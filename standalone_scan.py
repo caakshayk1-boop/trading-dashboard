@@ -2516,7 +2516,15 @@ def main():
             signals   = _safe("swing_scan",    run_swing_scan,     time_str)
             comms = []   # retired/disabled writer — unwired 2026-09-18. See the note in the eod slot.
             # Backtested engine — runs on the completed daily bar, as tested.
-            measured  = _safe("measured_equity", run_measured_equity_scan, time_str)
+            # ── TWO ENGINES RETIRED ON THEIR OWN RECORD, 2026-09-18 ────────
+            # PLUMB (equity_measured): 16 closed, -0.535R, 25% won, t=-2.92 —
+            #   the ONLY significantly losing engine on the board, and it was
+            #   the one described as "built from a measured edge". The measure
+            #   came back negative and the engine goes with it.
+            # NORTH (ai_longterm): no closed trade, no measured basis, and the
+            #   same weekly-to-months horizon ASCENT already covers. An engine
+            #   that has never been graded cannot be defended on its record.
+            measured = []
             # OHL/OLL reads today's Open/High/Low off the DAILY bar
             # (interval="1d"), which is only stable once the session has
             # closed — the same reason measured_equity runs here and not
@@ -2604,7 +2612,7 @@ def main():
             # runs. The `holiday` slot below KEEPS its commodity scan on
             # purpose — an NSE holiday falls on a weekday, when COMEX is open.
             mbs       = _safe("multibagger",   run_multibagger_scan, time_str)
-            lt        = _safe("ai_longterm",   run_ai_longterm_scan, time_str)
+            lt = []
             # Third weekly engine on the same Saturday clock. It was only ever
             # reachable through the /magic bot command, so it ran when someone
             # remembered to ask rather than every week.

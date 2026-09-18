@@ -1004,6 +1004,72 @@ def log_to_all_signals(symbol, signal_type, action, entry, sl, t1, t2, t3, rr,
     return row_id
 
 
+# ── THE TREND GATE ──────────────────────────────────────────────────────────
+#
+# Akshay: "quality over quantity — take inspiration from Investtech."
+#
+# What Investtech actually does that this book did not: it will not take a long
+# against its own trend channel. Every engine here could, and did.
+#
+# THIS WAS MEASURED BEFORE IT WAS BUILT, against all 269 closed NSE-equity
+# trades, with each name's bars cut at its own entry date so there is no
+# lookahead. Expectancy of what the gate KEEPS against what it DROPS:
+#
+#     no filter                 264 trades   -0.044R   29.9% won
+#     above the 200-day         192          -0.028R   (dropped -0.085R)
+#     200-day rising            150          -0.004R   (dropped -0.097R)
+#     stacked 50>200            137          +0.015R   (dropped -0.107R)
+#     stacked + 200 rising      120          +0.042R   (dropped -0.115R)   <- this
+#     + volume confirm           38          +0.090R   (dropped -0.066R)
+#
+# The separation is consistent: at every cut, what passes is better than what
+# is dropped, and the dropped bucket is reliably negative. The gate turns a
+# losing book into a flat one and removes 55% of the signals to do it.
+#
+# IT IS NOT AN EDGE AND THE COMMENT WILL NOT PRETEND IT IS. +0.042R at t=0.30
+# over 120 trades is indistinguishable from zero. What the evidence supports is
+# narrower and still worth having: these are the trades that were losing money,
+# and they are identifiable before entry.
+#
+# The volume variant is better still and cuts the sample to 38, which is too
+# few to set a rule on. It is left out deliberately rather than fitted.
+#
+# ONE FILTER THAT INVERTED, recorded so nobody adds it back: requiring a strong
+# close (in the top 40% of the bar's range) made things WORSE — kept -0.122R
+# against dropped +0.002R. The obvious quality test was the wrong one.
+TREND_GATE_ON = os.environ.get("TREND_GATE", "1") != "0"
+
+
+def _trend_ok(symbol: str):
+    """(passed, why). A long needs the trend under it, or it does not go.
+
+    Returns True on any failure to FETCH — a gate that silently drops every
+    signal when Yahoo is slow is worse than no gate, and the failure mode has
+    to be "publish and be judged", not "publish nothing and look healthy".
+    """
+    if not TREND_GATE_ON:
+        return True, "gate off"
+    try:
+        import yfinance as yf
+        sym = str(symbol or "").replace(".NS", "").replace(".BO", "")
+        d = yf.Ticker(sym + ".NS").history(period="2y", interval="1d", auto_adjust=True)
+        if d is None or len(d) < 220:
+            return True, "no history — not gated"
+        c = d["Close"]
+        s50 = c.rolling(50).mean().iloc[-1]
+        s200s = c.rolling(200).mean()
+        s200, s200_prev = s200s.iloc[-1], s200s.iloc[-21]
+        px = c.iloc[-1]
+        if not (px > s50 > s200):
+            return False, f"not stacked (px {px:.1f}, 50d {s50:.1f}, 200d {s200:.1f})"
+        if not (s200 > s200_prev):
+            return False, "200-day still falling"
+        return True, "stacked, 200-day rising"
+    except Exception as e:                                       # noqa: BLE001
+        logging.warning(f"trend gate could not read {symbol} ({e}) — letting it through")
+        return True, "gate unavailable"
+
+
 def log_batch_to_all_signals(rows, date=None):
     """Insert many signals over ONE connection. Returns row ids in input order.
 
@@ -1022,6 +1088,32 @@ def log_batch_to_all_signals(rows, date=None):
     """
     if not rows:
         return []
+
+    # THE GATE RUNS HERE because this is where every engine writes. Ten engines
+    # with ten copies of one entry condition is the drift this file has already
+    # recorded against four target ladders and three feed lists.
+    #
+    # Long NSE equities only: the gate is a statement about an equity trend and
+    # says nothing about a currency or a short, and the book is long-only.
+    if TREND_GATE_ON:
+        kept, dropped = [], []
+        for r in rows:
+            mk = str(r.get("market") or "NSE").upper()
+            act = str(r.get("action") or "BUY").upper()
+            if mk != "NSE" or act not in ("BUY", "LONG"):
+                kept.append(r)
+                continue
+            ok, why = _trend_ok(r.get("symbol"))
+            (kept if ok else dropped).append(r)
+            if not ok:
+                logging.info(f"  trend gate dropped {r.get('symbol')} "
+                             f"({r.get('signal_type')}): {why}")
+        if dropped:
+            logging.info(f"trend gate: {len(kept)} published, {len(dropped)} dropped "
+                         f"of {len(rows)}")
+        rows = kept
+        if not rows:
+            return []
 
     # ── ONE TICKET PER NAME PER ENGINE, ENFORCED WHERE EVERY ENGINE WRITES ──
     #
