@@ -1,7 +1,7 @@
 {
- "build_id": "20260918T092244",
- "date": "2026-09-18",
- "date_str": "Friday, September 18 2026",
+ "build_id": "20260919T074926",
+ "date": "2026-09-19",
+ "date_str": "Saturday, September 19 2026",
  "picks": [
   {
    "symbol": "SMCI",
@@ -411,8 +411,12 @@
  "picks_week": null,
  "open_context": {
   "AAPL": {
-   "price": 332.41,
+   "price": 336.13,
    "sector": "Technology"
+  },
+  "ACE": {
+   "price": 1205.6,
+   "sector": "Industrials"
   },
   "ANANTRAJ": {
    "price": 596.9,
@@ -425,6 +429,14 @@
   "ASHOKLEY": {
    "price": 158.62,
    "sector": "Industrials"
+  },
+  "AUROPHARMA": {
+   "price": 1643.0,
+   "sector": "Healthcare"
+  },
+  "BAJAJHFL": {
+   "price": 82.7,
+   "sector": "Financial Services"
   },
   "BANKINDIA": {
    "price": 138.17,
@@ -482,17 +494,9 @@
    "price": 1370.8,
    "sector": "Financial Services"
   },
-  "CRISIL": {
-   "price": 4578.7998,
-   "sector": "Financial Services"
-  },
   "CRM": {
-   "price": 250.54,
+   "price": 237.92,
    "sector": "Technology"
-  },
-  "CUPID": {
-   "price": 279.15,
-   "sector": "Consumer Defensive"
   },
   "DRREDDY": {
    "price": 1140.0,
@@ -503,8 +507,12 @@
    "sector": "Technology"
   },
   "EMMVEE": {
-   "price": 321.7,
+   "price": 324.5,
    "sector": "Technology"
+  },
+  "FINCABLES": {
+   "price": 1395.8,
+   "sector": "Industrials"
   },
   "FSL": {
    "price": 273.1,
@@ -594,8 +602,12 @@
    "price": 80.8,
    "sector": "Financial Services"
   },
+  "MARUTI": {
+   "price": 12338.0,
+   "sector": "Consumer Cyclical"
+  },
   "META": {
-   "price": 673.31,
+   "price": 665.75,
    "sector": "Communication Services"
   },
   "MINDACORP": {
@@ -618,6 +630,10 @@
    "price": 80.8,
    "sector": "Basic Materials"
   },
+  "NUVOCO": {
+   "price": 316.2,
+   "sector": "Basic Materials"
+  },
   "PARADEEP": {
    "price": 146.84,
    "sector": "Basic Materials"
@@ -630,24 +646,8 @@
    "price": 1763.0,
    "sector": "Technology"
   },
-  "PFOCUS": {
-   "price": 320.45,
-   "sector": "Communication Services"
-  },
   "PINELABS": {
    "price": 184.48,
-   "sector": "Technology"
-  },
-  "POLYCAB": {
-   "price": 8208.5,
-   "sector": "Industrials"
-  },
-  "RBLBANK": {
-   "price": 404.15,
-   "sector": "Financial Services"
-  },
-  "SAP": {
-   "price": 213.2,
    "sector": "Technology"
   }
  },
@@ -779,8 +779,8 @@
    {
     "dataset": "Careers feed",
     "status": "DEGRADED",
-    "age": "16h old",
-    "note": "partial coverage \u2014 12/22 records"
+    "age": "15h old",
+    "note": "partial coverage \u2014 10/22 records"
    }
   ]
  },
@@ -941,7 +941,7 @@
   },
   "daughter": {
    "months": 8,
-   "days": 267,
+   "days": 268,
    "heading": "Eight months old.",
    "band": "crawling",
    "born": "2025-12-25"
@@ -949,103 +949,103 @@
   "productivity": "Write tomorrow's top 3 tasks tonight. Wake up with a plan.",
   "father": [
    {
-    "title": "Put her in front of a mirror",
-    "do": "Hold her at a mirror and name both of you.",
-    "why": "Self-recognition does not arrive until around 18 months, so she is currently treating the reflection as another baby \u2014 which is exactly why it holds her attention and drives social behaviours."
+    "title": "Stop at eye contact",
+    "do": "When she catches your eye across the room, stop and respond \u2014 smile, wave, say her name.",
+    "why": "Social referencing is beginning: she checks your face to decide how to feel about things. Responding consistently makes you a reliable reference point."
    },
    {
-    "title": "Ask her mother what she needs",
-    "do": "Ask directly, once, and act on the answer without negotiating it.",
-    "why": "The most reliable predictor of a child's early environment is the functioning of the partnership around them. This is a fatherhood task, not a marital one."
+    "title": "Let her lead the play",
+    "do": "Follow what she reaches for instead of redirecting to the toy you chose. Sit on the floor at her level for 15 minutes.",
+    "why": "Serve-and-return interaction builds the circuitry for attention and self-regulation. Following her focus teaches that her signals produce a response \u2014 the root of secure attachment."
    }
   ],
   "life_wisdom": [
    {
     "tradition": "Jainism",
-    "term": "Syadvada",
-    "translation": "Conditioned assertion \u2014 'in some respect'",
-    "teaching": "Every claim is true only under stated conditions. Jain logic prefixes assertions with 'in some respect' to keep the conditions visible.",
-    "apply": "Attach the assumption to the forecast, out loud: 'growth is 12% \u2014 in the respect that the two new stores open in Q3.' Half of forecasting disputes are actually undeclared conditions."
+    "term": "Kshama",
+    "translation": "Forgiveness, asked and given",
+    "teaching": "Once a year, at Michchhami Dukkadam, Jains ask forgiveness of everyone they may have harmed \u2014 regardless of whether they feel at fault.",
+    "apply": "The ritual removes the negotiation over who was more wrong. Do not wait for the annual version: close a grudge this week without settling the scoreboard first."
    },
    {
     "tradition": "Buddhism",
-    "term": "Impermanence of success",
-    "translation": "Anicca applied upward",
-    "teaching": "Impermanence is usually offered as consolation in difficulty. It applies symmetrically: the good quarter, the promotion, the peak are equally conditioned.",
-    "apply": "On a good week, note it explicitly and hold it lightly. The habit of not over-identifying with wins is what makes losses survivable."
+    "term": "Dana",
+    "translation": "Generosity, listed first",
+    "teaching": "In the traditional sequence of practices, generosity comes before ethics and meditation \u2014 as the foundation rather than the reward.",
+    "apply": "Give something away before you feel you have surplus. Time or attention counts; the point is that it precedes abundance rather than following it."
    }
   ],
   "spanish": [
    {
-    "word": "cuadrar",
-    "meaning": "to add up / reconcile",
-    "es": "Las cuentas no cuadran.",
-    "en": "The accounts do not reconcile.",
+    "word": "\u00bfqu\u00e9 opinas?",
+    "meaning": "what do you think?",
+    "es": "\u00bfQu\u00e9 opinas de esta propuesta?",
+    "en": "What do you think of this proposal?",
     "tag": "Business"
    },
    {
-    "word": "el proveedor",
-    "meaning": "the supplier",
-    "es": "Negociamos mejores plazos con el proveedor.",
-    "en": "We negotiated better terms with the supplier.",
+    "word": "las ventas",
+    "meaning": "the sales",
+    "es": "Las ventas subieron un 8% este mes.",
+    "en": "Sales rose 8% this month.",
     "tag": "Business"
    }
   ],
   "vocab": [
    {
-    "word": "Judicious",
-    "say": "joo-DISH-uhs",
-    "meaning": "Showing good judgement.",
-    "example": "A judicious use of markdown clears stock without training customers to wait.",
-    "note": "Sounds considered rather than cautious."
+    "word": "Marginal",
+    "say": "MAR-ji-nuhl",
+    "meaning": "Relating to the next unit; or barely sufficient.",
+    "example": "The marginal store adds revenue but no profit.",
+    "note": "In economics it means 'the next one'. Most people misuse it to mean 'small'."
    },
    {
-    "word": "Systemic",
-    "say": "sis-TEM-ik",
-    "meaning": "Affecting the whole system.",
-    "example": "This is a systemic control weakness, not an isolated error.",
-    "note": "Not 'systematic', which means methodical. The two get confused in audit reports constantly."
+    "word": "Salutary",
+    "say": "SAL-yuh-ter-ee",
+    "meaning": "Producing a good effect, usually unpleasantly.",
+    "example": "The audit finding was a salutary reminder about access controls.",
+    "note": "The useful shock. Slightly formal, lands well in written commentary."
    }
   ],
   "speaking": {
-   "title": "Name then explain",
-   "drill": "Practise five answers that open with the conclusion: 'No \u2014 and the reason is\u2026'",
-   "why": "Burying the verdict at the end forces the listener to hold everything in memory. Lead with it."
+   "title": "Own the accent",
+   "drill": "Read a page aloud focusing only on the final consonant of each word, at normal speed.",
+   "why": "Clarity comes from finishing words, not from changing your accent. Endings are where intelligibility is lost."
   },
   "interview_tech": [
    {
-    "q": "Like-for-like sales are +3% but total sales are \u22122%. What is happening?",
-    "a": "The existing estate is growing while the total base shrank \u2014 you closed stores, or a material store left the LFL set. LFL strips out openings and closures, so the gap is the net space effect. Ask: was the closure deliberate portfolio pruning, in which case \u22122% total with +3% LFL and better margin is a good outcome; or did leases expire without replacement, which is a pipeline failure. Follow with sales density per sqm \u2014 that tells you whether the remaining estate is genuinely stronger.",
-    "who": "Marks & Spencer \u00b7 Americana \u00b7 Alshaya"
+    "q": "Your CEO wants to grow revenue 20%. Finance says cash cannot fund it. How do you frame that?",
+    "a": "Not as a refusal. Compute the sustainable growth rate: ROE \u00d7 retention ratio. If the business sustainably funds 12% and the ask is 20%, the gap is 8 points that must come from somewhere \u2014 debt, equity, working capital release, or margin. Present the three routes with the cost of each and the covenant headroom. Then let the CEO choose. Finance's job is to price the options, not to be the department that says no.",
+    "who": "Unilever \u00b7 P&G \u00b7 Nestl\u00e9"
    },
    {
-    "q": "You are consolidating Malaysia and Indonesia. Where do FX translation differences land?",
-    "a": "Functional currency results are translated at the closing rate for assets and liabilities, average rate for P&L, and the difference goes to other comprehensive income as a foreign currency translation reserve \u2014 not through P&L. It only recycles to P&L on disposal of the foreign operation. The trap: intercompany balances that are effectively permanent investment belong in the net investment, so their FX also goes to OCI. Getting that wrong puts noise through earnings every quarter.",
-    "who": "Landmark Group \u00b7 Unilever \u00b7 Shell"
+    "q": "Same-store sales are flat but the store is more profitable. Is that good?",
+    "a": "Depends entirely on the cause. If margin rose from better buying, less markdown, or labour-scheduling efficiency \u2014 excellent, that is real operating leverage. If it rose because you cut staff hours below service thresholds, deferred maintenance, or stopped local marketing, you are harvesting the store and flat sales will turn negative within three quarters. Ask for the conversion rate and units per transaction, not just the margin.",
+    "who": "Costco \u00b7 Zara \u00b7 Alshaya"
    }
   ],
   "interview_soft": [
    {
-    "q": "The board pushes back hard on your numbers in front of everyone. What do you do?",
-    "a": "Do not defend and do not fold. Separate the challenge into fact and judgement. If they have spotted a factual error, concede immediately and precisely \u2014 'you are right, that is the restated base, I will recirculate by Thursday.' Credibility survives errors; it does not survive defensiveness. If it is a judgement call, state your assumption, the sensitivity, and offer the alternative case. Never argue methodology in the room; take it offline with the one director who raised it.",
-    "who": "Any listed board"
+    "q": "Describe a time you had to deliver bad news to senior stakeholders.",
+    "a": "Lead with the structure you used, because that is the skill. Bad news goes: the number, the cause, the impact, the plan, the ask. No preamble. Deliver it early even when incomplete \u2014 'here is what I know now and what I will know Friday' beats a complete answer a week late. Give a specific example with the actual figure and what you did next. The tell they look for: did you surface it or did someone else find it.",
+    "who": "Amazon \u00b7 Emaar \u00b7 Nestl\u00e9"
    },
    {
-    "q": "An employee asks you to approve an expense that is within policy but clearly wrong. What now?",
-    "a": "They are testing whether you hide behind rules. Policy is a floor, not a ceiling. Approve or reject on the substance, explain the reasoning to the person directly, and then fix the policy so the next person is not in the same position. If it involves a senior person, the answer does not change \u2014 that is precisely when it counts. Say plainly that you would escalate to the audit committee if pressured to approve something you believe is wrong.",
-    "who": "Any group with a code of conduct"
+    "q": "Why should we hire you over a candidate with Big Four and listed-company experience?",
+    "a": "Do not disparage the alternative. Frame the trade: audit teaches you to verify what happened; operating finance teaches you to change what happens next. Then be specific about what you own that they do not \u2014 a live multi-country P&L, an ERP implementation you led rather than advised on, and store-level decisions you made and were held to. End with the honest gap and how you would close it. Confidence with a named weakness beats confidence alone.",
+    "who": "Every shortlist"
    }
   ],
   "cfo_field": [
    {
-    "q": "The offer is decided by the non-technical questions.",
-    "a": "Everyone shortlisted can do the technical work \u2014 that is why they were shortlisted. What separates the offer is whether the panel believes you can hold a room, disagree with a CEO without theatre, and be trusted with bad news. Prepare the failure story properly: what you decided, what it cost, what you changed afterwards. A candidate with no failure story reads as someone who has never owned a decision.",
-    "who": "Why strong CVs lose"
+    "q": "The controller who never leaves the close never becomes CFO.",
+    "a": "The job you are promoted out of is 'the person who produces the numbers'. The job you are promoted into is 'the person who decides what to do about them'. If your calendar is 70% close, reconciliation and audit prep, you are demonstrating that you are excellent at the job you already have. Push the close down: a well-run retail group closes in 5 working days, and every day you shave buys back roughly 12 days a year of capacity to spend on decisions instead of production.",
+    "who": "The single most common plateau"
    },
    {
-    "q": "A forecast that is never wrong is a forecast nobody is using.",
-    "a": "Track forecast accuracy as a metric in its own right \u2014 absolute percentage error by month, by category. Under 5% at group level is good in retail; over 15% and the business has stopped believing you. But an FP&A team that is never wrong is sandbagging, and sandbagging is more expensive than error: it prices in a buffer everyone plans around, and the buffer compounds up the hierarchy.",
-    "who": "What separates FP&A from reporting"
+    "q": "The Gulf pays for scarcity, not for years.",
+    "a": "Salary in the region tracks the intersection of skills, not the length of the CV. CA plus genuine FP&A plus retail plus a system implementation is a much rarer combination than any one of them is deep. If you are negotiating, the leverage is in naming the intersection, not in listing the years. And check the structure: basic versus allowances changes gratuity, which is calculated on basic salary alone.",
+    "who": "Compensation structure"
    }
   ],
   "review": {
@@ -1325,73 +1325,73 @@
    "shows": 20,
    "source": "each channel's public Atom feed",
    "built_on": "2026-09-17",
-   "age_days": 0.1,
-   "is_fallback": false
+   "age_days": 1.0,
+   "is_fallback": true
   },
   "smart_reads": [
    {
     "source": "Livemint",
     "cat": "money",
-    "title": "Mutual funds with the highest BSE exposure: Could we see a major reshuffle after NSE's listing? Experts weigh in",
-    "link": "https://www.livemint.com/money/personal-finance/mutual-funds-with-the-highest-bse-exposure-could-we-see-a-major-reshuffle-after-nses-listing-experts-weigh-in-11789670064292.html",
-    "summary": "NSE's upcoming listing could have implications for mutual funds that already hold BSE. While some index funds may see no immediate change, active and thematic funds could reassess their exposure. Here are the schemes with the highest BSE holdings and what investors need to watch.",
-    "date": "Sep 17, 2026",
-    "_sort": "2026-09-17T19:42:10+00:00",
+    "title": "Gold vs Nifty 50: What would  \u20b91 lakh invested 20 years ago be worth today? Check post-tax returns",
+    "link": "https://www.livemint.com/money/personal-finance/gold-vs-nifty-50-what-would-1-lakh-invested-20-years-ago-be-worth-today-check-post-tax-returns-11789757341461.html",
+    "summary": "Gold has outperformed the Nifty 50 over the past 20 years, but returns are only part of the comparison. Their capital gains tax treatment is different too. Here\u2019s what  \u20b91 lakh invested 20 years ago could be worth today and how much an investor may keep after tax.",
+    "date": "Sep 18, 2026",
+    "_sort": "2026-09-18T20:26:18+00:00",
     "smart": {
      "what_happened": [
-      "NSE's upcoming listing may affect mutual funds that currently hold large positions in BSE.",
-      "Index funds might see little immediate change, while active and thematic funds could reassess their BSE exposure."
+      "Gold's \u20b91 lakh invested 20 years ago would be worth more today than the same amount invested in the Nifty 50.",
+      "The capital gains tax treatment for gold differs from that for Nifty 50 equity investments."
      ],
-     "why_it_matters": "The listing of NSE introduces a new major exchange that could shift trading volume and liquidity away from BSE, prompting fund managers to evaluate portfolio risk and performance implications. A reallocation by active and thematic funds could influence the demand for BSE securities and affect market dynamics for both exchanges.",
-     "what_to_watch": "Monitor the disclosed BSE exposure percentages of the top five mutual fund schemes in their next quarterly filings after the NSE listing.",
-     "headline": "Mutual funds with highest BSE holdings face potential reshuffle after NSE listing",
-     "read_seconds": 23
+     "why_it_matters": "The comparison highlights that not only the raw returns but also the post\u2011tax outcomes can vary significantly between asset classes, influencing an investor's net wealth accumulation over long horizons.",
+     "what_to_watch": "Monitor any changes to capital gains tax rates applicable to gold and equity index investments.",
+     "headline": "Gold outperformed Nifty 50 over 20 years for \u20b91 lakh investment",
+     "read_seconds": 22
     }
    },
    {
     "source": "ET Opinion",
     "cat": "money",
-    "title": "Credit where credit's due: India's tokenised bonds must now open the door to global capital",
-    "link": "https://economictimes.indiatimes.com/opinion/et-commentary/credit-where-credits-due-indias-tokenised-bonds-must-now-open-the-door-to-global-capital/articleshow/134318332.cms",
-    "summary": "India's pilot tokenised bond issuance successfully settled transactions on a distributed ledger. This innovation improved issuance efficiency and removed settlement risks for domestic investors. Tokenisation offers potential for broader foreign capital access to Indian credit markets. Global investors could hold Indian",
-    "date": "Sep 17, 2026",
-    "_sort": "2026-09-17T17:43:38+00:00",
-    "smart": {
-     "what_happened": [
-      "The pilot tokenised bond issuance in India successfully settled transactions on a distributed ledger, improving issuance efficiency and removing settlement risks for domestic investors.",
-      "The tokenisation model is presented as a way to broaden foreign capital access to Indian credit markets, allowing global investors to hold Indian bonds."
-     ],
-     "why_it_matters": "The successful settlement demonstrates that blockchain technology can streamline bond issuance and reduce settlement risk, which could make Indian debt instruments more attractive to both domestic and overseas investors, potentially expanding the pool of capital available to fund India's financing needs.",
-     "what_to_watch": "The next regulatory filing or approval for a follow\u2011on tokenised bond issuance in India.",
-     "headline": "India's pilot tokenised bond issuance settles on distributed ledger",
-     "read_seconds": 26
-    }
+    "title": "Pass the buck to RBI, banks: Let the savings from digital payments fund UPI costs, not consumers",
+    "link": "https://economictimes.indiatimes.com/opinion/et-commentary/pass-the-buck-to-rbi-banks-let-the-savings-from-digital-payments-fund-upi-costs-not-consumers/articleshow/134340858.cms",
+    "summary": "The RBI's MDR introduction on UPI transactions above \u20b92,000 faces criticism.  This move may discourage digital payments and encourage a return to cash.  Savings from reduced currency printing should cover fintech expenses instead.  Digital payments have significantly reduced RBI's currency printing expenditure.  Incent",
+    "date": "Sep 18, 2026",
+    "_sort": "2026-09-18T18:03:17+00:00"
    },
    {
     "source": "The Marginalian",
     "cat": "ideas",
-    "title": "Actuality vs. Possibility and How to Hear the Signal of Your Life",
-    "link": "https://www.themarginalian.org/2026/09/17/george-kubler-actuality/",
-    "summary": "Sitting atop a Spanish mesa one sweltering August night, watching the Perseid meteor showers streak the sky with the debris of a comet burning through the atmosphere against the backdrop of a billion dead stars whose signal light is only now reaching us, I found myself trembling with the parallel to life itself: The gr",
-    "date": "Sep 17, 2026",
-    "_sort": "2026-09-17T16:38:16+00:00"
+    "title": "The Stoic Key to Living with Presence: Seneca on Time Spent vs. Saved vs. Wasted",
+    "link": "https://www.themarginalian.org/2026/09/18/seneca-letter-1-time/",
+    "summary": "\"Lay hold of to-day\u2019s task, and you will not need to depend so much upon to-morrow\u2019s. While we are postponing, life speeds by. Nothing... is ours, except time.\"",
+    "date": "Sep 18, 2026",
+    "_sort": "2026-09-18T15:23:43+00:00",
+    "smart": {
+     "what_happened": [
+      "Seneca says to lay hold of today's task rather than depend on tomorrow.",
+      "He warns that postponing lets life speed by and only time is truly ours."
+     ],
+     "why_it_matters": "The advice highlights the financial importance of effective time management, as allocating present effort to current projects can improve productivity and reduce the cost of delays, which is a key concern for businesses and investors seeking efficient operations.",
+     "what_to_watch": "watch for new corporate initiatives or publications that emphasize present\u2011focused time management practices",
+     "headline": "Seneca urges focusing on today's tasks to avoid wasting time",
+     "read_seconds": 20
+    }
    },
    {
     "source": "Economic Times",
     "cat": "money",
-    "title": "Retiring soon? How much higher EPS pension will you get after the wage ceiling hike",
-    "link": "https://economictimes.indiatimes.com/wealth/save/epfo-eps-pension-calculator-after-new-epf-wage-ceiling-retiring-soon-how-much-higher-payout-will-you-get-after-limit-hike-to-rs-25000/articleshow/134310888.cms",
-    "summary": "The Employees Provident Fund wage ceiling has risen to Rs 25,000. This change will affect Employees Pension Scheme members' monthly pension amounts. Employees with longer service periods will see greater pension increases. Pension calculations depend on average salary and years of pensionable service. The new ceiling a",
-    "date": "Sep 17, 2026",
-    "_sort": "2026-09-17T11:47:11+00:00",
+    "title": "8th Pay Commission latest news: 8 demands from nursing staff in Chandigarh meeting",
+    "link": "https://economictimes.indiatimes.com/wealth/save/8th-pay-commission-latest-news-8-demands-from-nursing-staff-in-chandigarh-meeting/articleshow/134335955.cms",
+    "summary": "The Nurses Welfare Association engaged with the 8th Pay Commission officials to present crucial demands. They aim for an increase in starting salaries and better compensation for night shifts. Furthermore, the association is pushing for expanded insurance benefits and additional hardship allowances. A significant ask i",
+    "date": "Sep 18, 2026",
+    "_sort": "2026-09-18T12:54:17+00:00",
     "smart": {
      "what_happened": [
-      "The Employees Provident Fund wage ceiling has been increased to Rs 25,000.",
-      "EPS members will see higher monthly pensions, with larger gains for those with longer service periods."
+      "The Nurses Welfare Association met with 8th Pay Commission officials to present its demands.",
+      "The demands include higher starting salaries, better night\u2011shift compensation, expanded insurance benefits and additional hardship allowances."
      ],
-     "why_it_matters": "The higher wage ceiling raises the basis used to calculate EPS pensions, meaning retirees and near\u2011retirees will receive larger monthly payouts. Since pension amounts are tied to average salary and years of pensionable service, the change benefits long\u2011tenured employees the most, potentially improving retirement income stability for a significant segment of the workforce.",
-     "what_to_watch": "The first EPS pension statements issued after the ceiling change, showing the revised monthly amounts for members.",
-     "headline": "Employees Provident Fund wage ceiling raised to Rs 25,000 affecting EPS pensions",
+     "why_it_matters": "The request targets core components of nursing compensation, which could affect payroll budgets, staff retention and the overall cost structure of public health services in Chandigarh. If approved, the changes would raise labor costs for the government and potentially set a precedent for other states' health workforce negotiations.",
+     "what_to_watch": "The next formal response or decision from the 8th Pay Commission regarding the eight demands.",
+     "headline": "Nurses Welfare Association presents eight demands to 8th Pay Commission",
      "read_seconds": 26
     }
    },
@@ -1402,17 +1402,7 @@
     "link": "https://www.nytimes.com/2026/09/16/well/covid-vaccines-vfc-program-delay.html",
     "summary": "The Health Department has not decided whether to provide the shots to states through the Vaccines for Children program, which serves uninsured and low-income families.",
     "date": "Sep 16, 2026",
-    "_sort": "2026-09-16T22:59:04+00:00",
-    "smart": {
-     "what_happened": [
-      "The Health Department has not decided to provide Covid shots to states through the Vaccines for Children program.",
-      "Consequently, Covid vaccinations are delayed for about half of U.S. children."
-     ],
-     "why_it_matters": "The delay affects uninsured and low\u2011income families who rely on the Vaccines for Children program, potentially leaving a large segment of the child population unprotected and hindering broader public\u2011health goals such as herd immunity.",
-     "what_to_watch": "The Health Department's announcement on whether to supply Covid vaccines through the Vaccines for Children program.",
-     "headline": "Covid vaccines delayed for half of U.S. children",
-     "read_seconds": 20
-    }
+    "_sort": "2026-09-16T22:59:04+00:00"
    },
    {
     "source": "Psyche",
@@ -1421,7 +1411,17 @@
     "link": "https://psyche.co/ideas/terminal-lucidity-when-dying-dementia-patients-regain-awareness",
     "summary": "The reports span centuries and cultures. If they\u2019re real, memory and identity might be far more recoverable than we thought- by Ariel Zeleznikow-JohnstonRead on Psyche",
     "date": "Sep 16, 2026",
-    "_sort": "2026-09-16T10:00:00+00:00"
+    "_sort": "2026-09-16T10:00:00+00:00",
+    "smart": {
+     "what_happened": [
+      "Reports from centuries and cultures describe terminal lucidity in dying dementia patients.",
+      "The phenomenon involves a brief return of memory and awareness before death."
+     ],
+     "why_it_matters": "If terminal lucidity is genuine, it suggests that memory and identity may be more recoverable at the end of life than previously believed, challenging current understanding of dementia progression and informing end\u2011of\u2011life care practices.",
+     "what_to_watch": "Monitor the upcoming issue of Psyche for the full research publication on terminal lucidity.",
+     "headline": "Terminal lucidity: when dying dementia patients regain awareness",
+     "read_seconds": 20
+    }
    },
    {
     "source": "Peter Attia",
@@ -1453,40 +1453,47 @@
   ],
   "lichess_games": [
    {
-    "id": "jUgJs2tU",
-    "url": "https://lichess.org/jUgJs2tU",
+    "id": "Nn0cxGUa",
+    "url": "https://lichess.org/Nn0cxGUa",
     "result": "Loss",
     "icon": "\u274c",
     "cls": "loss",
     "my_side": "Black",
-    "my_rating": 1618,
-    "opp_rating": 1623,
-    "opponent": "Miri1",
+    "my_rating": 1606,
+    "opp_rating": 1599,
+    "opponent": "Vpougatch",
     "me_diff": -6,
-    "opp_diff": 6,
-    "opening": "Philidor Defense",
-    "eco": "C41",
-    "moves": 36,
+    "opp_diff": 5,
+    "opening": "King's Gambit",
+    "eco": "C30",
+    "moves": 18,
     "termination": "Resignation",
     "speed": "Blitz",
-    "analysis": "Focus on early piece activity: after 1.e4 e5\u202f2.Nf3 d6, develop the bishop to\u202fBb5\u202finstead of passive \u2026Nf6, preventing White\u2019s central buildup and saving 30\u202fseconds per move.",
+    "analysis": "Focus on early king safety: after 1.e4 e5 2.f4 exf4 3.Nf3, avoid 3\u2026Qh4+; instead play 3\u2026d5 or 3\u2026g5, then develop knights/bishops before queen raids. This prevents forced queen\u2011side attacks and reduces average loss\u202f\u2248\u202f+0.45\u202fpawns.",
     "is_upset": false,
     "is_collapse": false,
     "is_long": false,
     "best_move": {},
     "key_facts": [
-     "Rating gap +5 (1618 vs 1623)",
-     "Endgame from move 27",
-     "36 moves \u00b7 Blitz"
+     "Rating gap -7 (1606 vs 1599)",
+     "18 moves \u00b7 Blitz"
     ],
-    "standout": "",
+    "standout": "Over in 18 moves \u2014 decided in the opening, so the opening is what to study.",
     "game_strength": null,
-    "est_fide": 1218,
+    "est_fide": 1206,
     "accuracy": null,
     "acpl": null,
     "analysed": false,
     "_mode": "full",
     "_trend": [
+     {
+      "day": "09/18",
+      "wins": 0,
+      "losses": 2,
+      "draws": 0,
+      "total": 2,
+      "pct": 0
+     },
      {
       "day": "09/17",
       "wins": 2,
@@ -1534,210 +1541,83 @@
       "draws": 0,
       "total": 1,
       "pct": 0
-     },
-     {
-      "day": "09/10",
-      "wins": 1,
-      "losses": 3,
-      "draws": 1,
-      "total": 5,
-      "pct": 20
      }
     ],
     "_yest_counts": {
      "blitz": {
-      "win": 2,
+      "win": 0,
       "loss": 2,
       "draw": 0,
       "rp": {
-       "before": 1611,
-       "after": 1612
+       "before": 1612,
+       "after": 1600
       }
      }
     },
-    "_session_date": "2026-09-17",
+    "_session_date": "2026-09-18",
     "_is_yesterday": true
    },
    {
-    "id": "it7gTCQh",
-    "url": "https://lichess.org/it7gTCQh",
+    "id": "bdRuerOc",
+    "url": "https://lichess.org/bdRuerOc",
     "result": "Loss",
     "icon": "\u274c",
     "cls": "loss",
     "my_side": "White",
-    "my_rating": 1622,
-    "opp_rating": 1703,
-    "opponent": "H2op",
-    "me_diff": -4,
-    "opp_diff": 4,
-    "opening": "Indian Defense",
-    "eco": "A45",
-    "moves": 36,
-    "termination": "Resignation",
-    "speed": "Blitz",
-    "analysis": "Focus on early central control: after 1.d4 Nf6 2.Nf3 e6, play 3.c4 (or 3.Nc3) instead of 3.Nc3\u2011e5 ideas; aim for solid pawn structure and avoid passive piece placements that let Black equalize quickly. This will increase your accuracy and reduce unnecessary piece trades.",
-    "is_upset": false,
-    "is_collapse": false,
-    "is_long": false,
-    "best_move": {},
-    "key_facts": [
-     "Rating gap +81 (1622 vs 1703)",
-     "Endgame from move 28",
-     "36 moves \u00b7 Blitz"
-    ],
-    "standout": "",
-    "game_strength": null,
-    "est_fide": 1222,
-    "accuracy": null,
-    "acpl": null,
-    "analysed": false
-   },
-   {
-    "id": "tYRmlEjO",
-    "url": "https://lichess.org/tYRmlEjO",
-    "result": "Win",
-    "icon": "\u2705",
-    "cls": "win",
-    "my_side": "Black",
-    "my_rating": 1617,
-    "opp_rating": 1584,
-    "opponent": "Iskusnjara",
-    "me_diff": 5,
-    "opp_diff": -5,
-    "opening": "Philidor Defense",
-    "eco": "C41",
-    "moves": 35,
-    "termination": "Resignation",
-    "speed": "Blitz",
-    "analysis": "Focus on the Philidor\u2019s central pawn break: play ...d5 earlier (by move\u202f12) instead of passive ...c6, gaining space and preventing White\u2019s strong e4\u2011e5 thrust.",
-    "is_upset": false,
-    "is_collapse": false,
-    "is_long": false,
-    "best_move": {},
-    "key_facts": [
-     "Rating gap -33 (1617 vs 1584)",
-     "Endgame from move 25",
-     "35 moves \u00b7 Blitz"
-    ],
-    "standout": "",
-    "game_strength": null,
-    "est_fide": 1217,
-    "accuracy": null,
-    "acpl": null,
-    "analysed": false
-   },
-   {
-    "id": "4TC6Mm34",
-    "url": "https://lichess.org/4TC6Mm34",
-    "result": "Win",
-    "icon": "\u2705",
-    "cls": "win",
-    "my_side": "White",
-    "my_rating": 1611,
-    "opp_rating": 1608,
-    "opponent": "Jasp3rbilleh",
-    "me_diff": 6,
-    "opp_diff": -15,
-    "opening": "Indian Defense",
-    "eco": "A45",
-    "moves": 23,
-    "termination": "Resignation",
-    "speed": "Blitz",
-    "analysis": "Focus on early queen development: avoid bringing the queen out before completing piece coordination; it cost you ~0.6\u202fcp\u202fper move and gave Black unnecessary tempo. Strengthen opening fundamentals first.",
-    "is_upset": false,
-    "is_collapse": false,
-    "is_long": false,
-    "best_move": {},
-    "key_facts": [
-     "Rating gap -3 (1611 vs 1608)",
-     "23 moves \u00b7 Blitz"
-    ],
-    "standout": "",
-    "game_strength": null,
-    "est_fide": 1211,
-    "accuracy": null,
-    "acpl": null,
-    "analysed": false
-   },
-   {
-    "id": "wFvJXysa",
-    "url": "https://lichess.org/wFvJXysa",
-    "result": "Win",
-    "icon": "\u2705",
-    "cls": "win",
-    "my_side": "Black",
-    "my_rating": 1606,
-    "opp_rating": 1596,
-    "opponent": "turboPi",
-    "me_diff": 5,
-    "opp_diff": -6,
+    "my_rating": 1612,
+    "opp_rating": 1605,
+    "opponent": "avbeketo",
+    "me_diff": -6,
+    "opp_diff": 6,
     "opening": "Queen's Pawn Game",
-    "eco": "D02",
-    "moves": 49,
-    "termination": "Checkmate",
+    "eco": "D00",
+    "moves": 63,
+    "termination": "Resignation",
     "speed": "Blitz",
-    "analysis": "Focus on early piece coordination: develop knights to f6/c6 before pushing ...e5; avoid unnecessary queen moves that waste tempo and expose king.",
+    "analysis": "Strengthen your opening preparation: memorize the first 12 queen\u2011pawn game moves, avoid early queen swaps, and reduce blunders to under\u202f3 per game.",
     "is_upset": false,
     "is_collapse": false,
     "is_long": true,
-    "best_move": {},
+    "best_move": {
+     "san": "Kc3",
+     "move_no": 54,
+     "gain_cp": 900,
+     "eval_after": -16.95
+    },
     "key_facts": [
-     "Rating gap -10 (1606 vs 1596)",
-     "Endgame from move 34",
-     "49 moves \u00b7 Blitz"
+     "Accuracy 69% vs their 67%",
+     "Average centipawn loss 105",
+     "9 inaccuracies \u00b7 3 mistakes \u00b7 8 blunders",
+     "Rating gap -7 (1612 vs 1605)",
+     "Endgame from move 37",
+     "63 moves \u00b7 Blitz"
     ],
-    "standout": "Finished by checkmate on move 49 \u2014 you converted rather than letting it drift.",
-    "game_strength": null,
-    "est_fide": 1206,
-    "accuracy": null,
-    "acpl": null,
-    "analysed": false
-   },
-   {
-    "id": "3cjRDEGi",
-    "url": "https://lichess.org/3cjRDEGi",
-    "result": "Draw",
-    "icon": "\u00bd",
-    "cls": "draw",
-    "my_side": "White",
-    "my_rating": 1605,
-    "opp_rating": 1656,
-    "opponent": "MWHS25",
-    "me_diff": 1,
-    "opp_diff": -1,
-    "opening": "Caro-Kann Defense",
-    "eco": "B12",
-    "moves": 37,
-    "termination": "Draw",
-    "speed": "Blitz",
-    "analysis": "Focus on early queen\u2011side development: after 1.e4 c6 2.d4 d5, play 3.Nc3 (or 3.Nd2) instead of 3.f3, saving tempo and preventing cramped positions.",
-    "is_upset": false,
-    "is_collapse": false,
-    "is_long": false,
-    "best_move": {},
-    "key_facts": [
-     "Rating gap +51 (1605 vs 1656)",
-     "Endgame from move 23",
-     "37 moves \u00b7 Blitz"
-    ],
-    "standout": "",
-    "game_strength": null,
-    "est_fide": 1205,
-    "accuracy": null,
-    "acpl": null,
-    "analysed": false
+    "standout": "You were 5.7 pawns up at the peak and lost from there \u2014 this is the game to review, not the openings.",
+    "game_strength": 1250,
+    "est_fide": 1212,
+    "accuracy": 69,
+    "acpl": 105,
+    "analysed": true
    }
   ],
   "lichess_summary": {
    "mode": "full",
-   "total": 6,
-   "wins": 3,
+   "total": 2,
+   "wins": 0,
    "losses": 2,
-   "draws": 1,
-   "pct": 50,
-   "icon": "\u2696\ufe0f",
-   "score": "3/6",
+   "draws": 0,
+   "pct": 0,
+   "icon": "\u274c",
+   "score": "0/2",
    "trend": [
+    {
+     "day": "09/18",
+     "wins": 0,
+     "losses": 2,
+     "draws": 0,
+     "total": 2,
+     "pct": 0
+    },
     {
      "day": "09/17",
      "wins": 2,
@@ -1785,33 +1665,25 @@
      "draws": 0,
      "total": 1,
      "pct": 0
-    },
-    {
-     "day": "09/10",
-     "wins": 1,
-     "losses": 3,
-     "draws": 1,
-     "total": 5,
-     "pct": 20
     }
    ],
-   "weak_op": "C41 Philidor Defense (1/2 = 50% WR)",
-   "best_op": "C41 Philidor Defense (1/2 = 50% WR)",
+   "weak_op": "",
+   "best_op": "",
    "upsets": 0,
    "collapses": 0,
    "long_games": 1,
-   "session_summary": "Your Philidor is a joke\u2014half the time you\u2019re just handing the opponent a free win, and the other half you\u2019re barely scraping a draw. Stop treating 1\u2026e5\u202f2\u2026d6 as a \u201csolid\u201d system; study the main\u2011line 3\u2026exd4 4.Nxd4 Nf6 5.Nc3 Be7 and the immediate \u2026c5 break to fight for the centre, then practice the resulting pawn structures until they become second nature. From now on, replace every Philidor game with a vetted anti\u2011Sicilian (e.g., the Grand Prix Attack) until you can consistently convert at least a 60\u202f% win rate.",
-   "session_date": "2026-09-17",
+   "session_summary": "AKK_010 is utterly flailing\u2014zero wins from two losses, a 0\u202f% success rate that signals a fundamental lack of basic competence. Your opening repertoire is a disaster; you\u2019re either playing nothing at all or choosing lines that immediately cede the initiative, so abandon every current variation and master a single, solid system (e.g., the London System as White, Caro\u2011Kann as Black) before attempting anything else. Stop \u201cthinking\u201d and start drilling forced tactical motifs and endgame basics for at least one hour daily, then only play against players rated 300\u2013400 points lower until you can consistently convert a simple material advantage into a win.",
+   "session_date": "2026-09-18",
    "is_yesterday": true,
    "token_missing": false
   },
   "lichess_puzzle": {
-   "pid": "lpmqI",
-   "rating": 1925,
+   "pid": "kjngX",
+   "rating": 1878,
    "level": "\ud83d\udd34 stretch",
-   "themes": "Mate In2 \u00b7 Middlegame \u00b7 Short",
-   "tip": "Force mate in two. Find the move that limits all their responses.",
-   "url": "https://lichess.org/training/lpmqI"
+   "themes": "Middlegame \u00b7 Crushing \u00b7 Short",
+   "tip": "Calculate 3 moves deep before touching a piece.",
+   "url": "https://lichess.org/training/kjngX"
   }
  }
 }
