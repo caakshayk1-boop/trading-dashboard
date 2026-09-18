@@ -1088,8 +1088,50 @@ MODE_NOTE = {
         "_US position check — grading only, no entries._",
 }
 
-VALID_SLOTS = {"morning", "midday", "eod", "weekend", "holiday", "full", "intraday",
-               "none", "us", "momentum", "basebreak"}
+# ── WHAT A SLOT IS, AND WHICH KIND EACH ONE IS ───────────────────────────────
+#
+# VALID_SLOTS was a flat set of eleven names, and the code branched on all of
+# them the same way. That flatness is what let the intraday engine be wired to
+# `midday` on 2026-09-17 and never run: nothing distinguished "a slot the
+# schedule produces" from "a slot you can type on the command line", so a
+# branch on a slot with no cron looked exactly like a branch on a slot with
+# three. It cost the engine with the best record on the board nine days.
+#
+# Three kinds, and the difference is who causes the run:
+#
+#   SCHEDULED    a cron fires it, and the watchdog re-fires it if the cron is
+#                dropped. Each one MUST have an arm in daily_scan.yml's case
+#                block — test_scan_slots fails the build otherwise, which is
+#                the check that did not exist.
+#   ON_DEMAND    a person types it. A tool, not a schedule. It is legitimate
+#                for these to have no cron; that is the whole point of them.
+#   DERIVED      the run decides it for itself — `holiday` from the NSE
+#                calendar, `none` when the clock says no slot is due.
+#
+# The operator's schedule is THREE touches and they are not interchangeable:
+# midday reads a session it can still trade into, eod reads completed bars two
+# hours after the bell, weekend sweeps everything with no session at all.
+SCHEDULED_SLOTS = {
+    "midday":  "11:30 IST — the intraday engine only. Research tier: it writes "
+               "the ledger and alerts nobody.",
+    "eod":     "17:30 IST — the day's measured scan, two hours after the bell "
+               "so every close is final, plus position management.",
+    "weekend": "09:30 IST Saturday — the full sweep and the multibagger scan, "
+               "on a day with no session to be timely about.",
+}
+ON_DEMAND_SLOTS = {
+    "morning":   "position management only; kept so a manual run still grades the book",
+    "full":      "every engine, by hand",
+    "intraday":  "the intraday engine on its own",
+    "momentum":  "the momentum engine on its own",
+    "basebreak": "the base-break engine on its own",
+    "us":        "US positions — the SCHEDULE was retired 2026-08-27, the capability was not",
+}
+DERIVED_SLOTS = {
+    "holiday": "set by the run when the NSE calendar says the market is shut",
+    "none":    "set by the run when the clock matches no slot",
+}
+VALID_SLOTS = set(SCHEDULED_SLOTS) | set(ON_DEMAND_SLOTS) | set(DERIVED_SLOTS)
 
 
 def _explicit_slot(argv=None) -> bool:
@@ -1242,12 +1284,25 @@ def _before_window_opens(requested, now_ist):
 # ── Individual scan runners ───────────────────────────────────────────────────
 
 def run_markets(time_str):
+    """The FX and metals line — RETURNED, not sent.
+
+    This used to be its own _send(). On a quiet day the scan then produced
+    three messages — "starting", "Markets", "complete, no new signals" — none
+    of which required the reader to do anything, and two of which said nothing
+    at all. Three notifications to deliver one fact is how a useful alert
+    channel becomes one people stop opening.
+
+    It is NOT dropped, because it is not a duplicate: this is forex and metals,
+    and the brief's 01 MARKET INTEL is equities. Two different facts that were
+    being confused for one because they share the word "markets". It rides
+    along inside the completion message instead.
+    """
     try:
         from scanner import fetch_forex_comm
         fc = fetch_forex_comm()
         if not fc:
-            return
-        lines = [f"🌐 *Markets* — {time_str}\n"]
+            return ""
+        lines = ["🌐 *FX and metals*"]
         for r in fc:
             sign  = "+" if r["Chg%"] >= 0 else ""
             arrow = "▲" if r["Chg%"] >= 0 else "▼"
@@ -1256,9 +1311,10 @@ def run_markets(time_str):
             # with the spot price beside it.
             note = "  ⚠ futures basis" if r.get("Basis") == "futures" else ""
             lines.append(f"{arrow} *{r['Asset']}*: `{r['Last']}` ({sign}{r['Chg%']}%){note}")
-        _send("\n".join(lines))
+        return "\n".join(lines)
     except Exception as e:
         logging.warning(f"run_markets skipped: {e}")
+        return ""
 
 
 # Commodity conflict groups — don't send opposing signals for same underlying
@@ -1905,10 +1961,38 @@ def run_fno_alerts(time_str, signals):
     _send_chunked(f"🎯 *F&O Setups* ({len(fno_sigs)}) — {time_str}\n", blocks)
 
 
+# Past this IST hour:minute a 15-minute momentum signal has no session left to
+# work with, so filing one would put a trade in the ledger that could not have
+# been taken. Cron drift on this repo runs 1.5-3h, which is the whole reason
+# this guard is needed rather than trusted to the schedule: the midday cron is
+# set for 11:30 IST and can land at 14:30.
+INTRADAY_LATEST_IST = (14, 30)
+
+
 def run_intraday_scan(time_str):
-    """30-min intraday momentum: VWAP + RSI55 cross + vol surge on Nifty 50 universe."""
+    """30-min intraday momentum: VWAP + RSI55 cross + vol surge on Nifty 50 universe.
+
+    RESEARCH TIER — writes the ledger, alerts nobody. See engine_names.may_alert.
+    """
     from scanner import scan_intraday_momentum
     from tracker import (log_batch_to_all_signals, duplicate_symbols, mark_alerts_sent)
+    # ── REFUSE RATHER THAN FILE A TRADE THAT COULD NOT HAVE BEEN TAKEN ──────
+    #
+    # The schedule cannot be relied on to enforce this. Scheduled runs on this
+    # repo land 1.5-3h late, so the 11:30 IST cron can execute at 14:30, and a
+    # 15-minute momentum push identified then has an hour of session behind it
+    # and none in front. Filing it anyway would grow the forward sample with
+    # trades nobody could have entered, which is worse than not running: it
+    # makes the record look like evidence.
+    import pytz
+    from datetime import datetime as _dt
+    _now_ist = _dt.now(pytz.timezone("Asia/Kolkata"))
+    if (_now_ist.hour, _now_ist.minute) > INTRADAY_LATEST_IST:
+        logging.info("intraday: %s IST is past the %02d:%02d cutoff — not scanning. "
+                     "A 15m signal filed now could not have been traded.",
+                     _now_ist.strftime("%H:%M"), *INTRADAY_LATEST_IST)
+        return []
+
     logging.info("Running intraday momentum scan (15m)...")
     raw = scan_intraday_momentum()
     dupes = duplicate_symbols(raw, "intraday")
@@ -1928,12 +2012,32 @@ def run_intraday_scan(time_str):
                 "t2": s["target2"], "t3": s["target2"], "rr": s["rr"],
                 "timeframe": "15m", "score": s.get("score", 0),
             })
-        ids  = log_batch_to_all_signals(rows)
-        sent = _send_chunked(
-            f"⚡ *Intraday Momentum* ({len(sigs)}) — {time_str}\n"
-            "_(15m · VWAP + RSI55 + Vol surge)_\n",
-            blocks, footer="\n_Intraday only · Exit by 3:15 PM IST_")
-        _record_delivery(ids, sent, mark_alerts_sent)
+        ids = log_batch_to_all_signals(rows)
+        # ── ASKED, NOT ASSUMED ───────────────────────────────────────────────
+        #
+        # This called _send_chunked unconditionally, under a note at the call
+        # site reading "IT IS RESEARCH TIER AND ALERTS NOTHING ... logged and
+        # shown and never sent". The policy was in prose and the code did the
+        # opposite; the only reason nobody received these is that the slot it
+        # is wired to does not exist, so it has never once run.
+        #
+        # may_alert() is now the thing that decides, for every engine, in one
+        # place. A refusal still writes the ledger — running forward silently
+        # is the entire point of the research tier — and records the delivery
+        # as sent=False WITH the reason, so afterwards "deliberately not sent"
+        # stays distinguishable from "tried and failed".
+        from engine_names import may_alert
+        allowed, why_not = may_alert("intraday")
+        if allowed:
+            sent = _send_chunked(
+                f"⚡ *Intraday Momentum* ({len(sigs)}) — {time_str}\n"
+                "_(15m · VWAP + RSI55 + Vol surge)_\n",
+                blocks, footer="\n_Intraday only · Exit by 3:15 PM IST_")
+            _record_delivery(ids, sent, mark_alerts_sent)
+        else:
+            _record_delivery(ids, False, mark_alerts_sent, reason=why_not)
+            logging.info("intraday: %d found, %d logged (research — not alerted)",
+                         len(sigs), len(ids))
     return sigs
 
 
@@ -2177,8 +2281,20 @@ def main():
                      f"standing down (--once).")
         return 0
 
+    # ── NOBODY NEEDS TO BE TOLD A SCAN STARTED ──────────────────────────────
+    #
+    # This sent "SwingDesk Pro — Slot: EOD starting..." on every run. It
+    # announced work rather than reporting it, arrived BEFORE any content, and
+    # on a quiet day was one of three messages that together said nothing
+    # happened — a heartbeat the reader has to open to discover is a heartbeat.
+    #
+    # The completion message already says what the scan did, and says it after
+    # the scan knows. If the run dies before that, the failure path sends the
+    # error; and if the whole job dies, the watchdog sees a slot with no
+    # recorded work and dispatches it again. Neither needs a herald.
+    #
+    # It stays in the LOG, where a start line is genuinely useful.
     logging.info(f"=== Scan started: {time_str} | Slot: {slot} ===")
-    _send(f"🔄 *SwingDesk Pro* — {time_str}\n_Slot: {slot.upper()} starting..._")
 
     def _safe(label, fn, *args, default=None, **kwargs):
         """Run a scan function, catch + log any exception so one failure doesn't stop others."""
@@ -2198,7 +2314,7 @@ def main():
         # sees the whole book.
         book = _safe("price_alerts", run_price_alerts, time_str,
                      SLOT_MARKETS.get(slot), default={}) or {}
-        _safe("markets",      run_markets,      time_str)
+        fx_block = _safe("markets", run_markets, time_str, default="") or ""
 
         mode = None   # set by slots that generate no signals by design
 
@@ -2413,20 +2529,28 @@ def main():
             ex.append(f"{book['open_after']} still open")
         existing = ("\n_Existing book:_ " + " · ".join(ex)) if ex else ""
 
+        # ── ONE MESSAGE PER SCAN ────────────────────────────────────────────
+        #
+        # A quiet run used to send three: "starting", the FX line, and this.
+        # The first is gone, and the second rides here — so a scan that finds
+        # nothing is now a single notification that carries the FX move, the
+        # book's state and the reason there were no entries, instead of three
+        # that carry one fact between them.
+        fx = ("\n\n" + fx_block) if fx_block else ""
         if total == 0:
             _send(
                 f"✅ *{slot.upper()} scan complete* — {time_str}\n"
                 + (MODE_NOTE.get(mode, f"_{mode.replace('-', ' ')} — no entries by design._")
                    if mode
                    else "_No new signals. Regime/score/RR filters not met._")
-                + existing
+                + existing + fx
             )
         else:
             _send(
                 f"✅ *{slot.upper()} scan done* — {time_str}\n"
                 + "_New:_\n"
                 + "\n".join(f"  • {p}" for p in parts)
-                + existing
+                + existing + fx
             )
 
         return 0

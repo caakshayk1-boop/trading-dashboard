@@ -76,6 +76,50 @@ LEDGER_ONLY = {
 }
 
 
+# ── WHICH ENGINES ARE ALLOWED TO REACH THE PHONE ─────────────────────────────
+#
+# This was a comment, and a comment cannot stop a function calling _send().
+#
+# On 2026-09-17 the intraday engine was brought back under a note reading "IT
+# IS RESEARCH TIER AND ALERTS NOTHING ... it is logged and shown and never
+# sent — the same terms PIVOT came back on". run_intraday_scan calls
+# _send_chunked. The policy and the code disagreed, and the only reason nobody
+# got the alerts is that the slot it was wired to does not exist, so it has
+# never run at all.
+#
+# PIVOT does it correctly: it writes the ledger, records the delivery as
+# sent=False WITH a reason, and sends nothing — so afterwards "deliberately not
+# sent" is distinguishable from "tried and failed". That is the behaviour this
+# makes general.
+#
+# The bar is this book's own: 30 closed trades at t >= 2. An engine that has
+# not cleared it may run forward, may fill the ledger and may be published —
+# it may not interrupt somebody's evening. Promoting one for having impressed
+# on a small sample is the precise error the thirty-trade rule exists to stop.
+ALERTS_SUPPRESSED = {
+    # key                reason written into the delivery record
+    "pivot":    "research tier — logged, never alerted. No closed trade and no "
+                "measured expectancy yet.",
+    "intraday": "research tier — logged, never alerted. 17 closed at +1.472R "
+                "(t=3.69) is a good record on a small sample and 13 short of "
+                "the 30 this book requires before an engine is trusted.",
+}
+
+
+def may_alert(signal_type) -> tuple:
+    """(allowed, reason) — may this engine's signals be sent to Telegram?
+
+    `reason` is None when allowed, and the sentence to write into the delivery
+    record when not. Every scan that sends must ask; a scan that asks and is
+    refused still logs to the ledger, because running forward silently is the
+    whole point of the research tier.
+    """
+    k = str(signal_type or "").strip()
+    if k in ALERTS_SUPPRESSED:
+        return False, ALERTS_SUPPRESSED[k]
+    return True, None
+
+
 def engine_name(signal_type) -> str:
     """The published name, or the plainest thing available.
 
