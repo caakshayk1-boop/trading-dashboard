@@ -68,8 +68,24 @@ if sig:
        sig["entry_ref"] - sig["stop"] >= sig["meta"]["atr"] * 0.999,
        f'{sig["entry_ref"]-sig["stop"]:.2f} vs atr {sig["meta"]["atr"]:.2f}')
     ok("T2 is further than T1", sig["t2"] > sig["t1"])
-    ok("every target carries its measured reach",
-       0 < sig["t2_reach"] < sig["t1_reach"] < 1)
+    # ── REACH RATES BELONG TO THE MEASURED MOVE, AND ONLY TO IT ─────────
+    # LEDGE's targets are floored at the house ladder (R1_MULT/R2_MULT) since
+    # 2026-09-19, because the measured move is anchored to the BOX while the
+    # stop is anchored to the box FLOOR and the entry to neither — so a
+    # breakout that closed well above the box could publish a first target at
+    # 0.169R, which TATACHEM did. When the floor binds, the target is further
+    # away than the one the 188-signal backtest measured, so its reach rate is
+    # null rather than carried over: 58.5% quoted against a target the
+    # backtest never tested is worse than no number at all.
+    if sig.get("t1_floored"):
+        ok("a floored target reports no reach rate, rather than a wrong one",
+           sig["t1_reach"] is None and sig["rr1"] >= 1.6 - 1e-9,
+           f'rr1={sig["rr1"]:.3f}')
+    else:
+        ok("every target carries its measured reach",
+           0 < sig["t2_reach"] < sig["t1_reach"] < 1)
+    ok("the first target always clears the house ladder",
+       sig["rr1"] >= 1.6 - 1e-9, f'rr1={sig["rr1"]:.3f}')
     ok("it explains itself", len(sig["why"]) >= 3)
     ok("it says how it can be wrong", "CLOSE" in sig["invalidate"])
 
