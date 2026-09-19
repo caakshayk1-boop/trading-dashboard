@@ -2694,10 +2694,19 @@ DETAIL_FIELDS = (
 # one silently. The two consumers have different needs and now have different
 # files; screen.json is untouched.
 #
-# THE KEEP LIST IS DERIVED, NOT MAINTAINED BY HAND. It is every field the
-# signal frontend actually references — see test_screen_lite.py, which reads
-# public/signal.js and fails if this list has drifted from it. A hand-kept
-# whitelist would go stale the first time somebody added a column.
+# WHAT THE KEEP LIST IS, AND WHERE IT IS CHECKED. It is every field the signal
+# frontend references, and it IS maintained by hand — an earlier version of
+# this note claimed it was derived and cited a test_screen_lite.py that has
+# never existed in this repo, which is the worse failure of the two: a
+# hand-kept list that says it is checked gets treated as if it were.
+#
+# The check that does exist is in the OTHER repo, test/guard.mjs, and it runs
+# in that repo's deploy.yml. It reads public/signal.js against the payload and
+# fails if a field the page reads is absent from the projection — the
+# direction that breaks a page. The reverse (a field kept here that the page
+# stopped reading) costs bytes, not correctness, and nothing measures it; the
+# frontend touches essentially every field that survives, measured in a
+# browser on 2026-09-19, so there is currently nothing to reclaim.
 LITE_DROP_FIELDS = (
     "brk20", "brk50", "cf_conf", "cfo_cr", "delta", "ebit_margin", "em_conf",
     "fcf_cr", "fcf_margin", "g_conf", "has_stmts", "isin", "m_inv", "m_pos",
