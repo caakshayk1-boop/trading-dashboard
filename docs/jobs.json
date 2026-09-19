@@ -1,6 +1,6 @@
 {
- "generated_at": "2026-09-18T09:21:45Z",
- "next_refresh": "2026-09-19T09:21:45Z",
+ "generated_at": "2026-09-19T05:30:56Z",
+ "next_refresh": "2026-09-20T05:30:56Z",
  "sources": [
   {
    "name": "Majid Al Futtaim",
@@ -8,7 +8,7 @@
    "status": "ok",
    "jobs_found": 18,
    "detail": "",
-   "last_success": "2026-09-18T09:21:45Z"
+   "last_success": "2026-09-19T05:30:56Z"
   },
   {
    "name": "Chalhoub Group",
@@ -16,7 +16,7 @@
    "status": "ok",
    "jobs_found": 6,
    "detail": "",
-   "last_success": "2026-09-18T09:21:45Z"
+   "last_success": "2026-09-19T05:30:56Z"
   },
   {
    "name": "GMG",
@@ -24,15 +24,15 @@
    "status": "ok",
    "jobs_found": 2,
    "detail": "",
-   "last_success": "2026-09-18T09:21:45Z"
+   "last_success": "2026-09-19T05:30:56Z"
   },
   {
    "name": "Al-Futtaim",
    "kind": "employer",
    "status": "ok",
-   "jobs_found": 40,
+   "jobs_found": 37,
    "detail": "",
-   "last_success": "2026-09-18T09:21:45Z"
+   "last_success": "2026-09-19T05:30:56Z"
   },
   {
    "name": "Abdul Latif Jameel",
@@ -40,7 +40,7 @@
    "status": "ok",
    "jobs_found": 2,
    "detail": "",
-   "last_success": "2026-09-18T09:21:45Z"
+   "last_success": "2026-09-19T05:30:56Z"
   },
   {
    "name": "Landmark Group",
@@ -48,7 +48,7 @@
    "status": "ok",
    "jobs_found": 7,
    "detail": "",
-   "last_success": "2026-09-18T09:21:45Z"
+   "last_success": "2026-09-19T05:30:56Z"
   },
   {
    "name": "Al Tayer",
@@ -56,7 +56,7 @@
    "status": "ok",
    "jobs_found": 4,
    "detail": "",
-   "last_success": "2026-09-18T09:21:45Z"
+   "last_success": "2026-09-19T05:30:56Z"
   },
   {
    "name": "Apparel Group",
@@ -64,7 +64,7 @@
    "status": "ok",
    "jobs_found": 7,
    "detail": "",
-   "last_success": "2026-09-18T09:21:45Z"
+   "last_success": "2026-09-19T05:30:56Z"
   },
   {
    "name": "Emaar",
@@ -94,9 +94,9 @@
    "name": "Etihad Airways",
    "kind": "employer",
    "status": "ok",
-   "jobs_found": 14,
+   "jobs_found": 13,
    "detail": "",
-   "last_success": "2026-09-18T09:21:45Z"
+   "last_success": "2026-09-19T05:30:56Z"
   },
   {
    "name": "Aldar",
@@ -104,47 +104,7 @@
    "status": "ok",
    "jobs_found": 7,
    "detail": "",
-   "last_success": "2026-09-18T09:21:45Z"
-  },
-  {
-   "name": "Alshaya Group",
-   "kind": "employer",
-   "status": "error",
-   "jobs_found": 0,
-   "detail": "17 postings linked, but no detail page yielded a usable job title — the detail URL renders client-side",
-   "last_success": null
-  },
-  {
-   "name": "Azadea",
-   "kind": "employer",
-   "status": "error",
-   "jobs_found": 0,
-   "detail": "no ATS endpoint could be resolved from the public careers page",
-   "last_success": null
-  },
-  {
-   "name": "Lulu Group",
-   "kind": "employer",
-   "status": "error",
-   "jobs_found": 0,
-   "detail": "no ATS endpoint could be resolved from the public careers page",
-   "last_success": null
-  },
-  {
-   "name": "Cenomi",
-   "kind": "employer",
-   "status": "error",
-   "jobs_found": 0,
-   "detail": "no ATS endpoint could be resolved from the public careers page",
-   "last_success": null
-  },
-  {
-   "name": "LinkedIn",
-   "kind": "aggregator",
-   "status": "blocked",
-   "jobs_found": 0,
-   "detail": "LinkedIn search: HTTP 429",
-   "last_success": "2026-09-17T09:48:18Z"
+   "last_success": "2026-09-19T05:30:56Z"
   },
   {
    "name": "Michael Page",
@@ -153,48 +113,24 @@
    "jobs_found": 0,
    "detail": "reachable, but no senior-finance roles matched",
    "last_success": null
-  },
-  {
-   "name": "GulfTalent",
-   "kind": "aggregator",
-   "status": "error",
-   "jobs_found": 0,
-   "detail": "listing fetched (17464 chars) but no posting link matched '(https://www\\\\.gulftalent\\\\.com/[a-z\\\\-]+/jobs/[a-z0-9\\\\-]+-\\\\d+)' — page shape changed, or it is behind a login",
-   "last_success": null
-  },
-  {
-   "name": "Bayt",
-   "kind": "aggregator",
-   "status": "blocked",
-   "jobs_found": 0,
-   "detail": "https://www.bayt.com/en/uae/jobs/finance-manager-jobs/: bot-verification interstitial, not a job list",
-   "last_success": null
-  },
-  {
-   "name": "Indeed",
-   "kind": "aggregator",
-   "status": "error",
-   "jobs_found": 0,
-   "detail": "listing fetched (2067 chars) but no posting link matched '/rc/clk\\\\?jk=([0-9a-f]{16})' — page shape changed, or it is behind a login",
-   "last_success": "2026-08-19T15:44:31Z"
   }
  ],
  "stats": {
-  "total_active": 64,
-  "high_fit": 6,
+  "total_active": 62,
+  "high_fit": 5,
   "s_tier": 1,
   "by_country": {
-   "UAE": 54,
+   "UAE": 52,
    "Saudi Arabia": 0,
    "Malaysia": 10,
    "Oman": 0
   },
   "duplicates_removed": 0,
-  "stale_removed": 1,
+  "stale_removed": 7,
   "sources_ok": 10,
-  "sources_attempted": 22,
+  "sources_attempted": 14,
   "urls_verified": 84,
-  "urls_unverified": 12,
+  "urls_unverified": 8,
   "urls_broken": 0
  },
  "jobs": [
@@ -211,8 +147,8 @@
    "employment_type": null,
    "posted_date": "2026-08-27",
    "closing_date": "2026-09-30",
-   "scraped_at": "2026-09-18T09:21:45Z",
-   "last_verified_at": "2026-09-18T09:21:45Z",
+   "scraped_at": "2026-09-19T05:30:56Z",
+   "last_verified_at": "2026-09-19T05:30:56Z",
    "status": "AGING",
    "source": "Al-Futtaim",
    "sources": [
@@ -305,8 +241,8 @@
    "employment_type": null,
    "posted_date": "2026-09-02",
    "closing_date": null,
-   "scraped_at": "2026-09-18T09:21:45Z",
-   "last_verified_at": "2026-09-18T09:21:45Z",
+   "scraped_at": "2026-09-19T05:30:56Z",
+   "last_verified_at": "2026-09-19T05:30:56Z",
    "status": "ACTIVE",
    "source": "Landmark Group",
    "sources": [
@@ -417,8 +353,8 @@
    "employment_type": "Experienced hires",
    "posted_date": "2026-07-27",
    "closing_date": null,
-   "scraped_at": "2026-09-18T09:21:45Z",
-   "last_verified_at": "2026-09-18T09:21:45Z",
+   "scraped_at": "2026-09-19T05:30:56Z",
+   "last_verified_at": "2026-09-19T05:30:56Z",
    "status": "STALE",
    "source": "Aldar",
    "sources": [
@@ -522,8 +458,8 @@
    "employment_type": "Full-Time",
    "posted_date": "2026-06-26",
    "closing_date": null,
-   "scraped_at": "2026-09-18T09:21:45Z",
-   "last_verified_at": "2026-09-18T09:21:45Z",
+   "scraped_at": "2026-09-19T05:30:56Z",
+   "last_verified_at": "2026-09-19T05:30:56Z",
    "status": "STALE",
    "source": "GMG",
    "sources": [
@@ -603,8 +539,8 @@
    "employment_type": "Experienced hires",
    "posted_date": "2026-09-02",
    "closing_date": null,
-   "scraped_at": "2026-09-18T09:21:45Z",
-   "last_verified_at": "2026-09-18T09:21:45Z",
+   "scraped_at": "2026-09-19T05:30:56Z",
+   "last_verified_at": "2026-09-19T05:30:56Z",
    "status": "ACTIVE",
    "source": "Aldar",
    "sources": [
@@ -696,114 +632,6 @@
    "exclusion_reason": null
   },
   {
-   "id": "78f0a66ac81ed93bc3b6eff754189137836459f7",
-   "company": "Al-Futtaim",
-   "company_group": "Al-Futtaim",
-   "title": "Finance Business Partner | Al-Futtaim Automotive | Finance",
-   "normalized_title": "finance business partner al futtaim automotive finance",
-   "location": "Dubai",
-   "country": "UAE",
-   "region": "GCC",
-   "department": null,
-   "employment_type": null,
-   "posted_date": "2026-09-03",
-   "closing_date": "2026-10-03",
-   "scraped_at": "2026-09-18T09:21:45Z",
-   "last_verified_at": "2026-09-18T09:21:45Z",
-   "status": "ACTIVE",
-   "source": "Al-Futtaim",
-   "sources": [
-    "Al-Futtaim"
-   ],
-   "source_url": "https://www.afuturewithus.com/job/Dubai-Finance-Business-Partner-Al-Futtaim-Automotive-Finance/1433264633/",
-   "application_url": "https://www.afuturewithus.com/talentcommunity/apply/1433264633/?locale=en_GB",
-   "is_direct_apply": true,
-   "application_url_verified": true,
-   "source_confidence": "high",
-   "salary_min": null,
-   "salary_max": null,
-   "salary_currency": null,
-   "experience_min": 6,
-   "experience_max": null,
-   "description": "Job Requisition ID: 180376 \n\n Established in the 1930s as a trading business, Al-Futtaim Group today is one of the most diversified and progressive, privately held regional businesses headquartered in Dubai, United Arab Emirates. Structured into five operating divisions; automotive, financial services, real estate, retail and healthcare; employing more than 35,000 employees across more than 20 countries in the Middle East, Asia and Africa, Al-Futtaim Group partners with over 200 of the world's most admired and innovative brands. Al-Futtaim Group’s entrepreneurship and relentless customer focus enables the organization to continue to grow and expand; responding to the changing needs of our customers within the societies in which we operate. \n\n By upholding our values of respect, excellence, collaboration and integrity; Al-Futtaim Group continues to enrich the lives and aspirations of our customers each and every day\n\n Overview Of The Role: \nThe Financial Analyst will be responsible for providing analytical and commercial support to the management team, contributing to performance reviews, operational decision-making, and improvement plans. The role involves budgeting, forecasting, and producing detailed management reports to support the company's profitability and financial objectives. Additionally, the Financial Analyst will aid in working capital guidance, commercial financial evaluations, and support annual audits, all while driving system and process improvements within the organization.\n\n What You Will Do: \n\n Prepare annual budgets and periodic forecasts while ensuring adherence to agreed timelines.\n\r\n Provide quality support and structured reporting to the management team for accurate financial insights.\n\r\n Prepare daily, weekly, and monthly management reports and presentations for the management board.\n\r\n Support divisional performance reviews and conduct variance analysis.\n\r\n Coordinate with the finance team for general ledger reviews and manage accounting-related issues.\n\r\n Review, manage, and process incentives.\n\r\n Assist management in understanding financial metrics and influences.\n\r\n Advise the Finance Head on working capital planning and validate underlying assumptions.\n\r\n Prepare monthly cash flow statements and forecasts.\n\r\n Identify areas for improvement and provide early warning signals.\n\r\n Continuously follow up and update action initiated by business units.\n\r\n Offer analytical support for evaluating pricing for specific deals.\n\r\n Analyze monthly sales versus expected targets to gauge campaign and pricing decision effectiveness.\n\r\n Support stock and receivables analysis.\n\r\n Advise on capex and project evaluation.\n\r\n Recommend improvements to incentive models.\n\r\n Provide historical database maintenance and exception reporting for corrective actions.\n\r\n Support the finance team during year-end audits to ensure timely completion.\n\r\n Assist the team for overall development and deeper understanding of financial reports.\n\r\n Facilitate audit completion without delay.\n\r\n Advise on system and process development for new initiatives and improvements.\n\r\n Act as a SAP user and project member for group reporting updates.\n\r\n Support business units in process change coordination.\n\n Required Skills To Be Successful: \n\n Advanced accounting and analytical skills.\n\r\n Proficiency in MS Excel and ERP systems.\n\r\n Strong communication and teamwork abilities.\n\r\n Initiative and the ability to work independently.\n\n What Qualifies You For The Role: \n\n Qualified Accountant or equivalent post-graduate qualification.\n\r\n Minimum of 6 years of experience in finance-related roles.\n\r\n Strong accounting and analytical skills, with advanced proficiency in MS Excel and ERP systems.\n\r\n Excellent communication skills and the ability to function effectively in a complex, multi-branded business environment.\n\n About Al-Futtaim Automotive \n\r\nA major division of the UAE-based Al-Futtaim Group of companies, Al-Futtaim Automotive is an industry leader with presence in 10 countries across the Middle East, Asia and Africa.\n\r\nOur core business activities at Al-Futtaim Automotive include distribution, manufacturing, leasing and aftersales, and we are firmly established as the regional representative of some of the world’s most iconic automotive brands: Toyota, Lexus, Honda, Jeep, Chrysler, Dodge, Volvo and RAM.\n\r\nWe are driven by a customer-centric approach, constantly pushing the boundaries on innovation, quality standards, and value-added service across our vast universe of customers - right from motoring enthusiasts to fleet operators to contractors. Our mission is to become the leader in custom-made mobility solutions by delivering nothing less than world-class omni-channel experiences. \n\r\nWe channel our local expertise and global trust to deliver one of the most comprehensive portfolios of mobility products and solutions, from passenger cars to SUVs, electric vehicles to high-performance motorbikes, commercial vehicles to industrial & construction equipment.\n\r\nWhat keeps the company moving forward is a 9000-member strong team, with inspiring possibilities for growth, throughout the career path. This is Al-Futtaim Automotive and we empower talent to move forward. \n\n Apply now » \n\n Find similar jobs: \n\n Finance & Accounting Jobs \n\n HOME PAGE \n\n PRIVACY \n\n CORPORATE WEBSITE \n\n CONTACT US \n\n Opens in a new tab. \n\n Opens in a new tab. \n\n Opens in a new tab. \n\n Opens in a new tab. \n\n © Copyright 2026 | afuturewithus.com\n\n // \n\n // \n\n // \n\n const jobAlertSpans = document.querySelectorAll(\"[data-testid=jobAlertSpanText]\");\n jobAlertSpans?.forEach((jobEl) => {\n jobEl.textContent = window?.jsStr?.tcjobresultscreatejobalertsdetailstext || \"\";\n });\n\n // \n\n // \n\n // \n\n //",
-   "responsibilities": [
-    "Prepare annual budgets and periodic forecasts while ensuring adherence to agreed timelines",
-    "Provide quality support and structured reporting to the management team for accurate financial insights",
-    "Prepare daily, weekly, and monthly management reports and presentations for the management board",
-    "Support divisional performance reviews and conduct variance analysis",
-    "Coordinate with the finance team for general ledger reviews and manage accounting-related issues",
-    "Review, manage, and process incentives",
-    "Assist management in understanding financial metrics and influences",
-    "Advise the Finance Head on working capital planning and validate underlying assumptions",
-    "Prepare monthly cash flow statements and forecasts",
-    "Identify areas for improvement and provide early warning signals",
-    "Continuously follow up and update action initiated by business units",
-    "Offer analytical support for evaluating pricing for specific deals",
-    "Analyze monthly sales versus expected targets to gauge campaign and pricing decision effectiveness",
-    "Support stock and receivables analysis",
-    "Advise on capex and project evaluation",
-    "Recommend improvements to incentive models",
-    "Provide historical database maintenance and exception reporting for corrective actions",
-    "Support the finance team during year-end audits to ensure timely completion",
-    "Assist the team for overall development and deeper understanding of financial reports",
-    "Facilitate audit completion without delay"
-   ],
-   "requirements": [],
-   "skills": [
-    "Budgeting",
-    "Forecasting",
-    "SAP",
-    "Excel",
-    "Variance Analysis"
-   ],
-   "nationality_requirement": null,
-   "work_authorization_requirement": null,
-   "emiratisation_requirement": false,
-   "saudization_requirement": false,
-   "candidate_fit_score": 76,
-   "employer_score": 88,
-   "career_upside_score": 50,
-   "opportunity_score": 75,
-   "score_breakdown": {
-    "seniority": 12,
-    "functional": 20,
-    "industry": 15,
-    "geographic": 10,
-    "scope": 3,
-    "leadership": 5,
-    "qualification": 5,
-    "upside": 6
-   },
-   "tier": "A",
-   "application_priority": "HIGH PRIORITY",
-   "why_fit": [
-    "Multi-country / multi-entity scope maps directly onto his Malaysia + Indonesia P&L ownership across 60+ Max Fashion and Babyshop stores.",
-    "Al-Futtaim is peer retail to his current employer — the 60+ store, multi-brand lifestyle retail P&L he already owns transfers without a sector learning curve.",
-    "IFRS/MPERS group consolidation is day-to-day for him, including IFRS 16 across 60+ retail leases.",
-    "Capital allocation fit — he builds the ROI/IRR/NPV store feasibility models that decide new-store capex."
-   ],
-   "watch_out": [
-    "SAP is named and his ERP depth is D365, not SAP — expect to address that gap directly."
-   ],
-   "resume_match": {
-    "strong": [
-     "FP&A — budgeting, forecasting, variance analysis on MYR 400M+ P&L",
-     "Multi-country P&L (Malaysia + Indonesia, 60+ stores)",
-     "IFRS / MPERS group consolidation, IFRS 16 across 60+ leases",
-     "D365 ERP implementation lead (close −40%), Power BI reporting",
-     "Board / CEO / CFO quarterly reporting",
-     "ROI/IRR/NPV modelling and store feasibility"
-    ],
-    "missing": [
-     "SAP"
-    ],
-    "tailoring_recommended": true
-   },
-   "duplicate_group": "f3067e57ac38e746b7387133cab9aff55a7736af",
-   "is_excluded": false,
-   "exclusion_reason": null
-  },
-  {
    "id": "f7567f413378118c4133edf7497fa19339e5d64a",
    "company": "Al-Futtaim",
    "company_group": "Al-Futtaim",
@@ -816,8 +644,8 @@
    "employment_type": null,
    "posted_date": "2026-09-17",
    "closing_date": "2026-10-11",
-   "scraped_at": "2026-09-18T09:21:45Z",
-   "last_verified_at": "2026-09-18T09:21:45Z",
+   "scraped_at": "2026-09-19T05:30:56Z",
+   "last_verified_at": "2026-09-19T05:30:56Z",
    "status": "NEW",
    "source": "Al-Futtaim",
    "sources": [
@@ -912,8 +740,8 @@
    "employment_type": null,
    "posted_date": "2026-09-04",
    "closing_date": "2026-09-30",
-   "scraped_at": "2026-09-18T09:21:45Z",
-   "last_verified_at": "2026-09-18T09:21:45Z",
+   "scraped_at": "2026-09-19T05:30:56Z",
+   "last_verified_at": "2026-09-19T05:30:56Z",
    "status": "ACTIVE",
    "source": "Al-Futtaim",
    "sources": [
@@ -997,8 +825,8 @@
    "employment_type": "Regular",
    "posted_date": "2026-09-17",
    "closing_date": null,
-   "scraped_at": "2026-09-18T09:21:45Z",
-   "last_verified_at": "2026-09-18T09:21:45Z",
+   "scraped_at": "2026-09-19T05:30:56Z",
+   "last_verified_at": "2026-09-19T05:30:56Z",
    "status": "NEW",
    "source": "Majid Al Futtaim",
    "sources": [
@@ -1096,8 +924,8 @@
    "employment_type": "Regular",
    "posted_date": "2026-06-10",
    "closing_date": null,
-   "scraped_at": "2026-09-18T09:21:45Z",
-   "last_verified_at": "2026-09-18T09:21:45Z",
+   "scraped_at": "2026-09-19T05:30:56Z",
+   "last_verified_at": "2026-09-19T05:30:56Z",
    "status": "STALE",
    "source": "Majid Al Futtaim",
    "sources": [
@@ -1194,8 +1022,8 @@
    "employment_type": "Regular",
    "posted_date": "2026-09-07",
    "closing_date": null,
-   "scraped_at": "2026-09-18T09:21:45Z",
-   "last_verified_at": "2026-09-18T09:21:45Z",
+   "scraped_at": "2026-09-19T05:30:56Z",
+   "last_verified_at": "2026-09-19T05:30:56Z",
    "status": "ACTIVE",
    "source": "Majid Al Futtaim",
    "sources": [
@@ -1293,8 +1121,8 @@
    "employment_type": "Experienced hires",
    "posted_date": "2026-08-25",
    "closing_date": null,
-   "scraped_at": "2026-09-18T09:21:45Z",
-   "last_verified_at": "2026-09-18T09:21:45Z",
+   "scraped_at": "2026-09-19T05:30:56Z",
+   "last_verified_at": "2026-09-19T05:30:56Z",
    "status": "AGING",
    "source": "Aldar",
    "sources": [
@@ -1377,8 +1205,8 @@
    "id": "382a0930d31eb459d284d5df9a5acf47c4e0a40a",
    "company": "Al-Futtaim",
    "company_group": "Al-Futtaim",
-   "title": "Manager - Financial Controlling | GBS | Dubai",
-   "normalized_title": "manager financial controlling gbs dubai",
+   "title": "Manager - Financial Controlling",
+   "normalized_title": "manager financial controlling",
    "location": "Dubai",
    "country": "UAE",
    "region": "GCC",
@@ -1386,14 +1214,14 @@
    "employment_type": null,
    "posted_date": "2026-09-03",
    "closing_date": "2026-10-02",
-   "scraped_at": "2026-09-18T09:21:45Z",
-   "last_verified_at": "2026-09-18T09:21:45Z",
+   "scraped_at": "2026-09-19T05:30:56Z",
+   "last_verified_at": "2026-09-19T05:30:56Z",
    "status": "ACTIVE",
    "source": "Al-Futtaim",
    "sources": [
     "Al-Futtaim"
    ],
-   "source_url": "https://www.afuturewithus.com/job/Dubai-Manager-Financial-Controlling-GBS-Dubai/1433260733/",
+   "source_url": "https://www.afuturewithus.com/job/Dubai-Manager-Financial-Controlling/1433260733/",
    "application_url": "https://www.afuturewithus.com/talentcommunity/apply/1433260733/?locale=en_GB",
    "is_direct_apply": true,
    "application_url_verified": true,
@@ -1463,7 +1291,7 @@
     "SAP is named and his ERP depth is D365, not SAP — expect to address that gap directly."
    ],
    "resume_match": null,
-   "duplicate_group": "83097b42e8ed5f8f20558b01c7ad8ee19c0ad12c",
+   "duplicate_group": "501bb8eaf34264cf8a066a9280b4c7dfb396b5b4",
    "is_excluded": false,
    "exclusion_reason": null
   },
@@ -1480,8 +1308,8 @@
    "employment_type": null,
    "posted_date": "2026-09-12",
    "closing_date": "2026-09-20",
-   "scraped_at": "2026-09-18T09:21:45Z",
-   "last_verified_at": "2026-09-18T09:21:45Z",
+   "scraped_at": "2026-09-19T05:30:56Z",
+   "last_verified_at": "2026-09-19T05:30:56Z",
    "status": "NEW",
    "source": "Al-Futtaim",
    "sources": [
@@ -1666,8 +1494,8 @@
    "employment_type": null,
    "posted_date": "2026-09-08",
    "closing_date": null,
-   "scraped_at": "2026-09-18T09:21:45Z",
-   "last_verified_at": "2026-09-18T09:21:45Z",
+   "scraped_at": "2026-09-19T05:30:56Z",
+   "last_verified_at": "2026-09-19T05:30:56Z",
    "status": "ACTIVE",
    "source": "Landmark Group",
    "sources": [
@@ -1749,8 +1577,8 @@
    "employment_type": null,
    "posted_date": "2026-09-14",
    "closing_date": "2026-10-09",
-   "scraped_at": "2026-09-18T09:21:45Z",
-   "last_verified_at": "2026-09-18T09:21:45Z",
+   "scraped_at": "2026-09-19T05:30:56Z",
+   "last_verified_at": "2026-09-19T05:30:56Z",
    "status": "NEW",
    "source": "Al-Futtaim",
    "sources": [
@@ -1845,8 +1673,8 @@
    "employment_type": null,
    "posted_date": "2026-09-15",
    "closing_date": "2026-09-26",
-   "scraped_at": "2026-09-18T09:21:45Z",
-   "last_verified_at": "2026-09-18T09:21:45Z",
+   "scraped_at": "2026-09-19T05:30:56Z",
+   "last_verified_at": "2026-09-19T05:30:56Z",
    "status": "NEW",
    "source": "Al-Futtaim",
    "sources": [
@@ -1924,8 +1752,8 @@
    "employment_type": null,
    "posted_date": "2026-09-15",
    "closing_date": "2026-10-15",
-   "scraped_at": "2026-09-18T09:21:45Z",
-   "last_verified_at": "2026-09-18T09:21:45Z",
+   "scraped_at": "2026-09-19T05:30:56Z",
+   "last_verified_at": "2026-09-19T05:30:56Z",
    "status": "NEW",
    "source": "Al-Futtaim",
    "sources": [
@@ -2101,8 +1929,8 @@
    "employment_type": "Regular",
    "posted_date": "2026-09-03",
    "closing_date": null,
-   "scraped_at": "2026-09-18T09:21:45Z",
-   "last_verified_at": "2026-09-18T09:21:45Z",
+   "scraped_at": "2026-09-19T05:30:56Z",
+   "last_verified_at": "2026-09-19T05:30:56Z",
    "status": "ACTIVE",
    "source": "Majid Al Futtaim",
    "sources": [
@@ -2485,9 +2313,9 @@
    "employment_type": null,
    "posted_date": "2026-09-11",
    "closing_date": "2026-09-30",
-   "scraped_at": "2026-09-18T09:21:45Z",
-   "last_verified_at": "2026-09-18T09:21:45Z",
-   "status": "NEW",
+   "scraped_at": "2026-09-19T05:30:56Z",
+   "last_verified_at": "2026-09-19T05:30:56Z",
+   "status": "ACTIVE",
    "source": "Al-Futtaim",
    "sources": [
     "Al-Futtaim"
@@ -2581,8 +2409,8 @@
    "employment_type": null,
    "posted_date": "2026-09-02",
    "closing_date": "2026-10-31",
-   "scraped_at": "2026-09-18T09:21:45Z",
-   "last_verified_at": "2026-09-18T09:21:45Z",
+   "scraped_at": "2026-09-19T05:30:56Z",
+   "last_verified_at": "2026-09-19T05:30:56Z",
    "status": "ACTIVE",
    "source": "Al-Futtaim",
    "sources": [
@@ -2676,8 +2504,8 @@
    "employment_type": null,
    "posted_date": "2026-09-10",
    "closing_date": null,
-   "scraped_at": "2026-09-18T09:21:45Z",
-   "last_verified_at": "2026-09-18T09:21:45Z",
+   "scraped_at": "2026-09-19T05:30:56Z",
+   "last_verified_at": "2026-09-19T05:30:56Z",
    "status": "ACTIVE",
    "source": "Al Tayer",
    "sources": [
@@ -2768,8 +2596,8 @@
    "employment_type": "Experienced hires",
    "posted_date": "2026-09-02",
    "closing_date": null,
-   "scraped_at": "2026-09-18T09:21:45Z",
-   "last_verified_at": "2026-09-18T09:21:45Z",
+   "scraped_at": "2026-09-19T05:30:56Z",
+   "last_verified_at": "2026-09-19T05:30:56Z",
    "status": "ACTIVE",
    "source": "Aldar",
    "sources": [
@@ -2949,8 +2777,8 @@
    "employment_type": null,
    "posted_date": "2026-09-14",
    "closing_date": "2026-10-16",
-   "scraped_at": "2026-09-18T09:21:45Z",
-   "last_verified_at": "2026-09-18T09:21:45Z",
+   "scraped_at": "2026-09-19T05:30:56Z",
+   "last_verified_at": "2026-09-19T05:30:56Z",
    "status": "NEW",
    "source": "Apparel Group",
    "sources": [
@@ -3035,8 +2863,8 @@
    "employment_type": "Full-Time",
    "posted_date": "2026-09-03",
    "closing_date": null,
-   "scraped_at": "2026-09-18T09:21:45Z",
-   "last_verified_at": "2026-09-18T09:21:45Z",
+   "scraped_at": "2026-09-19T05:30:56Z",
+   "last_verified_at": "2026-09-19T05:30:56Z",
    "status": "ACTIVE",
    "source": "Chalhoub Group",
    "sources": [
@@ -3181,96 +3009,6 @@
    "exclusion_reason": null
   },
   {
-   "id": "fa416f9c62a583d431d916e6404f40bd3b76c4d0",
-   "company": "Al-Futtaim",
-   "company_group": "Al-Futtaim",
-   "title": "Operations Manager | Al Futtaim Auto Leasing | Financial Services",
-   "normalized_title": "operations manager al futtaim auto leasing financial services",
-   "location": "Dubai",
-   "country": "UAE",
-   "region": "GCC",
-   "department": null,
-   "employment_type": null,
-   "posted_date": "2026-09-04",
-   "closing_date": "2026-09-18",
-   "scraped_at": "2026-09-18T09:21:45Z",
-   "last_verified_at": "2026-09-18T09:21:45Z",
-   "status": "ACTIVE",
-   "source": "Al-Futtaim",
-   "sources": [
-    "Al-Futtaim"
-   ],
-   "source_url": "https://www.afuturewithus.com/job/Dubai-Operations-Manager-Al-Futtaim-Auto-Leasing-Financial-Services/1433691233/",
-   "application_url": "https://www.afuturewithus.com/talentcommunity/apply/1433691233/?locale=en_GB",
-   "is_direct_apply": true,
-   "application_url_verified": true,
-   "source_confidence": "high",
-   "salary_min": null,
-   "salary_max": null,
-   "salary_currency": null,
-   "experience_min": 3,
-   "experience_max": 5,
-   "description": "Job Requisition ID: 180927 \n\n Established in the 1930s as a trading business, Al-Futtaim Group today is one of the most diversified and progressive, privately held regional businesses headquartered in Dubai, United Arab Emirates. Structured into five operating divisions; automotive, financial services, real estate, retail and healthcare; employing more than 35,000 employees across more than 20 countries in the Middle East, Asia and Africa, Al-Futtaim Group partners with over 200 of the world's most admired and innovative brands. Al-Futtaim Group’s entrepreneurship and relentless customer focus enables the organization to continue to grow and expand; responding to the changing needs of our customers within the societies in which we operate. \n\n By upholding our values of respect, excellence, collaboration and integrity; Al-Futtaim Group continues to enrich the lives and aspirations of our customers each and every day\n\n Overview Of The Role: \n\n The Sr Manager Sales Support and Ops is responsible for providing commercial support and operational execution for B2B corporate clients, ensuring revenue is efficiently converted into profitable business. The role includes managing sales enablement, deal structuring, contract execution, and client onboarding through the customer lifecycle. The Sr Manager works closely with B2B Sales to drive conversion, margin discipline, and service delivery, offering leadership and oversight across sales support and operations teams to ensure scalable processes, cost control, and consistent execution aligned with commercial objectives.\n\n What You Will Do: \n\n Client Relationship Management \n\n Act as the primary relationship owner for high-value and strategic corporate clients, ensuring all interactions are managed efficiently and within SLA.\n\r\n Build and maintain strong long-term partnerships with client stakeholders; lead quarterly and annual account review meetings.\n\r\n Provide management with insights based on client feedback, market trends, and operational performance.\n\n Team Leadership and Support\n\n Oversee all activities performed by Relationship Management Executives and ensure seamless communication and service delivery across internal departments.\n\r\n Provide leadership and support to the team serving Managed Transport Services (MTS), ensuring successful delivery of outcomes.\n\r\n Serve as the point of escalation for complex client issues, ensuring timely and effective resolution while identifying opportunities for process improvement.\n\n Operational Execution \n\n Facilitate the onboarding process for new MTS clients and coordinate onboarding and oversight of suppliers to maintain high-quality service.\n\r\n Monitor and fulfill contractual Service Level Agreements (SLAs) for MTS customers and oversee offhire management.\n\r\n Collaborate with Contract Origination, Sales, Vehicle Logistics, Finance, and Customer Service for efficient processing of orders.\n\n Fleet Management\n\n Monitor fleet lifecycle activities including vehicle deliveries, maintenance progress, and registration renewals with proactive customer communication.\n\r\n Review renewal recommendations prepared by Relationship Executives; ensure renewal updates are provided to clients 90 days before contract expiry.\n\r\n Oversee offhire management, including accurate agreement closure, verification of fines, tolls, damages, and issuance of final invoices.\n\n Required Skills To Be Successful: \n\n Excellent interpersonal, negotiation, and leadership skills.\n\r\n Strong presentation and communication abilities.\n\r\n Ability to manage multiple accounts with competing priorities.\n\r\n High proficiency in MS Office and CRM tools.\n\n What Qualifies You For The Role: \n\n University graduate in Business, Marketing, Operations, or related fields preferred.\n\r\n 3-5 years of experience in client relationship management, corporate account management, or B2B service operations.\n\r\n Strong understanding of leasing, fleet operations, or automotive corporate services.\n\r\n Fluency in English; proficiency in Arabic is an advantage.\n\n About Al-Futtaim Group Real Estate \n\r\nThe real estate development and operations arm of Al-Futtaim, Al-Futtaim Group Real Estate is responsible for a multi-billion-dollar portfolio across MENA. With high-quality residential, business, retail, tourism, educational and healthcare developments, the master developer caters to the diverse needs of cities and communities in the region. From origination, conception, development, sales, procurement and construction of mega-projects and the leasing, operation and management of these projects after completion, Al-Futtaim Group Real Estate (AFGRE) has been developing and managing owned landbanks, unlocking the economic potential of the region and contributing to future development for more than 40 years. \n\r\nOur focus is to enable and invest in meaningful relationships to make our properties the best places to live and work, build additional products and services and enable partnerships to create true value to our customers throughout their entire experience with us.\n\r\nAFGRE is responsible for master planning of all projects in its portfolio, including two large scale mixed use destinations: Dubai Festival City and Cairo Festival City.\n\n About Al-Futtaim Malls \n\r\nAl-Futtaim Malls provides development and asset management expertise, specializing in building retail-led super regional malls in prime locations across MENA and beyond. With a proven track record of creating both sustainable revenue growth and value enhancement for tenants, Al-Futtaim Malls delivers exceptional experiences and exciting shopping environments for customers. \n\n Part of the Al-Futtaim Group, Al-Futtaim Malls leadership team brings more than 30 years of experience and a deep understanding and knowledge of the retail sector, both from a shopper’s point of view but as curators of space or landlords to other brands. The company has a directly managed portfolio including over 9 million sqft of retail space across four malls in the MENA region and two under development. Malls under the Al-Futtaim Malls portfolio include Dubai Festival City Mall and Festival Plaza in the UAE, Cairo Festival City Mall in Egypt, Doha Festival City in Qatar and Zenata Mall, Morocco.\n\n Leveraging on the expertise of its parent company, Al-Futtaim Malls established PLEX Management Services offering a full array of services including asset management and development, leasing, and brand experience expertise to shopping mall landlords and retail organizations globally. Implementing global best practice and deploying Al-Futtaim Mall’s deep understanding of mall management and retail dynamics, PLEX promises to deliver continuous growth and long-term value for its partners.\n\n For more information on Al-Futtaim Malls, please visit https://www.al-futtaimmalls.com/\n\n About Al-Futtaim Engineering & Technologies \n\r\nAl-Futtaim Engineering & Technologies offers customers complete engineering and systems integration solutions. \n\nThe Engineering arm operates in the UAE, Qatar, Saudi Arabia and Egypt providing a wide variety of products and services from air conditioning, scaffolding and access solutions, elevators and escalators, control and life safety, facilities management, building products, MEP, Energy Management, Technology Infrastructure and Digital Transformation. \n\nThe Technologies division provides complete business solutions to large, medium and small customers that include, contact centre solutions, business applications, business intelligence, data management, advanced analytics amongst others. The IT infrastructure portfolio comprises IP telephony, ELV systems, networking solutions, professional audio-visual solutions and managed services. \n\nThese solutions are further complemented by services that include project management, installation, testing, commissioning and after-sales maintenance contracts. \n\n Apply now » \n\n Find similar jobs: \n\n Sales Jobs \n\n HOME PAGE \n\n PRIVACY \n\n CORPORATE WEBSITE \n",
-   "responsibilities": [
-    "Act as the primary relationship owner for high-value and strategic corporate clients, ensuring all interactions are managed efficiently and within SLA",
-    "Build and maintain strong long-term partnerships with client stakeholders; lead quarterly and annual account review meetings",
-    "Provide management with insights based on client feedback, market trends, and operational performance",
-    "Oversee all activities performed by Relationship Management Executives and ensure seamless communication and service delivery across internal departments",
-    "Provide leadership and support to the team serving Managed Transport Services (MTS), ensuring successful delivery of outcomes",
-    "Serve as the point of escalation for complex client issues, ensuring timely and effective resolution while identifying opportunities for process improvement",
-    "Facilitate the onboarding process for new MTS clients and coordinate onboarding and oversight of suppliers to maintain high-quality service",
-    "Monitor and fulfill contractual Service Level Agreements (SLAs) for MTS customers and oversee offhire management",
-    "Collaborate with Contract Origination, Sales, Vehicle Logistics, Finance, and Customer Service for efficient processing of orders",
-    "Monitor fleet lifecycle activities including vehicle deliveries, maintenance progress, and registration renewals with proactive customer communication",
-    "Review renewal recommendations prepared by Relationship Executives; ensure renewal updates are provided to clients 90 days before contract expiry",
-    "Oversee offhire management, including accurate agreement closure, verification of fines, tolls, damages, and issuance of final invoices",
-    "Excellent interpersonal, negotiation, and leadership skills",
-    "Strong presentation and communication abilities",
-    "Ability to manage multiple accounts with competing priorities",
-    "High proficiency in MS Office and CRM tools",
-    "University graduate in Business, Marketing, Operations, or related fields preferred",
-    "3-5 years of experience in client relationship management, corporate account management, or B2B service operations",
-    "Strong understanding of leasing, fleet operations, or automotive corporate services",
-    "Fluency in English; proficiency in Arabic is an advantage"
-   ],
-   "requirements": [],
-   "skills": [
-    "Excel"
-   ],
-   "nationality_requirement": null,
-   "work_authorization_requirement": null,
-   "emiratisation_requirement": false,
-   "saudization_requirement": false,
-   "candidate_fit_score": 46,
-   "employer_score": 88,
-   "career_upside_score": 50,
-   "opportunity_score": 57,
-   "score_breakdown": {
-    "seniority": 9,
-    "functional": 0,
-    "industry": 15,
-    "geographic": 10,
-    "scope": 6,
-    "leadership": 0,
-    "qualification": 0,
-    "upside": 6
-   },
-   "tier": "C",
-   "application_priority": "OPTIONAL",
-   "why_fit": [
-    "Multi-country / multi-entity scope maps directly onto his Malaysia + Indonesia P&L ownership across 60+ Max Fashion and Babyshop stores.",
-    "Al-Futtaim is peer retail to his current employer — the 60+ store, multi-brand lifestyle retail P&L he already owns transfers without a sector learning curve.",
-    "UAE is one of his two target markets, and he is already GCC-adjacent inside a Dubai-headquartered group."
-   ],
-   "watch_out": [
-    "Nothing disqualifying surfaced in the posted text, which itself means the description is thin — probe scope and reporting line."
-   ],
-   "resume_match": null,
-   "duplicate_group": "fb5c2dd5d01f297317a9abb2572fbd3eaa3bc0b0",
-   "is_excluded": false,
-   "exclusion_reason": null
-  },
-  {
    "id": "dc09f86846b3e099917234e0457d1a878c4100d4",
    "company": "NicheHR Global",
    "company_group": null,
@@ -3379,8 +3117,8 @@
    "employment_type": null,
    "posted_date": "2026-09-01",
    "closing_date": "2026-10-18",
-   "scraped_at": "2026-09-18T09:21:45Z",
-   "last_verified_at": "2026-09-18T09:21:45Z",
+   "scraped_at": "2026-09-19T05:30:56Z",
+   "last_verified_at": "2026-09-19T05:30:56Z",
    "status": "ACTIVE",
    "source": "Al-Futtaim",
    "sources": [
@@ -3469,8 +3207,8 @@
    "employment_type": null,
    "posted_date": "2026-09-14",
    "closing_date": null,
-   "scraped_at": "2026-09-18T09:21:45Z",
-   "last_verified_at": "2026-09-18T09:21:45Z",
+   "scraped_at": "2026-09-19T05:30:56Z",
+   "last_verified_at": "2026-09-19T05:30:56Z",
    "status": "NEW",
    "source": "Al Tayer",
    "sources": [
@@ -3567,8 +3305,8 @@
    "employment_type": "Regular",
    "posted_date": "2026-09-01",
    "closing_date": null,
-   "scraped_at": "2026-09-18T09:21:45Z",
-   "last_verified_at": "2026-09-18T09:21:45Z",
+   "scraped_at": "2026-09-19T05:30:56Z",
+   "last_verified_at": "2026-09-19T05:30:56Z",
    "status": "ACTIVE",
    "source": "Majid Al Futtaim",
    "sources": [
@@ -3867,7 +3605,7 @@
    "source_url": "https://my.linkedin.com/jobs/view/finance-manager-at-jag-corporate-services-sdn-bhd-4458929634",
    "application_url": "https://my.linkedin.com/jobs/view/finance-manager-at-jag-corporate-services-sdn-bhd-4458929634",
    "is_direct_apply": false,
-   "application_url_verified": false,
+   "application_url_verified": true,
    "source_confidence": "medium",
    "salary_min": null,
    "salary_max": null,
@@ -3917,7 +3655,7 @@
    ],
    "watch_out": [
     "The posting date is not published by the source, so this could be an old req — age is unknown, not fresh.",
-    "The application link could not be confirmed reachable — verify it before relying on it."
+    "Sector is outside retail and real estate, so the industry half of his track record does not carry over."
    ],
    "resume_match": null,
    "duplicate_group": "5afebe56697d5646cbfa0a9c61d8d227de5d2aec",
@@ -3947,7 +3685,7 @@
    "source_url": "https://ae.linkedin.com/jobs/view/finance-manager-corporate-at-iffco-group-4462286738",
    "application_url": "https://ae.linkedin.com/jobs/view/finance-manager-corporate-at-iffco-group-4462286738",
    "is_direct_apply": false,
-   "application_url_verified": false,
+   "application_url_verified": true,
    "source_confidence": "medium",
    "salary_min": null,
    "salary_max": null,
@@ -4008,7 +3746,7 @@
    ],
    "watch_out": [
     "The posting date is not published by the source, so this could be an old req — age is unknown, not fresh.",
-    "The application link could not be confirmed reachable — verify it before relying on it."
+    "SAP is named and his ERP depth is D365, not SAP — expect to address that gap directly."
    ],
    "resume_match": null,
    "duplicate_group": "3d8f4e73cde9e2bd844ea2648053134257881ad3",
@@ -4028,8 +3766,8 @@
    "employment_type": "Experienced hires",
    "posted_date": "2026-04-28",
    "closing_date": null,
-   "scraped_at": "2026-09-18T09:21:45Z",
-   "last_verified_at": "2026-09-18T09:21:45Z",
+   "scraped_at": "2026-09-19T05:30:56Z",
+   "last_verified_at": "2026-09-19T05:30:56Z",
    "status": "STALE",
    "source": "Aldar",
    "sources": [
@@ -4126,7 +3864,7 @@
    "source_url": "https://ae.linkedin.com/jobs/view/finance-manager-at-rightangled-4454020258",
    "application_url": "https://ae.linkedin.com/jobs/view/finance-manager-at-rightangled-4454020258",
    "is_direct_apply": false,
-   "application_url_verified": false,
+   "application_url_verified": true,
    "source_confidence": "medium",
    "salary_min": null,
    "salary_max": null,
@@ -4193,7 +3931,7 @@
    ],
    "watch_out": [
     "The posting date is not published by the source, so this could be an old req — age is unknown, not fresh.",
-    "The application link could not be confirmed reachable — verify it before relying on it."
+    "SAP is named and his ERP depth is D365, not SAP — expect to address that gap directly."
    ],
    "resume_match": null,
    "duplicate_group": "0a4600c07fc768de2ce26a752f46198e475c244e",
@@ -4304,7 +4042,7 @@
    "source_url": "https://my.linkedin.com/jobs/view/finance-manager-at-dayone-4447258737",
    "application_url": "https://my.linkedin.com/jobs/view/finance-manager-at-dayone-4447258737",
    "is_direct_apply": false,
-   "application_url_verified": false,
+   "application_url_verified": true,
    "source_confidence": "medium",
    "salary_min": null,
    "salary_max": null,
@@ -4364,7 +4102,7 @@
    ],
    "watch_out": [
     "The posting date is not published by the source, so this could be an old req — age is unknown, not fresh.",
-    "The application link could not be confirmed reachable — verify it before relying on it."
+    "SAP is named and his ERP depth is D365, not SAP — expect to address that gap directly."
    ],
    "resume_match": null,
    "duplicate_group": "0b9fd60b6804108dd31af78877de1654013b0249",
@@ -4568,8 +4306,8 @@
    "employment_type": "Regular",
    "posted_date": "2026-09-15",
    "closing_date": null,
-   "scraped_at": "2026-09-18T09:21:45Z",
-   "last_verified_at": "2026-09-18T09:21:45Z",
+   "scraped_at": "2026-09-19T05:30:56Z",
+   "last_verified_at": "2026-09-19T05:30:56Z",
    "status": "NEW",
    "source": "Majid Al Futtaim",
    "sources": [
@@ -4650,6 +4388,96 @@
    "exclusion_reason": null
   },
   {
+   "id": "304982f31d18de1ee27620e30c94ba7e95afe6a8",
+   "company": "Al-Futtaim",
+   "company_group": "Al-Futtaim",
+   "title": "Insurance Assistant Motor Insurance Operations I Dubai | Financial Services| Orient Insurance PJSC",
+   "normalized_title": "insurance assistant motor insurance operations i dubai financial services orient insurance pjsc",
+   "location": null,
+   "country": "UAE",
+   "region": "GCC",
+   "department": null,
+   "employment_type": null,
+   "posted_date": "2026-09-16",
+   "closing_date": "2026-09-20",
+   "scraped_at": "2026-09-19T05:30:56Z",
+   "last_verified_at": "2026-09-19T05:30:56Z",
+   "status": "NEW",
+   "source": "Al-Futtaim",
+   "sources": [
+    "Al-Futtaim"
+   ],
+   "source_url": "https://www.afuturewithus.com/job/Insurance-Assistant-Motor-Insurance-Operations-I-Dubai-Financial-Services-Orient-Insurance-PJSC/1427249333/",
+   "application_url": "https://www.afuturewithus.com/talentcommunity/apply/1427249333/?locale=en_GB",
+   "is_direct_apply": true,
+   "application_url_verified": true,
+   "source_confidence": "high",
+   "salary_min": null,
+   "salary_max": null,
+   "salary_currency": null,
+   "experience_min": 2,
+   "experience_max": 3,
+   "description": "Job Requisition ID: 180702 \n\n Established in the 1930s as a trading business, Al-Futtaim Group today is one of the most diversified and progressive, privately held regional businesses headquartered in Dubai, United A”rab Emirates. Structured into five operating divisions; automotive, financial services, real estate, retail and healthcare; employing more than 35,000 employees across more than 20 countries in the Middle East, Asia and Africa, Al-Futtaim Group partners with over 200 of the world's most admired and innovative brands. Al-Futtaim Group’s entrepreneurship and relentless customer focus enables the organisation to continue to grow and expand; responding to the changing needs of our customers within the societies in which we operate. \n\n By upholding our values of respect, excellence, collaboration and integrity; Al-Futtaim Group continues to enrich the lives and aspirations of our customers each and every day. \n Job Description: \n\n Support daily motor insurance operations retail motor and fleet and ensure quotations, Approvals , policies and customer requests are handled accurately and on time. \n\n What you will do (Key Responsibilities) \n\n Support daily motor insurance operations \n\r\n Handle retail motor quotations, policy issuance, renewals, endorsements and cancellations. \n\r\n Review and provide approvals based on the approved authority matrix and guidelines \n\r\n Review customer profiles, vehicle details & supporting documents \n\r\n Enter, review and update policy details accurately in the system \n\r\n Follow up on pending documents, payments, approval and other requirements \n\r\n Work closely with all stakeholders, channel partners (internal and external) and customers \n\r\n Coordinate with underwriters, brokers, agents and other teams for smooth processing \n\r\n Maintain accurate records, trackers and reports, and complete all work within the required TAT \n\r\n Follow company underwriting guidelines, procedures and approval requirements \n\n Required Skills to be successful (Qualification) \n\n Bachelor’s degree in a relevant field \n\r\n Basic knowledge of motor insurance \n\r\n Basic knowledge of Microsoft Office, especially Excel \n\r\n Good written and verbal communication skills \n\r\n Minimum 2 to 3 years of previous insurance experience \n\n What equips you for the role (Skills Required) \n\n Good attention to detail and accuracy \n\r\n Good communication and coordination skills \n\r\n Ability to handle multiple tasks and priorities \n\r\n Customer focused approach \n\r\n Good follow up and time management skills \n\r\n Ability to work well with different teams and channel partners \n\r\n Willingness to learn and develop in motor insurance \n\n About Orient Insurance PJSC \n\n Orient Insurance Company commenced operations in 1982 as a part of the reputed Al-Futtaim Group and has since recorded a progressively steady growth. The Company is counted among the leaders in the UAE insurance market. Orient Insurance Company has a paid-up capital of AED 500 Million which is the highest in the insurance industry in UAE. With head office in Dubai, the company serves its clientele through an extensive branch network in Jebel Ali, Abu Dhabi, Al Ain, Sharjah and Ras Al Khaimah in UAE, Muscat in Sultanate of Oman, Riyadh in Kingdom of Saudi Arabia and Bahrain. \n\n Apply now » \n\n Find similar jobs: \n\n General Management & Business Support Jobs \n\n HOME PAGE \n\n PRIVACY \n\n CORPORATE WEBSITE \n\n CONTACT US \n\n Opens in a new tab. \n\n Opens in a new tab. \n\n Opens in a new tab. \n\n Opens in a new tab. \n\n © Copyright 2026 | afuturewithus.com\n\n // \n\n // \n\n // \n\n const jobAlertSpans = document.querySelectorAll(\"[data-testid=jobAlertSpanText]\");\n jobAlertSpans?.forEach((jobEl) => {\n jobEl.textContent = window?.jsStr?.tcjobresultscreatejobalertsdetailstext || \"\";\n });\n\n // \n\n // \n\n // \n\n //",
+   "responsibilities": [
+    "Support daily motor insurance operations",
+    "Handle retail motor quotations, policy issuance, renewals, endorsements and cancellations",
+    "Review and provide approvals based on the approved authority matrix and guidelines",
+    "Review customer profiles, vehicle details & supporting documents",
+    "Enter, review and update policy details accurately in the system",
+    "Follow up on pending documents, payments, approval and other requirements",
+    "Work closely with all stakeholders, channel partners (internal and external) and customers",
+    "Coordinate with underwriters, brokers, agents and other teams for smooth processing",
+    "Maintain accurate records, trackers and reports, and complete all work within the required TAT",
+    "Follow company underwriting guidelines, procedures and approval requirements",
+    "Bachelor’s degree in a relevant field",
+    "Basic knowledge of motor insurance",
+    "Basic knowledge of Microsoft Office, especially Excel",
+    "Good written and verbal communication skills",
+    "Minimum 2 to 3 years of previous insurance experience",
+    "Good attention to detail and accuracy",
+    "Good communication and coordination skills",
+    "Ability to handle multiple tasks and priorities",
+    "Customer focused approach",
+    "Good follow up and time management skills"
+   ],
+   "requirements": [],
+   "skills": [
+    "Excel"
+   ],
+   "nationality_requirement": null,
+   "work_authorization_requirement": null,
+   "emiratisation_requirement": false,
+   "saudization_requirement": false,
+   "candidate_fit_score": 34,
+   "employer_score": 88,
+   "career_upside_score": 50,
+   "opportunity_score": 50,
+   "score_breakdown": {
+    "seniority": 0,
+    "functional": 0,
+    "industry": 15,
+    "geographic": 10,
+    "scope": 3,
+    "leadership": 0,
+    "qualification": 0,
+    "upside": 6
+   },
+   "tier": "C",
+   "application_priority": "OPTIONAL",
+   "why_fit": [
+    "Multi-country / multi-entity scope maps directly onto his Malaysia + Indonesia P&L ownership across 60+ Max Fashion and Babyshop stores.",
+    "Al-Futtaim is peer retail to his current employer — the 60+ store, multi-brand lifestyle retail P&L he already owns transfers without a sector learning curve.",
+    "UAE is one of his two target markets, and he is already GCC-adjacent inside a Dubai-headquartered group."
+   ],
+   "watch_out": [
+    "Nothing disqualifying surfaced in the posted text, which itself means the description is thin — probe scope and reporting line."
+   ],
+   "resume_match": null,
+   "duplicate_group": "31facae04d45c22819dbb91fdf24e8b37fe4c3e4",
+   "is_excluded": false,
+   "exclusion_reason": null
+  },
+  {
    "id": "1929beb996055e8ac0f82e44f241f482273ab12f",
    "company": "Etihad Airways",
    "company_group": "Etihad",
@@ -4662,8 +4490,8 @@
    "employment_type": "Full-time",
    "posted_date": "2026-09-17",
    "closing_date": null,
-   "scraped_at": "2026-09-18T09:21:45Z",
-   "last_verified_at": "2026-09-18T09:21:45Z",
+   "scraped_at": "2026-09-19T05:30:56Z",
+   "last_verified_at": "2026-09-19T05:30:56Z",
    "status": "NEW",
    "source": "Etihad Airways",
    "sources": [
@@ -4855,8 +4683,8 @@
    "employment_type": "Full-time",
    "posted_date": "2026-09-15",
    "closing_date": null,
-   "scraped_at": "2026-09-18T09:21:45Z",
-   "last_verified_at": "2026-09-18T09:21:45Z",
+   "scraped_at": "2026-09-19T05:30:56Z",
+   "last_verified_at": "2026-09-19T05:30:56Z",
    "status": "NEW",
    "source": "Etihad Airways",
    "sources": [
@@ -5382,94 +5210,6 @@
    "exclusion_reason": null
   },
   {
-   "id": "f9ad3179c87544c55fc2130b9b881a270c461d3e",
-   "company": "Etihad Airways",
-   "company_group": "Etihad",
-   "title": "Manager Tax - Indirect",
-   "normalized_title": "manager tax indirect",
-   "location": "Abu Dhabi",
-   "country": "UAE",
-   "region": "GCC",
-   "department": "Other",
-   "employment_type": "Full-time",
-   "posted_date": "2026-09-09",
-   "closing_date": null,
-   "scraped_at": "2026-09-18T09:21:45Z",
-   "last_verified_at": "2026-09-18T09:21:45Z",
-   "status": "ACTIVE",
-   "source": "Etihad Airways",
-   "sources": [
-    "Etihad Airways"
-   ],
-   "source_url": "https://jobs.smartrecruiters.com/EtihadAirways5/744000148511999-manager-tax-indirect",
-   "application_url": "https://jobs.smartrecruiters.com/EtihadAirways5/744000148511999-manager-tax-indirect?oga=true",
-   "is_direct_apply": true,
-   "application_url_verified": true,
-   "source_confidence": "high",
-   "salary_min": null,
-   "salary_max": null,
-   "salary_currency": null,
-   "experience_min": 7,
-   "experience_max": 12,
-   "description": "We are looking for an experienced Indirect Tax Manager to provide comprehensive tax support for Etihad Airways and its group companies (‘Etihad’) in a range of taxation areas globally (mainly focused on indirect taxation) including planning, advisory, compliance, reporting and audit, with “hands-on” management of tax including tax compliances and related operational matters. Whilst successful candidates would be expected to have knowledge of taxation more generally, this role will require strong international indirect tax competence.\n Accountabilities \n Monitor global tax developments and ensure Etihad remains compliant and prepared for change.\n Advise the business on indirect tax implications across contracts, operations, overseas branches and commercial activities.\n Manage UAE VAT and other tax compliance obligations, including calculations, filings, payments and documentation.\n Lead tax audits, reviews, disputes, exemptions and risk matters globally.\n Maintain and improve tax policies, internal controls, governance records and reporting processes.\n Support tax transformation and improvement projects, including new taxes, technology, ERP, e-invoicing and tax function reviews.\n Provide tax briefings, training and stakeholder support while managing consultants, budgets, procurement and people responsibilities where needed.\n (These accountabilities are not exhaustive)\n\nA recognised accounting or tax qualification, supported by 7–12 years of tax advisory and compliance experience.\n Strong hands-on experience in international indirect tax, including return preparation, review and submission.\n The ability to provide practical tax advice, conduct research and review contracts with sound commercial judgement.\n Experience managing tax authority interactions, including audits, reviews, requests and correspondence.\n Understanding of VAT/GST and related tax areas such as excise, customs, UAE Corporate Tax and OECD Pillar 2.\n Experience working in an international, cross-functional environment, ideally within a multinational or advisory firm.\n The right behavioral profile: proactive, commercially minded, strong communicator and team player, with ERP awareness, flexibility and ability to travel when required.\n\nRecruitment Process \n The recruitment process for this position will involve the following steps:\n Shortlisted applicants will be invited to complete a recorded video interview via our third-party platform HireVue. This interview will allow you to record your responses to a range of questions related to the position and will allow you to demonstrate your knowledge and experience in a way that just your CV alone would not be able to. It also ensures fairness for you and all candidates, as all of our shortlisted candidates are asked the same questions and assessed on their responses. \n After a review of completed video interviews, shortlisted candidates will be invited to an initial technical interview with the hiring manager. \n Finalists may be invited to a follow-up interview if required\n All candidates will be notified as to the status of their application as soon as is possible.\n \n Etihad Airways is more than the UAE’s national airline - we’re shaping the future of global aviation. From our hub in Abu Dhabi, we connect people across continents and cultures, while driving our “Journey 2030” ambition to double our fleet, expand our network and grow our people for a new era of excellence. Join us and become part of a vision where the world is your workplace and extraordinary experiences take flight.\n To learn more visit www.etihad.com \n Recruitment Fraud Alert \n\nBeware of fraudulent job offers from individuals or organizations claiming to represent the Etihad group. We will never ask for personal information, bank details, or payment during the recruitment process. Interviews are conducted face-to-face or via video/telephone before any formal offer. If you are asked for money, please treat it as fraudulent.",
-   "responsibilities": [
-    "Accountabilities",
-    "Monitor global tax developments and ensure Etihad remains compliant and prepared for change",
-    "Advise the business on indirect tax implications across contracts, operations, overseas branches and commercial activities",
-    "Manage UAE VAT and other tax compliance obligations, including calculations, filings, payments and documentation",
-    "Lead tax audits, reviews, disputes, exemptions and risk matters globally",
-    "Maintain and improve tax policies, internal controls, governance records and reporting processes",
-    "Support tax transformation and improvement projects, including new taxes, technology, ERP, e-invoicing and tax function reviews",
-    "Provide tax briefings, training and stakeholder support while managing consultants, budgets, procurement and people responsibilities where needed",
-    "(These accountabilities are not exhaustive)"
-   ],
-   "requirements": [
-    "A recognised accounting or tax qualification, supported by 7–12 years of tax advisory and compliance experience",
-    "Strong hands-on experience in international indirect tax, including return preparation, review and submission",
-    "The ability to provide practical tax advice, conduct research and review contracts with sound commercial judgement",
-    "Experience managing tax authority interactions, including audits, reviews, requests and correspondence",
-    "Understanding of VAT/GST and related tax areas such as excise, customs, UAE Corporate Tax and OECD Pillar 2",
-    "Experience working in an international, cross-functional environment, ideally within a multinational or advisory firm",
-    "The right behavioral profile: proactive, commercially minded, strong communicator and team player, with ERP awareness, flexibility and ability to travel when required"
-   ],
-   "skills": [
-    "Budgeting",
-    "Excel"
-   ],
-   "nationality_requirement": null,
-   "work_authorization_requirement": null,
-   "emiratisation_requirement": false,
-   "saudization_requirement": false,
-   "candidate_fit_score": 47,
-   "employer_score": 55,
-   "career_upside_score": 22,
-   "opportunity_score": 45,
-   "score_breakdown": {
-    "seniority": 18,
-    "functional": 7,
-    "industry": 6,
-    "geographic": 10,
-    "scope": 0,
-    "leadership": 2,
-    "qualification": 2,
-    "upside": 2
-   },
-   "tier": "D",
-   "application_priority": "SKIP",
-   "why_fit": [
-    "Systems fit — he led the D365 ERP implementation that cut the close cycle 40%, and builds the Power BI reporting on top of it.",
-    "Core FP&A remit — he runs budgeting, forecasting and variance analysis on an MYR 400M+ P&L as FP&A Manager at Lifestyle Retail Malaysia (Landmark Group) since May 2023.",
-    "UAE is one of his two target markets, and he is already GCC-adjacent inside a Dubai-headquartered group."
-   ],
-   "watch_out": [
-    "Sector is outside retail and real estate, so the industry half of his track record does not carry over."
-   ],
-   "resume_match": null,
-   "duplicate_group": "3faafb4ce3ecd50785d1ac3ab3246104dbf741f2",
-   "is_excluded": false,
-   "exclusion_reason": null
-  },
-  {
    "id": "d1c8a60f670284c2aba4b373eba55918bf8829f0",
    "company": "Etihad Airways",
    "company_group": "Etihad",
@@ -5482,8 +5222,8 @@
    "employment_type": "Full-time",
    "posted_date": "2026-07-22",
    "closing_date": null,
-   "scraped_at": "2026-09-18T09:21:45Z",
-   "last_verified_at": "2026-09-18T09:21:45Z",
+   "scraped_at": "2026-09-19T05:30:56Z",
+   "last_verified_at": "2026-09-19T05:30:56Z",
    "status": "STALE",
    "source": "Etihad Airways",
    "sources": [
@@ -5573,8 +5313,8 @@
    "employment_type": "Full-time",
    "posted_date": "2026-09-18",
    "closing_date": null,
-   "scraped_at": "2026-09-18T09:21:45Z",
-   "last_verified_at": "2026-09-18T09:21:45Z",
+   "scraped_at": "2026-09-19T05:30:56Z",
+   "last_verified_at": "2026-09-19T05:30:56Z",
    "status": "NEW",
    "source": "Etihad Airways",
    "sources": [
@@ -5746,8 +5486,8 @@
    "employment_type": "Full-time",
    "posted_date": "2026-09-02",
    "closing_date": null,
-   "scraped_at": "2026-09-18T09:21:45Z",
-   "last_verified_at": "2026-09-18T09:21:45Z",
+   "scraped_at": "2026-09-19T05:30:56Z",
+   "last_verified_at": "2026-09-19T05:30:56Z",
    "status": "ACTIVE",
    "source": "Etihad Airways",
    "sources": [
@@ -5827,8 +5567,8 @@
    "employment_type": "Full-time",
    "posted_date": "2026-09-08",
    "closing_date": null,
-   "scraped_at": "2026-09-18T09:21:45Z",
-   "last_verified_at": "2026-09-18T09:21:45Z",
+   "scraped_at": "2026-09-19T05:30:56Z",
+   "last_verified_at": "2026-09-19T05:30:56Z",
    "status": "ACTIVE",
    "source": "Etihad Airways",
    "sources": [
@@ -5909,8 +5649,8 @@
    "employment_type": "Full-time",
    "posted_date": "2026-07-29",
    "closing_date": null,
-   "scraped_at": "2026-09-18T09:21:45Z",
-   "last_verified_at": "2026-09-18T09:21:45Z",
+   "scraped_at": "2026-09-19T05:30:56Z",
+   "last_verified_at": "2026-09-19T05:30:56Z",
    "status": "STALE",
    "source": "Etihad Airways",
    "sources": [
@@ -5982,8 +5722,8 @@
    "employment_type": "Full-time",
    "posted_date": "2026-07-28",
    "closing_date": null,
-   "scraped_at": "2026-09-18T09:21:45Z",
-   "last_verified_at": "2026-09-18T09:21:45Z",
+   "scraped_at": "2026-09-19T05:30:56Z",
+   "last_verified_at": "2026-09-19T05:30:56Z",
    "status": "STALE",
    "source": "Etihad Airways",
    "sources": [
@@ -6072,108 +5812,6 @@
    "exclusion_reason": null
   },
   {
-   "id": "461f274ac376c8ff45a79a607208506aa0ef60f2",
-   "company": "Al-Futtaim",
-   "company_group": "Al-Futtaim",
-   "title": "Senior Manager - Corporate Sales | Al Futtaim Auto Leasing | Financial Sercvices",
-   "normalized_title": "senior manager corporate sales al futtaim auto leasing financial sercvices",
-   "location": "Dubai",
-   "country": "UAE",
-   "region": "GCC",
-   "department": null,
-   "employment_type": null,
-   "posted_date": "2026-09-04",
-   "closing_date": "2026-09-18",
-   "scraped_at": "2026-09-18T09:21:45Z",
-   "last_verified_at": "2026-09-18T09:21:45Z",
-   "status": "ACTIVE",
-   "source": "Al-Futtaim",
-   "sources": [
-    "Al-Futtaim"
-   ],
-   "source_url": "https://www.afuturewithus.com/job/Dubai-Senior-Manager-Corporate-Sales-Al-Futtaim-Auto-Leasing-Financial-Sercvices/1433995233/",
-   "application_url": "https://www.afuturewithus.com/talentcommunity/apply/1433995233/?locale=en_GB",
-   "is_direct_apply": true,
-   "application_url_verified": true,
-   "source_confidence": "high",
-   "salary_min": null,
-   "salary_max": null,
-   "salary_currency": null,
-   "experience_min": 30,
-   "experience_max": null,
-   "description": "Job Requisition ID: 180928 \n\n Established in the 1930s as a trading business, Al-Futtaim Group today is one of the most diversified and progressive, privately held regional businesses headquartered in Dubai, United Arab Emirates. Structured into five operating divisions; automotive, financial services, real estate, retail and healthcare; employing more than 35,000 employees across more than 20 countries in the Middle East, Asia and Africa, Al-Futtaim Group partners with over 200 of the world's most admired and innovative brands. Al-Futtaim Group’s entrepreneurship and relentless customer focus enables the organization to continue to grow and expand; responding to the changing needs of our customers within the societies in which we operate. \n\n By upholding our values of respect, excellence, collaboration and integrity; Al-Futtaim Group continues to enrich the lives and aspirations of our customers each and every day\n\n Overview Of The Role: \n\n The Mobility Lead for Large Corporates & Enterprise Fleets is tasked with setting and executing a robust B2B sales strategy that encompasses the commercial strategy and execution of all corporate sales activities. The role's primary purpose is to drive sustainable revenue growth, market penetration, and enhance customer lifetime value across a complex portfolio of Financial Service, Rental Leasing products, and other vehicle assets. The role involves building and maintaining strategic relationships with key corporate and enterprise customers, developing high-performing sales teams, and leading the design of sector-focused go-to-market plans. Success in this role is measured by achieving sales targets, optimizing sales pipelines, and ensuring operational excellence from prospecting through delivery and aftersales.\n\n What You Will Do: \n\n Leadership & Strategy \r\n\n Develop and execute the B2B sales strategy across categories such as CV, LCV, Truck, Bus, and Industrial Equipment.\n\r\n Design an optimal, sector-based, and product vertical-oriented sales structure and embed the hunter-farmer methodology across the team.\n\r\n Lead, coach, and performance-manage Business Development Managers and Key Account Managers to exceed revenue and profit targets.\n\r\n Build annual sales plans, quotas, reporting cadence, and forecasting discipline.\n\n Business Development & Market Penetration \r\n\n Identify growth sectors such as construction, logistics, FMCG, oil & gas, government, and contracting to design targeted acquisition strategies.\n\r\n Establish senior-level relationships with C-suite and procurement decision-makers across the UAE.\n\r\n Drive large-tender participation and negotiate strategic corporate contracts.\n\n Pipeline Performance & Governance \r\n\n Oversee the full sales funnel from lead generation to closing and handover.\n\r\n Ensure CRM accuracy, pipeline quality, and adherence to sales governance.\n\r\n Monitor win/loss ratios, pricing discipline, and deal profitability.\n\n Account Management & Customer Experience \r\n\n Ensure smooth transition from Business Development Managers to Key Account Managers after acquisition.\n\r\n Oversee key account plans, cross-sell strategies, and retention programs.\n\r\n Resolve escalations and ensure adherence to Service Level Agreements, delivery timelines, and operational execution.\n\n Cross-Functional Collaboration \r\n\n Work closely with Finance, Operations, Collections, and Marketing to align pricing, delivery, risk management, and market communication.\n\r\n Collaborate with Marketing to build B2B brand presence and sector-specific campaigns.\n\r\n Support Collections on overdue accounts and implement proactive credit-risk measures.\n\n Reporting & Performance Insights \r\n\n Present monthly and quarterly business performance to senior management.\n\r\n Drive data-led decisions using industry trends, conversion metrics, market intelligence, and customer insights.\n\n Required Skills To Be Successful: \n\n Strategic and tactical sales leadership abilities.\n\r\n Strong negotiation and relationship management skills with senior-level stakeholders.\n\r\n Proficiency in CRM and pipeline management.\n\r\n Ability to work in a fast-paced, competitive market environment.\n\n What Qualifies You For The Role: \n\n Proven experience in strategic thinking with the ability to build long-term, multi-sector growth plans.\n\r\n Strong commercial acumen with a comprehensive understanding of leasing, asset lifecycle, pricing, and risk.\n\r\n Expertise in enterprise-level negotiation skills and extensive sector knowledge including logistics, contracting, industrial, government, and FMCG.\n\r\n Demonstrated ability to lead cross-functional collaboration, enforce operational excellence, and secure large contracts.\n\n About Al-Futtaim Group Real Estate \n\r\nThe real estate development and operations arm of Al-Futtaim, Al-Futtaim Group Real Estate is responsible for a multi-billion-dollar portfolio across MENA. With high-quality residential, business, retail, tourism, educational and healthcare developments, the master developer caters to the diverse needs of cities and communities in the region. From origination, conception, development, sales, procurement and construction of mega-projects and the leasing, operation and management of these projects after completion, Al-Futtaim Group Real Estate (AFGRE) has been developing and managing owned landbanks, unlocking the economic potential of the region and contributing to future development for more than 40 years. \n\r\nOur focus is to enable and invest in meaningful relationships to make our properties the best places to live and work, build additional products and services and enable partnerships to create true value to our customers throughout their entire experience with us.\n\r\nAFGRE is responsible for master planning of all projects in its portfolio, including two large scale mixed use destinations: Dubai Festival City and Cairo Festival City.\n\n About Al-Futtaim Malls \n\r\nAl-Futtaim Malls provides development and asset management expertise, specializing in building retail-led super regional malls in prime locations across MENA and beyond. With a proven track record of creating both sustainable revenue growth and value enhancement for tenants, Al-Futtaim Malls delivers exceptional experiences and exciting shopping environments for customers. \n\n Part of the Al-Futtaim Group, Al-Futtaim Malls leadership team brings more than 30 years of experience and a deep understanding and knowledge of the retail sector, both from a shopper’s point of view but as curators of space or landlords to other brands. The company has a directly managed portfolio including over 9 million sqft of retail space across four malls in the MENA region and two under development. Malls under the Al-Futtaim Malls portfolio include Dubai Festival City Mall and Festival Plaza in the UAE, Cairo Festival City Mall in Egypt, Doha Festival City in Qatar and Zenata Mall, Morocco.\n\n Leveraging on the expertise of its parent company, Al-Futtaim Malls established PLEX Management Services offering a full array of services including asset management and development, leasing, and brand experience expertise to shopping mall landlords and retail organizations globally. Implementing global best practice and deploying Al-Futtaim Mall’s deep understanding of mall management and retail dynamics, PLEX promises to deliver continuous growth and long-term value for its partners.\n\n For more information on Al-Futtaim Malls, please visit https://www.al-futtaimmalls.com/\n\n About Al-Futtaim Engineering & Technologies \n\r\nAl-Futtaim Engineering & Technologies offers customers complete engineering and systems integration solutions. \n\nThe Engineering arm operates in the UAE, Qatar, Saudi Arabia and Egypt providing a wide variety of products and services from air conditioning, scaffolding and access solutions, elevators and escalators, control and life safety, facilities management, building products, MEP, Energy Management, Technology Infrastructure and Digital Transformation. \n\nThe Tec",
-   "responsibilities": [
-    "Develop and execute the B2B sales strategy across categories such as CV, LCV, Truck, Bus, and Industrial Equipment",
-    "Design an optimal, sector-based, and product vertical-oriented sales structure and embed the hunter-farmer methodology across the team",
-    "Lead, coach, and performance-manage Business Development Managers and Key Account Managers to exceed revenue and profit targets",
-    "Build annual sales plans, quotas, reporting cadence, and forecasting discipline",
-    "Identify growth sectors such as construction, logistics, FMCG, oil & gas, government, and contracting to design targeted acquisition strategies",
-    "Establish senior-level relationships with C-suite and procurement decision-makers across the UAE",
-    "Drive large-tender participation and negotiate strategic corporate contracts",
-    "Oversee the full sales funnel from lead generation to closing and handover",
-    "Ensure CRM accuracy, pipeline quality, and adherence to sales governance",
-    "Monitor win/loss ratios, pricing discipline, and deal profitability",
-    "Ensure smooth transition from Business Development Managers to Key Account Managers after acquisition",
-    "Oversee key account plans, cross-sell strategies, and retention programs",
-    "Resolve escalations and ensure adherence to Service Level Agreements, delivery timelines, and operational execution",
-    "Work closely with Finance, Operations, Collections, and Marketing to align pricing, delivery, risk management, and market communication",
-    "Collaborate with Marketing to build B2B brand presence and sector-specific campaigns",
-    "Support Collections on overdue accounts and implement proactive credit-risk measures",
-    "Present monthly and quarterly business performance to senior management",
-    "Drive data-led decisions using industry trends, conversion metrics, market intelligence, and customer insights",
-    "Strategic and tactical sales leadership abilities",
-    "Strong negotiation and relationship management skills with senior-level stakeholders"
-   ],
-   "requirements": [],
-   "skills": [
-    "Forecasting",
-    "Excel"
-   ],
-   "nationality_requirement": null,
-   "work_authorization_requirement": null,
-   "emiratisation_requirement": false,
-   "saudization_requirement": false,
-   "candidate_fit_score": 71,
-   "employer_score": 88,
-   "career_upside_score": 81,
-   "opportunity_score": 77,
-   "score_breakdown": {
-    "seniority": 13,
-    "functional": 13,
-    "industry": 15,
-    "geographic": 10,
-    "scope": 6,
-    "leadership": 5,
-    "qualification": 0,
-    "upside": 9
-   },
-   "tier": "A",
-   "application_priority": "SKIP",
-   "why_fit": [
-    "Multi-country / multi-entity scope maps directly onto his Malaysia + Indonesia P&L ownership across 60+ Max Fashion and Babyshop stores.",
-    "Al-Futtaim is peer retail to his current employer — the 60+ store, multi-brand lifestyle retail P&L he already owns transfers without a sector learning curve.",
-    "Core FP&A remit — he runs budgeting, forecasting and variance analysis on an MYR 400M+ P&L as FP&A Manager at Lifestyle Retail Malaysia (Landmark Group) since May 2023.",
-    "The role reports into senior leadership; he already prepares quarterly Board, CEO and CFO reporting and briefs Investor Relations."
-   ],
-   "watch_out": [
-    "Asks for 30+ years; he has 10+ total and 7+ post-qualification, so this is a stretch on paper."
-   ],
-   "resume_match": {
-    "strong": [
-     "FP&A — budgeting, forecasting, variance analysis on MYR 400M+ P&L",
-     "Multi-country P&L (Malaysia + Indonesia, 60+ stores)",
-     "D365 ERP implementation lead (close −40%), Power BI reporting",
-     "Board / CEO / CFO quarterly reporting",
-     "Retail / fashion / lifestyle sector depth (Max Fashion, Babyshop)"
-    ],
-    "missing": [],
-    "tailoring_recommended": true
-   },
-   "duplicate_group": "fda5ec676ff15860b83740d9cebe61e0857b1712",
-   "is_excluded": true,
-   "exclusion_reason": "not a finance role"
-  },
-  {
    "id": "5817be9cf92c0d3cab02baa09baafef92734e8cd",
    "company": "Al-Futtaim",
    "company_group": "Al-Futtaim",
@@ -6186,8 +5824,8 @@
    "employment_type": null,
    "posted_date": "2026-09-08",
    "closing_date": "2026-11-30",
-   "scraped_at": "2026-09-18T09:21:45Z",
-   "last_verified_at": "2026-09-18T09:21:45Z",
+   "scraped_at": "2026-09-19T05:30:56Z",
+   "last_verified_at": "2026-09-19T05:30:56Z",
    "status": "ACTIVE",
    "source": "Al-Futtaim",
    "sources": [
@@ -6264,8 +5902,8 @@
    "employment_type": "Experienced hires",
    "posted_date": "2026-09-01",
    "closing_date": null,
-   "scraped_at": "2026-09-18T09:21:45Z",
-   "last_verified_at": "2026-09-18T09:21:45Z",
+   "scraped_at": "2026-09-19T05:30:56Z",
+   "last_verified_at": "2026-09-19T05:30:56Z",
    "status": "ACTIVE",
    "source": "Aldar",
    "sources": [
@@ -6360,8 +5998,8 @@
    "employment_type": null,
    "posted_date": "2026-08-23",
    "closing_date": "2026-10-18",
-   "scraped_at": "2026-09-18T09:21:45Z",
-   "last_verified_at": "2026-09-18T09:21:45Z",
+   "scraped_at": "2026-09-19T05:30:56Z",
+   "last_verified_at": "2026-09-19T05:30:56Z",
    "status": "AGING",
    "source": "Al-Futtaim",
    "sources": [
@@ -6451,8 +6089,8 @@
    "employment_type": null,
    "posted_date": "2026-09-17",
    "closing_date": "2026-10-18",
-   "scraped_at": "2026-09-18T09:21:45Z",
-   "last_verified_at": "2026-09-18T09:21:45Z",
+   "scraped_at": "2026-09-19T05:30:56Z",
+   "last_verified_at": "2026-09-19T05:30:56Z",
    "status": "NEW",
    "source": "Al-Futtaim",
    "sources": [
@@ -6530,8 +6168,8 @@
    "employment_type": null,
    "posted_date": "2026-09-03",
    "closing_date": "2026-10-10",
-   "scraped_at": "2026-09-18T09:21:45Z",
-   "last_verified_at": "2026-09-18T09:21:45Z",
+   "scraped_at": "2026-09-19T05:30:56Z",
+   "last_verified_at": "2026-09-19T05:30:56Z",
    "status": "ACTIVE",
    "source": "Al-Futtaim",
    "sources": [
@@ -6609,9 +6247,9 @@
    "employment_type": null,
    "posted_date": "2026-09-11",
    "closing_date": "2026-10-31",
-   "scraped_at": "2026-09-18T09:21:45Z",
-   "last_verified_at": "2026-09-18T09:21:45Z",
-   "status": "NEW",
+   "scraped_at": "2026-09-19T05:30:56Z",
+   "last_verified_at": "2026-09-19T05:30:56Z",
+   "status": "ACTIVE",
    "source": "Al-Futtaim",
    "sources": [
     "Al-Futtaim"
@@ -6700,8 +6338,8 @@
    "employment_type": null,
    "posted_date": "2026-09-10",
    "closing_date": "2027-02-23",
-   "scraped_at": "2026-09-18T09:21:45Z",
-   "last_verified_at": "2026-09-18T09:21:45Z",
+   "scraped_at": "2026-09-19T05:30:56Z",
+   "last_verified_at": "2026-09-19T05:30:56Z",
    "status": "ACTIVE",
    "source": "Al-Futtaim",
    "sources": [
@@ -6793,8 +6431,8 @@
    "employment_type": null,
    "posted_date": "2026-09-13",
    "closing_date": "2026-10-14",
-   "scraped_at": "2026-09-18T09:21:45Z",
-   "last_verified_at": "2026-09-18T09:21:45Z",
+   "scraped_at": "2026-09-19T05:30:56Z",
+   "last_verified_at": "2026-09-19T05:30:56Z",
    "status": "NEW",
    "source": "Al-Futtaim",
    "sources": [
@@ -6873,6 +6511,98 @@
    "exclusion_reason": "risk / compliance role, not commercial finance"
   },
   {
+   "id": "be26b03dbe152a19b3e1ca7cf42aed7c9f82a5a7",
+   "company": "Al-Futtaim",
+   "company_group": "Al-Futtaim",
+   "title": "UAE National - Insurance Assistant- Underwriting | Financial Services| Dubai I Orient Insurance PJSC",
+   "normalized_title": "insurance assistant underwriting financial services dubai i orient insurance pjsc",
+   "location": null,
+   "country": "UAE",
+   "region": "GCC",
+   "department": null,
+   "employment_type": null,
+   "posted_date": "2026-09-18",
+   "closing_date": "2026-10-18",
+   "scraped_at": "2026-09-19T05:30:56Z",
+   "last_verified_at": "2026-09-19T05:30:56Z",
+   "status": "NEW",
+   "source": "Al-Futtaim",
+   "sources": [
+    "Al-Futtaim"
+   ],
+   "source_url": "https://www.afuturewithus.com/job/UAE-National-Insurance-Assistant-Underwriting-Financial-Services-Dubai-I-Orient-Insurance-PJSC/1438996133/",
+   "application_url": "https://www.afuturewithus.com/talentcommunity/apply/1438996133/?locale=en_GB",
+   "is_direct_apply": true,
+   "application_url_verified": true,
+   "source_confidence": "high",
+   "salary_min": null,
+   "salary_max": null,
+   "salary_currency": null,
+   "experience_min": 5,
+   "experience_max": null,
+   "description": "Job Requisition ID: 181468 \n\n About Al-Futtaim \n\n Established in the 1930s, Al-Futtaim is one of the most diversified and progressive privately held regional businesses, headquartered in Dubai. Operating across more than 20 countries, the Group spans automotive, financial services, real estate, retail and health. With more than 40,000 employees, Al-Futtaim represents over 200 of the world’s most recognised brands, including Toyota, Lexus, IKEA, ACE and Marks & Spencer. Driven by its purpose to enrich lives and elevate communities, Al-Futtaim focuses on digital innovation, AI, sustainable growth and strategic partnerships, creating long-term value for customers, communities and partners while building a responsible legacy for future generations. \n\n Job description \n\n The successful candidates will be responsible to organise, analyse statistical data, and maintain systematic computerized records related to premiums, which will ensure an efficient control on the underwriting of the company’s business. \n\n What you will do \n\n Managing the existing renewal book, with review of accounts well in advance of renewal date’s to ensure the profitability of the book \n\r\n Handle day to day underwriting functions in a prompt manner by adhering to the prescribed guidelines and procedures \n\r\n Monitor the progress of risk management of the clients arrange periodic risk surveys \n\r\n Ability to scrutinize new submissions received and analyze the risk in line with Underwriting Guidelines in support of underwriting decisions \n\r\n Working closely with different business channels in securing new businesses as well as retention of existing portfolios \n\r\n Assist in the preparation of management reports, premium and claims statistics, in order to facilitate Management’s review and decision making actions \n\r\n Must provide highest standard of customer experience to all business partners \n\n Required skills to be successful: \n\n Attention to details \n\r\n strong analytical skills \n\r\n Good organizational skills \n\r\n Good skills in MS office (Excel, Word, PPT) Outlook and internet application \n\r\n Proactive and self-motivated \n\r\n Time management and focused delivery of deadlines \n\r\n Ability to perform under pressure \n\n What equips you for the role: \n\n Holding a relevant university degree or general insurance qualification \n\r\n Having over 5 years of work experience in the field of insurance handling similar job responsibilities. \n\r\n Experience and sound technical knowledge in handling Insurance \n\r\n Ability to prioritize workload in meeting deadlines and agreed TAT \n\n About Orient Insurance PJSC: \n\n Orient Insurance Company commenced operations in 1982 as a part of the reputed Al-Futtaim Group and has since recorded a progressively steady growth. The Company is counted among the leaders in the UAE insurance market. Orient Insurance Company has a paid-up capital of AED 500 Million which is the highest in the insurance industry in UAE. With head office in Dubai, the company serves its clientele through an extensive branch network in Jebel Ali, Abu Dhabi, Al Ain, Sharjah and Ras Al Khaimah in UAE, Muscat in Sultanate of Oman and Bahrain. \n\n Apply now » \n\n Find similar jobs: \n\n General Management & Business Support Jobs \n\n HOME PAGE \n\n PRIVACY \n\n CORPORATE WEBSITE \n\n CONTACT US \n\n Opens in a new tab. \n\n Opens in a new tab. \n\n Opens in a new tab. \n\n Opens in a new tab. \n\n © Copyright 2026 | afuturewithus.com\n\n // \n\n // \n\n // \n\n const jobAlertSpans = document.querySelectorAll(\"[data-testid=jobAlertSpanText]\");\n jobAlertSpans?.forEach((jobEl) => {\n jobEl.textContent = window?.jsStr?.tcjobresultscreatejobalertsdetailstext || \"\";\n });\n\n // \n\n // \n\n // \n\n //",
+   "responsibilities": [
+    "Managing the existing renewal book, with review of accounts well in advance of renewal date’s to ensure the profitability of the book",
+    "Handle day to day underwriting functions in a prompt manner by adhering to the prescribed guidelines and procedures",
+    "Monitor the progress of risk management of the clients arrange periodic risk surveys",
+    "Ability to scrutinize new submissions received and analyze the risk in line with Underwriting Guidelines in support of underwriting decisions",
+    "Working closely with different business channels in securing new businesses as well as retention of existing portfolios",
+    "Assist in the preparation of management reports, premium and claims statistics, in order to facilitate Management’s review and decision making actions",
+    "Must provide highest standard of customer experience to all business partners",
+    "Attention to details",
+    "strong analytical skills",
+    "Good organizational skills",
+    "Good skills in MS office (Excel, Word, PPT) Outlook and internet application",
+    "Proactive and self-motivated",
+    "Time management and focused delivery of deadlines",
+    "Ability to perform under pressure",
+    "Holding a relevant university degree or general insurance qualification",
+    "Having over 5 years of work experience in the field of insurance handling similar job responsibilities",
+    "Experience and sound technical knowledge in handling Insurance",
+    "Ability to prioritize workload in meeting deadlines and agreed TAT",
+    "HOME PAGE",
+    "CORPORATE WEBSITE"
+   ],
+   "requirements": [],
+   "skills": [
+    "Excel",
+    "Business Partnering"
+   ],
+   "nationality_requirement": null,
+   "work_authorization_requirement": null,
+   "emiratisation_requirement": false,
+   "saudization_requirement": false,
+   "candidate_fit_score": 55,
+   "employer_score": 88,
+   "career_upside_score": 50,
+   "opportunity_score": 62,
+   "score_breakdown": {
+    "seniority": 6,
+    "functional": 13,
+    "industry": 15,
+    "geographic": 10,
+    "scope": 3,
+    "leadership": 2,
+    "qualification": 0,
+    "upside": 6
+   },
+   "tier": "C",
+   "application_priority": "SKIP",
+   "why_fit": [
+    "Multi-country / multi-entity scope maps directly onto his Malaysia + Indonesia P&L ownership across 60+ Max Fashion and Babyshop stores.",
+    "Al-Futtaim is peer retail to his current employer — the 60+ store, multi-brand lifestyle retail P&L he already owns transfers without a sector learning curve.",
+    "Core FP&A remit — he runs budgeting, forecasting and variance analysis on an MYR 400M+ P&L as FP&A Manager at Lifestyle Retail Malaysia (Landmark Group) since May 2023.",
+    "UAE is one of his two target markets, and he is already GCC-adjacent inside a Dubai-headquartered group."
+   ],
+   "watch_out": [
+    "Nothing disqualifying surfaced in the posted text, which itself means the description is thin — probe scope and reporting line."
+   ],
+   "resume_match": null,
+   "duplicate_group": "e275f6228617901bbfc5348ce3804599950fe84e",
+   "is_excluded": true,
+   "exclusion_reason": "commercial / insurance role, not a finance function"
+  },
+  {
    "id": "49688488f66f050b912ca2d3ee82f05b57d8f535",
    "company": "Landmark Group",
    "company_group": "Landmark",
@@ -6885,8 +6615,8 @@
    "employment_type": null,
    "posted_date": "2026-09-02",
    "closing_date": null,
-   "scraped_at": "2026-09-18T09:21:45Z",
-   "last_verified_at": "2026-09-18T09:21:45Z",
+   "scraped_at": "2026-09-19T05:30:56Z",
+   "last_verified_at": "2026-09-19T05:30:56Z",
    "status": "ACTIVE",
    "source": "Landmark Group",
    "sources": [
@@ -6982,8 +6712,8 @@
    "employment_type": null,
    "posted_date": "2026-09-15",
    "closing_date": "2026-09-29",
-   "scraped_at": "2026-09-18T09:21:45Z",
-   "last_verified_at": "2026-09-18T09:21:45Z",
+   "scraped_at": "2026-09-19T05:30:56Z",
+   "last_verified_at": "2026-09-19T05:30:56Z",
    "status": "NEW",
    "source": "Al-Futtaim",
    "sources": [
@@ -7058,96 +6788,6 @@
    "exclusion_reason": "risk / compliance role, not commercial finance"
   },
   {
-   "id": "ac763f648d70b1d366bfaef31596c5e271f12233",
-   "company": "Al-Futtaim",
-   "company_group": "Al-Futtaim",
-   "title": "Key Accounts Manager | Al Futtaim Auto Leasing | Financial Services",
-   "normalized_title": "key accounts manager al futtaim auto leasing financial services",
-   "location": "Dubai",
-   "country": "UAE",
-   "region": "GCC",
-   "department": null,
-   "employment_type": null,
-   "posted_date": "2026-09-04",
-   "closing_date": "2026-09-18",
-   "scraped_at": "2026-09-18T09:21:45Z",
-   "last_verified_at": "2026-09-18T09:21:45Z",
-   "status": "ACTIVE",
-   "source": "Al-Futtaim",
-   "sources": [
-    "Al-Futtaim"
-   ],
-   "source_url": "https://www.afuturewithus.com/job/Dubai-Key-Accounts-Manager-Al-Futtaim-Auto-Leasing-Financial-Services/1433996633/",
-   "application_url": "https://www.afuturewithus.com/talentcommunity/apply/1433996633/?locale=en_GB",
-   "is_direct_apply": true,
-   "application_url_verified": true,
-   "source_confidence": "high",
-   "salary_min": null,
-   "salary_max": null,
-   "salary_currency": null,
-   "experience_min": 30,
-   "experience_max": null,
-   "description": "Job Requisition ID: 180926 \n\n Established in the 1930s as a trading business, Al-Futtaim Group today is one of the most diversified and progressive, privately held regional businesses headquartered in Dubai, United Arab Emirates. Structured into five operating divisions; automotive, financial services, real estate, retail and healthcare; employing more than 35,000 employees across more than 20 countries in the Middle East, Asia and Africa, Al-Futtaim Group partners with over 200 of the world's most admired and innovative brands. Al-Futtaim Group’s entrepreneurship and relentless customer focus enables the organization to continue to grow and expand; responding to the changing needs of our customers within the societies in which we operate. \n\n By upholding our values of respect, excellence, collaboration and integrity; Al-Futtaim Group continues to enrich the lives and aspirations of our customers each and every day\n\n Overview Of The Role: \n\n The Key Account Manager role is focused on managing a portfolio of key accounts to ensure customer retention and maximize output from the account portfolio. The position involves supporting sales strategies, meeting or exceeding sales performance and revenue targets, and building strong relationships with corporate clients. The manager is also responsible for cross-selling other Al-Futtaim products, planning customer retention strategies, and contributing to sales and marketing policy formulation. Reporting directly to the Head of B2B Sales, the role requires maintaining comprehensive reporting systems, working closely with the collections team to minimize debts, and ensuring a strong corporate image through suitable PR and presentation.\n\n What You Will Do: \n\n Account Management \r\n\n Manage a portfolio of key accounts and corporates to ensure customer retention and maximise output from key account portfolio.\n\r\n Build strong and effective account management relationships with all customers.\n\r\n Develop customer relationships to enhance profit levels and penetration of services.\n\r\n Plan and implement customer retention and relationship development.\n\r\n Contribute to formulation of policy and strategy within the sales and marketing function.\n\n Sales and Strategy \r\n\n Support the Head of Department in sales strategies, targets and sales performance so that profitability, growth and revenue targets are met or exceeded for corporate customers.\n\r\n Develop accounts and cross-sell other Al-Futtaim, Financial Services, Auto, and Industrial Equipment products.\n\r\n Deliver against all sales revenue and profit targets for lease and rental products.\n\r\n Grow accounts by cross-selling other AF products & services.\n\r\n Build awareness of Al-Futtaim products (financial services, rental, leasing, Auto, Truck/Bus & Industrial Equipment within local corporate community.\n\n Reporting and Analysis \r\n\n Maintain administration and relevant reporting and planning systems as required by the Line Manager on a periodic basis.\n\r\n Prepare report on a daily/weekly/monthly basis to assist in planning strategies for acquiring potential business and understanding future trends.\n\r\n Provide vital statistics to the Marketing team to assist in strategizing future campaigns.\n\r\n Sales metrics reports, measured daily, weekly, and monthly against agreed sales activity and performance targets.\n\n Collaboration \r\n\n Work closely with accounts and collections team to ensure debts are minimised.\n\r\n Become actively integrated with key local networking groups.\n\r\n Provide support in terms of effectively managing the expectations of clients to improve customer satisfaction and retention.\n\n Brand Management \r\n\n Maintain and develop corporate image and reputation, whilst protecting and developing the company's brands via suitable PR activities and own presentation.\n\r\n Build high levels of customer satisfaction.\n\n Required Skills To Be Successful: \n\n Strong relationship management skills.\n\r\n Business to Business consultative sales skills.\n\r\n Target oriented with a drive to exceed sales targets.\n\r\n Market awareness and understanding of customer and competitor challenges.\n\n What Qualifies You For The Role: \n\n Proven experience in prospect database development and sales achievements.\n\r\n Experience with Business to Business consultative sales skills.\n\r\n Exposure to high profile or blue chip organizations.\n\r\n Previous evidence of sales through multi-level decision makers.\n\r\n Capability in planning, organizing and balancing multiple demands.\n\r\n Fluency in English communication skills including reading, writing, speaking; Arabic communication skills are an advantage.\n\r\n Educational background at degree level or equivalent.\n\r\n Knowledgeable in MS Office applications.\n\n About Al-Futtaim Group Real Estate \n\r\nThe real estate development and operations arm of Al-Futtaim, Al-Futtaim Group Real Estate is responsible for a multi-billion-dollar portfolio across MENA. With high-quality residential, business, retail, tourism, educational and healthcare developments, the master developer caters to the diverse needs of cities and communities in the region. From origination, conception, development, sales, procurement and construction of mega-projects and the leasing, operation and management of these projects after completion, Al-Futtaim Group Real Estate (AFGRE) has been developing and managing owned landbanks, unlocking the economic potential of the region and contributing to future development for more than 40 years. \n\r\nOur focus is to enable and invest in meaningful relationships to make our properties the best places to live and work, build additional products and services and enable partnerships to create true value to our customers throughout their entire experience with us.\n\r\nAFGRE is responsible for master planning of all projects in its portfolio, including two large scale mixed use destinations: Dubai Festival City and Cairo Festival City.\n\n About Al-Futtaim Malls \n\r\nAl-Futtaim Malls provides development and asset management expertise, specializing in building retail-led super regional malls in prime locations across MENA and beyond. With a proven track record of creating both sustainable revenue growth and value enhancement for tenants, Al-Futtaim Malls delivers exceptional experiences and exciting shopping environments for customers. \n\n Part of the Al-Futtaim Group, Al-Futtaim Malls leadership team brings more than 30 years of experience and a deep understanding and knowledge of the retail sector, both from a shopper’s point of view but as curators of space or landlords to other brands. The company has a directly managed portfolio including over 9 million sqft of retail space across four malls in the MENA region and two under development. Malls under the Al-Futtaim Malls portfolio include Dubai Festival City Mall and Festival Plaza in the UAE, Cairo Festival City Mall in Egypt, Doha Festival City in Qatar and Zenata Mall, Morocco.\n\n Leveraging on the expertise of its parent company, Al-Futtaim Malls established PLEX Management Services offering a full array of services including asset management and development, leasing, and brand experience expertise to shopping mall landlords and retail organizations globally. Implementing global best practice and deploying Al-Futtaim Mall’s deep understanding of mall management and retail dynamics, PLEX promises to deliver continuous growth and long-term value for its partners.\n\n For more information on Al-Futtaim Malls, please visit https://www.al-futtaimmalls.com/\n\n About Al-Futtaim Engineering & Technologies \n\r\nAl-Futtaim Engineering & Technologies offers customers complete engineering and systems integration solutions. \n\nThe Engineering arm operates in the UAE, Qatar, Saudi Arabia and Egypt providing a wide variety of products and services from air conditioning, scaffolding and access solutions, elevators and escalators, control and life safety, facilities management, building products, MEP, Energy Management, Technology Infrastructure and",
-   "responsibilities": [
-    "Manage a portfolio of key accounts and corporates to ensure customer retention and maximise output from key account portfolio",
-    "Build strong and effective account management relationships with all customers",
-    "Develop customer relationships to enhance profit levels and penetration of services",
-    "Plan and implement customer retention and relationship development",
-    "Contribute to formulation of policy and strategy within the sales and marketing function",
-    "Support the Head of Department in sales strategies, targets and sales performance so that profitability, growth and revenue targets are met or exceeded for corporate customers",
-    "Develop accounts and cross-sell other Al-Futtaim, Financial Services, Auto, and Industrial Equipment products",
-    "Deliver against all sales revenue and profit targets for lease and rental products",
-    "Grow accounts by cross-selling other AF products & services",
-    "Build awareness of Al-Futtaim products (financial services, rental, leasing, Auto, Truck/Bus & Industrial Equipment within local corporate community",
-    "Maintain administration and relevant reporting and planning systems as required by the Line Manager on a periodic basis",
-    "Prepare report on a daily/weekly/monthly basis to assist in planning strategies for acquiring potential business and understanding future trends",
-    "Provide vital statistics to the Marketing team to assist in strategizing future campaigns",
-    "Sales metrics reports, measured daily, weekly, and monthly against agreed sales activity and performance targets",
-    "Work closely with accounts and collections team to ensure debts are minimised",
-    "Become actively integrated with key local networking groups",
-    "Provide support in terms of effectively managing the expectations of clients to improve customer satisfaction and retention",
-    "Maintain and develop corporate image and reputation, whilst protecting and developing the company's brands via suitable PR activities and own presentation",
-    "Build high levels of customer satisfaction",
-    "Strong relationship management skills"
-   ],
-   "requirements": [],
-   "skills": [
-    "Excel"
-   ],
-   "nationality_requirement": null,
-   "work_authorization_requirement": null,
-   "emiratisation_requirement": false,
-   "saudization_requirement": false,
-   "candidate_fit_score": 53,
-   "employer_score": 88,
-   "career_upside_score": 50,
-   "opportunity_score": 61,
-   "score_breakdown": {
-    "seniority": 11,
-    "functional": 0,
-    "industry": 15,
-    "geographic": 10,
-    "scope": 6,
-    "leadership": 5,
-    "qualification": 0,
-    "upside": 6
-   },
-   "tier": "C",
-   "application_priority": "SKIP",
-   "why_fit": [
-    "Multi-country / multi-entity scope maps directly onto his Malaysia + Indonesia P&L ownership across 60+ Max Fashion and Babyshop stores.",
-    "Al-Futtaim is peer retail to his current employer — the 60+ store, multi-brand lifestyle retail P&L he already owns transfers without a sector learning curve.",
-    "UAE is one of his two target markets, and he is already GCC-adjacent inside a Dubai-headquartered group."
-   ],
-   "watch_out": [
-    "Asks for 30+ years; he has 10+ total and 7+ post-qualification, so this is a stretch on paper."
-   ],
-   "resume_match": null,
-   "duplicate_group": "2d2d22439dcb3f3b3620d4836fee64ff21fe1039",
-   "is_excluded": true,
-   "exclusion_reason": "commercial account-management role, not a finance role"
-  },
-  {
    "id": "76afbed6b4cd950935eb242a1f77357178a12876",
    "company": "Aldar",
    "company_group": "Aldar",
@@ -7160,8 +6800,8 @@
    "employment_type": null,
    "posted_date": "2026-08-06",
    "closing_date": null,
-   "scraped_at": "2026-09-18T09:21:45Z",
-   "last_verified_at": "2026-09-18T09:21:45Z",
+   "scraped_at": "2026-09-19T05:30:56Z",
+   "last_verified_at": "2026-09-19T05:30:56Z",
    "status": "AGING",
    "source": "Aldar",
    "sources": [
@@ -7250,8 +6890,8 @@
    "employment_type": "Full-Time",
    "posted_date": "2026-06-25",
    "closing_date": null,
-   "scraped_at": "2026-09-18T09:21:45Z",
-   "last_verified_at": "2026-09-18T09:21:45Z",
+   "scraped_at": "2026-09-19T05:30:56Z",
+   "last_verified_at": "2026-09-19T05:30:56Z",
    "status": "STALE",
    "source": "GMG",
    "sources": [
@@ -7320,8 +6960,8 @@
    "employment_type": "Full-Time",
    "posted_date": "2026-07-13",
    "closing_date": null,
-   "scraped_at": "2026-09-18T09:21:45Z",
-   "last_verified_at": "2026-09-18T09:21:45Z",
+   "scraped_at": "2026-09-19T05:30:56Z",
+   "last_verified_at": "2026-09-19T05:30:56Z",
    "status": "STALE",
    "source": "Chalhoub Group",
    "sources": [
@@ -7396,8 +7036,8 @@
    "employment_type": null,
    "posted_date": "2026-09-05",
    "closing_date": "2026-09-20",
-   "scraped_at": "2026-09-18T09:21:45Z",
-   "last_verified_at": "2026-09-18T09:21:45Z",
+   "scraped_at": "2026-09-19T05:30:56Z",
+   "last_verified_at": "2026-09-19T05:30:56Z",
    "status": "ACTIVE",
    "source": "Al-Futtaim",
    "sources": [
@@ -7475,6 +7115,97 @@
    "exclusion_reason": "risk / compliance role, not commercial finance"
   },
   {
+   "id": "50a906d29d11d074b357eb464028d5ba872104f0",
+   "company": "Al-Futtaim",
+   "company_group": "Al-Futtaim",
+   "title": "SENIOR AML ANALYST I Dubai | Financial Services| Orient Insurance PJSC",
+   "normalized_title": "senior aml analyst i dubai financial services orient insurance pjsc",
+   "location": null,
+   "country": "UAE",
+   "region": "GCC",
+   "department": null,
+   "employment_type": null,
+   "posted_date": "2026-09-18",
+   "closing_date": "2026-10-18",
+   "scraped_at": "2026-09-19T05:30:56Z",
+   "last_verified_at": "2026-09-19T05:30:56Z",
+   "status": "NEW",
+   "source": "Al-Futtaim",
+   "sources": [
+    "Al-Futtaim"
+   ],
+   "source_url": "https://www.afuturewithus.com/job/SENIOR-AML-ANALYST-I-Dubai-Financial-Services-Orient-Insurance-PJSC/1438437933/",
+   "application_url": "https://www.afuturewithus.com/talentcommunity/apply/1438437933/?locale=en_GB",
+   "is_direct_apply": true,
+   "application_url_verified": true,
+   "source_confidence": "high",
+   "salary_min": null,
+   "salary_max": null,
+   "salary_currency": null,
+   "experience_min": null,
+   "experience_max": null,
+   "description": "Job Requisition ID: 181463 \n\n About Al-Futtaim \n\n Established in the 1930s, Al-Futtaim is one of the most diversified and progressive privately held regional businesses, headquartered in Dubai. Operating across more than 20 countries, the Group spans automotive, financial services, real estate, retail and health. With more than 40,000 employees, Al-Futtaim represents over 200 of the world’s most recognised brands, including Toyota, Lexus, IKEA, ACE and Marks & Spencer. Driven by its purpose to enrich lives and elevate communities, Al-Futtaim focuses on digital innovation, AI, sustainable growth and strategic partnerships, creating long-term value for customers, communities and partners while building a responsible legacy for future generations. \n\n Job Role: \n\n We are currently seeking a Senior AML Analyst to join our Insurance Division. \n\n The Senior AML Analyst is responsible for assisting the Compliance Department in establishing and implementing internal procedures related to Anti-Money Laundering (AML), Counter-Terrorist Financing (CTF), Counter-Proliferation Financing (CPF), Foreign Account Tax Compliance Act (FATCA), and Common Reporting Standard (CRS). The role supports the Compliance Department in ensuring that an appropriate framework, governance structure, and controls are in place to maintain compliance across the Insurance Division in line with applicable AML, CTF, CPF, FATCA & CRS regulatory requirements. \n\n Job Responsibilities: \n\n Develop, implement, review, and enhance AML, CTF, CPF, FATCA, and CRS policies and procedures. \n\r\n Provide compliance oversight, guidance, and governance of all applicable regulatory requirements. \n\r\n Regularly coordinate and follow up with internal departments to obtain required due diligence documents and resolve complex compliance-related issues. \n\r\n Execute and oversee due diligence activities in accordance with defined processes and applicable regulatory guidelines. \n\r\n Conduct and review enterprise-wide risk assessments and client risk assessments in accordance with established procedures and regulatory requirements. \n\r\n Monitor and ensure that relevant documentation is maintained in accordance with the record retention policy. \n\r\n Ensure all reporting timelines are met in accordance with agreed Turnaround Times (TATs) and escalate delays where necessary. \n\r\n Support and provide input into the screening and transaction monitoring systems review, enhancement, and implementation. \n\r\n Identify and assess red flags, control gaps, and compliance issues relating to KYC and client onboarding. \n\r\n Conduct complex investigations and prepare Suspicious Activity Reports (SARs) and Suspicious Transaction Reports (STRs), including reviewing cases prepared by team members. \n\r\n Liaise with regulators and supervisors in connection with the AML, CTF, CPF, FATCA, and CRS program and related regulatory matters. \n\r\n Build and maintain strong partnerships with Internal Audit, Operations, Business Development, and other stakeholders in connection with the AML, CTF, CPF, FATCA, and CRS programs. \n\r\n Work with leaders across the organization to address, track, and resolve related open issues in a timely and effective manner. \n\r\n Provide AML, CTF, CPF, FATCA, and CRS compliance advice to business units and support the Compliance Committee by organizing and participating in Compliance Committee meetings. \n\r\n Ensure the timely and accurate filing of regulatory reports with the relevant regulator. \n\r\n Develop training materials, deliver training sessions, and provide guidance relating to AML, CTF, CPF, FATCA, and CRS requirements. \n\r\n Assist in the planning, execution, and review of AML, CTF, CPF, FATCA, and CRS compliance reviews, including the analysis of results and recommendations. \n\r\n Work with business lines during testing to understand control processes, identify control deficiencies, and support the implementation of corrective action plans. \n\r\n Communicate and present compliance matters to various levels of management to ensure compliance with applicable regulatory and internal requirements. \n\r\n Maintain ongoing awareness and expert knowledge of all applicable internal and external AML, CTF, CPF, FATCA, and CRS regulatory requirements, and identify any issues that could impact the Institution. \n\r\n Review and provide recommendations on high-risk relationships, particularly cases escalated to Senior Management, and ensure that all relevant risks are appropriately highlighted for management sign-off. \n\r\n Support the AML Manager/MLRO in regulatory examinations, audits, compliance monitoring activities, and implementation of remediation actions. \n\r\n Provide guidance and mentoring to AML Analysts and support knowledge sharing within the compliance team. \n\n Job Requirements: \n\n Minimum of 5 years of AML, CTF, CPF, FATCA, and CRS compliance experience in the banking, insurance, or related industries. \n\r\n Bachelor’s degree in law, Finance, Commerce, Business Administration, or a related field. \n\r\n CAMS, ICA, or equivalent certifications are preferred. \n\r\n Exceptional communication skills, both verbal and written, with the ability to engage confidently with stakeholders and senior management. \n\r\n Excellent organizational and time management skills, with the ability to prioritize tasks under pressure. \n\r\n Working knowledge of reporting systems, data validation tools, and compliance monitoring solutions. \n\r\n Strong AML, CTF, CPF, FATCA, and CRS analytical skills, with a good knowledge and understanding of industry best practices, internal controls, and regulatory requirements. \n\r\n Knowledge of transaction monitoring systems and screening tools. \n\r\n Knowledge of applicable laws, decisions, resolutions, guidelines, and regulatory requirements relating to AML, CTF, CPF, FATCA, and CRS. \n\n About Orient Insurance PJSC \n\n Orient Insurance Company commenced operations in 1982 as a part of the reputed Al-Futtaim Group and has since recorded a progressively steady growth. The Company is counted among the leaders in the UAE insurance market. Orient Insurance Company has a paid-up capital of AED 500 Million which is the highest in the insurance industry in UAE. With head office in Dubai, the company serves its clientele through an extensive branch network in Jebel Ali, Abu Dhabi, Al Ain, Sharjah and Ras Al Khaimah in UAE, Muscat in Sultanate of Oman, Riyadh in Kingdom of Saudi Arabia and Bahrain. \n\n Apply now » \n\n Find similar jobs: \n\n HOME PAGE \n\n PRIVACY \n\n CORPORATE WEBSITE \n\n CONTACT US \n\n Opens in a new tab. \n\n Opens in a new tab. \n\n Opens in a new tab. \n\n Opens in a new tab. \n\n © Copyright 2026 | afuturewithus.com\n\n // \n\n // \n\n // \n\n const jobAlertSpans = document.querySelectorAll(\"[data-testid=jobAlertSpanText]\");\n jobAlertSpans?.forEach((jobEl) => {\n jobEl.textContent = window?.jsStr?.tcjobresultscreatejobalertsdetailstext || \"\";\n });\n\n // \n\n // \n\n // \n\n //",
+   "responsibilities": [
+    "Develop, implement, review, and enhance AML, CTF, CPF, FATCA, and CRS policies and procedures",
+    "Provide compliance oversight, guidance, and governance of all applicable regulatory requirements",
+    "Regularly coordinate and follow up with internal departments to obtain required due diligence documents and resolve complex compliance-related issues",
+    "Execute and oversee due diligence activities in accordance with defined processes and applicable regulatory guidelines",
+    "Conduct and review enterprise-wide risk assessments and client risk assessments in accordance with established procedures and regulatory requirements",
+    "Monitor and ensure that relevant documentation is maintained in accordance with the record retention policy",
+    "Ensure all reporting timelines are met in accordance with agreed Turnaround Times (TATs) and escalate delays where necessary",
+    "Support and provide input into the screening and transaction monitoring systems review, enhancement, and implementation",
+    "Identify and assess red flags, control gaps, and compliance issues relating to KYC and client onboarding",
+    "Conduct complex investigations and prepare Suspicious Activity Reports (SARs) and Suspicious Transaction Reports (STRs), including reviewing cases prepared by team members",
+    "Liaise with regulators and supervisors in connection with the AML, CTF, CPF, FATCA, and CRS program and related regulatory matters",
+    "Build and maintain strong partnerships with Internal Audit, Operations, Business Development, and other stakeholders in connection with the AML, CTF, CPF, FATCA, and CRS programs",
+    "Work with leaders across the organization to address, track, and resolve related open issues in a timely and effective manner",
+    "Provide AML, CTF, CPF, FATCA, and CRS compliance advice to business units and support the Compliance Committee by organizing and participating in Compliance Committee meetings",
+    "Ensure the timely and accurate filing of regulatory reports with the relevant regulator",
+    "Develop training materials, deliver training sessions, and provide guidance relating to AML, CTF, CPF, FATCA, and CRS requirements",
+    "Assist in the planning, execution, and review of AML, CTF, CPF, FATCA, and CRS compliance reviews, including the analysis of results and recommendations",
+    "Work with business lines during testing to understand control processes, identify control deficiencies, and support the implementation of corrective action plans",
+    "Communicate and present compliance matters to various levels of management to ensure compliance with applicable regulatory and internal requirements",
+    "Maintain ongoing awareness and expert knowledge of all applicable internal and external AML, CTF, CPF, FATCA, and CRS regulatory requirements, and identify any issues that could impact the Institution"
+   ],
+   "requirements": [],
+   "skills": [
+    "Excel"
+   ],
+   "nationality_requirement": null,
+   "work_authorization_requirement": null,
+   "emiratisation_requirement": false,
+   "saudization_requirement": false,
+   "candidate_fit_score": 49,
+   "employer_score": 88,
+   "career_upside_score": 50,
+   "opportunity_score": 59,
+   "score_breakdown": {
+    "seniority": 10,
+    "functional": 0,
+    "industry": 15,
+    "geographic": 10,
+    "scope": 3,
+    "leadership": 5,
+    "qualification": 0,
+    "upside": 6
+   },
+   "tier": "C",
+   "application_priority": "SKIP",
+   "why_fit": [
+    "Multi-country / multi-entity scope maps directly onto his Malaysia + Indonesia P&L ownership across 60+ Max Fashion and Babyshop stores.",
+    "Al-Futtaim is peer retail to his current employer — the 60+ store, multi-brand lifestyle retail P&L he already owns transfers without a sector learning curve.",
+    "Team leadership is proven — he mentors a team of 4 analysts and business-partners Ops, Retail Heads, Buying and IR.",
+    "UAE is one of his two target markets, and he is already GCC-adjacent inside a Dubai-headquartered group."
+   ],
+   "watch_out": [
+    "Nothing disqualifying surfaced in the posted text, which itself means the description is thin — probe scope and reporting line."
+   ],
+   "resume_match": null,
+   "duplicate_group": "807df1024f4a6e8e984a9035734065ac6895ea9d",
+   "is_excluded": true,
+   "exclusion_reason": "financial-crime / AML role"
+  },
+  {
    "id": "bc54d147210fd683b93068963313fd76477845a9",
    "company": "Al-Futtaim",
    "company_group": "Al-Futtaim",
@@ -7487,8 +7218,8 @@
    "employment_type": null,
    "posted_date": "2026-09-03",
    "closing_date": "2026-09-20",
-   "scraped_at": "2026-09-18T09:21:45Z",
-   "last_verified_at": "2026-09-18T09:21:45Z",
+   "scraped_at": "2026-09-19T05:30:56Z",
+   "last_verified_at": "2026-09-19T05:30:56Z",
    "status": "ACTIVE",
    "source": "Al-Futtaim",
    "sources": [
@@ -7576,8 +7307,8 @@
    "employment_type": null,
    "posted_date": "2026-09-02",
    "closing_date": "2026-09-30",
-   "scraped_at": "2026-09-18T09:21:45Z",
-   "last_verified_at": "2026-09-18T09:21:45Z",
+   "scraped_at": "2026-09-19T05:30:56Z",
+   "last_verified_at": "2026-09-19T05:30:56Z",
    "status": "ACTIVE",
    "source": "Al-Futtaim",
    "sources": [
@@ -7656,96 +7387,6 @@
    "exclusion_reason": "assistant manager grade, below his current FP&A Manager level"
   },
   {
-   "id": "079a3f49659b8b6a9362c5d9f3a7a423c2ece3f0",
-   "company": "Al-Futtaim",
-   "company_group": "Al-Futtaim",
-   "title": "Business Development Manager | Al Futtaim Auto Leasing | Financial Services",
-   "normalized_title": "business development manager al futtaim auto leasing financial services",
-   "location": "Dubai",
-   "country": "UAE",
-   "region": "GCC",
-   "department": null,
-   "employment_type": null,
-   "posted_date": "2026-09-04",
-   "closing_date": "2026-09-18",
-   "scraped_at": "2026-09-18T09:21:45Z",
-   "last_verified_at": "2026-09-18T09:21:45Z",
-   "status": "ACTIVE",
-   "source": "Al-Futtaim",
-   "sources": [
-    "Al-Futtaim"
-   ],
-   "source_url": "https://www.afuturewithus.com/job/Dubai-Business-Development-Manager-Al-Futtaim-Auto-Leasing-Financial-Services/1433998833/",
-   "application_url": "https://www.afuturewithus.com/talentcommunity/apply/1433998833/?locale=en_GB",
-   "is_direct_apply": true,
-   "application_url_verified": true,
-   "source_confidence": "high",
-   "salary_min": null,
-   "salary_max": null,
-   "salary_currency": null,
-   "experience_min": 30,
-   "experience_max": null,
-   "description": "Job Requisition ID: 180925 \n\n Established in the 1930s as a trading business, Al-Futtaim Group today is one of the most diversified and progressive, privately held regional businesses headquartered in Dubai, United Arab Emirates. Structured into five operating divisions; automotive, financial services, real estate, retail and healthcare; employing more than 35,000 employees across more than 20 countries in the Middle East, Asia and Africa, Al-Futtaim Group partners with over 200 of the world's most admired and innovative brands. Al-Futtaim Group’s entrepreneurship and relentless customer focus enables the organization to continue to grow and expand; responding to the changing needs of our customers within the societies in which we operate. \n\n By upholding our values of respect, excellence, collaboration and integrity; Al-Futtaim Group continues to enrich the lives and aspirations of our customers each and every day\n\n Overview Of The Role: \n\n The Business Development Manager is tasked with expanding the customer base through proactive prospecting and building strong account management relationships. The role supports sales strategies to exceed revenue targets and involves developing customer relationships to enhance service penetration and profitability. Key responsibilities include ensuring timely asset delivery, strategic sales planning, reporting, and providing insights to marketing for future campaigns. Collaboration with internal teams to minimize debt and maintaining the corporate brand image are essential.\n\n What You Will Do: \n\n Sales and Customer Acquisition \r\n\n Win new customers by building a prospect base through proactive prospecting techniques including cold calling.\n\r\n Deliver against all sales revenue and profit targets for lease and rental products, with performance measured through sales metrics reports daily, weekly, and monthly.\n\r\n Onboard new customers and ensure effective handover to Key Account Managers to continue growing accounts.\n\n Account Management \r\n\n Build strong and effective account management relationships with all customers.\n\r\n Develop customer relationships to enhance profit levels and penetration of services.\n\r\n Ensure timely delivery of vehicles/assets to the customer and maintain a high level of customer satisfaction.\n\n Strategic Planning and Reporting \r\n\n Support the Head of Department in sales strategies, targets, and sales performance.\n\r\n Contribute to the formulation of policy and strategy within the sales and marketing function.\n\r\n Plan and implement customer sales strategy.\n\r\n Prepare daily, weekly, and monthly reports to assist in planning strategies for acquiring potential business and understanding future trends.\n\r\n Provide vital statistics to the Marketing team to assist in strategizing future campaigns.\n\n Collaboration and Image Management \r\n\n Work closely with accounts and collections team to ensure debts are minimized.\n\r\n Maintain and develop the corporate image and reputation, protecting and developing the company's brands through suitable PR activities and personal presentation.\n\r\n Become actively integrated with key local networking groups.\n\n Required Skills To Be Successful: \n\n Proven ability in prospect database development and achieving sales targets.\n\r\n Strong business to business consultative sales skills.\n\r\n Ability to plan, organize, and manage multiple demands effectively.\n\r\n Target-oriented with a drive to exceed challenging goals.\n\n What Qualifies You For The Role: \n\n Proven track record in developing a prospect database and achieving sales targets.\n\r\n Excellent relationship and consultative sales skills, particularly in a B2B context.\n\r\n Experience working with high-profile or blue-chip organizations.\n\r\n Strong English communication skills and preferably strong Arabic communication skills.\n\r\n Educated to degree level or equivalent.\n\r\n Previous background in Sales and Business Development.\n\r\n Good applied knowledge of MS Office applications.\n\n About Al-Futtaim Group Real Estate \n\r\nThe real estate development and operations arm of Al-Futtaim, Al-Futtaim Group Real Estate is responsible for a multi-billion-dollar portfolio across MENA. With high-quality residential, business, retail, tourism, educational and healthcare developments, the master developer caters to the diverse needs of cities and communities in the region. From origination, conception, development, sales, procurement and construction of mega-projects and the leasing, operation and management of these projects after completion, Al-Futtaim Group Real Estate (AFGRE) has been developing and managing owned landbanks, unlocking the economic potential of the region and contributing to future development for more than 40 years. \n\r\nOur focus is to enable and invest in meaningful relationships to make our properties the best places to live and work, build additional products and services and enable partnerships to create true value to our customers throughout their entire experience with us.\n\r\nAFGRE is responsible for master planning of all projects in its portfolio, including two large scale mixed use destinations: Dubai Festival City and Cairo Festival City.\n\n About Al-Futtaim Malls \n\r\nAl-Futtaim Malls provides development and asset management expertise, specializing in building retail-led super regional malls in prime locations across MENA and beyond. With a proven track record of creating both sustainable revenue growth and value enhancement for tenants, Al-Futtaim Malls delivers exceptional experiences and exciting shopping environments for customers. \n\n Part of the Al-Futtaim Group, Al-Futtaim Malls leadership team brings more than 30 years of experience and a deep understanding and knowledge of the retail sector, both from a shopper’s point of view but as curators of space or landlords to other brands. The company has a directly managed portfolio including over 9 million sqft of retail space across four malls in the MENA region and two under development. Malls under the Al-Futtaim Malls portfolio include Dubai Festival City Mall and Festival Plaza in the UAE, Cairo Festival City Mall in Egypt, Doha Festival City in Qatar and Zenata Mall, Morocco.\n\n Leveraging on the expertise of its parent company, Al-Futtaim Malls established PLEX Management Services offering a full array of services including asset management and development, leasing, and brand experience expertise to shopping mall landlords and retail organizations globally. Implementing global best practice and deploying Al-Futtaim Mall’s deep understanding of mall management and retail dynamics, PLEX promises to deliver continuous growth and long-term value for its partners.\n\n For more information on Al-Futtaim Malls, please visit https://www.al-futtaimmalls.com/\n\n About Al-Futtaim Engineering & Technologies \n\r\nAl-Futtaim Engineering & Technologies offers customers complete engineering and systems integration solutions. \n\nThe Engineering arm operates in the UAE, Qatar, Saudi Arabia and Egypt providing a wide variety of products and services from air conditioning, scaffolding and access solutions, elevators and escalators, control and life safety, facilities management, building products, MEP, Energy Management, Technology Infrastructure and Digital Transformation. \n\nThe Technologies division provides complete business solutions to large, medium and small customers that include, contact centre solutions, business applications, business intelligence, data management, advanced analytics amongst others. The IT infrastructure portfolio comprises IP telephony, ELV systems, networking solutions, professional audio-visual solutions and managed services. \n\nThese solutions are further complemented by services that include project management, installation, testing, commissioning and after-sales maintenance contracts. \n\n Apply now » \n\n Find similar jobs: \n\n Sales Jobs \n\n HOME PAGE \n\n PRIVACY \n\n CORPORATE WEBSITE \n\n CONTACT US \n\n Opens in a new tab. \n\n Opens in a new tab. \n\n Opens in a ",
-   "responsibilities": [
-    "Win new customers by building a prospect base through proactive prospecting techniques including cold calling",
-    "Deliver against all sales revenue and profit targets for lease and rental products, with performance measured through sales metrics reports daily, weekly, and monthly",
-    "Onboard new customers and ensure effective handover to Key Account Managers to continue growing accounts",
-    "Build strong and effective account management relationships with all customers",
-    "Develop customer relationships to enhance profit levels and penetration of services",
-    "Ensure timely delivery of vehicles/assets to the customer and maintain a high level of customer satisfaction",
-    "Support the Head of Department in sales strategies, targets, and sales performance",
-    "Contribute to the formulation of policy and strategy within the sales and marketing function",
-    "Plan and implement customer sales strategy",
-    "Prepare daily, weekly, and monthly reports to assist in planning strategies for acquiring potential business and understanding future trends",
-    "Provide vital statistics to the Marketing team to assist in strategizing future campaigns",
-    "Work closely with accounts and collections team to ensure debts are minimized",
-    "Maintain and develop the corporate image and reputation, protecting and developing the company's brands through suitable PR activities and personal presentation",
-    "Become actively integrated with key local networking groups",
-    "Proven ability in prospect database development and achieving sales targets",
-    "Strong business to business consultative sales skills",
-    "Ability to plan, organize, and manage multiple demands effectively",
-    "Target-oriented with a drive to exceed challenging goals",
-    "Proven track record in developing a prospect database and achieving sales targets",
-    "Excellent relationship and consultative sales skills, particularly in a B2B context"
-   ],
-   "requirements": [],
-   "skills": [
-    "Excel"
-   ],
-   "nationality_requirement": null,
-   "work_authorization_requirement": null,
-   "emiratisation_requirement": false,
-   "saudization_requirement": false,
-   "candidate_fit_score": 47,
-   "employer_score": 88,
-   "career_upside_score": 50,
-   "opportunity_score": 58,
-   "score_breakdown": {
-    "seniority": 10,
-    "functional": 0,
-    "industry": 15,
-    "geographic": 10,
-    "scope": 6,
-    "leadership": 0,
-    "qualification": 0,
-    "upside": 6
-   },
-   "tier": "C",
-   "application_priority": "SKIP",
-   "why_fit": [
-    "Multi-country / multi-entity scope maps directly onto his Malaysia + Indonesia P&L ownership across 60+ Max Fashion and Babyshop stores.",
-    "Al-Futtaim is peer retail to his current employer — the 60+ store, multi-brand lifestyle retail P&L he already owns transfers without a sector learning curve.",
-    "UAE is one of his two target markets, and he is already GCC-adjacent inside a Dubai-headquartered group."
-   ],
-   "watch_out": [
-    "Asks for 30+ years; he has 10+ total and 7+ post-qualification, so this is a stretch on paper."
-   ],
-   "resume_match": null,
-   "duplicate_group": "1236082deeb7265e77fc9adf0395eb9898362730",
-   "is_excluded": true,
-   "exclusion_reason": "commercial / insurance role, not a finance function"
-  },
-  {
    "id": "7d9e1c50f486cbdf2b640c52bd3c9693a2c5ed4a",
    "company": "Apparel Group",
    "company_group": "Apparel Group",
@@ -7758,8 +7399,8 @@
    "employment_type": null,
    "posted_date": "2026-07-14",
    "closing_date": "2026-09-30",
-   "scraped_at": "2026-09-18T09:21:45Z",
-   "last_verified_at": "2026-09-18T09:21:45Z",
+   "scraped_at": "2026-09-19T05:30:56Z",
+   "last_verified_at": "2026-09-19T05:30:56Z",
    "status": "STALE",
    "source": "Apparel Group",
    "sources": [
@@ -7843,8 +7484,8 @@
    "employment_type": null,
    "posted_date": "2026-09-16",
    "closing_date": "2026-10-01",
-   "scraped_at": "2026-09-18T09:21:45Z",
-   "last_verified_at": "2026-09-18T09:21:45Z",
+   "scraped_at": "2026-09-19T05:30:56Z",
+   "last_verified_at": "2026-09-19T05:30:56Z",
    "status": "NEW",
    "source": "Al-Futtaim",
    "sources": [
@@ -7935,8 +7576,8 @@
    "employment_type": null,
    "posted_date": "2026-08-24",
    "closing_date": "2026-10-30",
-   "scraped_at": "2026-09-18T09:21:45Z",
-   "last_verified_at": "2026-09-18T09:21:45Z",
+   "scraped_at": "2026-09-19T05:30:56Z",
+   "last_verified_at": "2026-09-19T05:30:56Z",
    "status": "AGING",
    "source": "Al-Futtaim",
    "sources": [
@@ -8027,9 +7668,9 @@
    "employment_type": null,
    "posted_date": "2026-09-11",
    "closing_date": "2026-12-31",
-   "scraped_at": "2026-09-18T09:21:45Z",
-   "last_verified_at": "2026-09-18T09:21:45Z",
-   "status": "NEW",
+   "scraped_at": "2026-09-19T05:30:56Z",
+   "last_verified_at": "2026-09-19T05:30:56Z",
+   "status": "ACTIVE",
    "source": "Al-Futtaim",
    "sources": [
     "Al-Futtaim"
@@ -8044,7 +7685,7 @@
    "salary_currency": null,
    "experience_min": 3,
    "experience_max": null,
-   "description": "Job Requisition ID: 181298 \n\n Established in the 1930s as a trading business, Al-Futtaim Group today is one of the most diversified and progressive, privately held regional businesses headquartered in Dubai, United Arab Emirates. Structured into five operating divisions; automotive, financial services, real estate, retail and healthcare; employing more than 35,000 employees across more than 20 countries in the Middle East, Asia and Africa, Al-Futtaim Group partners with over 200 of the world's most admired and innovative brands. Al-Futtaim Group’s entrepreneurship and relentless customer focus enables the organization to continue to grow and expand; responding to the changing needs of our customers within the societies in which we operate. \n\n By upholding our values of respect, excellence, collaboration and integrity; Al-Futtaim Group continues to enrich the lives and aspirations of our customers each and every day\n\n Overview Of The Role: \n\n The Commercial Vehicles Sales Representative for the HINO Trucks Division is responsible for driving sales growth by actively seeking and engaging with prospective customers. This role focuses on achieving sales targets, maximizing profitability, and ensuring high levels of customer satisfaction through effective relationship management and consultative selling practices. Success in this position requires strong product knowledge, exceptional communication skills, and the ability to operate effectively in a fast-paced environment.\n \n What You Will Do: \n\n Sales and Revenue Growth \n Achieve and exceed monthly and annual sales targets while maximizing profitability by focusing on net sales and gross margin earnings.\n Utilize discounts effectively as a tool to close deals, ensuring profitability and customer satisfaction.\n \n Customer Engagement \n Contact prospective customers and manage assigned accounts within the designated territory.\n Conduct regular customer and field visits to assess business requirements, ensure satisfaction, and maintain long-term relationships.\n Qualify customers by understanding their requirements and interests and matching them to appropriate models.\n \n Product Demonstration \n Demonstrate trucks by explaining characteristics, capabilities, and features, offering test drives, and explaining warranties and services.\n \n Administrative Responsibilities \n Write sales orders, secure deposits, and process paperwork in line with established business policies.\n Provide sales management with information by completing reports.\n Ensure that monthly overdue payments are within the agreed target.\n \n Professional Development \n Attend all sales meetings, modular training sessions, and refresher courses to stay informed about new products.\n Communicate with the Sales Manager or Branch Manager regarding any additional training requirements.\n\n Required Skills To Be Successful: \n\n Strong PC skills, including proficiency in Excel and Microsoft Office.\n Excellent customer service and strong communication skills.\n Solid time management and analytical skills.\n Goal-oriented self-starter with the ability to thrive in a fast-paced work environment.\n \n What Qualifies You For The Role: \n\n 3+ years of experience in a Commercial Vehicle sales role at a dealership.\n Mandatory experience in light, medium, and heavy-duty truck sales in UAE.\n Bachelor’s degree or equivalent experience.\n Experience with commercial truck sales or truck equipment sales preferred.\n Valid UAE driving license.\n Experience within UAE.\n \n About Al-Futtaim Automotive \n\r\nA major division of the UAE-based Al-Futtaim Group of companies, Al-Futtaim Automotive is an industry leader with presence in 10 countries across the Middle East, Asia and Africa.\n\r\nOur core business activities at Al-Futtaim Automotive include distribution, manufacturing, leasing and aftersales, and we are firmly established as the regional representative of some of the world’s most iconic automotive brands: Toyota, Lexus, Honda, Jeep, Chrysler, Dodge, Volvo and RAM.\n\r\nWe are driven by a customer-centric approach, constantly pushing the boundaries on innovation, quality standards, and value-added service across our vast universe of customers - right from motoring enthusiasts to fleet operators to contractors. Our mission is to become the leader in custom-made mobility solutions by delivering nothing less than world-class omni-channel experiences. \n\r\nWe channel our local expertise and global trust to deliver one of the most comprehensive portfolios of mobility products and solutions, from passenger cars to SUVs, electric vehicles to high-performance motorbikes, commercial vehicles to industrial & construction equipment.\n\r\nWhat keeps the company moving forward is a 9000-member strong team, with inspiring possibilities for growth, throughout the career path. This is Al-Futtaim Automotive and we empower talent to move forward. \n\n Apply now » \n\n Find similar jobs: \n\n Sales Jobs \n\n HOME PAGE \n\n PRIVACY \n\n CORPORATE WEBSITE \n\n CONTACT US \n\n Opens in a new tab. \n\n Opens in a new tab. \n\n Opens in a new tab. \n\n Opens in a new tab. \n\n © Copyright 2026 | afuturewithus.com\n\n // \n\n // \n\n // \n\n const jobAlertSpans = document.querySelectorAll(\"[data-testid=jobAlertSpanText]\");\n jobAlertSpans?.forEach((jobEl) => {\n jobEl.textContent = window?.jsStr?.tcjobresultscreatejobalertsdetailstext || \"\";\n });\n\n // \n\n // \n\n // \n\n //",
+   "description": "Job Requisition ID: 181298 \n\n Established in the 1930s as a trading business, Al-Futtaim Group today is one of the most diversified and progressive, privately held regional businesses headquartered in Dubai, United Arab Emirates. Structured into five operating divisions; automotive, financial services, real estate, retail and healthcare; employing more than 35,000 employees across more than 20 countries in the Middle East, Asia and Africa, Al-Futtaim Group partners with over 200 of the world's most admired and innovative brands. Al-Futtaim Group’s entrepreneurship and relentless customer focus enables the organization to continue to grow and expand; responding to the changing needs of our customers within the societies in which we operate. \n\n By upholding our values of respect, excellence, collaboration and integrity; Al-Futtaim Group continues to enrich the lives and aspirations of our customers each and every day\n\n Overview Of The Role: \n\n The Commercial Vehicles Sales Representative for the HINO Trucks Division is responsible for driving sales growth by actively seeking and engaging with prospective customers. This role focuses on achieving sales targets, maximizing profitability, and ensuring high levels of customer satisfaction through effective relationship management and consultative selling practices. Success in this position requires strong product knowledge, exceptional communication skills, and the ability to operate effectively in a fast-paced environment.\n \n What You Will Do: \n\n Sales and Revenue Growth \n Achieve and exceed monthly and annual sales targets while maximizing profitability by focusing on net sales and gross margin earnings.\n Utilize discounts effectively as a tool to close deals, ensuring profitability and customer satisfaction.\n \n Customer Engagement \n Contact prospective customers and manage assigned accounts within the designated territory.\n Conduct regular customer and field visits to assess business requirements, ensure satisfaction, and maintain long-term relationships.\n Qualify customers by understanding their requirements and interests and matching them to appropriate models.\n \n Product Demonstration \n Demonstrate trucks by explaining characteristics, capabilities, and features, offering test drives, and explaining warranties and services.\n \n Administrative Responsibilities \n Write sales orders, secure deposits, and process paperwork in line with established business policies.\n Provide sales management with information by completing reports.\n Ensure that monthly overdue payments are within the agreed target.\n \n Professional Development \n Attend all sales meetings, modular training sessions, and refresher courses to stay informed about new products.\n Communicate with the Sales Manager or Branch Manager regarding any additional training requirements.\n\n Required Skills To Be Successful: \n\n Strong PC skills, including proficiency in Excel and Microsoft Office.\n Excellent customer service and strong communication skills.\n Solid time management and analytical skills.\n Goal-oriented self-starter with the ability to thrive in a fast-paced work environment.\n \n What Qualifies You For The Role: \n\n 3+ years of experience in a Commercial Vehicle sales role at a dealership.\n Mandatory experience in light, medium, and heavy-duty truck sales in UAE.\n Bachelor’s degree or equivalent experience.\n Experience with commercial truck sales or truck equipment sales preferred.\n Valid UAE driving license.\n Experience within UAE.\n \n About Al-Futtaim Automotive \n\r\nA major division of the UAE-based Al-Futtaim Group of companies, Al-Futtaim Automotive is an industry leader with presence in 10 countries across the Middle East, Asia and Africa.\n\r\nOur core business activities at Al-Futtaim Automotive include distribution, manufacturing, leasing and aftersales, and we are firmly established as the regional representative of some of the world’s most iconic automotive brands: Toyota, Lexus, Honda, Jeep, Chrysler, Dodge, Volvo and RAM.\n\r\nWe are driven by a customer-centric approach, constantly pushing the boundaries on innovation, quality standards, and value-added service across our vast universe of customers - right from motoring enthusiasts to fleet operators to contractors. Our mission is to become the leader in custom-made mobility solutions by delivering nothing less than world-class omni-channel experiences. \n\r\nWe channel our local expertise and global trust to deliver one of the most comprehensive portfolios of mobility products and solutions, from passenger cars to SUVs, electric vehicles to high-performance motorbikes, commercial vehicles to industrial & construction equipment.\n\r\nWhat keeps the company moving forward is a 9000-member strong team, with inspiring possibilities for growth, throughout the career path. This is Al-Futtaim Automotive and we empower talent to move forward. \n\n Apply now » \n\n Find similar jobs: \n\n HOME PAGE \n\n PRIVACY \n\n CORPORATE WEBSITE \n\n CONTACT US \n\n Opens in a new tab. \n\n Opens in a new tab. \n\n Opens in a new tab. \n\n Opens in a new tab. \n\n © Copyright 2026 | afuturewithus.com\n\n // \n\n // \n\n // \n\n const jobAlertSpans = document.querySelectorAll(\"[data-testid=jobAlertSpanText]\");\n jobAlertSpans?.forEach((jobEl) => {\n jobEl.textContent = window?.jsStr?.tcjobresultscreatejobalertsdetailstext || \"\";\n });\n\n // \n\n // \n\n // \n\n //",
    "responsibilities": [
     "Achieve and exceed monthly and annual sales targets while maximizing profitability by focusing on net sales and gross margin earnings",
     "Utilize discounts effectively as a tool to close deals, ensuring profitability and customer satisfaction",
@@ -8117,8 +7758,8 @@
    "employment_type": "Full-Time",
    "posted_date": "2026-07-22",
    "closing_date": null,
-   "scraped_at": "2026-09-18T09:21:45Z",
-   "last_verified_at": "2026-09-18T09:21:45Z",
+   "scraped_at": "2026-09-19T05:30:56Z",
+   "last_verified_at": "2026-09-19T05:30:56Z",
    "status": "STALE",
    "source": "Chalhoub Group",
    "sources": [
@@ -8187,8 +7828,8 @@
    "employment_type": null,
    "posted_date": "2026-09-16",
    "closing_date": "2026-10-31",
-   "scraped_at": "2026-09-18T09:21:45Z",
-   "last_verified_at": "2026-09-18T09:21:45Z",
+   "scraped_at": "2026-09-19T05:30:56Z",
+   "last_verified_at": "2026-09-19T05:30:56Z",
    "status": "NEW",
    "source": "Al-Futtaim",
    "sources": [
@@ -8277,8 +7918,8 @@
    "employment_type": null,
    "posted_date": "2026-08-31",
    "closing_date": "2026-09-30",
-   "scraped_at": "2026-09-18T09:21:45Z",
-   "last_verified_at": "2026-09-18T09:21:45Z",
+   "scraped_at": "2026-09-19T05:30:56Z",
+   "last_verified_at": "2026-09-19T05:30:56Z",
    "status": "ACTIVE",
    "source": "Al-Futtaim",
    "sources": [
@@ -8355,96 +7996,6 @@
    "exclusion_reason": "not a finance role"
   },
   {
-   "id": "1b1917e20a469546e1b119ad65eddf3582a05dbb",
-   "company": "Al-Futtaim",
-   "company_group": "Al-Futtaim",
-   "title": "Collections Executive | Al Futtaim Finance | Financial Services",
-   "normalized_title": "collections executive al futtaim finance financial services",
-   "location": "Dubai",
-   "country": "UAE",
-   "region": "GCC",
-   "department": null,
-   "employment_type": null,
-   "posted_date": "2026-09-11",
-   "closing_date": "2026-09-18",
-   "scraped_at": "2026-09-18T09:21:45Z",
-   "last_verified_at": "2026-09-18T09:21:45Z",
-   "status": "NEW",
-   "source": "Al-Futtaim",
-   "sources": [
-    "Al-Futtaim"
-   ],
-   "source_url": "https://www.afuturewithus.com/job/Dubai-Collections-Executive-Al-Futtaim-Finance-Financial-Services/1436198733/",
-   "application_url": "https://www.afuturewithus.com/talentcommunity/apply/1436198733/?locale=en_GB",
-   "is_direct_apply": true,
-   "application_url_verified": true,
-   "source_confidence": "high",
-   "salary_min": null,
-   "salary_max": null,
-   "salary_currency": null,
-   "experience_min": 3,
-   "experience_max": null,
-   "description": "Job Requisition ID: 180930 \n\r\n About Al-Futtaim\nEstablished in the 1930s, Al-Futtaim is one of the most diversified and progressive privately held regional businesses, headquartered in Dubai. Operating across more than 20 countries, the Group spans automotive, financial services, real estate, retail and health. With more than 40,000 employees, Al-Futtaim represents over 200 of the world’s most recognised brands, including Toyota, Lexus, IKEA, ACE and Marks & Spencer. Driven by its purpose to enrich lives and elevate communities, Al-Futtaim focuses on digital innovation, AI, sustainable growth and strategic partnerships, creating long-term value for customers, communities and partners while building a responsible legacy for future generations.\n \n Overview Of The Role: \n\n The Collections Executive is responsible for maximizing collection efforts by maintaining consistent follow-up with debtors and defaulters to ensure full settlement. The role focuses on minimizing overdue receivables while optimizing cash flow levels. Success in this position requires adherence to collection procedures and ethical practices, while maintaining accurate records and effective communication with customers and internal teams.\n\n What You Will Do: \n\n Conduct regular follow-ups with past-due customers via telephone calls and emails to ensure timely collection of overdue amounts.\n\r\n Maintain complete and accurate collection records by documenting all customer interactions in the Collection Management Log.\n\r\n Respond promptly and professionally to customer queries related to collections.\n\r\n Ensure timely and effective collection of overdue amounts through consistent and rigorous follow-up to recover the pending dues.\n\r\n Provide timely feedback and updates to the team regarding customer payment behaviour, history, and financial health.\n\r\n Ensure strict adherence to collection procedures, SOP, compliance standards, and ethical practices while protecting the organization's reputation.\n\r\n Handle timely escalation and transfer of accounts for legal action by completing required formalities and following up until resolution.\n\r\n Coordinate with all relevant departments, including Operations, to resolve customer/account issues affecting customer payment behaviour.\n\r\n Negotiate repayment solutions with customers via calls, emails, and meetings to resolve pending dues.\n\r\n Submit periodic ad-hoc reports to the Line Manager.\n\n Required Skills To Be Successful: \n\n Excellent communication and interpersonal skills for efficient negotiation and problem resolution.\n\r\n Strong ability to manage multiple priorities and meet deadlines under pressure.\n\r\n Proficiency in Collection Management Systems and data analysis tools.\n\r\n Adherence to ethical practices and company policies in debt collection.\n\n What Qualifies You For The Role: \n\n Bachelor's degree in finance, business administration, or a related field.\n\r\n At least 3 years of experience in collections or a similar financial role.\n\r\n Proficient in using Collection Management Systems and Microsoft Office Suite.\n\r\n Strong negotiation and communication skills.\n\n We’re here to provide excellent service but a little help from you can ensure a five-star candidate experience from start to finish.\n\n Before you click “apply”: Please read the job description carefully to ensure you can confidently demonstrate why this opportunity is right for you and take the time to put together a well-crafted and personalised CV to further boost your visibility. Our global Talent Acquisition team members are all assigned to specific businesses to ensure that we make the best matches between talent and opportunities. We not only consider the requisite compatibility of skills and behaviours, but also how candidates align with our Values of Respect, Integrity, Collaboration, and Excellence.\n\n As part of our candidate experience promise, we also want to make ourselves available to you throughout the application process. We make every effort to review and respond to every application.\n\n Apply now » \n\n Find similar jobs: \n\n General Management & Business Support Jobs \n\n HOME PAGE \n\n PRIVACY \n\n CORPORATE WEBSITE \n\n CONTACT US \n\n Opens in a new tab. \n\n Opens in a new tab. \n\n Opens in a new tab. \n\n Opens in a new tab. \n\n © Copyright 2026 | afuturewithus.com\n\n // \n\n // \n\n // \n\n const jobAlertSpans = document.querySelectorAll(\"[data-testid=jobAlertSpanText]\");\n jobAlertSpans?.forEach((jobEl) => {\n jobEl.textContent = window?.jsStr?.tcjobresultscreatejobalertsdetailstext || \"\";\n });\n\n // \n\n // \n\n // \n\n //",
-   "responsibilities": [
-    "Conduct regular follow-ups with past-due customers via telephone calls and emails to ensure timely collection of overdue amounts",
-    "Maintain complete and accurate collection records by documenting all customer interactions in the Collection Management Log",
-    "Respond promptly and professionally to customer queries related to collections",
-    "Ensure timely and effective collection of overdue amounts through consistent and rigorous follow-up to recover the pending dues",
-    "Provide timely feedback and updates to the team regarding customer payment behaviour, history, and financial health",
-    "Ensure strict adherence to collection procedures, SOP, compliance standards, and ethical practices while protecting the organization's reputation",
-    "Handle timely escalation and transfer of accounts for legal action by completing required formalities and following up until resolution",
-    "Coordinate with all relevant departments, including Operations, to resolve customer/account issues affecting customer payment behaviour",
-    "Negotiate repayment solutions with customers via calls, emails, and meetings to resolve pending dues",
-    "Submit periodic ad-hoc reports to the Line Manager",
-    "Excellent communication and interpersonal skills for efficient negotiation and problem resolution",
-    "Strong ability to manage multiple priorities and meet deadlines under pressure",
-    "Proficiency in Collection Management Systems and data analysis tools",
-    "Adherence to ethical practices and company policies in debt collection",
-    "Bachelor's degree in finance, business administration, or a related field",
-    "At least 3 years of experience in collections or a similar financial role",
-    "Proficient in using Collection Management Systems and Microsoft Office Suite",
-    "Strong negotiation and communication skills",
-    "HOME PAGE",
-    "CORPORATE WEBSITE"
-   ],
-   "requirements": [],
-   "skills": [
-    "Excel"
-   ],
-   "nationality_requirement": null,
-   "work_authorization_requirement": null,
-   "emiratisation_requirement": false,
-   "saudization_requirement": false,
-   "candidate_fit_score": 39,
-   "employer_score": 88,
-   "career_upside_score": 50,
-   "opportunity_score": 53,
-   "score_breakdown": {
-    "seniority": 0,
-    "functional": 0,
-    "industry": 15,
-    "geographic": 10,
-    "scope": 3,
-    "leadership": 5,
-    "qualification": 0,
-    "upside": 6
-   },
-   "tier": "C",
-   "application_priority": "SKIP",
-   "why_fit": [
-    "Multi-country / multi-entity scope maps directly onto his Malaysia + Indonesia P&L ownership across 60+ Max Fashion and Babyshop stores.",
-    "Al-Futtaim is peer retail to his current employer — the 60+ store, multi-brand lifestyle retail P&L he already owns transfers without a sector learning curve.",
-    "UAE is one of his two target markets, and he is already GCC-adjacent inside a Dubai-headquartered group."
-   ],
-   "watch_out": [
-    "Nothing disqualifying surfaced in the posted text, which itself means the description is thin — probe scope and reporting line."
-   ],
-   "resume_match": null,
-   "duplicate_group": "ac8ace8c92890b966e41a09f16bd262caeaceba3",
-   "is_excluded": true,
-   "exclusion_reason": "transactional AP/AR/collections role"
-  },
-  {
    "id": "1f764f02b0928a562bcfb4c0e02ae76725a78d21",
    "company": "Al-Futtaim",
    "company_group": "Al-Futtaim",
@@ -8457,9 +8008,9 @@
    "employment_type": null,
    "posted_date": "2026-09-11",
    "closing_date": "2026-09-30",
-   "scraped_at": "2026-09-18T09:21:45Z",
-   "last_verified_at": "2026-09-18T09:21:45Z",
-   "status": "NEW",
+   "scraped_at": "2026-09-19T05:30:56Z",
+   "last_verified_at": "2026-09-19T05:30:56Z",
+   "status": "ACTIVE",
    "source": "Al-Futtaim",
    "sources": [
     "Al-Futtaim"
@@ -8549,8 +8100,8 @@
    "employment_type": null,
    "posted_date": "2026-09-02",
    "closing_date": "2026-09-30",
-   "scraped_at": "2026-09-18T09:21:45Z",
-   "last_verified_at": "2026-09-18T09:21:45Z",
+   "scraped_at": "2026-09-19T05:30:56Z",
+   "last_verified_at": "2026-09-19T05:30:56Z",
    "status": "ACTIVE",
    "source": "Al-Futtaim",
    "sources": [
@@ -8639,8 +8190,8 @@
    "employment_type": null,
    "posted_date": "2026-08-17",
    "closing_date": null,
-   "scraped_at": "2026-09-18T09:21:45Z",
-   "last_verified_at": "2026-09-18T09:21:45Z",
+   "scraped_at": "2026-09-19T05:30:56Z",
+   "last_verified_at": "2026-09-19T05:30:56Z",
    "status": "AGING",
    "source": "Al Tayer",
    "sources": [
@@ -8724,8 +8275,8 @@
    "employment_type": null,
    "posted_date": "2026-09-08",
    "closing_date": "2026-10-31",
-   "scraped_at": "2026-09-18T09:21:45Z",
-   "last_verified_at": "2026-09-18T09:21:45Z",
+   "scraped_at": "2026-09-19T05:30:56Z",
+   "last_verified_at": "2026-09-19T05:30:56Z",
    "status": "ACTIVE",
    "source": "Apparel Group",
    "sources": [
@@ -8803,8 +8354,8 @@
    "employment_type": "Full-time",
    "posted_date": "2026-08-26",
    "closing_date": null,
-   "scraped_at": "2026-09-18T09:21:45Z",
-   "last_verified_at": "2026-09-18T09:21:45Z",
+   "scraped_at": "2026-09-19T05:30:56Z",
+   "last_verified_at": "2026-09-19T05:30:56Z",
    "status": "AGING",
    "source": "Etihad Airways",
    "sources": [
