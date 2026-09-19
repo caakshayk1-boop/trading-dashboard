@@ -205,5 +205,35 @@ ok("nothing is silently dropped",
 ok("a suspended book deploys no capital",
    b2["state"]["deployed"] == 0 and b2["state"]["heat"] == 0)
 
+# ── EVERY REFUSAL HAS TO BE A SENTENCE ───────────────────────────────────────
+#
+# entry_block prints REJECT_LABELS.get(reason, reason), so a code with no label
+# reaches Telegram as the code. SHORT_NOT_TAKEN had no label and is the
+# third-most-common refusal there is: 13 of 200 rows in the live ledger
+# snapshot, every one of which would have put the string SHORT_NOT_TAKEN in a
+# message to a person.
+#
+# The .get fallback stays — it is the safety net for a code added tomorrow.
+# This is what stops one being left there.
+#
+# Read out of the SOURCE, not out of a list written here, for the same reason
+# the engine-name test is: a hand-kept inventory goes stale the first time
+# somebody adds a gate, and a test that goes stale silently is worse than none.
+import re as _re
+_src = open("swing_rulebook.py", encoding="utf-8").read()
+_emitted = sorted(set(_re.findall(r'\bno\(\s*"([A-Z_]+)"', _src)) |
+                  set(_re.findall(r'Rejected\([^)]*?"([A-Z_]+)"', _src, _re.S)))
+ok("size_signal can refuse for at least ten distinct reasons", len(_emitted) >= 10,
+   f"{len(_emitted)} found")
+_unlabelled = [c for c in _emitted if c not in RB.REJECT_LABELS]
+ok("every refusal a reader can be shown is a sentence, not a database key",
+   not _unlabelled, str(_unlabelled))
+
+# And the reverse: a label nothing emits is a sentence describing a gate that
+# no longer exists, which a reader would never see and a maintainer would
+# believe in.
+_orphan = [k for k in RB.REJECT_LABELS if k not in _emitted]
+ok("every label belongs to a gate that can actually fire", not _orphan, str(_orphan))
+
 print("\nALL CHECKS PASSED" if not fail else f"\n{fail} CHECK(S) FAILED")
 sys.exit(1 if fail else 0)

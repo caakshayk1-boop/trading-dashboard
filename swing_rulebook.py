@@ -415,6 +415,14 @@ def _f(v) -> Optional[float]:
 REJECT_LABELS = {
     "NOT_EQUITY_INDIA": "Not an Indian listed equity",
     "OUT_OF_MANDATE":   "Engine is outside the mandate",
+    # THIS WAS MISSING AND IT IS THE THIRD-MOST-COMMON REFUSAL. size_signal
+    # emits SHORT_NOT_TAKEN for every SELL, entry_block prints
+    # REJECT_LABELS.get(reason, reason), and the fallback is the raw code — so
+    # 13 of 200 rows in the live ledger snapshot would have put the string
+    # SHORT_NOT_TAKEN in a Telegram message. This book's rule is that alerts
+    # print names and never database keys; the .get fallback is the safety net
+    # for a code added tomorrow, not a place to leave one that exists today.
+    "SHORT_NOT_TAKEN":  "A short — this book is long-only",
     "DUPLICATE_ENGINE": "Duplicate of another engine's signal",
     "WRONG_TIMEFRAME":  "Timeframe does not belong to this horizon",
     "BELOW_BAND":       "Final target below the horizon's return band",
