@@ -116,8 +116,41 @@ export default async function handler(req, res) {
     // Checked against Yahoo: NEM.NS returns 0 closes and NEM returns 63;
     // RELIANCE.NS returns 67 and RELIANCE returns 0. Neither suffix is right
     // on its own, so both are tried, most-likely first.
+    /* ── THE LEDGER'S OWN NAME IS NOT ALWAYS YAHOO'S ────────────────────
+     *
+     * This 404'd on WTIUSD, and the 404 stopped the whole site publishing.
+     * The smoke test in newspaper.yml counts a failed request as a JS error
+     * and fails the build, the build failing skips the commit, and the commit
+     * skipping starved signal.askakshay.com of every feed it syncs — its
+     * screen sat 26 hours old while a freshly built one waited upstream. Nine
+     * of the last ten publishes were red for this one symbol.
+     *
+     * The ledger stores commodities and pairs under its OWN names — WTIUSD,
+     * XAUUSD, BRNUSD, NGAS — and Yahoo calls them CL=F, GC=F, BZ=F, NG=F.
+     * Neither `WTIUSD.NS` nor `WTIUSD` exists there, so both candidates
+     * missed and the route answered 404 for a symbol this site publishes.
+     *
+     * The map already existed, in symbols.py's NON_EQUITY, and was not
+     * reachable from a serverless function. This is that map — kept in step by
+     * test_engine_regressions.py, which asserts the two agree, so a commodity
+     * added on the Python side cannot silently 404 here. */
+    const NON_EQUITY = {
+      GOLD: "GC=F", XAUUSD: "GC=F", GC: "GC=F",
+      SILVER: "SI=F", XAGUSD: "SI=F", SI: "SI=F",
+      CRUDE: "CL=F", WTIUSD: "CL=F", WTI: "CL=F",
+      BRENT: "BZ=F", BRNUSD: "BZ=F",
+      NATGAS: "NG=F", NGAS: "NG=F",
+      COPPER: "HG=F",
+      USDINR: "INR=X", EURINR: "EURINR=X", GBPINR: "GBPINR=X",
+      EURUSD: "EURUSD=X", GBPUSD: "GBPUSD=X", AUDUSD: "AUDUSD=X",
+      USDJPY: "USDJPY=X",
+      NIFTY: "^NSEI", NIFTY50: "^NSEI", BANKNIFTY: "^NSEBANK", SENSEX: "^BSESN",
+    };
+    const mapped = NON_EQUITY[bare] || null;
     const marked = /[.=^]/.test(bare) || /-USD$/.test(bare);
-    const candidates = marked ? [bare] : [`${bare}.NS`, bare];
+    const candidates = mapped ? [mapped]
+      : marked ? [bare]
+      : [`${bare}.NS`, bare];
     try {
       let yh = null, pairs = null;
       for (const c of candidates) {

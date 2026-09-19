@@ -63,6 +63,16 @@ ok("the candidate list is a correction, not an expansion",
 ok("a published engine this book does not size stays UNKNOWN",
    all(RB.tier_of(e) == "UNKNOWN" for e in ("ledge", "keel", "momentum_quant")),
    str({e: RB.tier_of(e) for e in ("ledge", "keel", "momentum_quant")}))
+# Pinned deliberately. The decision not to size these was taken on 2026-09-19
+# against a book measuring -0.765R at t=-2.79 — see the note beside
+# UNSIZED_BUT_PUBLISHED. Adding one to CANDIDATE should require editing this
+# line, which is the point: it makes the change visible in a diff instead of
+# arriving as a quiet three-position increase in the admitted book.
+ok("every engine named unsized is in fact unsized",
+   all(e not in RB.CANDIDATE and e not in RB.FUNDED
+       for e in RB.UNSIZED_BUT_PUBLISHED),
+   str([e for e in RB.UNSIZED_BUT_PUBLISHED
+        if e in RB.CANDIDATE or e in RB.FUNDED]))
 ok("every engine sits in exactly one tier",
    all(RB.tier_of(e) != "UNKNOWN" for e in
        ["magic","multibagger","ai_longterm","breakout","ohl","equity_measured",

@@ -190,6 +190,39 @@ CANDIDATE = {
 # the same day's ledger. Correcting which TIDAL band gets funded is a fix;
 # funding three more engines is a different decision and not one to make as a
 # side effect of a fix. It needs Akshay's call.
+# DECIDED 2026-09-19 — THEY STAY UNSIZED. Asked to make the call; the measured
+# position that day:
+#
+#     engine   published  closed    avgR      sized
+#     BREACH      16         2    -1.000R      yes
+#     TIDAL        4         0       --        yes
+#     ASCENT       2         1    -1.000R      yes
+#     VECTOR       8         7    -0.564R      no
+#     KEEL         9         3    -1.000R      no
+#     LEDGE        6         0       --        no
+#
+# THE OBVIOUS ARGUMENT FOR ADDING THEM IS THE WRONG ONE. "They are published,
+# so they should be sized" sounds like consistency — and the table says the
+# three already sized have THREE closed trades between them, all losers, while
+# the three not sized have TEN. The capital book is sized on less evidence than
+# it ignores. That is a real finding and it does not argue for adding; it says
+# this roster is not evidence-based in either direction, because nothing here
+# has evidence yet.
+#
+# WHY NOT, IN ONE LINE: the book is measurably losing. Across every live engine
+# since launch it reads -0.765R over 13 closed at t = -2.79, a 95% interval of
+# [-1.36R, -0.17R] that excludes zero. The sign is settled. Adding three
+# engines to a system whose expectancy is established as negative increases
+# exposure to a measured loss, and not slightly — it took the admitted list
+# from 5 positions to 8 on the same ledger.
+#
+# Nothing here clears this book's bar of 30 closed at t >= +2, and nothing is
+# close. "Absence is not permission" already covers that; this records that the
+# question was asked and answered rather than left open.
+#
+# THE QUESTION THE TABLE ACTUALLY RAISES is the other one — whether the three
+# CURRENTLY sized belong there on three closed trades. That is a decision to
+# REMOVE capital, which is not one to take silently either. Flagged, not taken.
 UNSIZED_BUT_PUBLISHED = ("ledge", "keel", "momentum_quant", "pivot", "intraday")
 
 # Retired by THIS rulebook, for its own reasons. The site's own retirements are
