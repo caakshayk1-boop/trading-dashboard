@@ -174,8 +174,19 @@ ok("a share pricier than the name cap does not exist", r and r.reason == "BELOW_
 # stopped exercising the dedupe and quietly tested nothing.
 book = RB.build_book([sig(id=1, symbol="PAYTM", signal_type="magicmagic"),
                       sig(id=2, symbol="PAYTM", signal_type="breakout")], {})
+# ── THE BOOK IS SUSPENDED, SO THE ASSERTION MOVES TO would_place ────────────
+# Suspended 2026-09-19 — see SUSPENDED_WHY. `admitted` is empty by design now,
+# so asserting on it would pass for the wrong reason: an empty list contains no
+# duplicates either. The dedupe is asserted where the work still happens, which
+# is the whole point of suspending the OUTPUT rather than the pipeline.
+ok("the book is suspended and says so", RB.SUSPENDED is True and book["suspended"] is True)
+ok("a suspended book places nothing", len(book["admitted"]) == 0)
 ok("the same name is not sized twice",
-   len(book["admitted"]) == 1 and len(book["duplicates"]) == 1)
+   len(book["would_place"]) == 1 and len(book["duplicates"]) == 1,
+   f"would_place={len(book['would_place'])} dupes={len(book['duplicates'])}")
+ok("the suspension states what it costs",
+   isinstance(book["would_place"], list) and book["suspended_why"]
+   and "30" in book["suspended_why"])
 
 many = [sig(id=i, symbol=s) for i, s in enumerate(["PAYTM", "COFORGE", "TESTCO", "DIXON"])]
 b2 = RB.build_book(many, {})
@@ -184,8 +195,15 @@ ok("heat never exceeds its cap",
    f"Rs {b2['state']['heat']:,} / {b2['state']['heat_cap']:,}")
 ok("deployed never exceeds its cap",
    b2["state"]["deployed"] <= b2["state"]["deployed_cap"])
+# would_place replaces admitted in the reconciliation while suspended: every
+# signal is still in exactly one bucket, which is the property this asserts.
 ok("nothing is silently dropped",
-   len(b2["admitted"]) + len(b2["deferred"]) + len(b2["duplicates"]) + len(b2["rejected"]) == len(many))
+   len(b2["would_place"]) + len(b2["admitted"]) + len(b2["deferred"])
+   + len(b2["duplicates"]) + len(b2["rejected"]) == len(many),
+   f"{len(b2['would_place'])}+{len(b2['admitted'])}+{len(b2['deferred'])}"
+   f"+{len(b2['duplicates'])}+{len(b2['rejected'])} vs {len(many)}")
+ok("a suspended book deploys no capital",
+   b2["state"]["deployed"] == 0 and b2["state"]["heat"] == 0)
 
 print("\nALL CHECKS PASSED" if not fail else f"\n{fail} CHECK(S) FAILED")
 sys.exit(1 if fail else 0)

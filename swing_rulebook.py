@@ -153,6 +153,47 @@ HORIZONS = {
 # The honest state: no engine is funded, four are candidates. Publishing that
 # is the entire point of keeping the ledger in the open.
 
+# ── THE BOOK IS SUSPENDED ────────────────────────────────────────────────────
+#
+# DECIDED 2026-09-19 by Akshay, on an external audit's recommendation and after
+# the numbers below were put in front of him. It sizes nothing until an engine
+# clears this book's own bar.
+#
+# WHY. The book allocated against engines with no evidence. On the day it was
+# suspended it sized three — magicmagic, multibagger, breakout — which had
+# THREE closed trades between them, all losers, while ignoring three engines
+# with ten closed trades between them. It was sized on less evidence than it
+# ignored, and in the direction opposite to what evidence there was.
+#
+# The wider position is worse and is the real reason. Across every live engine
+# since launch the book reads -0.765R over 13 closed at t = -2.79, a 95%
+# interval of [-1.36R, -0.17R] that excludes zero. The sign is settled. A
+# capital plan — even a paper one — that allocates into a system whose
+# expectancy is established as negative is not a feature. It is a claim the
+# evidence contradicts, published beside the evidence that contradicts it.
+#
+# IT IS SUSPENDED, NOT DELETED, AND THAT IS THE POINT. The rulebook still
+# runs: every signal is still judged, every rejection still carries its reason,
+# and the sizing arithmetic is unchanged and still tested. What stops is the
+# admitting. A reader who came looking for the ₹1cr book finds it, finds it
+# empty, and finds the measurement that emptied it — which is the same
+# discipline this site applies to its losing trades. Deleting the file would
+# have hidden a published claim rather than withdrawn it.
+#
+# WHAT RE-OPENS IT. One engine at 30+ closed trades with t >= +2. That is this
+# book's own published bar, it was set before these numbers existed, and
+# nothing on the board is close to it. Flip SUSPENDED to False when something
+# is — and not before, and not because the roster looks empty.
+SUSPENDED = True
+SUSPENDED_ON = "2026-09-19"
+SUSPENDED_WHY = (
+    "Suspended 2026-09-19. This book sized three engines with three closed "
+    "trades between them, all losers, while the site's whole measured record "
+    "stood at -0.765R over 13 closed (t=-2.79, 95% CI [-1.36R, -0.17R], "
+    "excluding zero). No engine has cleared the 30-closed-at-t>=2 bar this "
+    "book requires. It sizes nothing until one does."
+)
+
 FUNDED: dict = {}          # cleared for real capital — empty by measurement
 
 # ── THE TIDAL PAIR WAS THE WRONG WAY ROUND, AND CAPITAL FOLLOWED IT ──────────
@@ -692,6 +733,8 @@ def build_book(signals: list, sectors: dict, capital: float = CAPITAL) -> dict:
         t, r = size_signal(s, sectors, capital)
         (tickets if t else rejected).append(t or r)
 
+
+
     tickets.sort(key=lambda t: (-(t.score or 0), t.date), reverse=False)
     tickets.sort(key=lambda t: -(t.score or 0))
 
@@ -726,8 +769,30 @@ def build_book(signals: list, sectors: dict, capital: float = CAPITAL) -> dict:
         b = by_h.setdefault(t.horizon, {"count": 0, "notional": 0, "risk": 0})
         b["count"] += 1; b["notional"] += t.notional; b["risk"] += t.risk_amount
 
+    # ── SUSPENDED: JUDGE EVERYTHING, PLACE NOTHING ───────────────────────────
+    #
+    # The suspension is applied HERE, after the whole pipeline has run, and not
+    # before it. A first version cleared the ticket list up front and that was
+    # wrong in a way its own tests caught: it skipped the dedupe and the cap
+    # arithmetic, so the book stopped reporting duplicate names and heat
+    # pressure at the same time it stopped placing. Suspending the OUTPUT keeps
+    # every judgement the rulebook makes — the sizing, the caps, the sector
+    # limits, the duplicates — visible and tested, and removes only the act of
+    # admitting.
+    #
+    # `would_place` is what this suspension is costing, in the open. A
+    # suspension whose cost is invisible is one nobody ever revisits.
+    would = [asdict(t) for t in admitted]
+    if SUSPENDED:
+        admitted, deferred = [], []
+        heat = deployed = 0.0
+
     return {
         "capital": capital,
+        "suspended": SUSPENDED,
+        "suspended_on": SUSPENDED_ON if SUSPENDED else None,
+        "suspended_why": SUSPENDED_WHY if SUSPENDED else None,
+        "would_place": would if SUSPENDED else [],
         "admitted": [asdict(t) for t in admitted],
         "deferred": [{"ticket": asdict(t), "cap": c} for t, c in deferred],
         "rejected": [asdict(r) for r in rejected],

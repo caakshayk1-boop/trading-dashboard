@@ -1006,7 +1006,24 @@ def build_section_brief(slot: str = "midday") -> str:
     # actually align and the TOTAL row proves the book adds up. Every ticket
     # carries what it costs and what state it is in.
     book = _mandate_book()
-    if book:
+    if book and book.get("suspended"):
+        # ── SUSPENDED 2026-09-19 ─────────────────────────────────────────────
+        # The section stays and says why, rather than disappearing. A reader who
+        # got this brief every morning with a ₹1 crore book in it is owed the
+        # withdrawal explicitly — a section that silently stops appearing reads
+        # as a broken job, which is the one thing this brief must never look
+        # like. Same rule the site applies: a published claim is withdrawn out
+        # loud or not at all.
+        rule("🎯 *02 · TRADE IDEAS* — the ₹1 crore book")
+        _would = len(book.get("would_place") or [])
+        L.append(
+            f"⛔ *Suspended {book.get('suspended_on', '')}* — this book is placing nothing.\n\n"
+            + str(book.get("suspended_why") or "")
+            + (f"\n\nIt would otherwise have placed *{_would}* order"
+               f"{'' if _would == 1 else 's'} today." if _would else "")
+            + "\n\nRe-opens when one engine reaches *30 closed trades at t ≥ 2*."
+        )
+    elif book:
         st = book["state"]
         cap = book.get("capital") or 0
         rule("🎯 *02 · TRADE IDEAS* — the ₹1 crore book")
