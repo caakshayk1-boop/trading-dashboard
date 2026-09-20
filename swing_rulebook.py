@@ -423,6 +423,14 @@ REJECT_LABELS = {
     # print names and never database keys; the .get fallback is the safety net
     # for a code added tomorrow, not a place to leave one that exists today.
     "SHORT_NOT_TAKEN":  "A short — this book is long-only",
+    # RETIRED arrived with the site's retirement list and had no label either,
+    # which is the check above earning its place: it was written for
+    # SHORT_NOT_TAKEN and caught this one on the merge, three commits later, in
+    # code nobody in this branch had touched. The gate above it argues that a
+    # retired engine must not be refused as "not mapped to a horizon" — a
+    # clerical excuse for a decision made on a measurement. A reader shown the
+    # raw word RETIRED gets the decision back as a database key instead.
+    "RETIRED":          "Engine retired on the measured record",
     "DUPLICATE_ENGINE": "Duplicate of another engine's signal",
     "WRONG_TIMEFRAME":  "Timeframe does not belong to this horizon",
     "BELOW_BAND":       "Final target below the horizon's return band",
