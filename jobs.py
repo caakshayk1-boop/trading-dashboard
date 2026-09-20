@@ -221,6 +221,23 @@ SOURCES: list[dict[str, Any]] = [
      "discover": None},
 ]
 
+# ── SOURCES THAT CANNOT WORK ARE NOT SOURCES ────────────────────────────────
+# Eight entries here had reported zero rows for weeks: four HTML scrapers, three
+# employers with no ATS behind them, and LinkedIn, which answers unauthenticated
+# search with 429 by design. They still counted in "10 of 22 sources responded",
+# which reads as a broken scraper rather than a list padded with sites that have
+# nothing to call.
+#
+# Skipped rather than deleted: ats.RETIRED carries the reason for each, so it
+# travels with the code, and putting one back is removing a name from a dict.
+# `python3 jobs.py --probe <careers-url>` is how you find out whether a
+# candidate belongs here or in SOURCES.
+import ats as _ats  # noqa: E402
+
+RETIRED_SOURCES = [s for s in SOURCES if s["name"] in _ats.RETIRED]
+SOURCES = [s for s in SOURCES if s["name"] not in _ats.RETIRED]
+
+
 # Search terms pushed into each source's own keyword search.
 SEARCH_TERMS = [
     "finance manager", "financial planning and analysis", "fp&a",
@@ -1812,6 +1829,79 @@ def fetch_lever(src: dict) -> list[dict]:
     return out
 
 
+# -- Workday -------------------------------------------------------------
+# THE PLATFORM THIS FILE WAS MISSING. Workday is the default HR system for
+# large Gulf employers, and every one of them was unreachable here because
+# there was no adapter — not because the data was hard to get. It is two
+# unauthenticated JSON calls.
+#
+#   POST /wday/cxs/{tenant}/{site}/jobs      {appliedFacets, limit, offset, searchText}
+#   GET  /wday/cxs/{tenant}/{site}{externalPath}
+#
+# searchText is pushed to the SERVER rather than filtering titles here: a
+# tenant with 4,000 postings would otherwise cost 200 pages to find eleven
+# finance roles, and the paging is what gets an IP throttled.
+def fetch_workday(src: dict) -> list[dict]:
+    e = src["endpoint"]
+    base = f"https://{e['tenant']}.{e['wd']}.myworkdayjobs.com/wday/cxs/{e['tenant']}/{e['site']}"
+    terms = e.get("search") or ["finance"]
+
+    seen: dict[str, dict] = {}
+    for term in terms:
+        offset, pages = 0, 0
+        while pages < 10:                      # 200 postings per term is plenty
+            resp = _check(_post_json(f"{base}/jobs", {
+                "appliedFacets": {}, "limit": 20, "offset": offset, "searchText": term,
+            }), f"{src['name']} list")
+            try:
+                page = resp.json()
+            except ValueError as exc:
+                raise SourceError(f"{src['name']}: non-JSON response ({exc})")
+            rows = page.get("jobPostings") or []
+            for r in rows:
+                path = r.get("externalPath")
+                if path:
+                    seen.setdefault(path, r)
+            offset += 20
+            pages += 1
+            if offset >= int(page.get("total") or 0) or not rows:
+                break
+
+    out = []
+    for path, r in seen.items():
+        title = (r.get("title") or "").strip()
+        if not TITLE_PREFILTER.search(title):
+            continue
+        try:
+            det = (_get(f"{base}{path}", headers={"Accept": "application/json"})
+                   .json().get("jobPostingInfo") or {})
+        except Exception:
+            continue                    # one dead posting is not a dead source
+        desc = strip_html(det.get("jobDescription"))
+        if len(desc) < 120:
+            continue
+        loc = det.get("location") or r.get("locationsText")
+        # startDate is a real date. postedOn is the string "Posted 30+ Days
+        # Ago", which parse_date cannot use and which would age every role to
+        # unknown — the field that decides whether the site shows it at all.
+        apply_url = det.get("externalUrl") or (
+            f"https://{e['tenant']}.{e['wd']}.myworkdayjobs.com/{e['site']}{path}")
+        out.append(_raw(
+            title=title, company=src["name"],
+            location=primary_city(loc),
+            country=resolve_country(loc, (det.get("country") or {}).get("descriptor")
+                                    if isinstance(det.get("country"), dict) else det.get("country")),
+            employment_type=det.get("timeType"),
+            posted_date=parse_date(det.get("startDate")),
+            description=desc,
+            responsibilities=text_bullets(desc),
+            requirements=text_bullets(desc),
+            source_url=apply_url, application_url=apply_url,
+            is_direct_apply=True, req_id=det.get("jobReqId") or det.get("jobPostingId"),
+        ))
+    return out
+
+
 # -- SmartRecruiters (Etihad) --------------------------------------------
 # Two calls per posting: the list carries no description, and a posting with
 # no description fails the length floor below and would be dropped — so this
@@ -2153,6 +2243,7 @@ def fetch_discover_only(src: dict) -> list[dict]:
 
 
 ADAPTERS = {
+    "workday": fetch_workday,
     "oracle": fetch_oracle,
     "phenom": fetch_phenom,
     "teamtailor": fetch_teamtailor,
@@ -2590,9 +2681,45 @@ def build(write: bool = False, path: str = OUT_PATH) -> dict:
     return payload
 
 
+def probe_cli(url: str) -> int:
+    """`python3 jobs.py --probe <careers url>` — can we harvest this employer?
+
+    Adding a source used to mean writing a parser and finding out a month later
+    that it had rotted. This answers the only question that matters, in about
+    ten seconds, and prints the SOURCES entry to paste if the answer is yes.
+    """
+    import ats
+    p = ats.discover(url)
+    print()
+    print(f"  url      : {url}")
+    print(f"  resolved : {p.resolved or '-'}")
+    print(f"  platform : {p.platform or 'none found'}")
+    if p.error:
+        print(f"  RESULT   : NO — {p.error}")
+        print()
+        print("  No ATS means no durable source. Do not write it an HTML parser:")
+        print("  that is what Alshaya, GulfTalent, Bayt and Indeed already are,")
+        print("  and all four have reported zero rows for weeks.")
+        return 1
+    print(f"  endpoint : {p.list_url}")
+    print(f"  RESULT   : YES — {p.total} postings match 'finance'")
+    for t in p.sample[:5]:
+        print(f"             · {t}")
+    print()
+    print("  SOURCES entry:")
+    print(f"    {p.source_entry('NAME HERE', discover=url)!r}")
+    return 0
+
+
 def main() -> int:
     logging.basicConfig(level=logging.INFO, format="%(message)s",
                         stream=sys.stdout)
+    if "--probe" in sys.argv:
+        i = sys.argv.index("--probe")
+        if i + 1 >= len(sys.argv):
+            print("usage: python3 jobs.py --probe <careers-url>")
+            return 2
+        return probe_cli(sys.argv[i + 1])
     data = build(write=True)
     st = data["stats"]
     print()

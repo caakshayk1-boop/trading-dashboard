@@ -565,12 +565,23 @@ check("an unknown key is made readable, not printed raw",
 # at two depths. Both numbers were right and the page never said which it
 # meant. This pins the arithmetic on the Python side; signal.js pins the same
 # arithmetic on the JS side, and neither may state a bare total again.
+#
+# UPDATED 2026-09-19, and the change is a real one rather than a loosened
+# assertion. `magic` was retired that day, so TIDAL no longer runs two bands
+# on the published floor — magicmagic carries the name alone. Names and keys
+# are therefore both 8 and the "N names over M configurations" clause
+# correctly disappears, because there is no longer a discrepancy to explain.
+#
+# So the count is pinned, AND the rule that produced the clause is pinned
+# separately: it must appear exactly when keys and names disagree. Asserting
+# only the totals would let the clause vanish for the wrong reason later.
 _t = en.published_tally()
-check("eight engines publish over nine configurations",
-      _t == {"names": 8, "keys": 9, "research": 3}, _t)
+check("eight engines publish over eight configurations",
+      _t == {"names": 8, "keys": 8, "research": 3}, _t)
+_note = en.tally_note()
 check("the tally states its own arithmetic",
-      "8 names over 9 configurations" in en.tally_note()
-      and "not cleared to publish" in en.tally_note(), en.tally_note())
+      ("8 engines publish" in _note and "not cleared to publish" in _note
+       and (("names over" in _note) == (_t["keys"] > _t["names"]))), _note)
 check("the research floor is named but never counted as publishing",
       all(k in en.ENGINE_NAMES and not en.is_published_engine(k)
           for k in en.RESEARCH_ONLY))

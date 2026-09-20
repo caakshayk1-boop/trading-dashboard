@@ -13,7 +13,7 @@ UNI = frozenset({"PAYTM", "COFORGE", "TESTCO", "DIXON"})
 RB._UNIVERSE = UNI
 
 def sig(**kw):
-    base = dict(id=1, symbol="TESTCO", signal_type="magic", date="2026-08-20",
+    base = dict(id=1, symbol="TESTCO", signal_type="magicmagic", date="2026-09-10",
                 market="NSE", timeframe="1W", action="BUY", score=80,
                 entry=1000.0, sl=920.0, target1=1250.0, target2=1400.0, target3=1400.0)
     base.update(kw); return base
@@ -52,19 +52,46 @@ for eng in ("cf_1h", "commodity", "intraday", "4h", "ai_4h"):
     t, r = RB.size_signal(sig(signal_type=eng), {})
     ok(f"{eng} is out of mandate", r and r.reason == "OUT_OF_MANDATE")
 ok("nothing is funded", RB.FUNDED == {})
-ok("four candidates", len(RB.CANDIDATE) == 4)
+# Three, and the list SHRANK rather than grew. magic and ai_longterm were
+# retired on the site; magicmagic replaced magic as the live TIDAL band, which
+# is a correction. LEDGE, KEEL and VECTOR are published by the site and
+# deliberately still unsized — see UNSIZED_BUT_PUBLISHED. Sizing them is a
+# decision about money and is Akshay's to make, not a side effect of this fix.
+ok("the candidate list is a correction, not an expansion",
+   set(RB.CANDIDATE) == {"magicmagic", "multibagger", "breakout"},
+   str(sorted(RB.CANDIDATE)))
+ok("a published engine this book does not size stays UNKNOWN",
+   all(RB.tier_of(e) == "UNKNOWN" for e in ("ledge", "keel", "momentum_quant")),
+   str({e: RB.tier_of(e) for e in ("ledge", "keel", "momentum_quant")}))
+# Pinned deliberately. The decision not to size these was taken on 2026-09-19
+# against a book measuring -0.765R at t=-2.79 — see the note beside
+# UNSIZED_BUT_PUBLISHED. Adding one to CANDIDATE should require editing this
+# line, which is the point: it makes the change visible in a diff instead of
+# arriving as a quiet three-position increase in the admitted book.
+ok("every engine named unsized is in fact unsized",
+   all(e not in RB.CANDIDATE and e not in RB.FUNDED
+       for e in RB.UNSIZED_BUT_PUBLISHED),
+   str([e for e in RB.UNSIZED_BUT_PUBLISHED
+        if e in RB.CANDIDATE or e in RB.FUNDED]))
 ok("every engine sits in exactly one tier",
    all(RB.tier_of(e) != "UNKNOWN" for e in
        ["magic","multibagger","ai_longterm","breakout","ohl","equity_measured",
         "top5_pick","magicmagic","sip_bucket","ai_daily","cf_1h","commodity",
         "intraday","4h","ai_4h"]))
 ok("an unknown engine is never sized", RB.tier_of("brand_new") == "UNKNOWN")
-# The duplicate direction reversed on review: magic is the survivor (48
-# signals, no duplicates of its own), magicmagic is retired as its copy.
+# THE PAIR WAS THE WRONG WAY ROUND AND CAPITAL FOLLOWED IT. This rulebook had
+# magic as a candidate and magicmagic retired as its duplicate; the site
+# decided the opposite on 2026-09-18, on the measured ground that >15% off the
+# high admits everything 20-40% does plus a shallower tail. mandate.json's
+# admitted list was carrying a magic position — capital sized to an engine no
+# page will show. The site's retirement is binding on this file now.
+t, r = RB.size_signal(sig(signal_type="magic"), {})
+ok("a site-retired engine is never sized",
+   r is not None and t is None, r.reason if r else "SIZED — capital on a dead engine")
+ok("and it is refused for being retired, not for some weaker reason",
+   r and "retired on the site" in (r.detail or ""), r.detail[:60] if r else "")
 t, r = RB.size_signal(sig(signal_type="magicmagic"), {})
-ok("magicmagic is named as magic's duplicate",
-   r and r.reason in ("DUPLICATE_ENGINE", "OUT_OF_MANDATE"),
-   r.detail[:52] if r else "sized")
+ok("the live TIDAL band is sized", t is not None, r.detail[:52] if r else "sized")
 t, r = RB.size_signal(sig(timeframe="15m"), {})
 ok("a 15m signal is not a swing timeframe", r and r.reason == "WRONG_TIMEFRAME")
 t, r = RB.size_signal(sig(score=30), {})
@@ -142,10 +169,24 @@ ok("a share pricier than the name cap does not exist", r and r.reason == "BELOW_
 
 # One name, one ticket — even across two engines. Both must be engines that
 # actually size, or the second is dropped as retired and nothing is deduped.
-book = RB.build_book([sig(id=1, symbol="PAYTM", signal_type="magic"),
+# magicmagic, not magic — the line above is exactly the trap this hit. magic
+# was retired on the site on 2026-09-18 and no longer sizes, so the pair
+# stopped exercising the dedupe and quietly tested nothing.
+book = RB.build_book([sig(id=1, symbol="PAYTM", signal_type="magicmagic"),
                       sig(id=2, symbol="PAYTM", signal_type="breakout")], {})
+# ── THE BOOK IS SUSPENDED, SO THE ASSERTION MOVES TO would_place ────────────
+# Suspended 2026-09-19 — see SUSPENDED_WHY. `admitted` is empty by design now,
+# so asserting on it would pass for the wrong reason: an empty list contains no
+# duplicates either. The dedupe is asserted where the work still happens, which
+# is the whole point of suspending the OUTPUT rather than the pipeline.
+ok("the book is suspended and says so", RB.SUSPENDED is True and book["suspended"] is True)
+ok("a suspended book places nothing", len(book["admitted"]) == 0)
 ok("the same name is not sized twice",
-   len(book["admitted"]) == 1 and len(book["duplicates"]) == 1)
+   len(book["would_place"]) == 1 and len(book["duplicates"]) == 1,
+   f"would_place={len(book['would_place'])} dupes={len(book['duplicates'])}")
+ok("the suspension states what it costs",
+   isinstance(book["would_place"], list) and book["suspended_why"]
+   and "30" in book["suspended_why"])
 
 many = [sig(id=i, symbol=s) for i, s in enumerate(["PAYTM", "COFORGE", "TESTCO", "DIXON"])]
 b2 = RB.build_book(many, {})
@@ -154,8 +195,15 @@ ok("heat never exceeds its cap",
    f"Rs {b2['state']['heat']:,} / {b2['state']['heat_cap']:,}")
 ok("deployed never exceeds its cap",
    b2["state"]["deployed"] <= b2["state"]["deployed_cap"])
+# would_place replaces admitted in the reconciliation while suspended: every
+# signal is still in exactly one bucket, which is the property this asserts.
 ok("nothing is silently dropped",
-   len(b2["admitted"]) + len(b2["deferred"]) + len(b2["duplicates"]) + len(b2["rejected"]) == len(many))
+   len(b2["would_place"]) + len(b2["admitted"]) + len(b2["deferred"])
+   + len(b2["duplicates"]) + len(b2["rejected"]) == len(many),
+   f"{len(b2['would_place'])}+{len(b2['admitted'])}+{len(b2['deferred'])}"
+   f"+{len(b2['duplicates'])}+{len(b2['rejected'])} vs {len(many)}")
+ok("a suspended book deploys no capital",
+   b2["state"]["deployed"] == 0 and b2["state"]["heat"] == 0)
 
 # ── EVERY REFUSAL HAS TO BE A SENTENCE ───────────────────────────────────────
 #

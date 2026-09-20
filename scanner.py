@@ -1336,14 +1336,137 @@ def _check_breakouts(df_d, df_w, df_m):
                 found.append(("Weekly", "Cup & Handle"))
                 break
 
-    if df_m is not None and len(df_m) >= 8:
-        mclose = df_m["Close"].squeeze()
-        mhigh  = df_m["High"].squeeze()
-        m6hi   = mhigh.rolling(6).max().iloc[-2]
-        if mclose.iloc[-1] > m6hi:
-            found.append(("Monthly", "6M Breakout"))
+    # ── A MONTHLY BREAKOUT NEEDS A CLOSED MONTHLY CANDLE ────────────────────
+    #
+    # Akshay: "for monthly breakouts, only generate once the month closes — 30
+    # or 31 — and consider popular candles with reference to 1-month or 3-month
+    # candles."
+    #
+    # THE BUG THIS REPLACES. `mclose.iloc[-1]` was the month IN PROGRESS.
+    # Yahoo appends a row for the current month from its first session, so on
+    # the 3rd of a month this compared three days of trade against the prior six
+    # months' high and called it a six-month breakout. A third of those months
+    # then closed back below the level, and the engine had already published.
+    #
+    # THREE GATES NOW, and each one removes signals rather than adding them:
+    #
+    #   1. THE BAR MUST BE CLOSED. The in-progress month is dropped and the
+    #      comparison runs on the last completed one.
+    #   2. IT MUST BE FRESH. A closed-bar test is true every day for the whole
+    #      following month, so without this the same breakout re-fires for
+    #      thirty sessions. Only the days immediately after the close count.
+    #   3. THE CANDLE MUST BE CONVINCING. A month that closes a hair above a
+    #      six-month high on a doji is not the same event as one that closes at
+    #      the top of a wide range. The monthly candle has to be a real one —
+    #      see _monthly_candle below — and the quarter has to agree.
+    if df_m is not None and len(df_m) >= 10:
+        closed_m = _closed_monthly(df_m)
+        if closed_m is not None and len(closed_m) >= 8:
+            mclose = closed_m["Close"].squeeze()
+            mhigh  = closed_m["High"].squeeze()
+            m6hi   = mhigh.rolling(6).max().iloc[-2]
+            if mclose.iloc[-1] > m6hi and _month_just_closed(closed_m):
+                candle = _monthly_candle(closed_m)
+                if candle:
+                    found.append(("Monthly", f"6M Breakout · {candle}"))
 
     return found
+
+
+# ── MONTH-BOUNDARY HELPERS ──────────────────────────────────────────────────
+# Kept together and named for what they decide, because the difference between
+# "this month" and "the last completed month" is the whole correctness question
+# for any monthly signal and it was previously decided by an index of -1.
+
+def _closed_monthly(df_m):
+    """The monthly frame with the in-progress month removed.
+
+    Yahoo indexes a monthly bar on the FIRST day of its month, so the test is
+    on the index's month, not on a date comparison against the bar's label.
+    """
+    try:
+        import pandas as pd
+        idx = df_m.index
+        now = pd.Timestamp.now(tz=idx.tz) if getattr(idx, "tz", None) else pd.Timestamp.now()
+        if (idx[-1].year, idx[-1].month) == (now.year, now.month):
+            return df_m.iloc[:-1]
+        return df_m
+    except Exception:                                            # noqa: BLE001
+        return None
+
+
+# How long after a month closes its breakout still counts as news. Seven days
+# covers the first week of the new month, so a scan that is skipped or a cron
+# that drops still catches it — and a signal cannot re-fire all month.
+MONTHLY_FRESH_DAYS = 7
+
+
+def _month_just_closed(closed_m) -> bool:
+    """Did the last completed monthly bar close within the freshness window?"""
+    try:
+        import pandas as pd
+        idx = closed_m.index
+        now = pd.Timestamp.now(tz=idx.tz) if getattr(idx, "tz", None) else pd.Timestamp.now()
+        # The bar is labelled with the month's first day; it CLOSED at month end.
+        month_end = idx[-1] + pd.offsets.MonthEnd(0)
+        return 0 <= (now - month_end).days <= MONTHLY_FRESH_DAYS
+    except Exception:                                            # noqa: BLE001
+        return False
+
+
+def _monthly_candle(closed_m):
+    """The name of the monthly candle, when it is one worth acting on.
+
+    Not a pattern library — three shapes that mean "the month was bought", and
+    a quarterly agreement test. Everything else returns None and the breakout
+    is dropped, which is the point: the gate exists to reject.
+
+      Marubozu       closed in the top 20% of its own range, and that range was
+                     wider than its recent average. The month went up and
+                     stayed up.
+      Engulfing      the body covers the previous month's body outright, after
+                     a down month. A reversal with size behind it.
+      Breakaway      closed above the prior three months' highs on the widest
+                     range of the four. A month that left a base.
+
+    THE QUARTER HAS TO AGREE. A strong month inside a falling quarter is a
+    bounce; the three-month close must also be above where it was three months
+    ago. That single test removes most of what this function would otherwise
+    pass.
+    """
+    try:
+        o = float(closed_m["Open"].squeeze().iloc[-1])
+        h = float(closed_m["High"].squeeze().iloc[-1])
+        l = float(closed_m["Low"].squeeze().iloc[-1])
+        c = float(closed_m["Close"].squeeze().iloc[-1])
+        po = float(closed_m["Open"].squeeze().iloc[-2])
+        pc = float(closed_m["Close"].squeeze().iloc[-2])
+        rng = h - l
+        if rng <= 0 or c <= o:
+            return None                                  # a down month is not a breakout
+
+        # The quarter has to agree — see the docstring.
+        if len(closed_m) >= 4:
+            c3 = float(closed_m["Close"].squeeze().iloc[-4])
+            if c3 > 0 and c <= c3:
+                return None
+
+        avg_rng = float((closed_m["High"] - closed_m["Low"]).squeeze()
+                        .rolling(6).mean().iloc[-2])
+        wide = avg_rng > 0 and rng > avg_rng
+
+        if (c - l) / rng >= 0.80 and wide:
+            return "monthly marubozu"
+        if pc < po and c >= po and o <= pc:
+            return "monthly engulfing"
+        if len(closed_m) >= 4:
+            hi3 = float(closed_m["High"].squeeze().iloc[-4:-1].max())
+            rng3 = (closed_m["High"] - closed_m["Low"]).squeeze().iloc[-4:-1].max()
+            if c > hi3 and rng > float(rng3):
+                return "monthly breakaway"
+        return None
+    except Exception:                                            # noqa: BLE001
+        return None
 
 
 def analyze_breakout(symbol):

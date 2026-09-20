@@ -116,6 +116,18 @@ ENGINE_VERSION = "v2"
 # holding horizon, and the resulting stop-out rate. They are stated because an
 # engine's rule means little without the evidence that the rule is sane.
 REMARKS = {
+    # PIVOT had no entry here, so engine_rule() returned "" for it and an
+    # alert naming PIVOT would have carried no explanation at all — the one
+    # thing every other engine's message does. Caught by test_alert_pipeline's
+    # "every named engine can explain itself" the moment pivot was added to
+    # the Python name map on 2026-09-19; it had been absent from that map
+    # entirely, so the gap had never been reachable before.
+    "pivot":            "Reaction at a level — daily horizon. Takes price AT a level the "
+                        "market has already reacted to (the 200-day, the top of a multi-week "
+                        "shelf, or a swing high being retested) rather than price breaking "
+                        "away from one, and requires the higher timeframe to agree and the "
+                        "session to confirm. Research tier: logged and published, never "
+                        "alerted, with no closed trade and no measured expectancy yet.",
     "cf_1h":            "Commodity 1h channel scan — intraday horizon. Entry on the 1h bar, "
                         "gated by 4H EMA alignment and RSI 45-75 long / 25-55 short; targets "
                         "from swing pivots and day levels, R:R measured not asserted; stop is "
@@ -1004,6 +1016,72 @@ def log_to_all_signals(symbol, signal_type, action, entry, sl, t1, t2, t3, rr,
     return row_id
 
 
+# ── THE TREND GATE ──────────────────────────────────────────────────────────
+#
+# Akshay: "quality over quantity — take inspiration from Investtech."
+#
+# What Investtech actually does that this book did not: it will not take a long
+# against its own trend channel. Every engine here could, and did.
+#
+# THIS WAS MEASURED BEFORE IT WAS BUILT, against all 269 closed NSE-equity
+# trades, with each name's bars cut at its own entry date so there is no
+# lookahead. Expectancy of what the gate KEEPS against what it DROPS:
+#
+#     no filter                 264 trades   -0.044R   29.9% won
+#     above the 200-day         192          -0.028R   (dropped -0.085R)
+#     200-day rising            150          -0.004R   (dropped -0.097R)
+#     stacked 50>200            137          +0.015R   (dropped -0.107R)
+#     stacked + 200 rising      120          +0.042R   (dropped -0.115R)   <- this
+#     + volume confirm           38          +0.090R   (dropped -0.066R)
+#
+# The separation is consistent: at every cut, what passes is better than what
+# is dropped, and the dropped bucket is reliably negative. The gate turns a
+# losing book into a flat one and removes 55% of the signals to do it.
+#
+# IT IS NOT AN EDGE AND THE COMMENT WILL NOT PRETEND IT IS. +0.042R at t=0.30
+# over 120 trades is indistinguishable from zero. What the evidence supports is
+# narrower and still worth having: these are the trades that were losing money,
+# and they are identifiable before entry.
+#
+# The volume variant is better still and cuts the sample to 38, which is too
+# few to set a rule on. It is left out deliberately rather than fitted.
+#
+# ONE FILTER THAT INVERTED, recorded so nobody adds it back: requiring a strong
+# close (in the top 40% of the bar's range) made things WORSE — kept -0.122R
+# against dropped +0.002R. The obvious quality test was the wrong one.
+TREND_GATE_ON = os.environ.get("TREND_GATE", "1") != "0"
+
+
+def _trend_ok(symbol: str):
+    """(passed, why). A long needs the trend under it, or it does not go.
+
+    Returns True on any failure to FETCH — a gate that silently drops every
+    signal when Yahoo is slow is worse than no gate, and the failure mode has
+    to be "publish and be judged", not "publish nothing and look healthy".
+    """
+    if not TREND_GATE_ON:
+        return True, "gate off"
+    try:
+        import yfinance as yf
+        sym = str(symbol or "").replace(".NS", "").replace(".BO", "")
+        d = yf.Ticker(sym + ".NS").history(period="2y", interval="1d", auto_adjust=True)
+        if d is None or len(d) < 220:
+            return True, "no history — not gated"
+        c = d["Close"]
+        s50 = c.rolling(50).mean().iloc[-1]
+        s200s = c.rolling(200).mean()
+        s200, s200_prev = s200s.iloc[-1], s200s.iloc[-21]
+        px = c.iloc[-1]
+        if not (px > s50 > s200):
+            return False, f"not stacked (px {px:.1f}, 50d {s50:.1f}, 200d {s200:.1f})"
+        if not (s200 > s200_prev):
+            return False, "200-day still falling"
+        return True, "stacked, 200-day rising"
+    except Exception as e:                                       # noqa: BLE001
+        logging.warning(f"trend gate could not read {symbol} ({e}) — letting it through")
+        return True, "gate unavailable"
+
+
 def log_batch_to_all_signals(rows, date=None):
     """Insert many signals over ONE connection. Returns row ids in input order.
 
@@ -1022,6 +1100,32 @@ def log_batch_to_all_signals(rows, date=None):
     """
     if not rows:
         return []
+
+    # THE GATE RUNS HERE because this is where every engine writes. Ten engines
+    # with ten copies of one entry condition is the drift this file has already
+    # recorded against four target ladders and three feed lists.
+    #
+    # Long NSE equities only: the gate is a statement about an equity trend and
+    # says nothing about a currency or a short, and the book is long-only.
+    if TREND_GATE_ON:
+        kept, dropped = [], []
+        for r in rows:
+            mk = str(r.get("market") or "NSE").upper()
+            act = str(r.get("action") or "BUY").upper()
+            if mk != "NSE" or act not in ("BUY", "LONG"):
+                kept.append(r)
+                continue
+            ok, why = _trend_ok(r.get("symbol"))
+            (kept if ok else dropped).append(r)
+            if not ok:
+                logging.info(f"  trend gate dropped {r.get('symbol')} "
+                             f"({r.get('signal_type')}): {why}")
+        if dropped:
+            logging.info(f"trend gate: {len(kept)} published, {len(dropped)} dropped "
+                         f"of {len(rows)}")
+        rows = kept
+        if not rows:
+            return []
 
     # ── ONE TICKET PER NAME PER ENGINE, ENFORCED WHERE EVERY ENGINE WRITES ──
     #
@@ -1598,6 +1702,72 @@ def get_performance():
         "worst":         round(float(closed["pnl_pct"].min()), 2) if len(closed) > 0 else 0,
         "by_type":       by_type,
     }
+
+def get_site_record():
+    """What signal.askakshay.com is accountable for — the number for the phone.
+
+    get_performance() above opens with "Performance from ALL signal types" and
+    means it: every engine including retired ones, every date including the
+    months before this site existed, shorts that were never sent to anybody,
+    and COMEX gold priced in dollars. That is a real figure about the LEDGER
+    and it is the wrong figure to answer "how are we doing" with, because it
+    is not the figure any page shows.
+
+    On 2026-09-19 the site published 45 signals since launch with 13 closed at
+    7.7% and -0.765R. /performance, reading the same database, would have
+    quoted a different total, a different win rate and a different expectancy
+    — a fifth answer to one question, and the only one that arrives unprompted
+    on a phone.
+
+    This applies engine_names.in_book(), which mirrors ENGINE_BOOK.inBook() in
+    the browser: live engine, long only, rupee-priced, on or after LAUNCH.
+
+    r_multiple IS CHECKED FOR NULL FIRST. float(None) raises but
+    pd.to_numeric(...).fillna(0) does not — it turns an ungraded row into a
+    closed trade booked at exactly 0R, which lands in the count, the win rate
+    and the expectancy. The site fixed this same hole in three places; this is
+    the fourth.
+    """
+    from engine_names import LAUNCH, in_book
+    init_db()
+    try:
+        with _conn() as c:
+            df = pd.read_sql("SELECT * FROM all_signals", c)
+    except Exception:                                       # noqa: BLE001
+        return {}
+    if df.empty:
+        return {}
+
+    df = df[df.apply(lambda r: in_book(r.to_dict()), axis=1)]
+    if df.empty:
+        return {"published": 0, "closed": 0, "open": 0, "launch": LAUNCH}
+
+    r = pd.to_numeric(df.get("r_multiple"), errors="coerce")
+    status = df.get("status").astype(str).str.upper()
+    badge = df.get("badge", pd.Series("", index=df.index)).astype(str).str.lower()
+    scored = r.notna() & (status != "OPEN") & (badge != "open")
+
+    closed = df[scored]
+    rr = r[scored]
+    n = len(closed)
+    wins = int((rr > 0).sum())
+    out = {"published": len(df), "closed": n, "open": int((status == "OPEN").sum()),
+           "launch": LAUNCH, "wins": wins, "losses": n - wins}
+    if n:
+        mean = float(rr.mean())
+        out["win_rate"] = round(wins / n * 100, 1)
+        out["avg_r"] = round(mean, 3)
+        if n > 1:
+            sd = float(rr.std(ddof=1))
+            out["t"] = round(mean / (sd / (n ** 0.5)), 2) if sd else None
+        by = {}
+        for k, grp in closed.groupby(closed["signal_type"].astype(str)):
+            gr = pd.to_numeric(grp["r_multiple"], errors="coerce").dropna()
+            if len(gr):
+                by[k] = {"n": len(gr), "avg_r": round(float(gr.mean()), 3)}
+        out["by_engine"] = by
+    return out
+
 
 def get_active_signals():
     init_db()

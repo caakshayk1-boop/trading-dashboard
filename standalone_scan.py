@@ -2504,11 +2504,27 @@ def main():
 
         elif slot == "eod":
             breakouts = _safe("breakout_scan", run_breakout_scan,  time_str)
-            tlm_daily = _safe("tlm_daily",     run_tlm_scan,       time_str, interval="1d")
+            # ── FOUR WRITERS THE SITE DOES NOT ACKNOWLEDGE, UNWIRED ────────
+            # tlm_daily writes `ai_daily` and tlm_4h writes `ai_4h`; 4h_scan
+            # writes `4h`. tracker.py marks all three retired. commodity_scan
+            # writes `commodity`, which engines.json marks disabled and which
+            # is COMEX rather than NSE — it had still written 7 rows since
+            # launch, every one of them appearing under no engine on the site.
+            # A ledger writer the roster does not name is a row nobody can
+            # explain, so none of them is called any more.
+            tlm_daily = []
             signals   = _safe("swing_scan",    run_swing_scan,     time_str)
-            comms     = _safe("commodity_scan",run_commodity_scan, time_str)
+            comms = []   # retired/disabled writer — unwired 2026-09-18. See the note in the eod slot.
             # Backtested engine — runs on the completed daily bar, as tested.
-            measured  = _safe("measured_equity", run_measured_equity_scan, time_str)
+            # ── TWO ENGINES RETIRED ON THEIR OWN RECORD, 2026-09-18 ────────
+            # PLUMB (equity_measured): 16 closed, -0.535R, 25% won, t=-2.92 —
+            #   the ONLY significantly losing engine on the board, and it was
+            #   the one described as "built from a measured edge". The measure
+            #   came back negative and the engine goes with it.
+            # NORTH (ai_longterm): no closed trade, no measured basis, and the
+            #   same weekly-to-months horizon ASCENT already covers. An engine
+            #   that has never been graded cannot be defended on its record.
+            measured = []
             # OHL/OLL reads today's Open/High/Low off the DAILY bar
             # (interval="1d"), which is only stable once the session has
             # closed — the same reason measured_equity runs here and not
@@ -2571,12 +2587,12 @@ def main():
         elif slot == "weekend":
             # Momentum is weekly by design — see run_momentum_scan.
             momentum  = _safe("momentum_scan", run_momentum_scan,  time_str)
-            sigs_4h   = _safe("4h_scan",       run_4h_scan,        time_str)
-            tlm_4h    = _safe("tlm_4h",        run_tlm_scan,       time_str, interval="4h")
+            sigs_4h = []   # retired/disabled writer — unwired 2026-09-18. See the note in the eod slot.
+            tlm_4h = []   # retired/disabled writer — unwired 2026-09-18. See the note in the eod slot.
             signals   = _safe("swing_scan",    run_swing_scan,     time_str)
             _safe("fno_alerts",                run_fno_alerts,     time_str, signals)
             breakouts = _safe("breakout_scan", run_breakout_scan,  time_str)
-            tlm_daily = _safe("tlm_daily",     run_tlm_scan,       time_str, interval="1d")
+            tlm_daily = []   # retired/disabled writer — unwired 2026-09-18. See the note in the eod slot.
             # NO COMMODITY SCAN ON SATURDAY.
             #
             # This branch used to call run_commodity_scan and it produced a
@@ -2596,7 +2612,7 @@ def main():
             # runs. The `holiday` slot below KEEPS its commodity scan on
             # purpose — an NSE holiday falls on a weekday, when COMEX is open.
             mbs       = _safe("multibagger",   run_multibagger_scan, time_str)
-            lt        = _safe("ai_longterm",   run_ai_longterm_scan, time_str)
+            lt = []
             # Third weekly engine on the same Saturday clock. It was only ever
             # reachable through the /magic bot command, so it ran when someone
             # remembered to ask rather than every week.
@@ -2611,8 +2627,8 @@ def main():
             }
 
         elif slot == "holiday":
-            comms   = _safe("commodity_scan", run_commodity_scan, time_str)
-            sigs_4h = _safe("4h_scan",        run_4h_scan,        time_str)
+            comms = []   # retired/disabled writer — unwired 2026-09-18. See the note in the eod slot.
+            sigs_4h = []   # retired/disabled writer — unwired 2026-09-18. See the note in the eod slot.
             counts  = {"commodities": len(comms), "4h": len(sigs_4h)}
             _send(f"🏛️ *NSE Holiday* ({now.strftime('%d %b %Y')}) — "
                   f"Markets & commodity signals only. Equities resume next trading day.")
@@ -2620,7 +2636,7 @@ def main():
         else:  # full (off-hours fallback)
             breakouts = _safe("breakout_scan", run_breakout_scan,  time_str)
             signals   = _safe("swing_scan",    run_swing_scan,     time_str)
-            comms     = _safe("commodity_scan",run_commodity_scan, time_str)
+            comms = []   # retired/disabled writer — unwired 2026-09-18. See the note in the eod slot.
             counts    = {"breakouts": len(breakouts), "swing": len(signals), "commodities": len(comms)}
 
         log_scan_meta(slot, counts)

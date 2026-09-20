@@ -50,6 +50,7 @@ import math
 import pathlib
 import statistics
 from datetime import date, datetime, timezone
+from engine_names import LIVE as _LIVE, RETIRED as _RETIRED
 
 log = logging.getLogger("regime")
 logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(message)s")
@@ -61,7 +62,17 @@ OUT = ROOT / "docs" / "regime.json"
 
 # Matches tracker.py's EXCLUDE_FROM_EXPECTANCY. Research and allocation
 # artefacts are not trades and must not enter an expectancy figure.
-EXCLUDE = {"multibagger", "top5_pick", "sip_bucket"}
+# ── WHAT COUNTS AS THIS BOOK ─────────────────────────────────────────────────
+#
+# Was a hand-written EXCLUDE = {"multibagger", "top5_pick", "sip_bucket"}, and
+# it excluded MULTIBAGGER — ASCENT — which is an engine this site publishes.
+# So the regime panel was reporting a book with one of the site's own engines
+# missing from it, beside a record that included it.
+#
+# Now derived from engine_names.LIVE, the same map signal.js is held to by
+# test_engine_names.py. An engine is in this table exactly when the site
+# publishes it; there is no second opinion to keep in sync.
+INCLUDE = set(_LIVE)
 
 # ── ENGINES THAT NO LONGER RUN ──────────────────────────────────────────────
 # tracker.py's description map is the authority. `intraday` is NOT in here any
@@ -78,12 +89,17 @@ EXCLUDE = {"multibagger", "top5_pick", "sip_bucket"}
 # not a record of three things it stopped doing. That is the opposite call from
 # the one made an hour earlier, and the difference is that `intraday` is now a
 # live engine rather than a retired one being smuggled back in by a label.
-RETIRED = {
-    "4h": "retired 2026-08-01",
-    "ai_4h": "retired 2026-07-29",
-    "ai_daily": "retired 2026-07-29",
-    "ohl": "retired 2026-09-17",
-}
+#
+# THIS LIST IS NO LONGER KEPT HERE. It was, and it went stale: on 2026-09-19
+# it still named only the four intraday-era keys above while signal.js had
+# retired magic, equity_measured and ai_longterm. The regime panel and the
+# record beside it were therefore reporting two different populations, 11
+# closed against 12, and a reader could see 9.1% and 8.3% on one screen with
+# nothing to say which was this book's.
+#
+# engine_names.RETIRED is the one Python copy, and test_engine_names.py
+# asserts it equals the JS registry in both directions.
+RETIRED = {k: f"retired {v}" for k, v in _RETIRED.items()}
 
 # ── THIS SITE'S OWN RECORD STARTS HERE ──────────────────────────────────────
 # Akshay: "this also shows all from total, show only related to signal site."
@@ -243,13 +259,30 @@ def by_regime(rows: list[dict], labels: dict[str, dict]) -> dict:
     skipped_market = 0
     skipped_retired = 0
     skipped_prelaunch = 0
+    skipped_not_published = 0
+    skipped_short = 0
 
     for r in rows:
         eng = str(r.get("signal_type") or "")
-        if not eng or eng in EXCLUDE:
+        if not eng:
             continue
         if eng in RETIRED:
             skipped_retired += 1
+            continue
+        if eng not in INCLUDE:
+            skipped_not_published += 1
+            continue
+        # ── AND NOTHING SHORT, FOR THE SAME REASON THE SITE SAYS IT ─────────
+        # The book is long-only: standalone_scan's longs_only() states that
+        # "nothing short is put in front of a reader as an action", and the
+        # site filters shorts out of its published record on the grounds that
+        # it will not claim credit for a call nobody received. This table did
+        # not, so a short that was never sent counted toward what "this book"
+        # did in a regime. Every engine still FILES shorts and the ledger
+        # still keeps every one — deleting them would destroy the evidence for
+        # whether refusing them costs anything.
+        if str(r.get("action") or "BUY").upper() == "SELL":
+            skipped_short += 1
             continue
         # ── THE LABEL IS A NIFTY FACT. IT DESCRIBES NIFTY INSTRUMENTS. ──
         #
@@ -318,6 +351,8 @@ def by_regime(rows: list[dict], labels: dict[str, dict]) -> dict:
     return {"cells": out, "unlabelled_trades": unlabelled,
             "excluded_non_nse": skipped_market,
             "excluded_retired": skipped_retired,
+            "excluded_not_published": skipped_not_published,
+            "excluded_short": skipped_short,
             "excluded_pre_launch": skipped_prelaunch,
             "launch": LAUNCH,
             "retired_engines": sorted(RETIRED),

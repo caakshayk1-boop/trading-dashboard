@@ -53,6 +53,11 @@ from __future__ import annotations
 
 import numpy as np
 
+# The house ladder, from the one module that owns it. Imported rather than
+# re-typed: this repo already has a note about four different target ladders
+# disagreeing, and a fifth copy here is how a fifth disagreement starts.
+from signals.indicators import R1_MULT, R2_MULT
+
 # ── tunables, in one place ───────────────────────────────────────────────────
 BOX_MIN_BARS      = 10      # a range shorter than this is not a base
 BOX_MAX_BARS      = 60
@@ -236,11 +241,51 @@ def ledge_signal(bars: dict, i: int) -> dict | None:
         # dropped — only 10.1% ever reached it, and 69% of trades timed out
         # instead, which makes it decoration rather than a target. That is the
         # same rule that removed this repo's old 4.0R third target.
-        "t1": float(top + 1.0 * boxh),      # reached 58.5% of the time
-        "t2": float(top + 2.0 * boxh),      # reached 31.9% of the time
-        "t1_reach": 0.585, "t2_reach": 0.319,
-        "rr1": float((top + boxh - c[i]) / risk),
-        "rr2": float((top + 2 * boxh - c[i]) / risk),
+        # ── THE MEASURED MOVE, FLOORED IN R ─────────────────────────────
+        #
+        # The targets are anchored to the BOX and the stop is anchored to the
+        # box FLOOR — but the entry is anchored to neither. It is the close
+        # that broke out, and that close can sit well above the box top. The
+        # further it runs before the signal fires, the worse the geometry gets,
+        # mechanically, with nothing checking it.
+        #
+        # TATACHEM, 2026-09-15, published live:
+        #     box   600.00 → 679.10  (11.6% deep, inside the 14% cap)
+        #     stop  597.00           (under the floor: risk 18.76% of entry)
+        #     entry 734.90           (8.2% ABOVE the box top)
+        #     t1    758.20  = top + boxh  →  0.169R
+        #     t2    837.30  = top + 2boxh →  0.743R
+        # Both targets below 1R: the plan could not pay for its own stop even
+        # if both printed. The first needed an 85.5% win rate to break even
+        # against a book running 7.7%. Every number came out of this function
+        # exactly as written — `rr1` was computed, was 0.169, and was published.
+        #
+        # KEEL, forty lines down, already does the right thing:
+        #     t1 = max(seg_hi, c[i] + 1.6 * risk)
+        # the structural level OR the house ladder's first rung, whichever is
+        # further. LEDGE gets the same floor. When the measured move is the
+        # larger number nothing changes — which is the common case, and why
+        # this does not disturb the backtest above.
+        #
+        # THE OTHER FIX WAS TRIED AND REJECTED ON ITS MERITS. Capping how far
+        # above the box top the breakout may close was swept (see the note at
+        # BOX_MAX_HEIGHT): <=1.0 ATR gave +0.255R at t=3.17 for a 15% cut in
+        # signals — no material gain in expectancy. That sweep measured
+        # EXPECTANCY, not whether the published plan was playable, which is a
+        # different question and the one that matters to a reader. Flooring the
+        # target answers it without discarding a signal.
+        "t1": float(max(top + 1.0 * boxh, c[i] + R1_MULT * risk)),
+        "t2": float(max(top + 2.0 * boxh, c[i] + R2_MULT * risk)),
+        # The reach rates belong to the MEASURED MOVE and are only true of it.
+        # Where the floor binds, the target is further away than the one those
+        # rates were measured on, so they are reported as null rather than
+        # carried over — a 58.5% reach rate quoted against a target the
+        # backtest never tested is a number that is worse than no number.
+        "t1_reach": 0.585 if (top + boxh) >= (c[i] + R1_MULT * risk) else None,
+        "t2_reach": 0.319 if (top + 2 * boxh) >= (c[i] + R2_MULT * risk) else None,
+        "t1_floored": bool((c[i] + R1_MULT * risk) > (top + boxh)),
+        "rr1": float(max(top + boxh, c[i] + R1_MULT * risk) - c[i]) / risk,
+        "rr2": float(max(top + 2 * boxh, c[i] + R2_MULT * risk) - c[i]) / risk,
         "why": [
             f"Closed above a {span}-bar base at {top:.1f}",
             f"Base only {(boxh/top)*100:.1f}% deep — stop sits under {floor:.1f}",
@@ -344,6 +389,25 @@ def keel_signal(bars: dict, i: int) -> dict | None:
     }
 
 
+# ── THE BACKTEST BELOW PREDATES THE TARGET FLOOR ─────────────────────────────
+#
+# Everything in this section was measured with LEDGE's ORIGINAL targets —
+# top + 1.0x box and top + 2.0x box, unfloored. Since 2026-09-19 the first two
+# targets are floored at the house ladder (1.6R / 2.5R), so where the floor
+# binds a signal now carries a target the sweep below never tested.
+#
+# WHAT THAT DOES AND DOES NOT INVALIDATE. It does not touch entry, stop, or
+# which bars fire — those are unchanged, so the trade POPULATION is the same.
+# It changes where some trades take profit, and only in the direction of a more
+# distant target: a floored T1 is further away than the measured move, so it is
+# reached LESS often than 58.5% and pays more when it is. The sign of that
+# trade-off is known; the size is not, and this file will not guess it.
+#
+# So +0.224R at t=3.20 describes the engine as it was, not as it is, and it
+# should not be quoted for signals generated after the floor without a re-run.
+# LEDGE remains PAPER either way — the bar is 30 closed trades at t>=2 and a
+# backtest has never been a closed trade.
+#
 # ── WHAT THE BACKTEST ACTUALLY SAID ──────────────────────────────────────────
 # 149 liquid NSE names, 2 years of daily bars, walk-forward, entry at the next
 # bar's OPEN, one position per symbol at a time, 60-day limit, stop checked

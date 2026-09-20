@@ -388,7 +388,8 @@ def _screen_reply(text: str) -> str:
 
 def handle_command(text, chat_id):
     """Handle bot commands — called by polling loop or webhook."""
-    from tracker import get_active_signals, get_performance, mute_asset
+    from tracker import (get_active_signals, get_performance, get_site_record,
+                         mute_asset)
     text = text.strip()
 
     if text.startswith("/vercel"):
@@ -398,7 +399,11 @@ def handle_command(text, chat_id):
         if sub == "all":
             msg = get_vercel_report("all")
         elif sub == "ohl":
-            msg = get_vercel_report("ohl")
+            # OHL was retired 2026-09-17 (25 closed, -0.265R, t=-0.86). The
+            # command stayed and would have returned an empty report forever,
+            # which reads as a broken bot rather than a retired engine.
+            msg = ("*OHL is retired.*\n25 closed at −0.265R, 20% won — it never "
+                   "cleared a bar. Use /active for what is open now.")
         else:
             msg = get_vercel_report("incremental")
         _post(msg, chat_id)
@@ -408,18 +413,31 @@ def handle_command(text, chat_id):
         _post(_SCREEN_HELP, chat_id)
 
     elif text.startswith("/start"):
+        # ── GROUPED BY WHAT YOU WANT, NOT BY WHAT THE CODE DOES ────────────
+        #
+        # The old one was a flat list under the word "Commands:", advertised
+        # `/vercel ohl` for an engine retired the day before, and closed with
+        # "Scans run 9:30 AM | 2:00 PM | 5:30 PM IST" — which stopped being
+        # true when signals went end-of-day only in July. A menu that lies
+        # about when the thing runs is worse than no menu.
+        #
+        # Three groups, because there are only three reasons anyone opens this:
+        # what is happening, what the record says, and making it shut up.
         _post(
-            "👋 *Nifty 500 Swing Scanner*\n\n"
-            "Commands:\n"
-            "/active — all open signals\n"
-            "/performance — win rate & stats\n"
-            "/mute SYMBOL — stop alerts for a stock\n"
-            "/stats — scanner health\n\n"
-            "*TradeFlow Pro (Vercel):*\n"
-            "/vercel — new signals since last check\n"
-            "/vercel all — everything generated today\n"
-            "/vercel ohl — OHL/OLL setups only\n\n"
-            "Scans run: 9:30 AM | 2:00 PM | 5:30 PM IST (Mon–Fri)",
+            "*SIGNAL* — the desk, in your pocket\n\n"
+            "*Right now*\n"
+            "/active — every open position, with its levels\n"
+            "/screen `SYMBOL` — the call on any NSE name\n"
+            "/book — what the book is holding\n\n"
+            "*The record*\n"
+            "/performance — win rate and expectancy since launch\n"
+            "/stats — is the pipeline actually running\n\n"
+            "*Control*\n"
+            "/mute `SYMBOL` — stop alerts on one name\n"
+            "/confirm · /skip — mark a fill, or decline it\n\n"
+            "_Two reports a day: 08:00 and 20:00 MYT._\n"
+            "_Signals are end-of-day only — nothing fires before 18:30 IST, "
+            "and a quiet morning is the correct result, not a fault._",
             chat_id
         )
 
@@ -434,20 +452,58 @@ def handle_command(text, chat_id):
             _post("\n".join(lines), chat_id)
 
     elif text.startswith("/performance"):
-        p = get_performance()
-        if not p:
-            _post("No closed trades yet.", chat_id)
+        # ── THE SAME RECORD THE SITE PUBLISHES, AND IT WAS NOT ─────────────
+        #
+        # This called get_performance(), whose own docstring reads "Performance
+        # from ALL signal types" and means it: retired engines, the months
+        # before this site existed, shorts nobody was ever sent, and COMEX gold
+        # priced in dollars. So the number that arrived on the phone was a
+        # FIFTH answer to "what is the record", after the four already
+        # disagreeing on the pages — and the only one that arrives unprompted.
+        #
+        # get_site_record() applies engine_names.in_book(), which mirrors
+        # ENGINE_BOOK.inBook() in the browser. Verified against the live ledger
+        # on 2026-09-19: both produce 45 published, 13 closed, 7.7%, -0.765R.
+        #
+        # THE T-STATISTIC IS PRINTED, not just the average. -0.765R over 13
+        # trades reads like a bad run; t=-2.79 says it is not one. That is the
+        # distinction the whole book turns on and it belongs in the message.
+        from engine_names import engine_name
+        rec = get_site_record()
+        if not rec or not rec.get("published"):
+            _post("Nothing published since " + rec.get("launch", "launch") + ".", chat_id)
+        elif not rec.get("closed"):
+            _post(f"*{rec['published']}* published since {rec['launch']}, "
+                  f"none closed yet. Nothing to report is reported as nothing.", chat_id)
         else:
-            _post(
-                f"📈 *Performance*\n\n"
-                f"Total signals: {p['total']}\n"
-                f"Win rate: *{p['win_rate']}%*\n"
-                f"Avg P&L: {p['avg_pnl']}%\n"
-                f"Avg R: {p['avg_r']}\n"
-                f"Profit factor: {p['profit_factor']}\n"
-                f"Best: +{p['best']}% | Worst: {p['worst']}%",
-                chat_id
-            )
+            t = rec.get("t")
+            verdict = ("no edge either way — indistinguishable from chance"
+                       if t is None or abs(t) < 2
+                       else "significantly positive" if t >= 2
+                       else "significantly negative — the losses are not bad luck")
+            lines = [
+                "*THE RECORD* — signal.askakshay.com",
+                f"_since {rec['launch']}, the 8 engines this site publishes_",
+                "",
+                f"Published   *{rec['published']}*   ({rec['open']} still open)",
+                f"Closed      *{rec['closed']}*   {rec['wins']}W / {rec['losses']}L",
+                f"Win rate    *{rec['win_rate']}%*",
+                f"Per trade   *{rec['avg_r']:+.3f}R*"
+                + (f"   t={t:+.2f}" if t is not None else ""),
+                "",
+                f"_{verdict}._",
+            ]
+            by = rec.get("by_engine") or {}
+            if by:
+                lines.append("")
+                lines.append("*By engine*")
+                for k, v in sorted(by.items(), key=lambda kv: -kv[1]["n"]):
+                    lines.append(f"{engine_name(k):<8} {v['n']:>2} closed  {v['avg_r']:+.3f}R")
+            if rec["closed"] < 30:
+                lines.append("")
+                lines.append(f"_{rec['closed']} closed is short of the 30 this book "
+                             f"requires before an engine is trusted. Shown anyway._")
+            _post("\n".join(lines), chat_id)
 
     elif text.startswith("/screen"):
         _post(_screen_reply(text), chat_id)
