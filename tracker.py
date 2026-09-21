@@ -1082,6 +1082,60 @@ def _trend_ok(symbol: str):
         return True, "gate unavailable"
 
 
+def drop_retired(rows):
+    """(rows that may file, rows refused) — split a batch on engine retirement.
+
+    A PURE FUNCTION, deliberately, and separate from the write it guards. The
+    first version of this lived inline inside log_batch_to_all_signals, which
+    meant the only way to test it was to call a function that opens a database
+    — and against Turso that is not an exception you can catch, it is a Rust
+    panic through pyo3. A gate nobody can test in isolation is a gate nobody
+    tests.
+
+    WHY IT EXISTS. PLUMB (equity_measured) was retired on 2026-09-18 for being
+    the only significantly losing engine — 16 closed, -0.535R, t = -2.92 — and
+    it filed MARUTI and HINDUNILVR that same day. Both rows are in the ledger.
+    Nobody saw them, because engines.js correctly refuses to publish a retired
+    engine, so the retirement looked complete from outside while the scanner
+    went on running it. Same shape as the fault the retirement commit fixed —
+    lists disagreeing about which engines exist — except this time the two
+    halves disagreed: the display knew and the generator did not.
+
+    WHAT RETIREMENT MEANS, AND WHAT IT DOES NOT. It stops an engine FILING NEW
+    SIGNALS. It says nothing about trades already open: `magic` has twenty of
+    them and they are still managed, still stopped, still alerted — which is
+    why a TIDAL alert can arrive on a Saturday with nothing new on the site.
+    This function is on the write path for new rows and must never be reached
+    from position management.
+
+    An allocation is not a retired engine. top5_pick and sip_bucket are absent
+    from RETIRED on purpose and pass through.
+
+    FAILS OPEN, like the trend gate beside it: if the map cannot be imported,
+    everything files. A gate that silently drops every signal when an import
+    breaks looks healthy and publishes nothing.
+    """
+    try:
+        from engine_names import RETIRED
+    except Exception as e:                                     # noqa: BLE001
+        logging.warning(f"retirement gate unavailable ({e}) — not filtering")
+        return list(rows), []
+    if not RETIRED:
+        return list(rows), []
+    live, refused = [], []
+    for r in rows or []:
+        k = str(r.get("signal_type") or "").strip()
+        (refused if k in RETIRED else live).append(r)
+    for r in refused:
+        k = str(r.get("signal_type") or "").strip()
+        logging.warning(f"  retired engine refused: {k} {r.get('symbol')} "
+                        f"— retired {RETIRED.get(k)}")
+    if refused:
+        logging.info(f"retirement gate: {len(live)} filed, {len(refused)} refused "
+                     f"of {len(rows)}")
+    return live, refused
+
+
 def log_batch_to_all_signals(rows, date=None):
     """Insert many signals over ONE connection. Returns row ids in input order.
 
@@ -1098,6 +1152,12 @@ def log_batch_to_all_signals(rows, date=None):
     and a broken idempotence key: the next run finds nothing logged under the
     real dates and writes the whole set again.
     """
+    if not rows:
+        return []
+
+    # A retired engine does not file. See drop_retired() for why this is a
+    # separate function and for what retirement does NOT mean.
+    rows, _refused = drop_retired(rows)
     if not rows:
         return []
 

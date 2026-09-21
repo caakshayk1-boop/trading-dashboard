@@ -298,7 +298,7 @@ telegram_bot._post = fake_post_ok
 standalone_scan.telegram_bot = telegram_bot
 import types
 
-def run_path(name, fn, sig_type, n, make, alerts=True):
+def run_path(name, fn, sig_type, n, make, alerts=True, retired=False):
     """Every row logged, and every row's delivery outcome RECORDED ACCURATELY.
 
     `alerts=False` is a research-tier engine: it writes the ledger and sends
@@ -319,6 +319,23 @@ def run_path(name, fn, sig_type, n, make, alerts=True):
             "SELECT COUNT(*), SUM(sent_at IS NOT NULL), "
             "       SUM(send_error IS NOT NULL AND send_error != '') "
             "FROM all_signals WHERE signal_type=?", (sig_type,)).fetchone()
+    if retired:
+        # A RETIRED ENGINE DOES NEITHER. `4h` (2026-08-01) and `ai_4h`
+        # (2026-07-29) are in engine_names.RETIRED, so tracker.drop_retired()
+        # refuses every row at the write path and may_alert() refuses the send.
+        #
+        # This used to assert all 40 were logged and all 40 sent, which is what
+        # the code did and not what the book says: PLUMB was retired on
+        # 2026-09-18 and filed MARUTI and HINDUNILVR the same day, invisible
+        # because the site correctly refuses to publish a retired engine.
+        #
+        # BOTH halves are checked because fixing only the write produced
+        # something worse — a Telegram alert with no ledger row behind it.
+        check(f"{name}: retired — nothing is logged", logged == 0, f"logged={logged}")
+        check(f"{name}: retired — nothing is sent", sent in (0, None), f"sent={sent}")
+        check(f"{name}: retired — nothing reached Telegram", not posted,
+              f"{len(posted)} messages")
+        return
     check(f"{name}: all {n} logged (no positional cap)", logged == n, f"logged={logged}")
     if alerts:
         check(f"{name}: all {n} marked sent", sent == n, f"sent={sent}")
@@ -333,14 +350,15 @@ scanner.scan_4h = lambda *a, **k: [
     {"symbol": f"H4_{i}", "price": 100.0+i, "sl": 95.0+i, "target1": 105.0+i,
      "target2": 110.0+i, "rr": 1.5, "score": 70, "fno": True} for i in range(M)]
 tracker.log_4h_signals = lambda *a, **k: None
-run_path("4h_scan", lambda: standalone_scan.run_4h_scan("t"), "4h", M, None)
+run_path("4h_scan", lambda: standalone_scan.run_4h_scan("t"), "4h", M, None,
+         retired=True)
 
 scanner.scan_tlm_breakouts = lambda interval="4h", *a, **k: [
     {"symbol": f"AI_{i}", "price": 100.0+i, "sl": 95.0+i, "target1": 105.0+i,
      "target2": 110.0+i, "target3": 115.0+i, "rr": 2.0, "pattern": "chan",
      "vol_ratio": 1.1, "fno": False, "timeframe": "4H"} for i in range(M)]
 run_path("tlm_scan", lambda: standalone_scan.run_tlm_scan("t", interval="4h"),
-         "ai_4h", M, None)
+         "ai_4h", M, None, retired=True)
 
 scanner.scan_commodities = lambda *a, **k: [
     {"symbol": f"CM_{i}", "ticker": f"C{i}=F", "action": "BUY", "price": 100.0+i,
@@ -373,10 +391,16 @@ _late = standalone_scan.run_intraday_scan("t")
 check("intraday_scan: past 14:30 IST it files nothing", _late == [], f"{len(_late)} filed")
 os.environ.pop("INTRADAY_NOW_IST", None)
 
-# Second run of the same scan must dedup everything, not re-alert
+# Second run of the same scan must dedup everything, not re-alert.
+#
+# THIS USED TO RE-RUN run_4h_scan, WHICH NO LONGER TESTS DEDUP AT ALL: `4h` is
+# retired, so the first run logs nothing, and a second run returning nothing
+# proves the retirement rather than the dedup. It would have passed for the
+# wrong reason and left dedup uncovered — the failure mode this file exists to
+# catch. Re-run a LIVE engine's scan instead, which is the thing dedup guards.
 before = posted[:]
 posted.clear()
-out2 = standalone_scan.run_4h_scan("t2")
+out2 = standalone_scan.run_commodity_scan("t2")
 check("re-running a scan re-alerts nothing (dedup holds)",
       out2 == [] and not posted, f"{len(out2)} signals, {len(posted)} messages")
 

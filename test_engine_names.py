@@ -30,11 +30,12 @@ A comment cannot hold two files in agreement. This can.
 Dependency-free and offline, like test_engine_regressions.py beside it:
 `python3 test_engine_names.py` is the whole contract.
 
-ONE HONEST LIMIT, stated rather than implied. The cross-repo checks read
-signal.js off disk. In this repo's CI that file is not checked out, so they
-SKIP — and a skip is printed as a skip, never as a pass. They are a local
-guard on the machine where the registry is actually edited, which is where
-the drift happens; CI still runs every Python-internal check below.
+THE CROSS-REPO CHECKS RUN IN CI NOW. They read engines.js off disk and for
+months that file existed on one laptop, so on every CI run they reported SKIP
+— printed as a skip, never as a pass, and a skip is not a failure, which is
+exactly how PLUMB came to file two signals after its own retirement. Since
+signal went public on 2026-09-21 tests.yml checks it out and sets $SIGNAL_JS,
+and fails hard if the file is missing rather than returning to skipping.
 """
 from __future__ import annotations
 
@@ -45,6 +46,8 @@ import sys
 from pathlib import Path
 
 import engine_names as en
+
+import io
 
 FAILURES: list[str] = []
 PASSES = 0
@@ -220,7 +223,9 @@ def cross_repo_checks() -> None:
                   "names match exactly",
                   "retirement agrees in both directions",
                   "both sites publish the same engines",
-                  "bands match where both carry one"):
+                  "bands match where both carry one",
+                  "the browser's label rule is still the shared-name rule",
+                  "labels match exactly"):
             skip(n, f"signal.js not at {SIGNAL_JS}")
         return
 
@@ -258,6 +263,173 @@ def cross_repo_checks() -> None:
           f"TIDAL's two keys are told apart by band alone: {bands}")
 
 
+    # ── THE LABEL, WHICH IS THE STRING A PERSON READS ────────────────────────
+    #
+    # engine_label() mirrors ENGINE_BOOK.label(). Two mirrors of it now: the
+    # Python function, and the re-implementation four lines below that this
+    # check compares it against. A re-implementation of a rule is only worth
+    # anything while the rule it re-implements has not moved, so the rule is
+    # read out of the JS source FIRST. If label() stops being "append the band
+    # where the name is shared", this check goes red rather than going on
+    # comparing Python against a rule the browser no longer applies.
+    src = SIGNAL_JS.read_text(encoding="utf-8")
+    body = re.sub(r"/\*.*?\*/", "", src, flags=re.S)
+    m = re.search(r"var\s+label\s*=\s*function\s*\(k\)\s*\{(.*?)\n  \};",
+                  body, flags=re.S)
+    rule = re.sub(r"\s+", " ", (m.group(1) if m else "")).strip()
+    check("the browser's label rule is still the shared-name rule",
+          bool(m) and "shared(e.name) && e.band" in rule
+          and "e.name + ' \u00b7 ' + e.band" in rule,
+          f"label() now reads: {rule or 'not found'}")
+
+    # shared() counts EVERY entry, retired included — `entries()`, not
+    # `live()`. Mirrored here deliberately: a retired engine keeps its name,
+    # so it keeps the ambiguity it created.
+    js_shared = lambda n: sum(1 for v in js.values() if v.get("name") == n) > 1
+    js_label = lambda k: (
+        js[k]["name"] + " \u00b7 " + js[k]["band"]
+        if js_shared(js[k]["name"]) and js[k].get("band") else js[k]["name"])
+    wrong_l = {k: (en.engine_label(k), js_label(k)) for k in js
+               if k in en.ENGINE_NAMES and en.engine_label(k) != js_label(k)}
+    check("labels match exactly", not wrong_l,
+          f"python vs site: {wrong_l} — the phone and the page would name "
+          f"the same engine differently")
+
+
+def test_a_shared_name_carries_its_band() -> None:
+    """engine_label, which is what an alert actually prints.
+
+    magic and magicmagic are one screen read at two depths and share the name
+    TIDAL by design. On the site the card prints the band underneath the name.
+    A Telegram alert has no underneath: both arrived on the phone reading
+    exactly `TIDAL`, from engines with different rules and different records —
+    one retired with twenty positions still open, one live. The two alerts a
+    reader most needs to tell apart were the two that were identical.
+    """
+    a, b = en.engine_label("magic"), en.engine_label("magicmagic")
+    check("TIDAL's two keys do not print the same string", a != b,
+          f"both render {a!r}")
+    check("magic carries its own band", a == "TIDAL \u00b7 >15% off the high", a)
+    check("magicmagic carries its own band",
+          b == "TIDAL \u00b7 20\u201340% off the high", b)
+
+    # The rule is "shared", not "has a band". LEDGE and KEEL both carry one
+    # and neither name is ambiguous, so neither prints it — a band on an
+    # unambiguous name is noise dressed as precision.
+    for k in ("ledge", "keel"):
+        check(f"{k} has a band and does not print it",
+              en.engine_label(k) == en.engine_name(k)
+              and en.engine_band(k) != "",
+              f"{en.engine_label(k)!r} vs {en.engine_name(k)!r}")
+
+    # Every name that is NOT shared must label exactly as it names, or the
+    # rule has quietly become "always append".
+    for k in en.ENGINE_NAMES:
+        if not en._name_is_shared(en.ENGINE_NAMES[k][0]):
+            check(f"{k} labels as it names",
+                  en.engine_label(k) == en.engine_name(k),
+                  f"{en.engine_label(k)!r} != {en.engine_name(k)!r}")
+
+    # Keys the registry has never heard of still have to render as something.
+    for k, want in (("top5_pick", "Weekly Top 5"), ("", "Unattributed"),
+                    ("made_up", "MADE UP")):
+        check(f"unknown key {k!r} falls through to engine_name",
+              en.engine_label(k) == want, f"{en.engine_label(k)!r} != {want!r}")
+
+    # engine_name itself must NOT have moved: it is held equal to the
+    # browser's name() in both directions by cross_repo_checks below, and
+    # that comparison is the check that catches a missed retirement.
+    check("engine_name is untouched — it still returns the bare name",
+          en.engine_name("magic") == "TIDAL" == en.engine_name("magicmagic"),
+          f"{en.engine_name('magic')!r} / {en.engine_name('magicmagic')!r}")
+
+
+def test_the_alert_composers_print_the_label() -> None:
+    """A rule nothing calls is a rule that is not applied.
+
+    engine_label existing is not the fix; the alert paths reaching for it is.
+    These are read as source rather than executed because two of the three
+    open Turso to run.
+    """
+    for path, want in (("standalone_scan.py", "engine_label(engine_key)"),
+                       ("telegram_bot.py", "engine_label(k)")):
+        src = io.open(path, encoding="utf-8").read()
+        check(f"{path} composes its engine with the label", want in src,
+              f"{want!r} not found — that path still prints a bare name")
+        check(f"{path} no longer calls engine_name for a printed name",
+              not re.search(r"(?<![_\w])engine_name\s*\(", src),
+              "a bare engine_name call is back in an alert path")
+
+    src = io.open("engine_names.py", encoding="utf-8").read()
+    check("engine_line, which every position alert goes through, uses it",
+          "name = engine_label(signal_type)" in src)
+
+
+def test_a_retired_engine_cannot_file() -> None:
+    """tracker.drop_retired, called for real with a mixed batch.
+
+    PLUMB was retired on 2026-09-18 and filed MARUTI and HINDUNILVR that same
+    day; both rows are in the ledger. The retirement had been applied to the
+    browser registry and not to the scanner, so it looked complete from the
+    outside while the generator went on running.
+    """
+    import os
+    for k, v in (("TURSO_URL", "x"), ("TURSO_TOKEN", "y"),
+                 ("TELEGRAM_TOKEN", "z"), ("TELEGRAM_CHAT_ID", "1")):
+        os.environ.setdefault(k, v)
+    try:
+        from tracker import drop_retired
+    except Exception as e:                                      # noqa: BLE001
+        skip("a retired engine cannot file", f"tracker will not import: {e}")
+        return
+
+    from engine_names import RETIRED, LIVE
+    live_keys = sorted(LIVE)[:2]
+    dead_keys = sorted(RETIRED)[:2]
+    row = lambda sym, k: {"symbol": sym, "signal_type": k,
+                          "market": "NSE", "action": "BUY"}
+
+    batch = ([row(f"LIVE{i}", k) for i, k in enumerate(live_keys)]
+             + [row(f"DEAD{i}", k) for i, k in enumerate(dead_keys)]
+             # NOT retired, merely not engines. These must pass through.
+             + [row("ALLOC1", "top5_pick"), row("ALLOC2", "sip_bucket")])
+
+    kept, refused = drop_retired(batch)
+    kept_k = [r["signal_type"] for r in kept]
+    ref_k = [r["signal_type"] for r in refused]
+
+    check("every retired engine's row is refused",
+          sorted(ref_k) == sorted(dead_keys), f"refused {ref_k}, expected {dead_keys}")
+    check("every live engine's row survives",
+          all(k in kept_k for k in live_keys), f"kept {kept_k}")
+    check("an allocation is not a retirement — top5_pick and sip_bucket pass",
+          "top5_pick" in kept_k and "sip_bucket" in kept_k, f"kept {kept_k}")
+    check("nothing is lost or duplicated by the split",
+          len(kept) + len(refused) == len(batch), f"{len(kept)}+{len(refused)} vs {len(batch)}")
+
+    # THE EXACT ROW THAT GOT THROUGH. equity_measured filed two SELLs on the
+    # day it was retired; this is that batch, and it must now be empty.
+    plumb = [{"symbol": "MARUTI", "signal_type": "equity_measured",
+              "market": "NSE", "action": "SELL"},
+             {"symbol": "HINDUNILVR", "signal_type": "equity_measured",
+              "market": "NSE", "action": "SELL"}]
+    k2, r2 = drop_retired(plumb)
+    check("the two PLUMB rows of 2026-09-18 would now be refused",
+          k2 == [] and len(r2) == 2, f"kept {k2}")
+
+    # FAILS OPEN. An unknown engine is not a retired one.
+    k3, r3 = drop_retired([row("XXX", "an_engine_invented_tomorrow")])
+    check("an unrecognised engine is not treated as retired", len(k3) == 1 and not r3)
+    check("an empty batch is handled", drop_retired([]) == ([], []))
+
+    # The gate belongs on the WRITE path. Retirement says nothing about trades
+    # already open — magic has twenty and they are still managed and alerted.
+    src = io.open("tracker.py", encoding="utf-8").read()
+    check("the write path calls it", "rows, _refused = drop_retired(rows)" in src)
+    check("it runs before the trend gate, so a retired row is never priced",
+          src.index("drop_retired(rows)") < src.index("if TREND_GATE_ON:"))
+
+
 def main() -> int:
     print("test_engine_names")
     for fn in (test_live_is_derived_not_typed,
@@ -267,7 +439,10 @@ def main() -> int:
                test_retired_engines_keep_their_names,
                test_no_key_is_both_published_and_ledger_only,
                test_retirement_dates_are_dates,
-               test_research_engines_are_not_live):
+               test_research_engines_are_not_live,
+               test_a_retired_engine_cannot_file,
+               test_a_shared_name_carries_its_band,
+               test_the_alert_composers_print_the_label):
         try:
             fn()
         except Exception as e:                                  # noqa: BLE001

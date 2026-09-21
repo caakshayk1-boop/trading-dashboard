@@ -156,6 +156,26 @@ def may_alert(signal_type) -> tuple:
     whole point of the research tier.
     """
     k = str(signal_type or "").strip()
+    # A RETIRED ENGINE DOES NOT ALERT EITHER, and this half was missing.
+    #
+    # tracker.drop_retired() stops a retired engine writing to the ledger. It
+    # does not stop it SENDING: run_4h_scan does
+    #
+    #     ids  = log_batch_to_all_signals(rows)     <- refused, ids = []
+    #     sent = _send_chunked(...)                 <- fires anyway
+    #
+    # so the write gate on its own produced a Telegram alert with no ledger row
+    # behind it at all — strictly worse than the bug it fixed, because an alert
+    # you cannot look up afterwards is the one thing this book must never send.
+    # Both halves of the refusal belong together.
+    #
+    # The reason is DIFFERENT from a research-tier one on purpose. A research
+    # engine logs and does not alert, because running it forward silently is
+    # the point. A retired engine does neither; it is finished.
+    if k in RETIRED:
+        return False, (f"{k} was retired on {RETIRED[k]} — it files nothing "
+                       f"and alerts nothing. Trades opened before that date "
+                       f"are still managed and still alert.")
     if k in ALERTS_SUPPRESSED:
         return False, ALERTS_SUPPRESSED[k]
     return True, None
@@ -188,6 +208,52 @@ def engine_band(signal_type) -> str:
     """The band that separates two runs of one screen. Empty for most."""
     k = str(signal_type or "").strip()
     return (ENGINE_NAMES[k][3] or "") if k in ENGINE_NAMES else ""
+
+
+def _name_is_shared(name) -> bool:
+    """True when more than one KEY publishes this name.
+
+    Counts EVERY entry, retired ones included — the same set the browser's
+    `shared()` counts. A retired engine keeps its name forever because its
+    closed trades stay in the ledger forever, so the ambiguity it created
+    does not end when it stops filing. TIDAL is shared today and will still
+    be shared after `magic` has been switched off for a year.
+    """
+    return sum(1 for v in ENGINE_NAMES.values() if v[0] == name) > 1
+
+
+def engine_label(signal_type) -> str:
+    """The name to PRINT: the published name, plus the band when it is needed.
+
+    Mirrors ENGINE_BOOK.label() in engines.js, line for line, and exists for
+    the reason that function exists.
+
+    `magic` and `magicmagic` are one screen read at two depths and share the
+    name TIDAL on purpose. On the site that is fine — the card prints the band
+    underneath. In a Telegram alert there is no card and no underneath, so two
+    engines with different rules, different bands and different records both
+    arrived on the phone reading exactly `TIDAL`, and a reader could not tell
+    which one had fired. `magic` is retired with twenty positions still open
+    and `magicmagic` is live: the two alerts a reader most needs to tell apart
+    were the two that were indistinguishable.
+
+    NOT a change to engine_name(). That function is held equal to the
+    browser's `name()` in both directions by test_engine_names.py, which is
+    the check that would have caught PLUMB filing after its own retirement.
+    Widening it to sometimes return a name-plus-band would have made that
+    comparison meaningless. This is a second function, mirroring a second
+    function, pinned by its own check.
+
+    The band is appended ONLY where the name is shared, which is also the
+    browser's rule: LEDGE and KEEL both carry a band and neither prints it,
+    because neither name is ambiguous and a band on an unambiguous name is
+    noise dressed as precision.
+    """
+    k = str(signal_type or "").strip()
+    if k not in ENGINE_NAMES:
+        return engine_name(k)
+    name, band = ENGINE_NAMES[k][0], ENGINE_NAMES[k][3]
+    return f"{name} · {band}" if band and _name_is_shared(name) else name
 
 
 def is_published_engine(signal_type) -> bool:
@@ -281,7 +347,7 @@ def tally_note() -> str:
 
 def engine_line(signal_type) -> str:
     """One line naming the engine and its job: "LEDGE · Base breakout"."""
-    name = engine_name(signal_type)
+    name = engine_label(signal_type)
     role = engine_role(signal_type)
     return f"{name} · {role}" if role else name
 
