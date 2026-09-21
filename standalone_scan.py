@@ -1481,8 +1481,20 @@ def run_4h_scan(time_str):
                 **_quality_fields(b),
             })
         ids  = log_batch_to_all_signals(rows)
-        sent = _send_chunked(f"⚡ *4H Signals* ({len(sigs)}) — {time_str}\n", blocks)
-        _record_delivery(ids, sent, mark_alerts_sent)
+        # ASK BEFORE SENDING. `4h` was retired on 2026-08-01, so drop_retired()
+        # refuses every row above and `ids` comes back empty — and this line
+        # used to send anyway, which is a Telegram alert with no ledger row
+        # behind it. An alert you cannot look up afterwards is the one thing
+        # this book must never send, so the refusal has to cover both halves.
+        from engine_names import may_alert
+        allowed, why_not = may_alert("4h")
+        if allowed:
+            sent = _send_chunked(f"⚡ *4H Signals* ({len(sigs)}) — {time_str}\n", blocks)
+            _record_delivery(ids, sent, mark_alerts_sent)
+        else:
+            _record_delivery(ids, False, mark_alerts_sent, reason=why_not)
+            logging.info("4h: %d found, %d logged — %s", len(sigs), len(ids), why_not)
+            return []
     return sigs
 
 
@@ -2064,9 +2076,18 @@ def run_tlm_scan(time_str, interval="4h"):
                 "rr": b["rr"], "timeframe": tf_label, "score": 0,
             })
         ids  = log_batch_to_all_signals(rows)
-        sent = _send_chunked(
-            f"🤖 *AI Signals* ({tf_label}, {len(tlm_sigs)}) — {time_str}\n", blocks)
-        _record_delivery(ids, sent, mark_alerts_sent)
+        # Same refusal as run_4h_scan: `ai_4h` was retired on 2026-07-29.
+        from engine_names import may_alert
+        allowed, why_not = may_alert(sig_type)
+        if allowed:
+            sent = _send_chunked(
+                f"🤖 *AI Signals* ({tf_label}, {len(tlm_sigs)}) — {time_str}\n", blocks)
+            _record_delivery(ids, sent, mark_alerts_sent)
+        else:
+            _record_delivery(ids, False, mark_alerts_sent, reason=why_not)
+            logging.info("tlm: %d found, %d logged — %s",
+                         len(tlm_sigs), len(ids), why_not)
+            return []
     return tlm_sigs
 
 

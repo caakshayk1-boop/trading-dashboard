@@ -156,6 +156,26 @@ def may_alert(signal_type) -> tuple:
     whole point of the research tier.
     """
     k = str(signal_type or "").strip()
+    # A RETIRED ENGINE DOES NOT ALERT EITHER, and this half was missing.
+    #
+    # tracker.drop_retired() stops a retired engine writing to the ledger. It
+    # does not stop it SENDING: run_4h_scan does
+    #
+    #     ids  = log_batch_to_all_signals(rows)     <- refused, ids = []
+    #     sent = _send_chunked(...)                 <- fires anyway
+    #
+    # so the write gate on its own produced a Telegram alert with no ledger row
+    # behind it at all — strictly worse than the bug it fixed, because an alert
+    # you cannot look up afterwards is the one thing this book must never send.
+    # Both halves of the refusal belong together.
+    #
+    # The reason is DIFFERENT from a research-tier one on purpose. A research
+    # engine logs and does not alert, because running it forward silently is
+    # the point. A retired engine does neither; it is finished.
+    if k in RETIRED:
+        return False, (f"{k} was retired on {RETIRED[k]} — it files nothing "
+                       f"and alerts nothing. Trades opened before that date "
+                       f"are still managed and still alert.")
     if k in ALERTS_SUPPRESSED:
         return False, ALERTS_SUPPRESSED[k]
     return True, None
