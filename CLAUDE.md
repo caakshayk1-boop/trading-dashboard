@@ -43,7 +43,7 @@ Nifty 500 research screen sitting directly above the Signal Log.
   generate.py overwrites. Editing the artefact silently loses the work.
 - `docs/screen.json` needs allow-listing in THREE places: generate.py writes it,
   `.vercelignore` names it, `vercel-news/build.js` copies it.
-- `python3 test_stock_screen.py` — 133 checks, offline, no pytest.
+- `python3 test_stock_screen.py` — 421 checks, offline, no pytest.
 
 Honesty rules the screen must keep (all pinned by tests):
 - Missing data scores `None` and leaves its parent score's denominator; it is
@@ -122,7 +122,7 @@ section can look more current than its data.
 - `job_runs` carries `records`/`expected` — the ATTEMPT's coverage, kept
   separate from the served payload's. A free-text detail like "only 50 priced"
   is unparseable, so no badge, test or API could ever act on it.
-- `python3 test_data_health.py` — 44 checks, offline, no pytest.
+- `python3 test_data_health.py` — 46 checks, offline, no pytest.
 
 Rules the layer must keep (all pinned by tests):
 - A failed newer attempt behind valid data is DEGRADED, never STALE. The data
@@ -137,19 +137,62 @@ Rules the layer must keep (all pinned by tests):
 Two touches a day, on the operator's clock. Nothing else is scheduled to post.
 
 - **08:00 MYT** — the morning brief. **20:00 MYT** — the night brief, alongside
-  the day's only scan. Crons live in `scheduled_tasks.yml` and `daily_scan.yml`;
+  the day's ENTRY scan. Crons live in `scheduled_tasks.yml` and `daily_scan.yml`;
   the 13:00 MYT "signals open" scan is **gone**, and no morning scan replaces it
   (08:00 MYT is 05:30 IST, before the NSE opens — it could only re-report the
   previous close).
+- Two touches is a claim about the PHONE, not about how often anything runs.
+  Two other scans exist and neither adds a third weekday notification:
+  - **11:30 IST / 14:00 MYT, weekdays** — the midday slot, GUST only. It files
+    to the ledger and is research tier, so `may_alert` refuses it. It is also
+    **silent on success**: the slot used to fall through to the completion
+    summary, which "always sends so you know scan ran", so a third message
+    arrived every weekday saying nothing had happened — against `daily_scan.yml`'s
+    own rationale for the cron, which is that it "adds no message to anybody's
+    phone ... the only basis on which an unproven engine gets to run at all".
+    `quiet_on_success` reads that straight off `may_alert`, so promoting GUST
+    out of research tier starts it reporting again in the same commit, with no
+    second list to remember. A FAILURE still alerts.
+  - **09:30 IST, Saturday** — the weekly engines (VECTOR, ASCENT, BREACH,
+    TIDAL). This one does post its summary; it files entries.
+  - The 22:00 and 00:00 MYT crons are RETRIES. They stand down when the slot
+    already completed, so they normally post nothing.
+  - `health_watch.py` runs three times a day and posts **only on failure** —
+    no `--always` in the cron. Silent on success, loud on failure, which is
+    the shape the midday slot now matches.
 - The **Cloudflare watchdog** (`src/watchdog.js` in the *signal* repo) holds its
   own copy of that schedule. Moving a cron here without moving it there does not
   remove a slot — it moves it into the watchdog, which then dispatches it daily
   with no cron anywhere to explain why.
 - `engine_names.py` — the PUBLISHED name of an engine (`breakout` → BREACH),
-  mirroring `ENGINE_REGISTRY` in the signal site's `signal.js`. Alerts print
-  names, never database keys. `published_tally()` states the arithmetic —
-  **8 names over 9 configurations**, because TIDAL runs two bands — which is the
-  number that used to say 8 on one page and 9 on another.
+  mirroring `REGISTRY` in the signal site's **`public/engines.js`**. The
+  registry moved there from `signal.js` on 2026-09-19 so the two browser
+  bundles stop keeping separate copies; `test_engine_names.py` (56 checks)
+  asserts the two are equal in both directions and now runs in CI, which it
+  did not while it looked for that file at a path on one laptop.
+  Alerts print names, never database keys.
+  `published_tally()` states the arithmetic and currently returns **8 names
+  over 8 keys**: with `magic` retired, `magicmagic` carries TIDAL alone and the
+  "N names over M configurations" clause correctly disappears. It is pinned to
+  the CONDITION — the clause must appear exactly when keys and names disagree —
+  so it cannot come back for the wrong reason. This is the number that once
+  said 8 on one page and 9 on another.
+- `engine_label()` is what an alert PRINTS, and it is not `engine_name()`.
+  Mirroring `ENGINE_BOOK.label()`, it appends the band where a name is SHARED:
+  `magic` and `magicmagic` both publish TIDAL, and a Telegram alert has no card
+  underneath to carry the band, so both arrived on the phone reading exactly
+  `TIDAL` — one retired with twenty positions open, one live. The rule is
+  *shared*, not *has a band*: LEDGE and KEEL carry one and print neither.
+  `engine_name()` is deliberately left returning the bare name, because it is
+  the half held equal to the browser in both directions.
+- **Every key the code can WRITE must be named, and so must every key a feed is
+  SLICED on.** Each roster check used to run one way — from a key somebody had
+  already remembered to name — so `swing`, `manual` and `4h_momentum` were on no
+  list in either language and would have printed their own database key back at
+  a reader, uppercased. `cf_momentum` was routing a feed slice with no writer
+  anywhere. Both directions are now read out of the SOURCE, not a hand-kept
+  inventory, with a floor on the match count so a pattern that stops matching
+  fails rather than passing everything.
 - Position alerts carry the engine, when the signal was filed, how long it has
   been held, and **what fired it**. `why_lines()` reads the row's own metadata
   (LEDGE/KEEL write measured reasons at signal time); `engine_rule()` is the
@@ -169,7 +212,7 @@ symbol at column level -1, which is where the default layout puts it. Under
 every symbol, and the batch degrades to one request each — still correct, never
 faster, and nothing says so. A test asserts the batch is actually used.
 
-Rules the layer must keep (all pinned by `test_alert_pipeline.py`, 135 checks,
+Rules the layer must keep (all pinned by `test_alert_pipeline.py`, 175 checks,
 and `test_brief_fit.py`):
 - Every engine in `tracker.REMARKS` has a published name, or a reader gets a key.
 - An alert with a missing field drops the field, never the message. The whole
@@ -269,7 +312,7 @@ signals**. `research.yml` runs twice a day at the 4-hour closes.
 - `docs/buoy.json` is written by `scan_buoy.py`, which `research.yml` does not
   run, and `/buoy` on the site redirects to `/research`. The workflow no longer
   stages it.
-- `python3 test_bars_cache.py` — 18 checks, offline. It pins the SHAPE of the
+- `python3 test_bars_cache.py` — 20 checks, offline. It pins the SHAPE of the
   bug, not just the instance: no source may hardcode a path into a home or
   scratch directory, bar files are addressed only through `bars_cache`, the
   workflow must harvest before it scans, and no scan may phrase its own

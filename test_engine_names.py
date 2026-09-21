@@ -296,6 +296,117 @@ def cross_repo_checks() -> None:
           f"the same engine differently")
 
 
+def test_every_writer_is_on_a_roster() -> None:
+    """Read the WRITERS out of the source, not out of a list kept by hand.
+
+    Every check in this file until now ran ENGINE_NAMES -> somewhere else:
+    does each key here have a REMARKS entry, does each match engines.js. All
+    of them start from a key somebody had already remembered to name, so a
+    scan that writes a key nobody named passes every one of them.
+
+    Two did. `swing` (standalone_scan.run_swing_scan, wired into the eod,
+    weekend and full slots) and `manual` (claude_bot, a signal filed by hand)
+    were in engines.js, in ENGINE_NAMES and in LEDGER_ONLY: none of the
+    three. engine_name() fell through to `k.replace("_"," ").upper()`, so a
+    row from either would have printed SWING or MANUAL at a reader — a raw
+    database key wearing the shape of a published engine's name, which is the
+    exact fault this module's first line says it exists to prevent.
+
+    They survived the 2026-09-18 cleanup that unwired four writers the roster
+    did not name, because that cleanup was done by reading the slot bodies and
+    these two are not what anyone was looking for. A list read by a person is
+    how both got missed; this reads the source.
+
+    Deliberately NOT asserting the reverse. A key on a roster with no writer
+    is correct and common: every retired engine is one, and the research three
+    are written by scan_research.py through a different path entirely.
+    """
+    import glob
+    # Both spellings the codebase actually uses, and only where the value is a
+    # literal — `signal_type=engine` in a loop is resolved by reading the loop,
+    # not by a regex, so it is left to the human and to the ledger check below.
+    pat = re.compile(r"""signal_type["']?\s*[:=]\s*["']([a-z0-9_]+)["']""")
+    found = {}
+    for path in sorted(glob.glob("*.py")):
+        if path.startswith("test_"):
+            continue
+        try:
+            src = io.open(path, encoding="utf-8").read()
+        except Exception:                                       # noqa: BLE001
+            continue
+        for m in pat.finditer(src):
+            found.setdefault(m.group(1), set()).add(path)
+
+    check("the scan for writers found some", len(found) >= 8,
+          f"only {sorted(found)} — the pattern has stopped matching, which "
+          f"would make every check below pass for the wrong reason")
+
+    known = set(en.ENGINE_NAMES) | set(en.LEDGER_ONLY)
+    orphans = {k: sorted(v) for k, v in found.items() if k not in known}
+    check("every key the code can WRITE is named somewhere", not orphans,
+          f"written and on no roster: {orphans} — a row from one of these "
+          f"prints its own database key at a reader")
+
+    # ── AND THE ROUTING SETS, WHICH ARE THE SAME DEFECT READ BACKWARDS ──────
+    #
+    # claude_bot slices the ledger by signal_type into the per-feed JSON files
+    # — _filter({"cf_1h", "commodity"}) and so on. A key in one of those sets
+    # that no engine writes is not harmless: it reads as though a feed slice
+    # depended on it, so nobody removes it, and it outlives the thing it was
+    # named for. `cf_momentum` sat in the commodity set with no writer anywhere
+    # and zero rows in the ledger. gems.js had exactly this with `strict` and
+    # `reclaim`, two BUOY lane names that had been in a filter doing nothing
+    # since the day they were typed.
+    routed = set()
+    for src_path in ("claude_bot.py",):
+        try:
+            src = io.open(src_path, encoding="utf-8").read()
+        except Exception:                                       # noqa: BLE001
+            continue
+        for block in re.findall(r"_filter\(\{([^}]*)\}\)", src):
+            routed |= set(re.findall(r"[\"']([a-z0-9_]+)[\"']", block))
+    check("the routing sets were found", len(routed) >= 5,
+          f"only {sorted(routed)} — the pattern has stopped matching")
+    dead = sorted(routed - known)
+    check("every key a feed is sliced on is a real engine", not dead,
+          f"routed and on no roster: {dead} — a feed slice named after "
+          f"nothing, which nobody removes because it looks load-bearing")
+
+    # And a name it can actually print. engine_name never returns "" by
+    # design; the failure mode is the last-resort branch, which returns the
+    # key back in capitals and is indistinguishable from a real name.
+    shouty = [k for k in found
+              if en.engine_name(k) == k.replace("_", " ").upper()
+              and k not in known]
+    check("no writer falls through to the uppercased-key fallback", not shouty,
+          f"{shouty} would print as a name and be a key")
+
+
+def test_the_ledger_carries_no_unnamed_engine() -> None:
+    """The same question asked of the DATA rather than the source.
+
+    The source check above cannot see a key built at runtime — basebreak
+    passes `signal_type=engine` from a loop. This one reads what actually
+    reached the ledger, which catches those without anybody having to trace
+    the loop. It is a local snapshot and says so when it is not there, rather
+    than passing quietly.
+    """
+    import pathlib
+    f = pathlib.Path("data/all_signals.json")
+    if not f.exists():
+        skip("the ledger carries no unnamed engine", "data/all_signals.json absent")
+        return
+    try:
+        rows = json.loads(f.read_text(encoding="utf-8"))
+    except Exception as e:                                      # noqa: BLE001
+        skip("the ledger carries no unnamed engine", f"unreadable: {e}")
+        return
+    known = set(en.ENGINE_NAMES) | set(en.LEDGER_ONLY)
+    seen = {str((r or {}).get("signal_type") or "") for r in rows} - {""}
+    check("every engine in the ledger has a name", not (seen - known),
+          f"in the ledger and on no roster: {sorted(seen - known)}")
+
+
 def test_a_shared_name_carries_its_band() -> None:
     """engine_label, which is what an alert actually prints.
 
@@ -441,6 +552,8 @@ def main() -> int:
                test_retirement_dates_are_dates,
                test_research_engines_are_not_live,
                test_a_retired_engine_cannot_file,
+               test_every_writer_is_on_a_roster,
+               test_the_ledger_carries_no_unnamed_engine,
                test_a_shared_name_carries_its_band,
                test_the_alert_composers_print_the_label):
         try:

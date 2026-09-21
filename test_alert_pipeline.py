@@ -1054,6 +1054,31 @@ for _k in ("4h", "ohl", "swing", "ai_weekly", "intraday", "made_up_key", ""):
     check(f"{_k or '(empty)'!r} renders a name, not a bare key",
           "_" not in _line.split("·")[-1], _line)
 
+# ── A SLOT THAT ALERTS NOTHING MUST NOT ANNOUNCE ITSELF ──────────────────────
+#
+# daily_scan.yml justifies the midday cron with "adds no message to anybody's
+# phone — which is the only basis on which an unproven engine gets to run at
+# all". The engine was silent; the SLOT was not. It fell through to the
+# completion summary, which always sends, so a third notification arrived every
+# weekday at 14:00 MYT against a design written down as two touches a day.
+_ss = open("standalone_scan.py", encoding="utf-8").read()
+check("the midday slot reads its silence from may_alert, not a hardcoded list",
+      'quiet_on_success = not _may("intraday")[0]' in _ss,
+      "a second hand-kept list is how this drifts back")
+check("the success summary is gated on it",
+      "if quiet_on_success:" in _ss and "elif total == 0:" in _ss,
+      "the completion summary sends regardless again")
+# The SEND in the except branch, not the phrase — "Scanner Error" also appears
+# in a comment further up the file, and matching that made this check pass on
+# the wrong occurrence.
+_err_send = '_send(\n            f"\u26a0\ufe0f *Scanner Error*'
+check("a FAILURE still alerts — the except branch is untouched",
+      _err_send in _ss and _ss.index("if quiet_on_success:") < _ss.index(_err_send),
+      "silent on success must not mean silent on failure")
+check("the midday mode note no longer claims it files nothing",
+      "files no new entries. Intraday generation" not in _ss,
+      "GUST has filed from this slot since 2026-09-17")
+
 _clear_open()
 
 shutil.rmtree(TMP, ignore_errors=True)
