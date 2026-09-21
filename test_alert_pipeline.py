@@ -14,7 +14,7 @@ Covers the failure that made the site show signals Telegram never sent
 Network is stubbed and the DB is a throwaway temp file — this sends nothing
 and touches no real data.
 """
-import os, sys, shutil, tempfile
+import os, re, sys, shutil, tempfile
 
 REPO = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, REPO)
@@ -1133,6 +1133,51 @@ check("run_book_outcomes actually resolves the book",
 check("run_swing_scan is kept, not deleted",
       "def run_swing_scan(" in _ss,
       "the history has to stay readable, like run_ohl_scan")
+
+# ── cf_1h FILES SILENTLY, AND THE GATE IS IN THE RIGHT PLACE ────────────────
+#
+# run_cf_scan used to SEND FIRST and log second, with no may_alert call at all.
+# Putting cf_1h in ALERTS_SUPPRESSED would then have suppressed nothing — the
+# post() happens before tracker is even imported. This is the same shape as the
+# retirement gate that produced "a Telegram alert with NO LEDGER ROW BEHIND IT",
+# and it is checked by ORDER, not just by presence.
+import engine_names as _en
+check("cf_1h is suppressed", not _en.may_alert("cf_1h")[0], _en.may_alert("cf_1h"))
+check("and its refusal states a reason",
+      bool(_en.may_alert("cf_1h")[1]), "a refusal with no reason is a silent drop")
+
+_cf = open("scheduled_tasks_runner.py", encoding="utf-8").read()
+check("run_cf_scan asks may_alert before posting",
+      'may_alert("cf_1h")' in _cf, "the gate is gone — it would alert again")
+check("the gate comes BEFORE the send",
+      _cf.index('may_alert("cf_1h")') < _cf.index('sent_ok = post('),
+      "it decides after it has already sent")
+check("a refused batch still writes the ledger",
+      _cf.index('may_alert("cf_1h")') < _cf.index("log_to_all_signals("),
+      "filing silently is the whole point — no row, no forward sample")
+check("and records WHY it was not sent, not just that it was not",
+      "mark_alerts_sent(ids, False, why_not)" in _cf,
+      "sent_at NULL with no reason is indistinguishable from a failed send")
+check("the alert gate fails CLOSED",
+      "allowed, why_not = False" in _cf,
+      "an import error must not be why a phone starts buzzing")
+
+# Every cron must resolve to a task. cf_scan ran for ten weeks by accident
+# because it WAS the fallthrough; the arms are explicit now and the fallthrough
+# must stay TASK=none.
+_yml = open(".github/workflows/scheduled_tasks.yml", encoding="utf-8").read()
+_crons = re.findall(r"- cron: '([^']+)'", _yml)
+_arms = set(re.findall(r'"([^"]+)"\)\s*TASK=', _yml))
+_orphans = [c for c in _crons if c not in _arms]
+check("every cron resolves to a named task", not _orphans,
+      f"{_orphans} would fall through")
+check("the fallthrough is still TASK=none",
+      "*)                TASK=none" in _yml,
+      "an unrecognised cron would become a CF scan again")
+check("cf_scan has explicit arms", sum(1 for a in _arms if a in _crons and
+      f'"{a}")  TASK=cf_scan' in _yml.replace("  ", "  ")) >= 0 and
+      _yml.count("TASK=cf_scan") >= 2,
+      "cf_scan is reachable from fewer than its two crons")
 
 _clear_open()
 

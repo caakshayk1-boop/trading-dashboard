@@ -197,6 +197,32 @@ ALERTS_SUPPRESSED = {
     # key                reason written into the delivery record
     "pivot":    "research tier — logged, never alerted. No closed trade and no "
                 "measured expectancy yet.",
+    # ── cf_1h COMES BACK SILENT, 2026-09-21 ──────────────────────────────────
+    #
+    # It posts the best t-statistic in the ledger — 367 closed, +0.334R,
+    # t = +3.85 — and every one of those 367 was filed between 2026-06-03 and
+    # 2026-08-21 by ACCIDENT. cf_scan was the FALLTHROUGH case in
+    # scheduled_tasks.yml: any unrecognised cron string became a CF scan. When
+    # the cron strings were corrected the accidental trigger vanished, which is
+    # why the engine stopped dead and nothing reported it.
+    #
+    # It is being given a real cron for the first time, and it comes back on
+    # PIVOT's terms rather than its own record, because that record cannot
+    # carry the decision:
+    #
+    #   · 227 COMEX + 140 FX, zero NSE. swing_rulebook refuses all 367 —
+    #     "not an Indian listed equity" — so no site publishes it and the
+    #     mandate will not fund it.
+    #   · 186 of 367 are SELL against a long-only book.
+    #   · all of it pre-LAUNCH, so none of it is in the published record.
+    #
+    # Filing silently rebuilds a forward sample under current rules. Alerting
+    # on it would put GOLD, CRUDE and USDJPY shorts on a phone for an engine
+    # no page shows — the precise outcome the fallthrough was removed to stop.
+    "cf_1h":    "filing silently — a real cron since 2026-09-21, rebuilding a "
+                "forward sample. Its 367-trade record was produced by an "
+                "accidental cron fallthrough, is entirely pre-launch, and is "
+                "FX and commodity against a long-only Indian-equity book.",
 }
 
 

@@ -162,6 +162,20 @@ Two touches a day, on the operator's clock. Nothing else is scheduled to post.
     second list to remember. A FAILURE still alerts.
   - **09:30 IST, Saturday** — the weekly engines (VECTOR, ASCENT, BREACH,
     TIDAL). This one does post its summary; it files entries.
+  - **16:00 and 21:00 IST, weekdays** — `cf_scan`, the FX/commodity 1H channel
+    engine, **filing silently**. It alerts nothing: `cf_1h` is in
+    `ALERTS_SUPPRESSED` and `run_cf_scan` asks `may_alert()` before it posts.
+    **It never had a cron before.** `cf_scan` was the `*)` FALLTHROUGH arm of
+    `scheduled_tasks.yml`'s dispatcher — any unrecognised cron string became a
+    CF scan — so its 367 signals between 03 Jun and 21 Aug were produced by
+    accident, and when the cron strings were corrected the engine stopped dead
+    with nothing reporting it. The arms are explicit now, the fallthrough stays
+    `TASK=none`, and a test asserts every cron resolves to a named task.
+    Its record is the best t-statistic in the ledger (t = +3.85) and cannot
+    carry a promotion: 227 COMEX + 140 FX and zero NSE, 186 of 367 SELL against
+    a long-only book, all of it pre-launch. It rebuilds a forward sample first.
+    Weekdays only — COMEX is shut Saturday, and this repo has already published
+    a natural-gas entry on one off Thursday's close.
   - The 22:00 and 00:00 MYT crons are RETRIES. They stand down when the slot
     already completed, so they normally post nothing.
   - `health_watch.py` runs three times a day and posts **only on failure** —
