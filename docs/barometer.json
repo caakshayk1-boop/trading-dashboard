@@ -1,6 +1,6 @@
 {
   "ok": true,
-  "generated_at": "2026-09-18T17:14:28+00:00",
+  "generated_at": "2026-09-21T18:55:06+00:00",
   "weights": {
     "trend": 30,
     "breadth": 30,
@@ -9,59 +9,41 @@
     "highs": 10
   },
   "today": {
-    "score": 39,
+    "score": 42,
     "band": {
-      "k": "weak",
-      "t": "Weak",
-      "c": "dn"
+      "k": "mixed",
+      "t": "Mixed",
+      "c": ""
     },
     "parts": [
       {
-        "key": "trend",
-        "label": "Where the index sits",
-        "score": 27.8,
-        "weight": 30,
-        "detail": "Nifty is 28% up its own 52-week range, 11.5% below the high"
-      },
-      {
         "key": "breadth",
         "label": "Names above their 200-day",
-        "score": 51.1,
+        "score": 55.7,
         "weight": 30,
-        "detail": "503 of 985 hold their 200-day average"
+        "detail": "548 of 983 hold their 200-day average"
       },
       {
         "key": "participation",
         "label": "Advancing today",
-        "score": 16.2,
+        "score": 40.7,
         "weight": 15,
-        "detail": "160 of 985 advanced"
-      },
-      {
-        "key": "volatility",
-        "label": "Volatility",
-        "score": 85,
-        "weight": 15,
-        "detail": "India VIX at 11.39 \u2014 very calm"
+        "detail": "400 of 983 advanced"
       },
       {
         "key": "highs",
         "label": "Names at a 52-week high",
-        "score": 0.0,
+        "score": 4.1,
         "weight": 10,
-        "detail": "0 of 985 at a 52-week high"
+        "detail": "2 of 983 at a 52-week high"
       }
     ],
-    "stage": {
-      "k": "early",
-      "t": "Slightly cheaper",
-      "c": ""
-    },
-    "counted": 985,
-    "nifty": 23346.400390625,
-    "drawdown_pct": 11.48,
-    "above_200dma_pct": 51.1,
-    "vix": 11.385000228881836
+    "stage": null,
+    "counted": 983,
+    "nifty": null,
+    "drawdown_pct": null,
+    "above_200dma_pct": 55.7,
+    "vix": null
   },
   "history": [
     {
@@ -91,6 +73,16 @@
       "drawdown_pct": 11.48,
       "above_200dma_pct": 51.1,
       "vix": 11.385000228881836
+    },
+    {
+      "date": "2026-09-21",
+      "score": 42,
+      "band": "mixed",
+      "stage": null,
+      "nifty": null,
+      "drawdown_pct": null,
+      "above_200dma_pct": 55.7,
+      "vix": null
     }
   ],
   "outcomes": {
