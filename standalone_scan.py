@@ -1184,8 +1184,12 @@ def _quality_fields(sig, extra_meta=None):
 # it succeeds.
 MODE_NOTE = {
     "position-management-only":
-        "_Midday is position management only — it manages the open book and "
-        "files no new entries. Intraday generation was removed on 2026-07-30: "
+        # "files no new entries" was true until 2026-09-17, when GUST was
+        # wired into this slot. It FILES — research tier, logged and never
+        # alerted — so the sentence is now about what reaches the phone.
+        "_Midday manages the open book and sends no new entries. GUST files "
+        "to the ledger from here and is research tier, so it alerts nothing. "
+        "Intraday generation was removed on 2026-07-30: "
         "it measured -0.005R over 583 trades against +0.171R on daily closes. "
         "New entries come from the EOD scan after the close._",
     "us position check":
@@ -2479,6 +2483,10 @@ def main():
         fx_block = _safe("markets", run_markets, time_str, default="") or ""
 
         mode = None   # set by slots that generate no signals by design
+        # ── A SLOT THAT ALERTS NOTHING MUST NOT ANNOUNCE ITSELF ─────────────
+        # Set by a slot whose engines are ALL refused by may_alert. See the
+        # midday branch, and the send at the bottom of this function.
+        quiet_on_success = False
 
         if slot == "us":
             # Position management only. This slot exists to grade US positions
@@ -2514,6 +2522,29 @@ def main():
             # thirty-trade rule exists to prevent.
             if slot == "midday":
                 _safe("intraday", run_intraday_scan, time_str)
+                # ── THIS CRON PROMISED SILENCE AND DID NOT DELIVER IT ───────
+                #
+                # daily_scan.yml's own rationale for this slot says: "It sends
+                # NOTHING ... this cron costs one Actions run and adds no
+                # message to anybody's phone — which is the only basis on
+                # which an unproven engine gets to run at all."
+                #
+                # Half true. may_alert refuses GUST, so the ENGINE sends
+                # nothing. But the slot fell through to the completion summary
+                # below, which "always sends so you know scan ran" — so every
+                # weekday at 14:00 MYT a third notification arrived saying
+                # nothing had happened, against a design that is written down
+                # as two touches a day on the operator's clock.
+                #
+                # Read from the gate rather than hardcoded: if GUST is ever
+                # promoted out of research tier, may_alert starts returning
+                # True and this slot starts reporting itself again, in the
+                # same commit that promotes it and with no second list to
+                # remember. A FAILURE still alerts — the except branch at the
+                # bottom is untouched. Silent on success, loud on failure, the
+                # same shape health_watch already uses.
+                from engine_names import may_alert as _may
+                quiet_on_success = not _may("intraday")[0]
             #
             # These slots now run position management only: price alerts and
             # the market snapshot, both executed above for every slot. Entries
@@ -2723,7 +2754,13 @@ def main():
         # book's state and the reason there were no entries, instead of three
         # that carry one fact between them.
         fx = ("\n\n" + fx_block) if fx_block else ""
-        if total == 0:
+        if quiet_on_success:
+            # Recorded, not announced. job_runs has already stamped this slot
+            # above and data_health reads that, so "did it run" is answerable
+            # without a notification.
+            logging.info("%s: complete and deliberately silent — every engine "
+                         "in this slot is refused by may_alert", slot)
+        elif total == 0:
             _send(
                 f"✅ *{slot.upper()} scan complete* — {time_str}\n"
                 + (MODE_NOTE.get(mode, f"_{mode.replace('-', ' ')} — no entries by design._")

@@ -137,10 +137,29 @@ Rules the layer must keep (all pinned by tests):
 Two touches a day, on the operator's clock. Nothing else is scheduled to post.
 
 - **08:00 MYT** — the morning brief. **20:00 MYT** — the night brief, alongside
-  the day's only scan. Crons live in `scheduled_tasks.yml` and `daily_scan.yml`;
+  the day's ENTRY scan. Crons live in `scheduled_tasks.yml` and `daily_scan.yml`;
   the 13:00 MYT "signals open" scan is **gone**, and no morning scan replaces it
   (08:00 MYT is 05:30 IST, before the NSE opens — it could only re-report the
   previous close).
+- Two touches is a claim about the PHONE, not about how often anything runs.
+  Two other scans exist and neither adds a third weekday notification:
+  - **11:30 IST / 14:00 MYT, weekdays** — the midday slot, GUST only. It files
+    to the ledger and is research tier, so `may_alert` refuses it. It is also
+    **silent on success**: the slot used to fall through to the completion
+    summary, which "always sends so you know scan ran", so a third message
+    arrived every weekday saying nothing had happened — against `daily_scan.yml`'s
+    own rationale for the cron, which is that it "adds no message to anybody's
+    phone ... the only basis on which an unproven engine gets to run at all".
+    `quiet_on_success` reads that straight off `may_alert`, so promoting GUST
+    out of research tier starts it reporting again in the same commit, with no
+    second list to remember. A FAILURE still alerts.
+  - **09:30 IST, Saturday** — the weekly engines (VECTOR, ASCENT, BREACH,
+    TIDAL). This one does post its summary; it files entries.
+  - The 22:00 and 00:00 MYT crons are RETRIES. They stand down when the slot
+    already completed, so they normally post nothing.
+  - `health_watch.py` runs three times a day and posts **only on failure** —
+    no `--always` in the cron. Silent on success, loud on failure, which is
+    the shape the midday slot now matches.
 - The **Cloudflare watchdog** (`src/watchdog.js` in the *signal* repo) holds its
   own copy of that schedule. Moving a cron here without moving it there does not
   remove a slot — it moves it into the watchdog, which then dispatches it daily
