@@ -43,6 +43,7 @@ from newspaper import (
     get_review,
     fetch_alert_log,
     get_top5_picks,
+    picks_record,
     picks_outcomes,
     _week_key,
     get_fund_screen,
@@ -620,8 +621,23 @@ def generate() -> None:
         _o = picks_out.get(_p.get("symbol")) or picks_out.get(_p.get("name"))
         if _o:
             _p["outcome"] = _o
+    # The picks' OWN cumulative record. picks_outcomes says whether THIS week's
+    # five resolved; this says what the ranking has actually done since it
+    # started being mirrored into the ledger. The section's provenance strip
+    # said these ideas "never touch win rate or expectancy", which is true of
+    # signal.askakshay.com's record and reads as "there is no record".
+    try:
+        picks_rec = picks_record()
+    except Exception as e:                                   # noqa: BLE001
+        print(f"[generate] ⚠️  picks record unavailable: {e}")
+        picks_rec = {}
+    _rec_note = ""
+    if picks_rec.get("closed"):
+        _rec_note = (f" · record {picks_rec['closed']} closed, "
+                     f"{picks_rec.get('wins')}W, {picks_rec.get('avg_r')}R")
     print(f"[generate] Picks: {len(top5)}"
-          f"{f' ({len(picks_out)} already resolved)' if picks_out else ''}")
+          f"{f' ({len(picks_out)} already resolved)' if picks_out else ''}"
+          f"{_rec_note}")
     tracker = get_tracker_stocks()
 
     # ── The Rs 1 crore mandate's order book ────────────────────────────────
@@ -923,6 +939,7 @@ def generate() -> None:
         daughter=daughter,
         productivity_tip=prod,
         top5=top5,
+        picks_rec=picks_rec,
         # Weekly, cached. build_if_missing so a fresh week actually builds it;
         # a failure returns {} and the section hides rather than failing the build.
         fund_screen=fund_screen,

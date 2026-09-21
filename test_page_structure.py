@@ -606,6 +606,57 @@ def _():
     )
 
 
+@check("the picks section shows its own record, not just this week's five")
+def picks_section_discloses_its_record() -> None:
+    """#picks ranks five new ideas every week. It must say what that ranking
+    has actually done.
+
+    The provenance strip said these ideas "never touch win rate or
+    expectancy". True of signal.askakshay.com — top5_pick is not a published
+    engine there and in_book refuses it — and read on its own it says "there
+    is no record of these". There is: they are mirrored into the ledger as
+    top5_pick, and the commit that added the mirror says why, that they were
+    "chosen weekly, shown to the reader as the week's picks, and never
+    recorded anywhere that could later say whether they worked".
+
+    Measured 2026-09-21: 19 closed, 1 win, -0.797R, t = -3.88.
+    """
+    import newspaper
+    assert hasattr(newspaper, "picks_record"), \
+        "picks_record() is gone — the section has nothing to render"
+
+    # The sentence must no longer read as an unqualified "no record exists".
+    assert "never touch win rate or expectancy" not in TEMPLATE, \
+        "the strip claims the picks have no record at all again"
+
+    assert "picks_rec" in TEMPLATE, \
+        "the record is computed and never rendered"
+
+    # NO DENOMINATOR, NO RATIO — nothing closed must render the absence, not
+    # a zero. A 0% win rate is a measured result; "nothing has resolved" is not.
+    assert "picks_rec.closed" in TEMPLATE and "picks_rec.open" in TEMPLATE, \
+        "the empty state is not distinguished from a measured zero"
+
+    # A losing record has to be named as one rather than left for the reader
+    # to work out from a minus sign, the same way the signal record does it.
+    assert "picks_rec.avg_r < 0" in TEMPLATE, \
+        "a negative record is rendered without being named"
+
+
+@check("generate.py actually passes the picks record to the template")
+def generate_wires_the_picks_record() -> None:
+    src = pathlib.Path("generate.py").read_text(encoding="utf-8")
+    assert "picks_record," in src, "picks_record is not imported"
+    assert "picks_rec = picks_record()" in src, "it is never called"
+    assert "picks_rec=picks_rec" in src, \
+        "computed and not passed — the template would render nothing"
+    # It must fail soft: a record that cannot be read must not cost the reader
+    # the whole section, the same rule the picks mirror itself follows.
+    i = src.index("picks_rec = picks_record()")
+    assert "except Exception" in src[i:i + 400], \
+        "an unreadable record would fail the build"
+
+
 def main() -> int:
     passed = failed = 0
     for name, fn in CHECKS:

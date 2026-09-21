@@ -4004,6 +4004,71 @@ def get_top5_picks(build_if_missing: bool = False) -> list[dict]:
     return _rr_floor(picks or [])
 
 
+def picks_record() -> dict:
+    """The picks' OWN cumulative record, across every week ever published.
+
+    WHY THIS EXISTS. The provenance strip on #picks told the reader these
+    ideas "never touch win rate or expectancy". That is true of
+    signal.askakshay.com's record — top5_pick is not a published engine there
+    and in_book refuses it — and it reads as "there is no record of these".
+    There is. They have been mirrored into the ledger as top5_pick since the
+    mirror was added, for the reason that commit gives: they were "chosen
+    weekly, shown to the reader as the week's picks, and never recorded
+    anywhere that could later say whether they worked. Every scan engine was
+    accountable; the most prominent ideas on the page were not."
+
+    Measured 2026-09-21 over the whole ledger: 19 closed, 1 win, -0.797R,
+    t = -3.88. Eighteen of nineteen stopped out. A section that ranks five new
+    ideas every week beside a sentence saying its outcomes do not count is
+    publishing the ranking and withholding the result.
+
+    picks_outcomes() answers "did THIS week's five resolve". This answers "what
+    has this ranking actually done", which is the question a reader deciding
+    whether to act on it is really asking.
+
+    NO DENOMINATOR, NO RATIO — the same rule data_health.py holds. Nothing
+    closed returns closed=0 and no win rate, and the caller renders the
+    absence rather than a zero.
+    """
+    try:
+        with _db() as con:
+            rows = con.execute(
+                "SELECT status, r_multiple FROM all_signals "
+                "WHERE signal_type = 'top5_pick'").fetchall()
+    except Exception as e:                                   # noqa: BLE001
+        log.warning(f"picks_record: {e}")
+        return {}
+
+    rs, open_n = [], 0
+    for r in rows:
+        status = str(r["status"] or "").upper()
+        if status == "OPEN":
+            open_n += 1
+            continue
+        try:
+            v = float(r["r_multiple"])
+        except (TypeError, ValueError):
+            continue
+        if v == v:                       # NaN is not a measured result
+            rs.append(v)
+
+    out = {"open": open_n, "closed": len(rs)}
+    if not rs:
+        return out
+    wins = sum(1 for x in rs if x > 0)
+    mean = sum(rs) / len(rs)
+    out.update(wins=wins, losses=len(rs) - wins,
+               win_rate=round(wins / len(rs) * 100, 1),
+               avg_r=round(mean, 3))
+    if len(rs) > 1:
+        var = sum((x - mean) ** 2 for x in rs) / (len(rs) - 1)
+        sd = var ** 0.5
+        # t is what says "this is not a bad run". Printed beside the average
+        # for the same reason the signal record prints it.
+        out["t"] = round(mean / (sd / len(rs) ** 0.5), 2) if sd else None
+    return out
+
+
 def picks_outcomes(week: str) -> dict:
     """What the ledger now says about this week's five ideas, keyed by symbol.
 
@@ -10569,7 +10634,38 @@ table.t tbody tr:hover{background:var(--surface2)}
     <span>Ranked once a week, <b>Sunday morning MYT</b> &mdash; the same five all week is the design, not a stalled scan</span>
     <span>Engine <b>{{ picks_engine }}</b></span>
     <span>These are ideas, not ledger signals &mdash; they carry no entry fill and
-      never touch win rate or expectancy</span>
+      never touch <a href="https://signal.askakshay.com/record">signal.askakshay.com</a>'s
+      win rate or expectancy</span>
+  {# ── AND THIS RANKING'S OWN RECORD ───────────────────────────────────────
+     The line above says these ideas never touch the SIGNAL site's expectancy.
+     True — top5_pick is not a published engine there and in_book refuses it.
+     Read on its own it says "there is no record of these", and there is: they
+     have been mirrored into the ledger since the commit that added the mirror,
+     whose whole argument was that they were "chosen weekly, shown to the
+     reader as the week's picks, and never recorded anywhere that could later
+     say whether they worked".
+
+     Measured 2026-09-21: 19 closed, 1 win, -0.797R, t = -3.88. A section that
+     ranks five new ideas every week and does not say that is publishing the
+     ranking and withholding the result.
+
+     NO DENOMINATOR, NO RATIO. Nothing closed renders the absence, never a
+     zero — a zero win rate is a measured result and "nothing has resolved
+     yet" is not. #}
+    {% if picks_rec and picks_rec.closed %}
+    <span class="pv-rec">This ranking's own record, every week since it began:
+      <b>{{ picks_rec.closed }}</b> closed,
+      <b>{{ picks_rec.wins }}</b> won
+      ({{ picks_rec.win_rate }}%),
+      <b>{{ '%+.3f'|format(picks_rec.avg_r) }}R</b> per idea{% if picks_rec.t %},
+      t = {{ '%+.2f'|format(picks_rec.t) }}{% endif %}{% if picks_rec.open %} &mdash;
+      {{ picks_rec.open }} still open{% endif %}.
+      {% if picks_rec.avg_r < 0 %}<b>That is a losing record and it is shown
+      because it is the record.</b>{% endif %}</span>
+    {% elif picks_rec and picks_rec.open %}
+    <span class="pv-rec">{{ picks_rec.open }} ideas are open and none has
+      resolved yet, so this ranking has no measured record to show.</span>
+    {% endif %}
   </div>
   {# ── THE MANDATE'S ORDER BOOK ────────────────────────────────────────────
      The five above are a RANKING. This is a BOOK: what the Rs 1 crore rulebook
