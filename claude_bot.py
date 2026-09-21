@@ -859,7 +859,12 @@ def _push_signals_to_github():
         "data/signals.json":           _filter({"swing", "4h_momentum", "manual"}),
         "data/signals_4h.json":        _filter({"4h_momentum", "4h"}),
         "data/breakouts.json":         _filter({"breakout"}),
-        "data/commodity_signals.json": _filter({"cf_momentum", "cf_1h", "commodity"}),
+        # `cf_momentum` was here and is gone: nothing in this repo writes that
+        # key and the ledger has never held a row of it. Same shape as `strict`
+        # and `reclaim` in gems.js — a routing entry that has done nothing
+        # since the day it was typed, while reading as though a feed slice
+        # depended on it. test_engine_names now checks these sets too.
+        "data/commodity_signals.json": _filter({"cf_1h", "commodity"}),
         "data/multibaggers.json":      _filter({"magic", "magicmagic", "multibagger"}),
     }
 

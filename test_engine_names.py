@@ -347,6 +347,31 @@ def test_every_writer_is_on_a_roster() -> None:
           f"written and on no roster: {orphans} — a row from one of these "
           f"prints its own database key at a reader")
 
+    # ── AND THE ROUTING SETS, WHICH ARE THE SAME DEFECT READ BACKWARDS ──────
+    #
+    # claude_bot slices the ledger by signal_type into the per-feed JSON files
+    # — _filter({"cf_1h", "commodity"}) and so on. A key in one of those sets
+    # that no engine writes is not harmless: it reads as though a feed slice
+    # depended on it, so nobody removes it, and it outlives the thing it was
+    # named for. `cf_momentum` sat in the commodity set with no writer anywhere
+    # and zero rows in the ledger. gems.js had exactly this with `strict` and
+    # `reclaim`, two BUOY lane names that had been in a filter doing nothing
+    # since the day they were typed.
+    routed = set()
+    for src_path in ("claude_bot.py",):
+        try:
+            src = io.open(src_path, encoding="utf-8").read()
+        except Exception:                                       # noqa: BLE001
+            continue
+        for block in re.findall(r"_filter\(\{([^}]*)\}\)", src):
+            routed |= set(re.findall(r"[\"']([a-z0-9_]+)[\"']", block))
+    check("the routing sets were found", len(routed) >= 5,
+          f"only {sorted(routed)} — the pattern has stopped matching")
+    dead = sorted(routed - known)
+    check("every key a feed is sliced on is a real engine", not dead,
+          f"routed and on no roster: {dead} — a feed slice named after "
+          f"nothing, which nobody removes because it looks load-bearing")
+
     # And a name it can actually print. engine_name never returns "" by
     # design; the failure mode is the last-resort branch, which returns the
     # key back in capitals and is indistinguishable from a real name.
