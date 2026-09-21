@@ -1624,6 +1624,34 @@ def run_commodity_scan(time_str):
     return sigs
 
 
+def run_book_outcomes(time_str):
+    """Walk the open book and resolve what actually happened. No scanning.
+
+    THIS IS THE HALF OF run_swing_scan THAT HAD TO SURVIVE IT. That function
+    opened by grading the whole book and only then scanned, so unwiring the
+    scan naively would have taken outcome resolution with it — in the eod,
+    weekend and full slots, which is every slot that had it.
+
+    It is NOT a duplicate of run_price_alerts. That pass grades OPEN and
+    T1_HIT rows against a bounded bar window and sends the alerts.
+    update_all_outcomes walks each signal's candles in order, requires entry
+    to be touched before a trade can resolve, records excursions, and marks
+    `exit_ambiguous` where one bar straddles both levels. Dropping it loses
+    the excursions and the ordering, not just a second opinion on the status.
+
+    update_outcomes is kept beside it although the legacy `signals` table has
+    no rows: claude_bot and scheduler.py still write it, and removing the
+    grader for a table that still has writers is a different decision from
+    unwiring this scan.
+    """
+    from tracker import update_outcomes, update_all_outcomes, init_db
+    init_db()
+    logging.info("Updating open trade outcomes (legacy + all)...")
+    update_outcomes()
+    update_all_outcomes()
+    return []
+
+
 def run_swing_scan(time_str):
     from scanner import scan_all
     from telegram_bot import send_alert, send_summary, send_top_picks
@@ -1634,6 +1662,19 @@ def run_swing_scan(time_str):
     except (ImportError, ModuleNotFoundError):
         SEND_TOP_PICKS_ONLY = os.environ.get("SEND_TOP_PICKS_ONLY", "false").lower() == "true"
 
+    # ── UNWIRED 2026-09-21. NOTHING CALLS THIS. ─────────────────────────────
+    #
+    # It ran in the eod, weekend and full slots and returned 0 signals on every
+    # scan_meta record back to 2026-09-04 — eleven consecutive runs — while the
+    # legacy `signals` table it writes has 0 rows in an 802-row ledger going
+    # back to June. It also wrote signal_type "swing", a key no site roster
+    # names, so anything it did produce would have been invisible on both sites
+    # and would have printed its own database key in an alert.
+    #
+    # Kept, not deleted, for the same reason run_ohl_scan and
+    # run_measured_equity_scan are kept: the history stays readable, and
+    # restoring it is re-adding a call rather than reconstructing a function.
+    # Its position-management half is now run_book_outcomes, above.
     init_db()
     logging.info("Updating open trade outcomes (swing + all)...")
     update_outcomes()
@@ -2568,7 +2609,9 @@ def main():
             # A ledger writer the roster does not name is a row nobody can
             # explain, so none of them is called any more.
             tlm_daily = []
-            signals   = _safe("swing_scan",    run_swing_scan,     time_str)
+            # swing_scan unwired 2026-09-21 — see the note on run_swing_scan.
+            # run_book_outcomes is the half of it that had to survive.
+            signals   = _safe("book_outcomes", run_book_outcomes, time_str)
             comms = []   # retired/disabled writer — unwired 2026-09-18. See the note in the eod slot.
             # Backtested engine — runs on the completed daily bar, as tested.
             # ── TWO ENGINES RETIRED ON THEIR OWN RECORD, 2026-09-18 ────────
@@ -2652,7 +2695,9 @@ def main():
             momentum  = _safe("momentum_scan", run_momentum_scan,  time_str)
             sigs_4h = []   # retired/disabled writer — unwired 2026-09-18. See the note in the eod slot.
             tlm_4h = []   # retired/disabled writer — unwired 2026-09-18. See the note in the eod slot.
-            signals   = _safe("swing_scan",    run_swing_scan,     time_str)
+            # swing_scan unwired 2026-09-21 — see the note on run_swing_scan.
+            # run_book_outcomes is the half of it that had to survive.
+            signals   = _safe("book_outcomes", run_book_outcomes, time_str)
             _safe("fno_alerts",                run_fno_alerts,     time_str, signals)
             breakouts = _safe("breakout_scan", run_breakout_scan,  time_str)
             tlm_daily = []   # retired/disabled writer — unwired 2026-09-18. See the note in the eod slot.
@@ -2698,7 +2743,9 @@ def main():
 
         else:  # full (off-hours fallback)
             breakouts = _safe("breakout_scan", run_breakout_scan,  time_str)
-            signals   = _safe("swing_scan",    run_swing_scan,     time_str)
+            # swing_scan unwired 2026-09-21 — see the note on run_swing_scan.
+            # run_book_outcomes is the half of it that had to survive.
+            signals   = _safe("book_outcomes", run_book_outcomes, time_str)
             comms = []   # retired/disabled writer — unwired 2026-09-18. See the note in the eod slot.
             counts    = {"breakouts": len(breakouts), "swing": len(signals), "commodities": len(comms)}
 

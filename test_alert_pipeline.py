@@ -1079,6 +1079,32 @@ check("the midday mode note no longer claims it files nothing",
       "files no new entries. Intraday generation" not in _ss,
       "GUST has filed from this slot since 2026-09-17")
 
+# ── THE SWING SCAN IS UNWIRED, AND GRADING SURVIVED IT ───────────────────────
+#
+# run_swing_scan opened by grading the whole book and only then scanned, so
+# unwiring the scan naively would have taken update_all_outcomes with it — in
+# the eod, weekend and full slots, which is every slot that had it. That is a
+# silent loss: positions stop resolving and the ledger just stops moving.
+# The CALL form, not the bare name. A bare substring matched the docstring
+# "Unlike run_swing_scan, these targets ..." and failed on prose — the same
+# mistake as matching "Scanner Error" in a comment. Strip comments and
+# docstring lines, then look for it being passed to _safe or called directly.
+_code_lines = [ln.split("#")[0] for ln in _ss.splitlines()]
+_code = "\n".join(ln for ln in _code_lines if "run_swing_scan" not in ln
+                  or "_safe(" in ln or "run_swing_scan(" in ln)
+check("no slot calls run_swing_scan any more",
+      "_safe(\"swing_scan\"" not in _ss and "run_swing_scan, time_str" not in _code,
+      "it is wired back into a slot")
+check("the three slots grade the book instead",
+      _ss.count("_safe(\"book_outcomes\", run_book_outcomes, time_str)") == 3,
+      "a slot lost its outcome pass")
+check("run_book_outcomes actually resolves the book",
+      "update_all_outcomes()" in _ss.split("def run_book_outcomes")[1].split("def run_swing_scan")[0],
+      "it grades nothing — the whole point of hoisting it")
+check("run_swing_scan is kept, not deleted",
+      "def run_swing_scan(" in _ss,
+      "the history has to stay readable, like run_ohl_scan")
+
 _clear_open()
 
 shutil.rmtree(TMP, ignore_errors=True)
