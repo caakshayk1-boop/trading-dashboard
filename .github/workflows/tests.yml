@@ -55,6 +55,33 @@ jobs:
     timeout-minutes: 20
     steps:
       - uses: actions/checkout@v4
+
+      # ── THE CROSS-REPO CHECKS RAN ON ONE LAPTOP AND NOWHERE ELSE ──────────
+      #
+      # test_engine_names.py holds engine_names.py equal to the browser's
+      # engines.js in BOTH directions — same keys, same names, same
+      # retirements, same bands. Its own commit message says "a comment cannot
+      # hold two files in agreement", and then it looked for engines.js at
+      # ~/Workspace/Apps/Websites/signal/public/engines.js, which exists on
+      # exactly one machine. Nothing set $SIGNAL_JS here, so five checks
+      # SKIPPED on every CI run since it was written.
+      #
+      # What that cost: PLUMB was retired on 2026-09-18 in engines.js and not
+      # in the scanner, and filed MARUTI and HINDUNILVR the same day. The two
+      # halves disagreed for three days with a green board, because the test
+      # that compares them was reporting SKIP and a skip is not a failure.
+      #
+      # This is possible now because signal went PUBLIC on 2026-09-21. It needs
+      # no token, and `continue-on-error` is deliberately absent: if the
+      # checkout fails the suite must go red rather than quietly return to
+      # skipping, which is the state this step exists to end.
+      - name: Check out the signal repo, for the cross-repo registry checks
+        uses: actions/checkout@v4
+        with:
+          repository: caakshayk1-boop/signal
+          path: .signal-checkout
+          fetch-depth: 1
+
       - uses: actions/setup-python@v5
         with:
           python-version: '3.11'
@@ -75,8 +102,19 @@ jobs:
       # tally rather than `set -e`: one failing suite must not hide the state
       # of the twenty after it, which is the whole reason to run them together.
       - name: Run the offline suites
+        env:
+          # Read by test_engine_names.py. Without it the five cross-repo
+          # checks skip; with it they are the thing that would have caught
+          # PLUMB filing after its own retirement.
+          SIGNAL_JS: ${{ github.workspace }}/.signal-checkout/public/engines.js
         run: |
           set +e
+          if [ ! -f "$SIGNAL_JS" ]; then
+            echo "::error::SIGNAL_JS not found at $SIGNAL_JS — the cross-repo"
+            echo "::error::registry checks would SKIP, which is how the two"
+            echo "::error::engine lists drifted apart in the first place."
+            exit 1
+          fi
           FAILED=""
           for t in test_*.py; do
             case "$t" in

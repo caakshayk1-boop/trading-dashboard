@@ -46,6 +46,8 @@ from pathlib import Path
 
 import engine_names as en
 
+import io
+
 FAILURES: list[str] = []
 PASSES = 0
 SKIPS = 0
@@ -258,6 +260,71 @@ def cross_repo_checks() -> None:
           f"TIDAL's two keys are told apart by band alone: {bands}")
 
 
+def test_a_retired_engine_cannot_file() -> None:
+    """tracker.drop_retired, called for real with a mixed batch.
+
+    PLUMB was retired on 2026-09-18 and filed MARUTI and HINDUNILVR that same
+    day; both rows are in the ledger. The retirement had been applied to the
+    browser registry and not to the scanner, so it looked complete from the
+    outside while the generator went on running.
+    """
+    import os
+    for k, v in (("TURSO_URL", "x"), ("TURSO_TOKEN", "y"),
+                 ("TELEGRAM_TOKEN", "z"), ("TELEGRAM_CHAT_ID", "1")):
+        os.environ.setdefault(k, v)
+    try:
+        from tracker import drop_retired
+    except Exception as e:                                      # noqa: BLE001
+        skip("a retired engine cannot file", f"tracker will not import: {e}")
+        return
+
+    from engine_names import RETIRED, LIVE
+    live_keys = sorted(LIVE)[:2]
+    dead_keys = sorted(RETIRED)[:2]
+    row = lambda sym, k: {"symbol": sym, "signal_type": k,
+                          "market": "NSE", "action": "BUY"}
+
+    batch = ([row(f"LIVE{i}", k) for i, k in enumerate(live_keys)]
+             + [row(f"DEAD{i}", k) for i, k in enumerate(dead_keys)]
+             # NOT retired, merely not engines. These must pass through.
+             + [row("ALLOC1", "top5_pick"), row("ALLOC2", "sip_bucket")])
+
+    kept, refused = drop_retired(batch)
+    kept_k = [r["signal_type"] for r in kept]
+    ref_k = [r["signal_type"] for r in refused]
+
+    check("every retired engine's row is refused",
+          sorted(ref_k) == sorted(dead_keys), f"refused {ref_k}, expected {dead_keys}")
+    check("every live engine's row survives",
+          all(k in kept_k for k in live_keys), f"kept {kept_k}")
+    check("an allocation is not a retirement — top5_pick and sip_bucket pass",
+          "top5_pick" in kept_k and "sip_bucket" in kept_k, f"kept {kept_k}")
+    check("nothing is lost or duplicated by the split",
+          len(kept) + len(refused) == len(batch), f"{len(kept)}+{len(refused)} vs {len(batch)}")
+
+    # THE EXACT ROW THAT GOT THROUGH. equity_measured filed two SELLs on the
+    # day it was retired; this is that batch, and it must now be empty.
+    plumb = [{"symbol": "MARUTI", "signal_type": "equity_measured",
+              "market": "NSE", "action": "SELL"},
+             {"symbol": "HINDUNILVR", "signal_type": "equity_measured",
+              "market": "NSE", "action": "SELL"}]
+    k2, r2 = drop_retired(plumb)
+    check("the two PLUMB rows of 2026-09-18 would now be refused",
+          k2 == [] and len(r2) == 2, f"kept {k2}")
+
+    # FAILS OPEN. An unknown engine is not a retired one.
+    k3, r3 = drop_retired([row("XXX", "an_engine_invented_tomorrow")])
+    check("an unrecognised engine is not treated as retired", len(k3) == 1 and not r3)
+    check("an empty batch is handled", drop_retired([]) == ([], []))
+
+    # The gate belongs on the WRITE path. Retirement says nothing about trades
+    # already open — magic has twenty and they are still managed and alerted.
+    src = io.open("tracker.py", encoding="utf-8").read()
+    check("the write path calls it", "rows, _refused = drop_retired(rows)" in src)
+    check("it runs before the trend gate, so a retired row is never priced",
+          src.index("drop_retired(rows)") < src.index("if TREND_GATE_ON:"))
+
+
 def main() -> int:
     print("test_engine_names")
     for fn in (test_live_is_derived_not_typed,
@@ -267,7 +334,8 @@ def main() -> int:
                test_retired_engines_keep_their_names,
                test_no_key_is_both_published_and_ledger_only,
                test_retirement_dates_are_dates,
-               test_research_engines_are_not_live):
+               test_research_engines_are_not_live,
+               test_a_retired_engine_cannot_file):
         try:
             fn()
         except Exception as e:                                  # noqa: BLE001
