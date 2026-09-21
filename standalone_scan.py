@@ -208,7 +208,7 @@ def entry_block(sig: dict, engine_key: str) -> str:
       - swing_rulebook.size_signal() knows the QUANTITY, the notional and the
         rupees at risk under the Rs 1 crore mandate — the alert said buy and
         left the size on a web page
-      - engine_names.engine_name() turns `breakout` into BREACH; the message
+      - engine_names.engine_label() turns `breakout` into BREACH; the message
         printed neither
       - "RR 1.5" never said to WHICH target
       - the exit alerts carry a reason, a horizon and an invalidation line. The
@@ -226,8 +226,11 @@ def entry_block(sig: dict, engine_key: str) -> str:
     sym = str(sig.get("symbol") or "?").replace(".NS", "")
     entry, stop = sig.get("entry"), sig.get("sl")
     try:
-        from engine_names import engine_name, engine_role
-        name, role = engine_name(engine_key), engine_role(engine_key)
+        from engine_names import engine_label, engine_role
+        # engine_LABEL, not engine_name: magic and magicmagic both publish
+        # TIDAL, and an entry alert is the one place with no card underneath
+        # to carry the band. See engine_names.engine_label.
+        name, role = engine_label(engine_key), engine_role(engine_key)
     except Exception:                                              # noqa: BLE001
         name, role = str(engine_key or "").upper() or "Unattributed", ""
 

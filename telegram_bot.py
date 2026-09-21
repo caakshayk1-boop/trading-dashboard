@@ -468,7 +468,7 @@ def handle_command(text, chat_id):
         # THE T-STATISTIC IS PRINTED, not just the average. -0.765R over 13
         # trades reads like a bad run; t=-2.79 says it is not one. That is the
         # distinction the whole book turns on and it belongs in the message.
-        from engine_names import engine_name
+        from engine_names import engine_label
         rec = get_site_record()
         if not rec or not rec.get("published"):
             _post("Nothing published since " + rec.get("launch", "launch") + ".", chat_id)
@@ -498,7 +498,12 @@ def handle_command(text, chat_id):
                 lines.append("")
                 lines.append("*By engine*")
                 for k, v in sorted(by.items(), key=lambda kv: -kv[1]["n"]):
-                    lines.append(f"{engine_name(k):<8} {v['n']:>2} closed  {v['avg_r']:+.3f}R")
+                    # engine_LABEL, and no column padding. TIDAL is two keys
+                    # and only the band tells them apart; the `:<8` never
+                    # aligned anything either — these lines are not in a code
+                    # block, so Telegram renders them in a proportional font.
+                    lines.append(f"{engine_label(k)} — {v['n']} closed, "
+                                 f"{v['avg_r']:+.3f}R")
             if rec["closed"] < 30:
                 lines.append("")
                 lines.append(f"_{rec['closed']} closed is short of the 30 this book "
