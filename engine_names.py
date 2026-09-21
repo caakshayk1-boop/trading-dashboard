@@ -162,13 +162,41 @@ LEDGER_ONLY = {
 # not cleared it may run forward, may fill the ledger and may be published —
 # it may not interrupt somebody's evening. Promoting one for having impressed
 # on a small sample is the precise error the thirty-trade rule exists to stop.
+#
+# ── GUST WAS PROMOTED ON 2026-09-21, BELOW THAT BAR, BY DECISION ─────────────
+#
+# Akshay, asked directly whether the account can now trade a 15-minute chart:
+# yes. That is the fact this turned on, and it is not one the ledger can
+# answer. swing_rulebook's 2026-08-25 review put intraday OUT_OF_MANDATE for
+# the CLOCK, not the record — "intraday posts +1.47R at t=+3.69 and is out for
+# trading a 15-minute chart, which this account cannot." When the account
+# changes, that reason stops applying.
+#
+# WHAT THE PROMOTION DOES NOT DO IS MAKE THE SAMPLE BIGGER, and this is
+# recorded rather than glossed:
+#
+#   · 17 closed, thirteen short of this book's own thirty.
+#   · every one of them filed 2026-06-11 to 2026-07-29 — ALL PRE-LAUNCH, on a
+#     ledger the repo says has been re-graded twice under stop rules it has
+#     since called wrong. None of it is in the published record, because
+#     in_book starts at 2026-09-02.
+#   · nothing since it was re-wired to the midday slot. The forward sample is
+#     zero.
+#
+# So this is a decision taken on an operational change with the statistical
+# case stated as weaker than it looks, not a promotion the numbers earned.
+# t >= 2 at 30 closed remains the bar for every other engine; if GUST's
+# forward record does not hold up, it comes back here and the reason gets
+# written beside it.
+#
+# It self-corrects one thing automatically: standalone_scan's midday slot sets
+# quiet_on_success from may_alert("intraday"), so the slot resumes reporting
+# itself the moment this entry is removed. That was built to read the gate
+# rather than a second list, exactly so this edit is the only edit.
 ALERTS_SUPPRESSED = {
     # key                reason written into the delivery record
     "pivot":    "research tier — logged, never alerted. No closed trade and no "
                 "measured expectancy yet.",
-    "intraday": "research tier — logged, never alerted. 17 closed at +1.472R "
-                "(t=3.69) is a good record on a small sample and 13 short of "
-                "the 30 this book requires before an engine is trusted.",
 }
 
 

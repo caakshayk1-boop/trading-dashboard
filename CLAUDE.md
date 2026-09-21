@@ -143,9 +143,16 @@ Two touches a day, on the operator's clock. Nothing else is scheduled to post.
   previous close).
 - Two touches is a claim about the PHONE, not about how often anything runs.
   Two other scans exist and neither adds a third weekday notification:
-  - **11:30 IST / 14:00 MYT, weekdays** — the midday slot, GUST only. It files
-    to the ledger and is research tier, so `may_alert` refuses it. It is also
-    **silent on success**: the slot used to fall through to the completion
+  - **11:30 IST / 14:00 MYT, weekdays** — the midday slot, GUST only.
+    **GUST was promoted out of research tier on 2026-09-21** and now alerts,
+    so this slot IS a third weekday touch. The decision was about the clock,
+    not the record: it had been out of mandate "for trading a 15-minute chart,
+    which this account cannot", and the account now can. The sample did not
+    change — 17 closed, thirteen short of this book's thirty, all pre-launch,
+    nothing since it was re-wired — and that is written above
+    `ALERTS_SUPPRESSED` in `engine_names.py` rather than glossed.
+    It was **silent on success** while suppressed: the slot used to fall
+    through to the completion
     summary, which "always sends so you know scan ran", so a third message
     arrived every weekday saying nothing had happened — against `daily_scan.yml`'s
     own rationale for the cron, which is that it "adds no message to anybody's

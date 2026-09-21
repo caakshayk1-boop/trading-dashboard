@@ -380,8 +380,21 @@ scanner.scan_intraday_momentum = lambda *a, **k: [
 # to file past 14:30 IST, because a 15-minute signal identified then has no
 # session left to trade into.
 os.environ["INTRADAY_NOW_IST"] = "11:30"
+# ── GUST ALERTS NOW. PROMOTED 2026-09-21, alerts=False -> alerts=True. ───────
+#
+# UPDATED TO THE NEW CONTRACT, NOT RELAXED. The promotion was a decision about
+# the account's clock — swing_rulebook had intraday out of mandate "for trading
+# a 15-minute chart, which this account cannot", and the account now can. So
+# the assertion flips from "none marked sent, and every row says why" to "all
+# of them sent", because that is what the code must now do.
+#
+# The research-tier PATH is not left untested by that flip: it was covered here
+# and only here, so PIVOT — which is still in ALERTS_SUPPRESSED — takes it over
+# below. Flipping this line without adding that one would have quietly deleted
+# coverage of the whole alerts=False branch, which is the shape of bug this
+# file exists to catch.
 run_path("intraday_scan", lambda: standalone_scan.run_intraday_scan("t"),
-         "intraday", M, None, alerts=False)
+         "intraday", M, None, alerts=True)
 
 # ...and past the cutoff it files NOTHING, rather than filing a trade nobody
 # could have taken. Scheduled runs here land 1.5-3h late, so this is the real
@@ -390,6 +403,22 @@ os.environ["INTRADAY_NOW_IST"] = "14:45"
 _late = standalone_scan.run_intraday_scan("t")
 check("intraday_scan: past 14:30 IST it files nothing", _late == [], f"{len(_late)} filed")
 os.environ.pop("INTRADAY_NOW_IST", None)
+
+# ── AND THE RESEARCH TIER ITSELF, ON THE ENGINE THAT IS STILL IN IT ──────────
+#
+# PIVOT: no closed trade, no measured expectancy, so may_alert refuses it. It
+# must write the ledger and record sent_at NULL WITH a reason — a row with no
+# send and no reason is indistinguishable from a send that failed, which is the
+# distinction send_error exists to hold.
+scanner.scan_pivot = lambda *a, **k: [
+    {"symbol": f"PV_{i}", "price": 100.0+i, "sl": 95.0+i, "target1": 105.0+i,
+     "target2": 110.0+i, "rr": 1.6, "timeframe": "Daily",
+     "why": "at the 200-day with the higher timeframe agreeing",
+     "invalidate": "a close back under the level",
+     "meta": {"level": 100.0+i}}
+    for i in range(M)]
+run_path("pivot_scan", lambda: standalone_scan.run_pivot_scan("t"),
+         "pivot", M, None, alerts=False)
 
 # Second run of the same scan must dedup everything, not re-alert.
 #
