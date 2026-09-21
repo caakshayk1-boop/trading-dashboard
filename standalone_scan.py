@@ -2565,14 +2565,22 @@ def main():
             # structural stops, +0.169R -> +0.224R; it is not a general rule and
             # the other engines keep intraday stops. See signals/basebreak.py.)
             basebrk   = _safe("basebreak",     run_basebreak_scan, time_str)
-            _safe("pivot", run_pivot_scan, time_str)
+            # ── PIVOT RAN IN TWO SLOTS AND WAS COUNTED IN NEITHER ──────────
+            # Its return value was dropped on the floor here and again in the
+            # basebreak slot, so it appeared in no `counts` dict. That is not
+            # cosmetic: `counts` is what log_scan_meta writes, what the slot
+            # summary prints, and what job_runs.record stores as `records` —
+            # the ATTEMPT's coverage that data_health.py reads. An engine
+            # whose output is never counted is an engine the health layer
+            # cannot tell apart from one that did not run.
+            pivots    = _safe("pivot",         run_pivot_scan,     time_str)
             # Ledger last: every alert and its outcome, to Telegram + Obsidian.
             # Runs after the scans so today's signals are already logged.
             _safe("signal_ledger", run_signal_ledger, time_str)
             counts    = {"breakouts": len(breakouts), "ai_daily": len(tlm_daily),
                          "swing": len(signals), "commodities": len(comms),
                          "measured": len(measured), "ohl": len(ohl),
-                         "basebreak": len(basebrk)}
+                         "basebreak": len(basebrk), "pivot": len(pivots or [])}
 
         elif slot == "basebreak":
             # AN ENGINE SELECTOR, NOT A TIME OF DAY — the same shape as
@@ -2582,8 +2590,8 @@ def main():
             # which is what asking for "eod" again would do.
             # It has no entry in _SLOT_OPENS_IST, so it is never window-gated.
             basebrk   = _safe("basebreak",     run_basebreak_scan, time_str)
-            _safe("pivot", run_pivot_scan, time_str)
-            counts    = {"basebreak": len(basebrk)}
+            pivots    = _safe("pivot",         run_pivot_scan,     time_str)
+            counts    = {"basebreak": len(basebrk), "pivot": len(pivots or [])}
 
         elif slot == "intraday":
             # AN ENGINE SELECTOR, NOT A TIME OF DAY — the same shape as

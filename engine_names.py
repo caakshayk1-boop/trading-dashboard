@@ -114,6 +114,31 @@ LEDGER_ONLY = {
     "top5_pick":      "Weekly Top 5",
     "sip_bucket":     "SIP allocation",
     "basebreak":      "Base break",
+    # ── TWO WRITERS THAT WERE ON NO LIST AT ALL ──────────────────────────────
+    #
+    # Found 2026-09-21 by the completeness check below, which did not exist
+    # before it. `swing` is written by standalone_scan.run_swing_scan, which
+    # runs in the eod, weekend and full slots; `manual` by claude_bot when a
+    # signal is filed by hand. Neither is in engines.js, neither was in
+    # ENGINE_NAMES, and neither was here — so engine_name() fell through to
+    # its last resort and would have printed the key back, uppercased, as if
+    # SWING were a published engine's name.
+    #
+    # The 2026-09-18 cleanup unwired four writers the roster did not name —
+    # 4h, ai_4h, ai_daily, commodity — on exactly that argument. These two
+    # survived it because nothing enumerated the writers; the check was
+    # ENGINE_NAMES -> tracker.REMARKS, which only ever asks about keys
+    # somebody had already remembered to name.
+    #
+    # Naming them is not a decision to keep running them. run_swing_scan has
+    # returned 0 signals on every scan_meta record back to 2026-09-04 and the
+    # legacy `signals` table it also writes is empty; whether it stays wired
+    # is a decision about signal generation and is not made here.
+    "swing":          "Swing scan",
+    "manual":         "Filed by hand",
+    # claude_bot's own scan runner, which is both the /scan command and the
+    # bot's scheduler. Found by the same check, in the same pass.
+    "4h_momentum":    "4-hour momentum",
 }
 
 
