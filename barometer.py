@@ -132,13 +132,42 @@ def compute(nifty_close, nifty_hi, nifty_lo, breadth: dict, vix) -> dict | None:
                       "weight": WEIGHTS["highs"],
                       "detail": f"{int(hi52)} of {int(counted)} at a 52-week high"})
 
+    # ── THE DENOMINATOR HAS TO TRAVEL WITH THE SCORE ────────────────────────
+    #
+    # wsum is the weight of the components that ANSWERED, not the weight this
+    # model declares. Dividing by it renormalises the score over whatever
+    # happened to have data and then publishes the result as "N out of 100" —
+    # the same number a complete reading produces, with nothing to tell them
+    # apart.
+    #
+    # Measured 2026-09-21: trend and volatility both came back None (no Nifty
+    # close, no VIX), so 45 of the declared 100 weight was missing — including
+    # trend, the single heaviest component at 30 — and the page printed
+    # "42 out of 100 — Mixed" from 55% of its own scale. The reader had no way
+    # to know. That is the fault data_health.py exists to stop: a partial build
+    # is DEGRADED, never presented as a complete one, and no denominator means
+    # no ratio.
+    #
+    # The score is still published, because withholding it loses the three
+    # components that DID answer. What changes is that the coverage is a field
+    # rather than an inference, so every consumer can say so and the ones that
+    # do not are visibly wrong instead of quietly wrong.
     wsum = sum(p["weight"] for p in parts)
     if not wsum:
         return None
+    total_weight = sum(WEIGHTS.values())
+    missing = [k for k in WEIGHTS if k not in {p["key"] for p in parts}]
     score = round(sum(p["score"] * p["weight"] for p in parts) / wsum)
     dd = None if None in (c, hi) else abs((c - hi) / hi * 100)
     stage = stage_of(dd, above_pct) if (dd is not None and above_pct is not None) else None
     return {"score": score, "band": band_of(score), "parts": parts,
+            # weight_used < weight_total means the score was renormalised over
+            # the components that answered. `missing` names which did not, so
+            # a page can print the absence rather than a reader assuming five.
+            "coverage": {"parts": len(parts), "parts_total": len(WEIGHTS),
+                         "weight_used": wsum, "weight_total": total_weight,
+                         "missing": missing,
+                         "complete": wsum == total_weight},
             "stage": stage, "counted": int(counted),
             "nifty": c, "drawdown_pct": None if dd is None else round(dd, 2),
             "above_200dma_pct": None if above_pct is None else round(above_pct, 1),
