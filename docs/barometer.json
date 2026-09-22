@@ -1,6 +1,6 @@
 {
   "ok": true,
-  "generated_at": "2026-09-21T18:55:06+00:00",
+  "generated_at": "2026-09-22T17:46:45+00:00",
   "weights": {
     "trend": 30,
     "breadth": 30,
@@ -9,7 +9,7 @@
     "highs": 10
   },
   "today": {
-    "score": 42,
+    "score": 44,
     "band": {
       "k": "mixed",
       "t": "Mixed",
@@ -17,18 +17,32 @@
     },
     "parts": [
       {
+        "key": "trend",
+        "label": "Where the index sits",
+        "score": 27.4,
+        "weight": 30,
+        "detail": "Nifty is 27% up its own 52-week range, 11.5% below the high"
+      },
+      {
         "key": "breadth",
         "label": "Names above their 200-day",
-        "score": 55.7,
+        "score": 55.6,
         "weight": 30,
-        "detail": "548 of 983 hold their 200-day average"
+        "detail": "547 of 983 hold their 200-day average"
       },
       {
         "key": "participation",
         "label": "Advancing today",
-        "score": 40.7,
+        "score": 41.0,
         "weight": 15,
-        "detail": "400 of 983 advanced"
+        "detail": "403 of 983 advanced"
+      },
+      {
+        "key": "volatility",
+        "label": "Volatility",
+        "score": 85,
+        "weight": 15,
+        "detail": "India VIX at 11.00 \u2014 very calm"
       },
       {
         "key": "highs",
@@ -38,12 +52,24 @@
         "detail": "2 of 983 at a 52-week high"
       }
     ],
-    "stage": null,
+    "coverage": {
+      "parts": 5,
+      "parts_total": 5,
+      "weight_used": 100,
+      "weight_total": 100,
+      "missing": [],
+      "complete": true
+    },
+    "stage": {
+      "k": "early",
+      "t": "Slightly cheaper",
+      "c": ""
+    },
     "counted": 983,
-    "nifty": null,
-    "drawdown_pct": null,
-    "above_200dma_pct": 55.7,
-    "vix": null
+    "nifty": 23329.0,
+    "drawdown_pct": 11.54,
+    "above_200dma_pct": 55.6,
+    "vix": 10.9975004196167
   },
   "history": [
     {
@@ -83,12 +109,26 @@
       "drawdown_pct": null,
       "above_200dma_pct": 55.7,
       "vix": null
+    },
+    {
+      "date": "2026-09-22",
+      "score": 44,
+      "band": "mixed",
+      "stage": {
+        "k": "early",
+        "t": "Slightly cheaper",
+        "c": ""
+      },
+      "nifty": 23329.0,
+      "drawdown_pct": 11.54,
+      "above_200dma_pct": 55.6,
+      "vix": 10.9975004196167
     }
   ],
   "outcomes": {
     "early": {
       "label": "Slightly cheaper",
-      "readings": 2,
+      "readings": 3,
       "m3": null,
       "m6": null,
       "m12": null
