@@ -1,7 +1,7 @@
 {
- "build_id": "20260921T074727",
- "date": "2026-09-21",
- "date_str": "Monday, September 21 2026",
+ "build_id": "20260922T082931",
+ "date": "2026-09-22",
+ "date_str": "Tuesday, September 22 2026",
  "picks": [
   {
    "symbol": "CRWD",
@@ -422,10 +422,6 @@
    "price": 606.15,
    "sector": "Real Estate"
   },
-  "ASAHIINDIA": {
-   "price": 961.05,
-   "sector": "Consumer Cyclical"
-  },
   "ASHOKLEY": {
    "price": 163.0,
    "sector": "Industrials"
@@ -474,10 +470,6 @@
    "price": 1416.6,
    "sector": "Energy"
   },
-  "CIPLA": {
-   "price": 1394.5,
-   "sector": "Healthcare"
-  },
   "COALINDIA": {
    "price": 409.9,
    "sector": "Energy"
@@ -506,9 +498,9 @@
    "price": 237.65,
    "sector": "Technology"
   },
-  "CUPID": {
-   "price": 265.0,
-   "sector": "Consumer Defensive"
+  "CUB": {
+   "price": 235.79,
+   "sector": "Financial Services"
   },
   "DRREDDY": {
    "price": 1185.0,
@@ -582,10 +574,6 @@
    "price": 146.58,
    "sector": "Financial Services"
   },
-  "JAINREC": {
-   "price": 276.25,
-   "sector": "Basic Materials"
-  },
   "JMFINANCIL": {
    "price": 126.3,
    "sector": "Financial Services"
@@ -598,13 +586,13 @@
    "price": 1065.4,
    "sector": "Healthcare"
   },
+  "JYOTICNC": {
+   "price": 1049.7,
+   "sector": "Industrials"
+  },
   "KAYNES": {
    "price": 3515.0,
    "sector": "Technology"
-  },
-  "KPRMILL": {
-   "price": 1141.4,
-   "sector": "Consumer Cyclical"
   },
   "LAURUSLABS": {
    "price": 1954.0,
@@ -649,6 +637,18 @@
   "PATANJALI": {
    "price": 367.0,
    "sector": "Consumer Defensive"
+  },
+  "PAYTM.NS": {
+   "price": 1849.9,
+   "sector": "Technology"
+  },
+  "PINELABS": {
+   "price": 192.04,
+   "sector": "Technology"
+  },
+  "POLYCAB": {
+   "price": 8400.0,
+   "sector": "Industrials"
   }
  },
  "ipos": {
@@ -786,285 +786,348 @@
  },
  "desk": {
   "chess": {
-   "title": "Middlegame: Piece Coordination",
-   "body": "Good chess is about all your pieces working together. Ask: which of my pieces is worst placed? Improve it. A knight on the rim is dim (a1, h1 etc). A bishop blocked by its own pawns is a 'tall pawn.' Rooks need open files. Queen needs safety. Coordinate: every piece pointing at the same sector = overwhelming attack.",
-   "index": 13,
+   "title": "Time Management",
+   "body": "Chess is a timed game. Use 70-80% of your clock in complex positions, blitz transitions and endgames you know. Common mistake: spending 15 minutes in the opening, then rushing in the critical middlegame. Rule: if a position is complicated and you see candidate moves, spend the time here \u2014 not in simple positions. Clock is a resource, not just a constraint.",
+   "index": 15,
    "total": 20
   },
   "wisdom": {
-   "title": "Being a Better Husband",
-   "body": "The best fathers are also good partners. Your daughter watches how you treat her mother. That becomes her template for relationships. Simple acts: say thank you. Notice when your partner is tired. Take something off her plate without being asked. Ask about her day and actually listen. Small but it compounds.",
-   "index": 7,
+   "title": "Financial Peace = Emotional Peace",
+   "body": "Money stress is the #1 relationship killer. Getting to AED 30K/month isn't just ambition \u2014 it's removing a major source of family stress. Every step toward financial stability is a step toward being a calmer, more present parent and partner. The job hunt matters. The income matters. It's not selfish. It's foundational.",
+   "index": 9,
    "total": 18
   },
   "book": {
-   "book": "Thinking in Bets",
-   "author": "Annie Duke",
-   "chapter": "Seek Disconfirming Evidence",
-   "lesson": "Humans are wired for confirmation bias \u2014 we notice and remember information that confirms our existing beliefs and ignore or discount information that challenges them. Duke's remedy: actively seek people and information that disagree with you. Before committing to a position, ask 'what would have to be true for me to be wrong?' Find the strongest version of the opposing argument (steelmanning, not strawmanning). The goal is not to change your mind on everything \u2014 it's to update your beliefs proportionally to the evidence. Strong opinions, weakly held.",
-   "key_quote": "Your best thinking comes from actively testing your beliefs against the strongest opposing evidence.",
-   "action": "Before your next important decision, write the strongest possible case for the opposite position. Does it change your thinking?",
-   "index": 31,
+   "book": "Mindset",
+   "author": "Carol Dweck",
+   "chapter": "Fixed vs Growth Mindset: The Belief That Changes Everything",
+   "lesson": "Dweck's 30 years of research found that children (and adults) hold one of two fundamental beliefs about their abilities. Fixed mindset: abilities are innate \u2014 you're either smart or you're not. This leads to avoiding challenges (to avoid looking dumb), giving up when things get hard, and feeling threatened by others' success. Growth mindset: abilities develop through dedication and hard work. This leads to embracing challenges, persisting through setbacks, and finding inspiration in others' success. The most important finding: the mindset is not fixed. It can be changed by learning about it.",
+   "key_quote": "The belief that your abilities are fixed is the only thing that makes them fixed.",
+   "action": "Notice your self-talk after a failure today. Is it fixed ('I'm not good at this') or growth ('I haven't learned this yet')? The word 'yet' is the most powerful in the growth mindset.",
+   "index": 33,
    "total": 48,
    "crux": [
-    "Every decision is a bet on an uncertain future. Certainty is not available.",
-    "Outcome \u2260 decision quality. Chess is nearly all skill; life is poker \u2014 skill plus luck.",
-    "'Resulting' is judging a decision by how it turned out. It is the core error.",
-    "Replace true/false with a confidence percentage. 'I'm 70% on this' is honest and updatable.",
-    "Saying 'I'm not sure' is a strength. Pretended certainty blocks learning.",
-    "Beliefs are formed first and vetted later, if ever. Assume yours are unaudited.",
-    "Motivated reasoning: contradicting evidence gets scrutinised, confirming evidence gets waved through.",
-    "Self-serving bias: wins are skill, losses are luck. This makes experience useless.",
-    "Build a truth-seeking group with an explicit charter: accuracy over comfort, dissent welcomed.",
-    "Argue the other side properly. Steelman it, don't strawman it.",
-    "Separate signal from noise in feedback. A small sample tells you almost nothing.",
-    "Use temporal distance \u2014 10 minutes, 10 months, 10 years \u2014 before deciding under emotion.",
-    "Backcast from success and pre-mortem from failure. Both, not one.",
-    "Tilt is real. Recognise the emotional state and stop deciding while in it."
+    "Two mindsets: fixed (abilities are static) and growth (abilities develop through effort).",
+    "Fixed mindset makes every task a verdict on your worth, so it avoids risk.",
+    "Growth mindset treats effort and failure as the mechanism of improvement.",
+    "Praising talent produces fragility. Praising process produces resilience.",
+    "'Not yet' is the most useful phrase in learning.",
+    "Fixed mindset avoids challenges that might reveal limits \u2014 and so never finds them.",
+    "Effort is what talent requires, not a substitute for it.",
+    "Criticism is data in a growth mindset and an attack in a fixed one.",
+    "Others' success is inspiration in one frame, threat in the other.",
+    "Mindsets are domain-specific. You can be growth-oriented at work and fixed about maths.",
+    "Fixed-mindset relationships expect compatibility; growth-mindset relationships expect work.",
+    "CEO disease: fixed-mindset leaders need to be the smartest person and suppress bad news.",
+    "You can change mindset by noticing the fixed voice and answering it deliberately."
    ],
    "learnings": [
-    "A good decision can lose. A bad decision can win. Track process, not scoreboard.",
-    "Confidence expressed as a percentage is falsifiable. Confidence expressed as certainty is not.",
-    "Without separating luck from skill, ten years of experience teaches nothing.",
-    "You need people who will tell you that you were wrong."
+    "How you explain a failure determines whether you get anything from it.",
+    "Talent praise is a trap. Process praise builds durability.",
+    "Avoiding challenge to protect self-image caps growth permanently.",
+    "'Not yet' converts a verdict into a timeline."
    ],
    "examples": [
-    "Pete Carroll's Super Bowl XLIX pass call was widely branded the worst in history. The interception rate on that play was about 2% \u2014 the decision was defensible, the outcome was not.",
-    "Duke won $4m at poker by focusing on decision quality across thousands of hands rather than the result of any single one.",
-    "In 1979, near-universal belief that Nixon's tapes would exonerate him did not survive contact with the tapes. Consensus is not evidence."
+    "Dweck's students given 'you're smart' avoided harder puzzles; those praised for effort chose them and improved.",
+    "Michael Jordan was cut from varsity and became famous for practice volume, not gifts.",
+    "Lee Iacocca's fixed mindset at Chrysler: early success, then defensiveness, suppressed dissent, and decline."
    ],
    "adapt": [
-    "Log every trade with the thesis and a confidence %, not just entry and exit. The ledger is the point.",
-    "45.8% win rate at +0.171R is a good system. Judge it on 459 trades, not on last week.",
-    "After a losing trade, ask what a repeat of that decision returns over 100 tries. Usually the answer is 'fine'.",
-    "The 50% real win rate on the signals feed is the honest number. Publish that, not the flattering one."
+    "The trading ledger is a learning instrument, not a verdict. -0.029R on 1H is information, not judgement.",
+    "Rejection from a Dubai role is 'not yet' with a specific gap. Name the gap.",
+    "Praise your daughter's effort and persistence, not how clever she is. It starts this early.",
+    "The 8/8 APEX stop-outs were a diagnosis of the exit rule, not of your ability."
    ]
   },
   "way": {
    "minimalism": {
-    "title": "The Empty Surface",
-    "body": "Keep one surface in your home completely empty. A desk, a counter, a shelf. It becomes a visual reference point \u2014 the moment things start accumulating elsewhere, you notice.",
-    "action": "Clear one surface fully. Keep it clear for a week.",
-    "index": 5,
+    "title": "The Box Test",
+    "body": "Pack a category into a box and seal it. If you have not opened it in a month, you do not need what is inside. Most people cannot name the contents a week later.",
+    "action": "Box one category \u2014 cables, kitchen gadgets, old chargers. Date the box.",
+    "index": 7,
     "total": 20,
     "label": "Minimalism"
    },
    "etiquette": {
-    "title": "Dress One Notch Above The Room",
-    "body": "Not two \u2014 two reads as trying. One notch signals you took the occasion seriously. In the Gulf, conservative beats fashionable in every professional setting.",
-    "action": "Check tomorrow's outfit against the room you will be in.",
-    "index": 11,
+    "title": "Say The Difficult Thing Kindly And Once",
+    "body": "Softening it into unrecognisability is not kindness \u2014 it guarantees you say it again, worse, later. Direct and warm. Once.",
+    "action": "Name one thing you have been avoiding saying. Say it plainly today.",
+    "index": 13,
     "total": 20,
     "label": "Etiquette"
    },
    "stillness": {
-    "title": "Silence Is A Position",
-    "body": "You are not required to have an opinion on everything you encounter. 'I don't know enough about that' is a complete and unusually strong answer.",
-    "action": "Decline to have an opinion on one thing today.",
-    "index": 9,
+    "title": "Do One Thing At A Time",
+    "body": "The monastic instruction is: when walking, walk; when eating, eat. Multitasking is the belief that attention divides without loss. It does not.",
+    "action": "Do the next task with nothing else open.",
+    "index": 11,
     "total": 20,
     "label": "Stillness"
    },
    "model": {
-    "title": "Inversion",
-    "body": "Solve the problem backwards. Instead of 'how do I succeed?', ask 'how would I guarantee failure?' \u2014 then avoid that. The failure list is concrete and short; the success list is vague and infinite.",
-    "action": "Invert your biggest current goal. Write the three surest ways to fail it.",
-    "index": 1,
+    "title": "Opportunity Cost",
+    "body": "The real cost of anything is the best alternative you gave up. Cash sitting idle has a cost. So does a meeting. So does a project you keep alive out of habit.",
+    "action": "Name what your largest time commitment is displacing.",
+    "index": 3,
     "total": 20,
     "label": "Mental Model"
    },
    "arabic": {
-    "script": "\u0645\u0639 \u0627\u0644\u0633\u0644\u0627\u0645\u0629",
-    "translit": "ma'a as-salaama",
-    "meaning": "Go in peace / goodbye",
-    "use": "The standard farewell. Said to the person leaving.",
-    "index": 27,
+    "script": "\u0628\u0627\u0644\u062a\u0648\u0641\u064a\u0642",
+    "translit": "bit-tawfeeq",
+    "meaning": "Good luck / wishing you success",
+    "use": "Before an exam, an interview, a launch. Sincere and common.",
+    "index": 29,
     "total": 30,
     "label": "Arabic"
    },
    "drill": {
-    "title": "Name The Assumption",
-    "body": "Every model rests on two or three assumptions doing all the work. Find them. The rest is arithmetic and does not deserve your review time.",
-    "action": "Find the two assumptions carrying your current model.",
-    "index": 13,
+    "title": "Reverse-Engineer A Good Model",
+    "body": "Take a model you admire and rebuild its structure from scratch. Copying output teaches nothing; reconstructing the logic teaches everything.",
+    "action": "Rebuild one section of a model you did not write.",
+    "index": 15,
     "total": 20,
     "label": "Drill"
    },
    "health": {
-    "title": "Strength Is Longevity, Not Vanity",
-    "body": "Muscle mass and grip strength both independently predict lifespan. After 30 you lose 3\u20138% of muscle per decade unless you resist it, and the decline accelerates. Sarcopenia is what puts people in care homes.",
-    "action": "Two sets of a compound lift. Squat, hinge, push, or pull.",
-    "index": 3,
+    "title": "Sleep Is The Performance Lever",
+    "body": "Under 7 hours measurably degrades reaction time, glucose control, immune function, and emotional regulation. One night at 4 hours drops next-day insulin sensitivity by around 25%. You cannot out-discipline this.",
+    "action": "Fixed lights-out tonight. Same time tomorrow.",
+    "index": 5,
     "total": 20,
     "label": "Health"
    }
   },
   "quote": {
    "name": "Warren Buffett",
-   "quote": "Price is what you pay. Value is what you get.",
-   "index": 8,
+   "quote": "Someone is sitting in the shade today because someone planted a tree long ago.",
+   "index": 10,
    "total": 96
   },
   "lesson": {
-   "tradition": "Chinese Wisdom",
-   "lesson": "A journey of a thousand miles begins with a single step.",
-   "source": "Lao Tzu"
+   "tradition": "Indian Wisdom",
+   "lesson": "Before you speak, let your words pass through three gates: Is it true? Is it necessary? Is it kind?",
+   "source": "Sufi Proverb"
   },
   "case": {
-   "title": "Berkshire Hathaway: Float as a Business Model",
-   "story": "Buffett uses insurance float \u2014 money collected in premiums before claims \u2014 as free capital to invest. $160B float generates investment returns at zero cost.",
-   "lesson": "The best business models create free capital. Study how your industry's best companies actually make money \u2014 it's rarely where you think."
+   "title": "SpaceX: Reusable Rockets",
+   "story": "Every expert said reusable rockets were impossible. SpaceX landed Falcon 9 first stage in 2015. Launch cost dropped from $150M to $28M. Changed the industry.",
+   "lesson": "Impossible is a consensus opinion, not a fact. When everyone says something can't be done, check if they've done the math or just the tradition."
   },
   "fpna": {
-   "title": "Sensitivity Analysis",
-   "body": "Which assumption, if wrong, blows up your model? Identify it. Test it. Present the range.",
-   "index": 20,
+   "title": "Driver-Based Forecasting",
+   "body": "Build forecasts on business drivers (units, headcount, utilization), not historical % growth.",
+   "index": 2,
    "total": 20
   },
   "cfo": {
-   "title": "FC Step 1: Own the Close",
-   "body": "Financial Controllers close the books \u2014 every month, clean, on time, no surprises. Speed + accuracy is the baseline. If close takes 10 days, get it to 5. Automate reconciliations. Build a close checklist and hit it every time.",
-   "index": 1,
+   "title": "FC Step 3: Internal Controls",
+   "body": "A Controller without strong controls is a liability. Know COSO framework. Segregation of duties. Maker-checker in AP/AR. SOX lite for listed companies. Document your controls. Auditors love documented processes.",
+   "index": 3,
    "total": 15
   },
   "money_hack": {
-   "title": "EPF Power",
-   "body": "EPF gives 8.25% guaranteed, tax-free. Max out VPF if your employer allows."
+   "title": "Emergency Fund",
+   "body": "6 months of expenses in a liquid FD. Job loss + medical can overlap."
   },
   "dubai": {
-   "title": "Attestation is the silent blocker",
-   "body": "Degree and CA certificate need MEA attestation in India, then UAE embassy attestation, then MOFA in the UAE. Three to six weeks if nothing goes wrong. Offers have been withdrawn over this.",
-   "targets": "Start it before you have an offer. It expires slowly and costs little.",
-   "action_label": "Cost",
-   "action": "Roughly \u20b98\u201315K all-in per document, and the only thing it buys is not losing the job.",
-   "index": 23,
+   "title": "What a Financial Controller title actually needs",
+   "body": "The jump from FP&A Manager to Controller in the Gulf is statutory reporting plus audit ownership plus a team. If the CV has no signed statutory set on it, that is the gap \u2014 not the years.",
+   "targets": "Controller bands start around AED 40K. It is the next rung, and it is close.",
+   "action_label": "Gap",
+   "action": "Get a statutory reporting line on the CV in the next six months. Any entity, any size.",
+   "index": 25,
    "total": 30
   },
   "daughter": {
    "months": 8,
-   "days": 270,
+   "days": 271,
    "heading": "Eight months old.",
    "band": "crawling",
    "born": "2025-12-25"
   },
-  "productivity": "Weekly review: 15 min every Sunday. What worked, what's next week's #1.",
+  "productivity": "Phone in another room during deep work. Physical distance reduces urge 60%.",
   "father": [
    {
-    "title": "Narrate what you are doing",
-    "do": "Talk through ordinary actions out loud while she watches \u2014 'I am pouring the water, now it is warm.'",
-    "why": "At 7 months she is mapping sound to meaning long before she can speak. Volume of directed speech is the single best-evidenced predictor of later vocabulary. Passive audio does not count; it has to be you, to her."
+    "title": "Practise object permanence",
+    "do": "Hide a toy under a cloth while she watches, then let her pull it off. Repeat with longer delays.",
+    "why": "Around 7\u20138 months this clicks. It is also why separation anxiety starts now \u2014 she has learned you continue to exist when you leave, but not yet that you come back."
    },
    {
-    "title": "Read the same book again",
-    "do": "Read one board book daily, the same one, for a week. Point at the same picture each time.",
-    "why": "Repetition is how infants build prediction. The boredom is yours, not hers \u2014 she is learning that symbols hold steady meaning."
+    "title": "Respond to the babble",
+    "do": "When she makes a sound, answer as if it were a sentence. Wait. Let her go again.",
+    "why": "Turn-taking is the structure of conversation, learned months before words. The pause is the important part \u2014 filling it teaches her that her turn does not matter."
    }
   ],
   "life_wisdom": [
    {
     "tradition": "Jainism",
-    "term": "Sallekhana's principle",
-    "translation": "Gradual reduction, not sudden renunciation",
-    "teaching": "The Jain tradition values incremental letting-go over dramatic gestures \u2014 small consistent reduction beats one grand sacrifice.",
-    "apply": "Do not overhaul the budget in one heroic month. Cut one recurring thing permanently. Repeat next month. Sustainable beats spectacular."
+    "term": "Asteya",
+    "translation": "Non-stealing, widely defined",
+    "teaching": "Extends beyond property to taking what was not freely given \u2014 credit, time, attention.",
+    "apply": "Attribute the idea to the person who had it, in the meeting, by name. Taking credit is the most common form and the least noticed."
    },
    {
     "tradition": "Buddhism",
-    "term": "Dukkha",
-    "translation": "Unsatisfactoriness",
-    "teaching": "The first noble truth is not 'life is suffering' but that conditioned things do not stay satisfying. The promotion satisfies briefly, then resets.",
-    "apply": "Before chasing the next milestone, name honestly what the last one actually changed and for how long. Then decide if you still want it."
+    "term": "Anicca",
+    "translation": "Impermanence",
+    "teaching": "Everything that arises passes. Applied properly this cuts both ways \u2014 bad quarters end, and so do good ones.",
+    "apply": "In a drawdown or a bad week, ask what will be true in six months. Most acute distress is a mis-estimate of duration."
    }
   ],
   "spanish": [
    {
-    "word": "el margen bruto",
-    "meaning": "gross margin",
-    "es": "El margen bruto baj\u00f3 dos puntos.",
-    "en": "Gross margin fell two points.",
+    "word": "la tasa",
+    "meaning": "the rate",
+    "es": "La tasa de inter\u00e9s cambi\u00f3 ayer.",
+    "en": "The interest rate changed yesterday.",
     "tag": "Business"
    },
    {
-    "word": "entregar",
-    "meaning": "to deliver / hand in",
-    "es": "Entregamos el reporte a tiempo.",
-    "en": "We delivered the report on time.",
+    "word": "el riesgo",
+    "meaning": "the risk",
+    "es": "Ese riesgo es demasiado alto.",
+    "en": "That risk is too high.",
     "tag": "Business"
    }
   ],
   "vocab": [
    {
-    "word": "Endemic",
-    "say": "en-DEM-ik",
-    "meaning": "Regularly found in a particular place or group.",
-    "example": "Shrinkage at that level is endemic to the format, not to the store.",
-    "note": "Distinguishes a structural feature from a local failure \u2014 useful when defending a manager."
+    "word": "Attenuate",
+    "say": "uh-TEN-yoo-ayt",
+    "meaning": "To reduce in force or effect.",
+    "example": "Hedging attenuates the FX impact but does not remove it.",
+    "note": "The honest word when something is dampened rather than solved."
    },
    {
-    "word": "Spurious",
-    "say": "SPYOOR-ee-uhs",
-    "meaning": "False; not genuine, despite appearing so.",
-    "example": "That correlation is spurious \u2014 both track store openings.",
-    "note": "The exact word for a relationship in the data that is real-looking and meaningless."
+    "word": "Efficacy",
+    "say": "EF-i-kuh-see",
+    "meaning": "The ability to produce the intended result.",
+    "example": "We have no evidence on the efficacy of that promotion.",
+    "note": "Not the same as efficiency. Efficacy is 'does it work', efficiency is 'at what cost'."
    }
   ],
   "speaking": {
-   "title": "Breathe before the hard part",
-   "drill": "Identify the toughest sentence in an answer and take a full breath immediately before it.",
-   "why": "Nerves shorten breath, which raises pitch and speeds delivery precisely when you most need authority."
+   "title": "Cut the throat-clear",
+   "drill": "Notice and eliminate the meaningless opener: 'So\u2026', 'Yeah, so\u2026', 'I guess\u2026'.",
+   "why": "It signals you started talking before you started thinking, even when you did not."
   },
   "interview_tech": [
    {
-    "q": "What is the difference between EBITDA and free cash flow, and which do you manage to?",
-    "a": "EBITDA ignores working capital movements, capex, tax and interest. A retailer can grow EBITDA while burning cash by stuffing stores with inventory and opening capital-hungry sites. Free cash flow = EBITDA \u2212 capex \u2212 change in working capital \u2212 tax \u2212 interest. Manage the business to free cash flow; report EBITDA because that is what lenders and multiples use. Where they diverge for more than two quarters, something structural is wrong.",
-    "who": "Berkshire \u00b7 Amazon \u00b7 Al-Futtaim"
+    "q": "How do you build a rolling 13-week cash forecast?",
+    "a": "Direct method, receipts and payments, not derived from P&L. Start with confirmed opening bank. Layer in: daily sales collections by tender type with settlement lag; supplier payment runs from the AP ageing; payroll on fixed dates; rent on quarter days; tax and VAT on statutory dates; capex from approved commitments. Roll it weekly and track forecast versus actual variance by line \u2014 the discipline is in explaining last week's miss, which is what makes week 13 credible.",
+    "who": "Every treasury function"
    },
    {
-    "q": "What breaks first when a retailer scales from 60 to 200 stores?",
-    "a": "Not the finance system \u2014 the master data and the operating cadence. Specifically: SKU and price master governance, because inconsistent data makes every report wrong; the supply chain's ability to replenish without central stock-outs; and the management reporting rhythm, because a weekly review that works for 60 stores becomes noise at 200 without exception-based reporting. Finance's job is to install store-level P&L discipline and exception thresholds before the growth, not after.",
-    "who": "Landmark Group \u00b7 Americana \u00b7 Alshaya"
+    "q": "Your forecast missed by 12%. The CEO asks why in the board meeting.",
+    "a": "Answer in this order: the number, the driver, the fix, the revised view. 'We missed by AED 14M. Eleven of that is two categories where sell-through ran 20 points below plan; three is timing on a store opening that slipped a quarter. The buying calendar for those categories is now locked four weeks later so we commit on actual trend. Revised full-year is AED 462M.' Never open with context and never let the explanation exceed four sentences before the number.",
+    "who": "Every board, everywhere"
    }
   ],
   "interview_soft": [
    {
-    "q": "How do you explain a complex financial concept to a non-finance audience?",
-    "a": "Demonstrate it rather than describe it. Pick something like IFRS 16 or working capital and explain it in the answer, in plain words, in under 30 seconds, with a number. The technique: one analogy, one number, one consequence. Then stop. The most common failure is finance people proving they understand it instead of making the other person understand it.",
-    "who": "Retail boards \u00b7 P&G \u00b7 Mars"
+    "q": "Tell me about a time you changed your mind after being convinced by someone junior.",
+    "a": "This is a culture question about ego. Pick a real instance, name the person's role, describe the argument they made and why it was better than yours, and say what you did afterwards to make sure they got the credit. The best version includes what you changed structurally so junior challenge became normal rather than exceptional.",
+    "who": "Amazon \u00b7 Google \u00b7 Unilever"
    },
    {
-    "q": "Describe a time you led a team through significant change.",
-    "a": "Use the ERP implementation \u2014 it is the strongest card in your hand. Cover what changed for the people, not just the systems: roles that disappeared, processes relearned, the period where everything took longer. Explain how you handled the dip in morale at go-live, who resisted and how you brought them round, and the measurable outcome. The 40% close reduction is the proof point; the retention of the team through it is the actual answer.",
-    "who": "Your own D365 story"
+    "q": "Why are you leaving your current role?",
+    "a": "Never criticise the employer. Frame as pull, not push, and make it structural rather than personal: the scope you want next does not exist there in the timeframe you want it. If there is an obvious reason they will infer \u2014 a merger, a new boss, relocation \u2014 name it briefly and neutrally before they ask. Anything that sounds like a grievance transfers directly onto how they imagine you will talk about them.",
+    "who": "Universal"
    }
   ],
   "cfo_field": [
    {
-    "q": "Know your break-even by store, not by chain.",
-    "a": "A chain at group-level profitability can be carrying a quarter of its estate below contribution. Compute store contribution \u2014 gross profit less rent, staff and directly attributable fixed cost \u2014 and rank it. Then, before closing anything: is the lease committed, what does the store contribute to online fulfilment in its catchment, and what is the exit cost. A negative-contribution store with four years left on a non-cancellable lease is usually cheaper to run than to close.",
-    "who": "The analysis that gets you noticed"
+    "q": "Read the cash flow statement first. Always.",
+    "a": "P&L is an opinion, cash is a fact. Open any set of accounts at the cash flow statement, compare operating cash flow to EBITDA over three years, and look at the gap. A business converting 90%+ of EBITDA to operating cash is real. One converting 50% has its profit sitting in working capital or is capitalising something it should be expensing. That one ratio finds more problems than any variance pack.",
+    "who": "The first thing to check, every time"
    },
    {
-    "q": "VAT in the GCC is a cash-flow instrument, not just a compliance task.",
-    "a": "Registration thresholds, filing frequency and the timing of input recovery all move working capital. A group filing quarterly rather than monthly holds recoverable input VAT longer than it needs to. Know the filing calendar in every jurisdiction the group trades in, and know which entity holds the recoverable balance \u2014 a refund stuck in the wrong entity is cash you own and cannot use.",
-    "who": "UAE \u00b7 KSA \u00b7 Oman"
+    "q": "Scenario planning beats a single budget, and costs less than it sounds.",
+    "a": "Three cases \u2014 base, downside, upside \u2014 with the two or three variables that actually move the outcome, not thirty. In retail that is usually like-for-like growth, gross margin, and rent renewals. The value is not the numbers; it is that the board has already discussed the downside before it arrives, so the conversation when it does is about the response rather than about whether it is happening.",
+    "who": "What a board actually wants"
    }
   ],
   "review": {
-   "prompt": "What made you angry, and what did it tell you about your boundaries?",
-   "why": "Anger is information about a violated value. Read it, do not act on it.",
-   "index": 17,
+   "prompt": "If this week repeated 50 times, where would you end up?",
+   "why": "That destination is your current trajectory, not your intention.",
+   "index": 18,
    "total": 20,
-   "week": 38,
+   "week": 39,
    "year": 2026,
-   "key": "2026-W38",
-   "weekday": 7,
-   "days_left": 0,
-   "is_review_day": true
+   "key": "2026-W39",
+   "weekday": 2,
+   "days_left": 5,
+   "is_review_day": false
   },
   "podcasts": {
    "ok": true,
-   "generated_at": "2026-09-20T23:48:49.062333+00:00",
+   "generated_at": "2026-09-22T00:33:17.131358+00:00",
    "episodes": [
+    {
+     "show": "The Deshbhakt",
+     "author": "The Deshbhakt",
+     "category": "Society",
+     "title": "Half Of Delhi Voters Wiped Out?! | Is EC Incompetent Or Part Of A Bigger Evil Plan? | Akash Banerjee",
+     "guest": "",
+     "published": "2026-09-21",
+     "link": "https://www.youtube.com/watch?v=i3DPYG5lD4w",
+     "takeaways": [
+      "India\u2019s voting system is facing serious questions due to SIR and the Election Commission\u2019s handling of electoral rolls.",
+      "From thousands of voters receiving notices in Delhi to large-scale deletions reported in Bengal, Maharashtra, Karnataka and Punjab, the process has left many citizens struggling to prove their eligibility to vote."
+     ]
+    },
+    {
+     "show": "The Wire",
+     "author": "The Wire",
+     "category": "Politics",
+     "title": "The Tata crisis is a mess and no one comes out of it unscathed",
+     "guest": "",
+     "published": "2026-09-21",
+     "link": "https://www.youtube.com/watch?v=8kQFjGDdnZY",
+     "takeaways": [
+      "The Tata crisis is a mess and no one comes out of it unscathed: Sucheta Dalal, Managing Editor, Moneylife, to Karan Thapar for The Wire.",
+      "Today we focus our attention on the crisis that\u2019s afflicted the Tata Group."
+     ]
+    },
+    {
+     "show": "ANI Podcast (clips)",
+     "author": "ANI Podcast with Smita Prakash Clips",
+     "category": "Politics",
+     "title": "\u201cOur History Created A Sense That India Needed Outsiders To Unite And Civilize Us\u201d Vikram Sampat",
+     "guest": "",
+     "published": "2026-09-21",
+     "link": "https://www.youtube.com/watch?v=7R5DEq2Qnok",
+     "takeaways": [
+      "\u201cOur History Created A Sense That India Needed Outsiders To Unite And Civilize Us\u201d Vikram Sampat #Anipodcast #SmitaPrakash #VikramSampath #History #India #BritishRule #British #Colonization Tune in here: linktr.ee/podcastwithsmitaprakash"
+     ]
+    },
+    {
+     "show": "Sadhguru",
+     "author": "Sadhguru",
+     "category": "Philosophy",
+     "title": "Sadhguru Darshan Part 2 - The Science of Navratri",
+     "guest": "",
+     "published": "2026-09-21",
+     "link": "https://www.youtube.com/watch?v=ac4264G0gk4",
+     "takeaways": [
+      "Fasting during Navratri is important.",
+      "True victory lies not in accumulations but in transcending one\u2019s limitations."
+     ]
+    },
+    {
+     "show": "Drishti IAS",
+     "author": "Drishti IAS",
+     "category": "Education",
+     "title": "UP Will Be Divided Into 4 States? | What Does Article 3 Say? | Current Affairs | Drishti IAS",
+     "guest": "",
+     "published": "2026-09-21",
+     "link": "https://www.youtube.com/watch?v=uYaBR9uc0yg",
+     "takeaways": [
+      "Can Uttar Pradesh really be divided into four states?",
+      "A fresh debate has emerged after Uttar Pradesh Minister and SBSP chief Om Prakash Rajbhar claimed that the state would be divided into four parts after the caste census."
+     ]
+    },
     {
      "show": "Akshat Shrivastava",
      "author": "Akshat Shrivastava",
@@ -1074,8 +1137,8 @@
      "published": "2026-09-20",
      "link": "https://www.youtube.com/watch?v=zWU3bTHd0t4",
      "takeaways": [
-      "The Indian stock market has delivered near\u2011zero returns over the past 2.5\u202fyears.",
-      "It is currently trading at a very low level, prompting questions about its valuation."
+      "The Indian stock market has delivered near\u2011zero returns over the past 2.5\u202fyears and is currently trading at a very low level.",
+      "The episode is not investment advice; listeners are urged to do their own due diligence."
      ]
     },
     {
@@ -1105,43 +1168,6 @@
      ]
     },
     {
-     "show": "The Wire",
-     "author": "The Wire",
-     "category": "Politics",
-     "title": "Rahul \u0915\u0940 \u0917\u0942\u0901\u091c \u0938\u0947 \u092e\u094b\u0926\u0940 \u0915\u0947 \u091b\u0942\u091f\u0947 \u092a\u0938\u0940\u0928\u0947 DUSU \u092e\u0947\u0902 ABVP \u0915\u0940 \u091c\u0940\u0924 \u092a\u0930 \u0927\u093e\u0901\u0927\u0932\u0940 \u0915\u093e \u0906\u0930\u094b\u092a! | Arfa Khanum Sherwani",
-     "guest": "",
-     "published": "2026-09-20",
-     "link": "https://www.youtube.com/watch?v=lZqBXnmyaw8",
-     "takeaways": [
-      "Arfa contrasts the massive success of this youth campaign with the results of the Delhi University Students\u2019 Union elections, where the BJP\u2019s student wing, ABVP, won three out of four positions."
-     ]
-    },
-    {
-     "show": "ANI Podcast (clips)",
-     "author": "ANI Podcast with Smita Prakash Clips",
-     "category": "Politics",
-     "title": "\u201cReligious Conversion Is Now Seen as Something Negative\u201d Vikram Sampath",
-     "guest": "",
-     "published": "2026-09-20",
-     "link": "https://www.youtube.com/watch?v=XY0dWzxrAL4",
-     "takeaways": [
-      "\u201cReligious Conversion Is Now Seen as Something Negative\u201d Vikram Sampath #Anipodcast #SmitaPrakash #VikramSampath #Religion #Hindu #Muslim #Christian #Buddhism Tune in here: linktr.ee/podcastwithsmitaprakash"
-     ]
-    },
-    {
-     "show": "Drishti IAS",
-     "author": "Drishti IAS",
-     "category": "Education",
-     "title": "UPSC CSAT 2027 Preparation Begins! | Percentage | Drishti IAS",
-     "guest": "",
-     "published": "2026-09-20",
-     "link": "https://www.youtube.com/watch?v=5T6gUf0nX70",
-     "takeaways": [
-      "Welcome to the CSAT Target Prelims 2027 Series by Drishti IAS.",
-      "In recent years, CSAT has emerged as one of the biggest challenges for UPSC aspirants, making early, systematic, and consistent preparation more important than ever."
-     ]
-    },
-    {
      "show": "Figuring Out",
      "author": "Raj Shamani",
      "category": "Business",
@@ -1151,7 +1177,7 @@
      "link": "https://www.youtube.com/watch?v=0XStJayUrUY",
      "takeaways": [
       "He believes conscientiousness beats raw talent in every founder he has ever backed.",
-      "He prefers funding founders who have failed once and returned smarter."
+      "He prefers funding founders who have already failed once and returned smarter."
      ]
     },
     {
@@ -1163,8 +1189,8 @@
      "published": "2026-09-19",
      "link": "https://www.youtube.com/watch?v=ky6jesFvIqY",
      "takeaways": [
-      "Bill Gates warned that as AI models become more powerful they could act against our interests and we could lose control.",
-      "Geoffrey Hinton said anyone claiming AI won\u2019t lead to human extinction isn\u2019t facing reality."
+      "An ex\u2011Anthropic scientist warned that AI could kill us all.",
+      "Bill Gates said that as models become more powerful, they could act against our interests and we could lose control."
      ]
     },
     {
@@ -1176,8 +1202,8 @@
      "published": "2026-09-19",
      "link": "https://www.youtube.com/watch?v=4XFtDn2W85Q",
      "takeaways": [
-      "Two families earning the same amount can have completely different financial lives.",
-      "Your city, housing costs, dependents, loans, and lifestyle matter more than comparing your salary with someone else."
+      "Your city, housing costs, dependants, loans, and lifestyle matter more than comparing your salary with someone else.",
+      "Don\u2019t assume the products mentioned are the best; you should do your own research."
      ]
     },
     {
@@ -1189,8 +1215,8 @@
      "published": "2026-09-19",
      "link": "https://www.youtube.com/watch?v=3GegZ7tT4i0",
      "takeaways": [
-      "Check metrics beyond just returns when evaluating index funds.",
-      "Avoid common mistakes that can hamper the returns you earn."
+      "Three key things every index fund investor should know: which metrics to check beyond returns, common mistakes that can hamper returns, and a strategy to achieve better returns.",
+      "You can use the provided Excel sheets, input your own data, and see how the numbers play out for you."
      ]
     },
     {
@@ -1207,19 +1233,6 @@
      ]
     },
     {
-     "show": "The Deshbhakt",
-     "author": "The Deshbhakt",
-     "category": "Society",
-     "title": "Riyadh Comes Under Fire! | Did Trump Ditch MBS To Shake Hands With The Houthis!? | Akash Banerjee",
-     "guest": "",
-     "published": "2026-09-19",
-     "link": "https://www.youtube.com/watch?v=JfacDx4K6K0",
-     "takeaways": [
-      "If the station for Saudi Arabia was perilous two days ago - it just got a whole lot worse now.",
-      "With NO HELP coming from America - MBS has been scampering all over the place asking for help."
-     ]
-    },
-    {
      "show": "CA Rachana Ranade",
      "author": "CA Rachana Phadke Ranade",
      "category": "Investing",
@@ -1229,7 +1242,7 @@
      "link": "https://www.youtube.com/watch?v=Z8k5_eiLraI",
      "takeaways": [
       "BSE\u2019s sharp growth was driven by changes in leadership, the relaunch of Sensex derivatives, SEBI\u2019s expiry\u2011day changes, and operating leverage.",
-      "The episode compares the revenue mix, market share, margins and valuations of BSE and NSE."
+      "The video compares revenue mix, market share, margins and valuations of BSE and NSE while asking if NSE can replicate BSE\u2019s growth story."
      ]
     },
     {
@@ -1254,21 +1267,8 @@
      "published": "2026-09-18",
      "link": "https://www.youtube.com/watch?v=q678XLOueN8",
      "takeaways": [
-      "Learn how to make content creation your part\u2011time job or full\u2011time career.",
-      "Learn how to harness the power of ChatGPT and transform your life."
-     ]
-    },
-    {
-     "show": "Sadhguru",
-     "author": "Sadhguru",
-     "category": "Philosophy",
-     "title": "Sadhguru Darshan Part 1 -  The True Meaning of Ganesha as Vighneshwara",
-     "guest": "",
-     "published": "2026-09-18",
-     "link": "https://www.youtube.com/watch?v=_zD8lEHeVP8",
-     "takeaways": [
-      "Sharp intelligence and a balanced disposition are the true means to overcome obstacles in life.",
-      "Sadhguru explains that Ganesha\u202fChaturthi holds deeper significance beyond the celebrations and feasting."
+      "Learn how to make content creation your part-time job or full-time career!",
+      "Learn to harness the power of ChatGPT and transform your life!"
      ]
     },
     {
@@ -1293,7 +1293,7 @@
      "published": "2026-09-15",
      "link": "https://www.youtube.com/watch?v=M_npo4c9DEA",
      "takeaways": [
-      "It explains how India\u2019s largest stock exchange generates its revenue.",
+      "The episode explains how India\u2019s largest stock exchange generates its revenue.",
       "It compares NSE\u2019s financial performance, growth potential, and valuations with those of BSE."
      ]
     },
@@ -1306,8 +1306,7 @@
      "published": "2026-09-15",
      "link": "https://www.youtube.com/watch?v=dWR6jRSMJ0U",
      "takeaways": [
-      "The real difference between novelty dopamine and depth dopamine.",
-      "Your brain is wired to avoid effort, not seek reward."
+      "The real difference between novelty dopamine and depth dopamine Why your brain is wired to avoid effort, not seek reward The 70-20-10 framework for structuring your time so dopamine compounds Why AI can trick your brain into feeling like you have knowledge you don't #DopamineDetox #Neuroscience #BrainHealth #Neurologist #DrSidWarrier #WarrierClinic #Dopamine #MentalHealthIndia #Productivity #HealthyBrain #ScienceExplained #IndianDoctor #Focus #SelfImprovement #Neurology Show your support by becoming a Channel Member and get special perks:"
      ]
     },
     {
@@ -1326,85 +1325,75 @@
    ],
    "shows": 20,
    "source": "each channel's public Atom feed",
-   "built_on": "2026-09-20",
+   "built_on": "2026-09-22",
    "age_days": 0.0,
    "is_fallback": false
   },
   "smart_reads": [
    {
+    "source": "The Marginalian",
+    "cat": "ideas",
+    "title": "The Science of Waiting and the Art of Delay",
+    "link": "https://www.themarginalian.org/2026/09/21/wait-frank-partnoy/",
+    "summary": "Exploring the intersection of time and decision-making to shine a light on what it means to be human.",
+    "date": "Sep 21, 2026",
+    "_sort": "2026-09-21T23:57:53+00:00"
+   },
+   {
     "source": "Livemint",
     "cat": "money",
-    "title": "Gilt mutual funds: ICICI Prudential tops 5-year returns at over 6%; all 23 schemes remain in the green",
-    "link": "https://www.livemint.com/money/personal-finance/gilt-mutual-funds-icici-prudential-tops-5-year-returns-at-over-6-all-23-schemes-remain-in-the-green-11789929430247.html",
-    "summary": "Gilt mutual funds invest at least 80% of their assets in government securities across maturities. Among the 23 schemes in the category, Bandhan Gilt Fund and Axis Gilt Fund featured among the top five performers over both one-year and five-year periods.",
-    "date": "Sep 20, 2026",
-    "_sort": "2026-09-20T19:10:11+00:00",
+    "title": "Small-cap mutual funds: How large- and mid-cap exposure differs across schemes; check 1-year returns",
+    "link": "https://www.livemint.com/money/personal-finance/smallcap-mutual-funds-how-large-and-mid-cap-exposure-differs-across-schemes-check-1-year-returns-11790015960912.html",
+    "summary": "Small-cap mutual funds must invest at least 65% in small-cap stocks, but their remaining portfolios can differ. Here\u2019s how top 10 schemes compare on large- and mid-cap exposure and what their one-year returns show.&amp;nbsp;",
+    "date": "Sep 21, 2026",
+    "_sort": "2026-09-21T19:35:53+00:00",
     "smart": {
      "what_happened": [
-      "ICICI Prudential topped the 5-year return category with performance above 6%.",
-      "All 23 gilt mutual fund schemes posted gains, with Bandhan Gilt Fund and Axis Gilt Fund among the top five for both one-year and five-year periods."
+      "Small-cap mutual funds are required to hold at least 65% of assets in small-cap stocks.",
+      "The top ten small-cap schemes differ in their large- and mid-cap allocations, producing a range of one-year returns."
      ],
-     "why_it_matters": "The uniform positive performance across the gilt fund category signals strong demand for government securities and suggests that investors are favoring low\u2011risk, fixed\u2011income assets amid a stable macro environment. ICICI Prudential's leading return highlights its effective duration management, while the presence of Bandhan and Axis in the top tier underscores competitive fund management across the space, potentially influencing future inflows into gilt-oriented products.",
-     "what_to_watch": "Track the next monthly performance report of the ICICI Prudential Gilt Fund to see if it maintains its lead.",
-     "headline": "ICICI Prudential leads 5-year gilt fund returns over 6%, all 23 schemes in green",
-     "read_seconds": 21
+     "why_it_matters": "The differing allocations to large- and mid-cap stocks affect the risk\u2011return profile of each small-cap fund, meaning investors cannot assume uniform performance across the category; understanding these exposures helps assess potential volatility and return expectations.",
+     "what_to_watch": "Monitor the next quarterly performance reports of the top ten small-cap funds for changes in their large- and mid-cap exposure percentages.",
+     "headline": "Small-cap funds show varied large- and mid-cap exposure and 1-year returns",
+     "read_seconds": 20
     }
    },
    {
     "source": "ET Opinion",
     "cat": "money",
-    "title": "Not aimed at India, but meant for India: Russia sanctions law leaves New Delhi at Trump's mercy",
-    "link": "https://economictimes.indiatimes.com/opinion/et-commentary/not-aimed-at-india-but-meant-for-india-russia-sanctions-law-leaves-new-delhi-at-trumps-mercy/articleshow/134372472.cms",
-    "summary": "A new US law grants President Trump significant tariff authority over oil buyers. This legislation poses potential challenges for India's energy security needs. The bill passed Congress with bipartisan support, creating uncertainty for trade relations. India will seek energy sources to meet its population's demands. Th",
-    "date": "Sep 20, 2026",
-    "_sort": "2026-09-20T17:30:00+00:00",
+    "title": "FCNR(B): Has RBI bought forex stability at too high a cost?",
+    "link": "https://economictimes.indiatimes.com/opinion/et-commentary/fcnrb-has-rbi-bought-forex-stability-at-too-high-a-cost/articleshow/134394723.cms",
+    "summary": "The FCNR(B) scheme attracted significant foreign currency deposits for the RBI.  These deposits bolstered forex reserves and stabilized the rupee's exchange rate.  However, the economic benefits of these outcomes remain unclear for the nation.  The scheme created substantial liquidity, necessitating costly sterilizatio",
+    "date": "Sep 21, 2026",
+    "_sort": "2026-09-21T17:45:23+00:00",
     "smart": {
      "what_happened": [
-      "The bill passed Congress with bipartisan support.",
-      "The law grants President Trump significant tariff authority over oil buyers, creating uncertainty for trade relations."
+      "The FCNR(B) scheme drew large foreign\u2011currency deposits, increasing RBI's forex reserves and helping to steady the rupee.",
+      "The resulting liquidity required costly sterilisation, and the overall economic benefit remains uncertain."
      ],
-     "why_it_matters": "The new tariff authority could raise the cost of imported oil for India, forcing the country to seek alternative energy sources to meet its growing demand and potentially disrupting existing trade flows.",
-     "what_to_watch": "A White House announcement of any tariffs applied to oil imports destined for India.",
-     "headline": "US law gives Trump tariff authority over oil buyers, affecting India",
+     "why_it_matters": "The scheme's ability to augment foreign exchange reserves and support the rupee's exchange rate can enhance external stability, but the high cost of sterilising the excess liquidity may strain the central bank's balance sheet and limit fiscal space. Assessing whether the net effect is positive is crucial for policymakers weighing the trade\u2011off between currency stability and financial cost.",
+     "what_to_watch": "Watch the RBI's monthly sterilisation outflow figures released in its financial statements for changes in the cost of the program.",
+     "headline": "RBI's FCNR(B) scheme boosts reserves but raises sterilization costs",
      "read_seconds": 26
     }
    },
    {
-    "source": "The Marginalian",
-    "cat": "ideas",
-    "title": "Are You Working: In Defense of the Invisible Labors of Creativitiy",
-    "link": "https://www.themarginalian.org/2026/09/20/leo-lionni-frederick/",
-    "summary": "Once, at the gym with a physicist friend, I was struck by how no one else in the room had any idea that while she was sweating on the treadmill with a blank stare into space, she was doing advanced mathematics working out the logic of black holes. Another time, on the train with a poet friend, none of the other passeng",
-    "date": "Sep 20, 2026",
-    "_sort": "2026-09-20T13:59:33+00:00"
-   },
-   {
-    "source": "The Economist",
+    "source": "Economic Times",
     "cat": "money",
-    "title": "House prices survived the last interest-rate rise. Will they this time?",
-    "link": "https://www.economist.com/finance-and-economics/2026/09/20/house-prices-survived-the-last-interest-rate-rise-will-they-this-time",
-    "summary": "Supports that shored up the housing market when borrowing costs last rose are gone",
-    "date": "Sep 20, 2026",
-    "_sort": "2026-09-20T09:05:41+00:00"
+    "title": "Retiring at 50, 58 or 60: How much EPS pension do you lose by retiring early?",
+    "link": "https://economictimes.indiatimes.com/wealth/save/epfo-wage-ceiling-eps-pension-calculator-retiring-at-50-vs-58-vs-60-how-much-monthly-payment-you-may-get/articleshow/134384844.cms",
+    "summary": "EPS pension calculator: Employees\u2019 Pension Scheme members can retire early from age fifty. Deferred retirement allows for increased pension amounts after age fifty-eight. An employee with twenty-five years of service and a pensionable salary of twenty-five thousand rupees receives a pension. Early retirement at age fif",
+    "date": "Sep 21, 2026",
+    "_sort": "2026-09-21T12:27:59+00:00"
    },
    {
     "source": "Peter Attia",
     "cat": "health",
-    "title": "Can semaglutide slow aging?",
-    "link": "https://peterattiamd.com/can-semaglutide-slow-aging/",
-    "summary": "A new study found that semaglutide extended median lifespan and improved several measures of aging in female mice\u2014but the headline requires careful interpretation.\nThe post Can semaglutide slow aging?\u00a0 appeared first on Peter Attia MD.",
-    "date": "Sep 19, 2026",
-    "_sort": "2026-09-19T11:00:00+00:00",
-    "smart": {
-     "what_happened": [
-      "A new study found that semaglutide extended median lifespan in female mice.",
-      "The drug also improved several measures of aging in the same animal cohort."
-     ],
-     "why_it_matters": "The findings suggest that semaglutide, a medication already used for diabetes and weight management, may have effects on biological aging pathways, raising interest in its potential broader health impacts. However, the results are limited to female mice and require careful interpretation before any relevance to human aging can be inferred.",
-     "what_to_watch": "Future peer\u2011reviewed studies or clinical trials that test semaglutide\u2019s effects on aging markers in humans.",
-     "headline": "Semaglutide extends median lifespan in female mice",
-     "read_seconds": 20
-    }
+    "title": "#408 \u2012 AMA #89: Thyroid health: interpreting symptoms, diagnosing and treating dysfunction, and navigating the gray zone",
+    "link": "https://peterattiamd.com/ama89/",
+    "summary": "\u201cThe goal of this podcast, of course, is then to walk people through the physiology carefully enough that you can see both the grains of truth on each side of those schools of thought, but perhaps more importantly, what they might be missing and therefore where we can hopefully land on a place to treat people.\u201d\u2012 Peter ",
+    "date": "Sep 21, 2026",
+    "_sort": "2026-09-21T04:15:00+00:00"
    },
    {
     "source": "NYT Well",
@@ -1434,13 +1423,13 @@
     "_sort": "2026-09-10T09:50:00+00:00"
    },
    {
-    "source": "Ness Labs",
+    "source": "James Clear",
     "cat": "habits",
-    "title": "Never forget what matters with Dr David Urbansky, founder of Linkflare",
-    "link": "https://nesslabs.com/linkflare-featured-tool?utm_source=rss&utm_medium=rss&utm_campaign=linkflare-featured-tool",
-    "summary": "FEATURED TOOL Welcome to this edition of our Tools for Thought series, where we interview founders on a mission to help us think better and work smarter. Dr David Urbansky is the founder of Linkflare, a universal bookmark manager that helps you save links, read distraction-free, and never forget the information that ma",
-    "date": "Sep 08, 2026",
-    "_sort": "2026-09-08T09:45:00+00:00"
+    "title": "My 2019 Annual Review",
+    "link": "https://jamesclear.com/2019-annual-review",
+    "summary": "Another year complete. Here&#8217;s a quick recap of 2019, which also happened to be one of the craziest years of my life. As always, this Annual Review will answer three questions. What went well this year? What didn\u2019t go so well this year? What did I learn? Before we begin, it is worth noting that [&#8230;]",
+    "date": "Jan 06, 2020",
+    "_sort": "2020-01-06T18:06:47+00:00"
    }
   ],
   "lichess_games": [
@@ -1461,7 +1450,7 @@
     "moves": 25,
     "termination": "Checkmate",
     "speed": "Blitz",
-    "analysis": "Study the Vienna Gambit line 1.e4 e5 2.Nc3 Nf6 3.f4; avoid early queen trades\u2014your queen was forced into checkmate at move\u202f25. Reduce queen\u2011exchanges, develop pieces, and castle by move\u202f10.",
+    "analysis": "Study early queen\u2011side development; avoid 4\u2026Qh4? and 7\u2026Nf6?\u2014instead play 4\u2026Nf6, 7\u2026Be7, keeping king safe and preventing forced mate.",
     "is_upset": false,
     "is_collapse": false,
     "is_long": false,
@@ -1560,7 +1549,7 @@
     "moves": 22,
     "termination": "Resignation",
     "speed": "Blitz",
-    "analysis": "Focus on early pawn structure: after 1.e4 e6 2.d4 d5 3.Nc3 Bb4, avoid the premature 4.e5; instead play 4.Qb3 (or 4.Bd3) to maintain central tension and prevent Black\u2019s active ...c5\u2011break. This alone saves ~0.5\u202fpawn\u2011eval and reduces tactical vulnerability.",
+    "analysis": "Focus on early pawn structure: after 1.e4 e6 2.d4 d5, avoid 3.Nc3? (the Classical) and instead play 3.Nc3\u202fBb4 (the Winawer) or 3.Nd2 (the Tarrasch) to keep the center solid; your 3.Nc3 allowed Black\u2019s ...Bb4+ and forced an inaccurate queen move, losing time and leading to a cramped position. Strengthen opening knowledge and choose a line that preserves central control.",
     "is_upset": false,
     "is_collapse": false,
     "is_long": false,
@@ -1649,18 +1638,18 @@
    "upsets": 0,
    "collapses": 0,
    "long_games": 0,
-   "session_summary": "Your 0\u202f% win rate tells you you\u2019re not just losing\u2014you\u2019re playing at a level that even a novice would outplay; every move is a mistake. Stop relying on the \u201cweakest opening\u201d you\u2019ve identified and replace it with a solid, low\u2011theory system like the London System or Caro\u2011Kann, then drill the first 10\u201312 moves until they\u2019re automatic. Spend the next 20\u202fhours analyzing each loss with a engine, cataloguing every tactical oversight, and replay those positions daily until you can spot the same patterns before you even think about moving.",
+   "session_summary": "Your play is catastrophically flat\u2014two straight losses with no draws or wins, yielding a 0\u202f% success rate, and you haven\u2019t even managed a single upset or collapse to gauge any variability. The data shows you have no identifiable \u201cbest\u201d opening and your \u201cweakest\u201d line is simply every line you touch; you\u2019re losing regardless of move order. Stop fiddling with fancy openings, drill basic endgames and tactical motifs daily, and force yourself to win at least one pawn\u2011grabbing mini\u2011game before you even think about returning to the board.",
    "session_date": "2026-09-19",
    "is_yesterday": false,
    "token_missing": false
   },
   "lichess_puzzle": {
-   "pid": "jfKQH",
-   "rating": 2023,
+   "pid": "kh1Lh",
+   "rating": 1851,
    "level": "\ud83d\udd34 stretch",
-   "themes": "Opening \u00b7 Advantage \u00b7 Short",
-   "tip": "Calculate 3 moves deep before touching a piece.",
-   "url": "https://lichess.org/training/jfKQH"
+   "themes": "Short \u00b7 Rook Endgame \u00b7 Blind Swine Mate",
+   "tip": "King activity and pawn structure dominate. Technique over tactics here.",
+   "url": "https://lichess.org/training/kh1Lh"
   }
  }
 }

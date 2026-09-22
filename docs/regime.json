@@ -1,6 +1,6 @@
 {
   "ok": true,
-  "generated_at": "2026-09-18T17:52:55+00:00",
+  "generated_at": "2026-09-21T18:56:05+00:00",
   "today": {
     "regime": "calm_range",
     "close": 23346.4,
@@ -22,7 +22,7 @@
   },
   "breadth": {
     "above_200dma_pct": 0,
-    "counted": 985,
+    "counted": 983,
     "note": "Shown for context. Not an input to the label above, because pulse.json keeps no history and a regime that cannot be backfilled cannot be measured."
   },
   "regimes": {
@@ -50,19 +50,29 @@
   "measured": {
     "cells": {
       "calm_range": {
-        "n": 11,
-        "avg_r": -0.723,
-        "win_rate": 9.1,
-        "t": -2.22,
+        "n": 15,
+        "avg_r": -0.797,
+        "win_rate": 6.7,
+        "t": -3.36,
         "readable": true,
         "engines": [
           {
             "engine": "momentum_quant",
-            "n": 7,
+            "n": 8,
             "retired": null,
-            "avg_r": -0.564,
-            "win_rate": 14.3,
-            "t": -1.1,
+            "avg_r": -0.619,
+            "win_rate": 12.5,
+            "t": -1.38,
+            "trusted": false,
+            "readable": true
+          },
+          {
+            "engine": "keel",
+            "n": 4,
+            "retired": null,
+            "avg_r": -1.0,
+            "win_rate": 0.0,
+            "t": null,
             "trusted": false,
             "readable": false
           },
@@ -85,16 +95,6 @@
             "t": null,
             "trusted": false,
             "readable": false
-          },
-          {
-            "engine": "keel",
-            "n": 1,
-            "retired": null,
-            "avg_r": -1.0,
-            "win_rate": 0.0,
-            "t": null,
-            "trusted": false,
-            "readable": false
           }
         ]
       }
@@ -102,9 +102,9 @@
     "unlabelled_trades": 0,
     "excluded_non_nse": 0,
     "excluded_retired": 151,
-    "excluded_not_published": 436,
+    "excluded_not_published": 441,
     "excluded_short": 0,
-    "excluded_pre_launch": 139,
+    "excluded_pre_launch": 141,
     "launch": "2026-09-02",
     "retired_engines": [
       "4h",
