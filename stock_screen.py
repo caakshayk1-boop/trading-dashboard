@@ -749,6 +749,37 @@ def technicals(px: dict, bench: dict | None) -> dict:
         t["from_low52"] = (last / lo - 1.0) if lo else None
     else:
         t["high52"] = t["low52"] = t["from_high52"] = t["from_low52"] = None
+        # ── A SHORT WINDOW IS STILL A MEASURED ONE ───────────────────────────
+        #
+        # Everything above this line is gated at 240 bars because it CLAIMS A
+        # YEAR: brk52w, "at a 52-week high", the -30% drawdown flag. Those must
+        # stay gated — a 52-week breakout on four months of data is a false
+        # sentence.
+        #
+        # A HIGH IS NOT AN AVERAGE, though, and that is where the gate went too
+        # far. The max of 96 bars is the true max of those 96 bars; nothing is
+        # approximated and nothing is missing. Nulling it published "—" for a
+        # fact the series plainly contains, on 69 of 983 names — LENSKART,
+        # GROWW, EMMVEE and the rest of the recent listings, plus the demerged
+        # tickers whose series restarts: VEDL, SKFINDIA, SKFINDUS, TIMEX.
+        #
+        # It is not only a blank cell. Those 69 carry a verdict with an entry,
+        # a stop and a target while the screen cannot say where the price sits
+        # in its own range — on a screen one of whose stated verdict reasons is
+        # "Broke its 52-week high".
+        #
+        # So the range is published under its OWN keys, with the number of
+        # sessions it covers, and every consumer must label it from that rather
+        # than calling four months a year. The 52-week keys stay None.
+        if n >= MIN_BARS["r1m"]:
+            rwh = h[-n:] if len(h) >= n else c[-n:]
+            rwl = l[-n:] if len(l) >= n else c[-n:]
+            rhi, rlo = max(rwh), min(rwl)
+            t["rng_hi"], t["rng_lo"] = rhi, rlo
+            t["rng_from_hi"] = (last / rhi - 1.0) if rhi else None
+            t["rng_sessions"] = n
+        else:
+            t["rng_hi"] = t["rng_lo"] = t["rng_from_hi"] = t["rng_sessions"] = None
 
     # Volume. A zero or missing average must not become a division.
     av20 = sma(v, 20) if n >= 20 else None
@@ -2283,6 +2314,13 @@ def build(limit: int | None = None, allow_fetch: bool = True,
             "high52": _round(t.get("high52"), 1, 1),
             "low52": _round(t.get("low52"), 1, 1),
             "from_high": _pct(t.get("from_high52")),
+            # The shorter window, for a name with less than a year of bars.
+            # Carries its own length so nothing downstream can print it as a
+            # year — see the note beside its computation.
+            "rng_hi": _round(t.get("rng_hi"), 1, 1),
+            "rng_lo": _round(t.get("rng_lo"), 1, 1),
+            "rng_from_hi": _pct(t.get("rng_from_hi")),
+            "rng_sessions": t.get("rng_sessions"),
             "r1d": _pct(t.get("r1d")),
             "r1w": _pct(t.get("r1w")), "r1m": _pct(t.get("r1m")),
             "r3m": _pct(t.get("r3m")), "r6m": _pct(t.get("r6m")),
