@@ -1910,9 +1910,73 @@ def test_magic_levels_never_publish_a_setup_that_cannot_pay_for_itself() -> None
           SC.magic_levels(df_for(prices), price=150.0, hi52=150.5) is None)
 
 
+def test_short_history_publishes_its_real_range() -> None:
+    """A high is not an average, and blanking it hid a measured fact.
+
+    MIN_BARS["high52"] = 240 gates everything that CLAIMS A YEAR — brk52w, the
+    "at a 52-week high" sentence, the -30% drawdown flag. That gate is right
+    and stays. But it also nulled high52/low52 outright, so 69 of 983 names
+    published "—" for a range their own series plainly contains: LENSKART,
+    GROWW, EMMVEE and the rest of the recent listings, plus the demerged
+    tickers whose series restarts — VEDL, SKFINDIA, SKFINDUS, TIMEX.
+
+    Those 69 carried a verdict with an entry, a stop and a target while the
+    screen could not say where the price sat in its own range.
+
+    So the shorter window is published under its OWN keys with the number of
+    sessions it covers. The year keys stay None; nothing may call four months
+    a year.
+    """
+    def px(n: int, seed: int = 7) -> dict:
+        import random
+        r = random.Random(seed)
+        c = [100.0]
+        for _ in range(n - 1):
+            c.append(c[-1] * (1 + r.uniform(-0.03, 0.035)))
+        return {"c": c, "h": [x * 1.015 for x in c], "l": [x * 0.985 for x in c],
+                "v": [1e6] * n, "last_date": "2026-09-22"}
+
+    # ── a full year: unchanged in every respect ──────────────────────────────
+    p = px(300)
+    t = S.technicals(p, None)
+    check("a full year still publishes the 52-week range", t["high52"] is not None)
+    check("...and does not also publish a short window",
+          t.get("rng_hi") is None and t.get("rng_sessions") is None,
+          f"rng_hi={t.get('rng_hi')}")
+
+    # ── a recent listing: the range is real, the year is not claimed ─────────
+    for n in (96, 239):
+        p = px(n)
+        t = S.technicals(p, None)
+        check(f"{n} bars claims no year", t["high52"] is None and t["from_high52"] is None)
+        check(f"{n} bars prints no 52-week breakout", t["brk52w"] is None)
+        check(f"{n} bars publishes the range it does have",
+              t["rng_hi"] is not None and t["rng_lo"] is not None)
+        check(f"{n} bars says how many sessions that covers", t["rng_sessions"] == n,
+              f"got {t['rng_sessions']}")
+        check(f"{n} bars reports the TRUE max, not a close-only one",
+              abs(t["rng_hi"] - max(p["h"])) < 1e-9, f"{t['rng_hi']} vs {max(p['h'])}")
+        check(f"{n} bars reports the true min", abs(t["rng_lo"] - min(p["l"])) < 1e-9)
+        check(f"{n} bars measures off-high against that high, never positive",
+              t["rng_from_hi"] is not None and t["rng_from_hi"] <= 0,
+              f"got {t['rng_from_hi']}")
+
+    # ── below a month, a "range" is noise and nothing is published ───────────
+    t = S.technicals(px(12), None)
+    check("under a month of bars, no range is invented",
+          t["rng_hi"] is None and t["rng_lo"] is None and t["rng_sessions"] is None)
+
+    # ── THE GATE ITSELF MUST NOT DRIFT. 240 is what makes the year honest. ───
+    check("the year gate is still a year", S.MIN_BARS["high52"] >= 240,
+          str(S.MIN_BARS["high52"]))
+    check("the short-window floor is a month", S.MIN_BARS["r1m"] == 20,
+          str(S.MIN_BARS["r1m"]))
+
+
 def main() -> int:
     print("stock screen — indicator arithmetic and honesty invariants\n")
-    for fn in (test_rsi_matches_hand_arithmetic,
+    for fn in (test_short_history_publishes_its_real_range,
+               test_rsi_matches_hand_arithmetic,
                test_rsi_edges,
                test_sma_and_ema,
                test_macd_measures_acceleration,
