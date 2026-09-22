@@ -1184,12 +1184,14 @@ def _quality_fields(sig, extra_meta=None):
 # it succeeds.
 MODE_NOTE = {
     "position-management-only":
-        # "files no new entries" was true until 2026-09-17, when GUST was
-        # wired into this slot. It FILES — research tier, logged and never
-        # alerted — so the sentence is now about what reaches the phone.
-        "_Midday manages the open book and sends no new entries. GUST files "
-        "to the ledger from here and is research tier, so it alerts nothing. "
-        "Intraday generation was removed on 2026-07-30: "
+        # Rewritten twice as the slot changed under it. "files no new entries"
+        # was true until 2026-09-17, when GUST was wired in; "alerts nothing"
+        # was true until 2026-09-21, when GUST was promoted out of research
+        # tier on a decision about the account's clock. This note is now only
+        # about the SWING book, which is what the slot still does not add to.
+        "_Midday manages the open book and adds nothing to the swing book. "
+        "GUST files and alerts from here on a 15-minute clock. "
+        "Daily-close intraday generation was removed on 2026-07-30: "
         "it measured -0.005R over 583 trades against +0.171R on daily closes. "
         "New entries come from the EOD scan after the close._",
     "us position check":
@@ -1220,8 +1222,9 @@ MODE_NOTE = {
 # midday reads a session it can still trade into, eod reads completed bars two
 # hours after the bell, weekend sweeps everything with no session at all.
 SCHEDULED_SLOTS = {
-    "midday":  "11:30 IST — the intraday engine only. Research tier: it writes "
-               "the ledger and alerts nobody.",
+    "midday":  "11:30 IST — the intraday engine only. GUST was promoted out "
+               "of research tier on 2026-09-21; it writes the ledger and "
+               "alerts.",
     "eod":     "17:30 IST — the day's measured scan, two hours after the bell "
                "so every close is final, plus position management.",
     "weekend": "09:30 IST Saturday — the full sweep and the multibagger scan, "
@@ -2166,7 +2169,16 @@ INTRADAY_LATEST_IST = (14, 30)
 def run_intraday_scan(time_str):
     """30-min intraday momentum: VWAP + RSI55 cross + vol surge on Nifty 50 universe.
 
-    RESEARCH TIER — writes the ledger, alerts nobody. See engine_names.may_alert.
+    PROMOTED OUT OF RESEARCH TIER 2026-09-21. It writes the ledger and it
+    alerts. The decision was about the CLOCK, not the record: swing_rulebook's
+    2026-08-25 review had it out of mandate "for trading a 15-minute chart,
+    which this account cannot", and the account now can.
+
+    The sample did not change and is not pretended to have. 17 closed, thirteen
+    short of this book's thirty, every one of them filed before LAUNCH on a
+    ledger re-graded twice, and nothing at all since it was re-wired. See the
+    note above ALERTS_SUPPRESSED in engine_names.py, which is where the
+    decision and its weakness are written down.
     """
     from scanner import scan_intraday_momentum
     from tracker import (log_batch_to_all_signals, duplicate_symbols, mark_alerts_sent)

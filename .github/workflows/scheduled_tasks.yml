@@ -100,6 +100,35 @@ on:
     # else watches production", and nothing did: every failure it was built
     # to catch is a 200 with a degraded body, which uptime pings miss.
     - cron: '0 3,9,15 * * *'  # 08:30 / 14:30 / 20:30 IST — health watch
+    # ── cf_1h GETS A REAL CRON, FOR THE FIRST TIME ──────────────────────────
+    #
+    # It never had one. cf_scan was the FALLTHROUGH arm of the case block
+    # below — any unrecognised cron string became a CF scan — so its 367
+    # signals between 2026-06-03 and 2026-08-21 were produced by accident, and
+    # when the cron strings were corrected the engine stopped dead with nothing
+    # reporting it.
+    #
+    # WEEKDAYS ONLY. COMEX runs Sunday 18:00 ET to Friday 17:00 ET, and this
+    # repo has already published a natural-gas entry on a Saturday off
+    # Thursday's close. FX is 24/5. Neither trades Saturday.
+    #
+    # Two runs, on the sessions that actually move these instruments: London
+    # and the London/NY overlap. cf_engine reads 1H bars, and scheduled runs on
+    # this repo land 1.5-3h late, so a slot has to be one the drift cannot push
+    # outside the session.
+    #
+    # Cadence is SAFE AT ANY FREQUENCY because CF_COOLDOWN is 48h per
+    # symbol+direction, derived from the backtest's holding horizon. The note
+    # on it is the warning: live once re-fired every 4 hours, 12x the tested
+    # rate, which is how 60 simultaneously-open NATGAS rows accumulated.
+    # Twice a day cannot reach that; the dedup table is what guarantees it.
+    #
+    # IT ALERTS NOTHING. cf_1h is in engine_names.ALERTS_SUPPRESSED and
+    # run_cf_scan asks may_alert() before it posts, so this costs two Actions
+    # runs and puts no message on anybody's phone. That is the whole point:
+    # rebuild a forward sample under current rules, then decide.
+    - cron: '30 10 * * 1-5'   # 16:00 IST / 18:30 MYT — London session
+    - cron: '30 15 * * 1-5'   # 21:00 IST / 23:30 MYT — London/NY overlap
   workflow_dispatch:
     inputs:
       task:
@@ -169,6 +198,12 @@ jobs:
               "0 16 * * 1-5")   TASK=brief_evening_catchup ;;  # 00:00 MYT
               "45 1 * * *")     TASK=sip_bucket    ;;
               "0 3,9,15 * * *") TASK=health        ;;
+              # cf_1h, filing silently — see the crons above. These are
+              # EXPLICIT arms: cf_scan used to be reached by the *) fallthrough
+              # and nothing else, which is exactly why it ran for ten weeks by
+              # accident and then stopped without anyone noticing.
+              "30 10 * * 1-5")  TASK=cf_scan       ;;
+              "30 15 * * 1-5")  TASK=cf_scan       ;;
               # ── RETIRED SLOTS ────────────────────────────────────────────
               # No cron points at these any more. They are kept so a manual
               # dispatch of an old schedule string still resolves to the right

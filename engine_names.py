@@ -162,13 +162,67 @@ LEDGER_ONLY = {
 # not cleared it may run forward, may fill the ledger and may be published —
 # it may not interrupt somebody's evening. Promoting one for having impressed
 # on a small sample is the precise error the thirty-trade rule exists to stop.
+#
+# ── GUST WAS PROMOTED ON 2026-09-21, BELOW THAT BAR, BY DECISION ─────────────
+#
+# Akshay, asked directly whether the account can now trade a 15-minute chart:
+# yes. That is the fact this turned on, and it is not one the ledger can
+# answer. swing_rulebook's 2026-08-25 review put intraday OUT_OF_MANDATE for
+# the CLOCK, not the record — "intraday posts +1.47R at t=+3.69 and is out for
+# trading a 15-minute chart, which this account cannot." When the account
+# changes, that reason stops applying.
+#
+# WHAT THE PROMOTION DOES NOT DO IS MAKE THE SAMPLE BIGGER, and this is
+# recorded rather than glossed:
+#
+#   · 17 closed, thirteen short of this book's own thirty.
+#   · every one of them filed 2026-06-11 to 2026-07-29 — ALL PRE-LAUNCH, on a
+#     ledger the repo says has been re-graded twice under stop rules it has
+#     since called wrong. None of it is in the published record, because
+#     in_book starts at 2026-09-02.
+#   · nothing since it was re-wired to the midday slot. The forward sample is
+#     zero.
+#
+# So this is a decision taken on an operational change with the statistical
+# case stated as weaker than it looks, not a promotion the numbers earned.
+# t >= 2 at 30 closed remains the bar for every other engine; if GUST's
+# forward record does not hold up, it comes back here and the reason gets
+# written beside it.
+#
+# It self-corrects one thing automatically: standalone_scan's midday slot sets
+# quiet_on_success from may_alert("intraday"), so the slot resumes reporting
+# itself the moment this entry is removed. That was built to read the gate
+# rather than a second list, exactly so this edit is the only edit.
 ALERTS_SUPPRESSED = {
     # key                reason written into the delivery record
     "pivot":    "research tier — logged, never alerted. No closed trade and no "
                 "measured expectancy yet.",
-    "intraday": "research tier — logged, never alerted. 17 closed at +1.472R "
-                "(t=3.69) is a good record on a small sample and 13 short of "
-                "the 30 this book requires before an engine is trusted.",
+    # ── cf_1h COMES BACK SILENT, 2026-09-21 ──────────────────────────────────
+    #
+    # It posts the best t-statistic in the ledger — 367 closed, +0.334R,
+    # t = +3.85 — and every one of those 367 was filed between 2026-06-03 and
+    # 2026-08-21 by ACCIDENT. cf_scan was the FALLTHROUGH case in
+    # scheduled_tasks.yml: any unrecognised cron string became a CF scan. When
+    # the cron strings were corrected the accidental trigger vanished, which is
+    # why the engine stopped dead and nothing reported it.
+    #
+    # It is being given a real cron for the first time, and it comes back on
+    # PIVOT's terms rather than its own record, because that record cannot
+    # carry the decision:
+    #
+    #   · 227 COMEX + 140 FX, zero NSE. swing_rulebook refuses all 367 —
+    #     "not an Indian listed equity" — so no site publishes it and the
+    #     mandate will not fund it.
+    #   · 186 of 367 are SELL against a long-only book.
+    #   · all of it pre-LAUNCH, so none of it is in the published record.
+    #
+    # Filing silently rebuilds a forward sample under current rules. Alerting
+    # on it would put GOLD, CRUDE and USDJPY shorts on a phone for an engine
+    # no page shows — the precise outcome the fallthrough was removed to stop.
+    "cf_1h":    "filing silently — a real cron since 2026-09-21, rebuilding a "
+                "forward sample. Its 367-trade record was produced by an "
+                "accidental cron fallthrough, is entirely pre-launch, and is "
+                "FX and commodity against a long-only Indian-equity book.",
 }
 
 

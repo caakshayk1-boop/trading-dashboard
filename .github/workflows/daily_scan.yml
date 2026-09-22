@@ -71,10 +71,22 @@ on:
     # engine uses is the one slot this one is useless in, because a push
     # identified after 15:30 has nothing to trade into.
     #
-    # It sends NOTHING. It is research tier, engine_names.may_alert refuses it,
-    # and the run writes the ledger and records sent=False with the reason. So
-    # this cron costs one Actions run and adds no message to anybody's phone —
-    # which is the only basis on which an unproven engine gets to run at all.
+    # IT SENT NOTHING UNTIL 2026-09-21, AND NOW IT DOES. That is a change of
+    # basis, so the old justification is replaced rather than left standing:
+    # this cron used to be free because may_alert refused GUST, and "adds no
+    # message to anybody's phone" was the only ground on which an unproven
+    # engine got to run at all.
+    #
+    # GUST was promoted out of research tier on a decision about the ACCOUNT,
+    # not the record — swing_rulebook had it out of mandate "for trading a
+    # 15-minute chart, which this account cannot", and the account now can.
+    # So this cron now costs one Actions run AND puts alerts on a phone, on a
+    # 17-trade pre-launch sample thirteen short of this book's own bar. That
+    # trade-off is recorded above ALERTS_SUPPRESSED in engine_names.py.
+    #
+    # The slot reports itself again too: standalone_scan sets quiet_on_success
+    # from may_alert("intraday"), which is why removing one dict entry was the
+    # whole change.
     #
     # 06:00 UTC is 11:30 IST, and that number is set by the drift, not by taste:
     # test_engine_regressions requires a weekday cron to still leave an hour of

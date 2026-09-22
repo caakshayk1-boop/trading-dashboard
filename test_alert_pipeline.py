@@ -14,7 +14,7 @@ Covers the failure that made the site show signals Telegram never sent
 Network is stubbed and the DB is a throwaway temp file — this sends nothing
 and touches no real data.
 """
-import os, sys, shutil, tempfile
+import os, re, sys, shutil, tempfile
 
 REPO = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, REPO)
@@ -380,8 +380,21 @@ scanner.scan_intraday_momentum = lambda *a, **k: [
 # to file past 14:30 IST, because a 15-minute signal identified then has no
 # session left to trade into.
 os.environ["INTRADAY_NOW_IST"] = "11:30"
+# ── GUST ALERTS NOW. PROMOTED 2026-09-21, alerts=False -> alerts=True. ───────
+#
+# UPDATED TO THE NEW CONTRACT, NOT RELAXED. The promotion was a decision about
+# the account's clock — swing_rulebook had intraday out of mandate "for trading
+# a 15-minute chart, which this account cannot", and the account now can. So
+# the assertion flips from "none marked sent, and every row says why" to "all
+# of them sent", because that is what the code must now do.
+#
+# The research-tier PATH is not left untested by that flip: it was covered here
+# and only here, so PIVOT — which is still in ALERTS_SUPPRESSED — takes it over
+# below. Flipping this line without adding that one would have quietly deleted
+# coverage of the whole alerts=False branch, which is the shape of bug this
+# file exists to catch.
 run_path("intraday_scan", lambda: standalone_scan.run_intraday_scan("t"),
-         "intraday", M, None, alerts=False)
+         "intraday", M, None, alerts=True)
 
 # ...and past the cutoff it files NOTHING, rather than filing a trade nobody
 # could have taken. Scheduled runs here land 1.5-3h late, so this is the real
@@ -390,6 +403,22 @@ os.environ["INTRADAY_NOW_IST"] = "14:45"
 _late = standalone_scan.run_intraday_scan("t")
 check("intraday_scan: past 14:30 IST it files nothing", _late == [], f"{len(_late)} filed")
 os.environ.pop("INTRADAY_NOW_IST", None)
+
+# ── AND THE RESEARCH TIER ITSELF, ON THE ENGINE THAT IS STILL IN IT ──────────
+#
+# PIVOT: no closed trade, no measured expectancy, so may_alert refuses it. It
+# must write the ledger and record sent_at NULL WITH a reason — a row with no
+# send and no reason is indistinguishable from a send that failed, which is the
+# distinction send_error exists to hold.
+scanner.scan_pivot = lambda *a, **k: [
+    {"symbol": f"PV_{i}", "price": 100.0+i, "sl": 95.0+i, "target1": 105.0+i,
+     "target2": 110.0+i, "rr": 1.6, "timeframe": "Daily",
+     "why": "at the 200-day with the higher timeframe agreeing",
+     "invalidate": "a close back under the level",
+     "meta": {"level": 100.0+i}}
+    for i in range(M)]
+run_path("pivot_scan", lambda: standalone_scan.run_pivot_scan("t"),
+         "pivot", M, None, alerts=False)
 
 # Second run of the same scan must dedup everything, not re-alert.
 #
@@ -1104,6 +1133,51 @@ check("run_book_outcomes actually resolves the book",
 check("run_swing_scan is kept, not deleted",
       "def run_swing_scan(" in _ss,
       "the history has to stay readable, like run_ohl_scan")
+
+# ── cf_1h FILES SILENTLY, AND THE GATE IS IN THE RIGHT PLACE ────────────────
+#
+# run_cf_scan used to SEND FIRST and log second, with no may_alert call at all.
+# Putting cf_1h in ALERTS_SUPPRESSED would then have suppressed nothing — the
+# post() happens before tracker is even imported. This is the same shape as the
+# retirement gate that produced "a Telegram alert with NO LEDGER ROW BEHIND IT",
+# and it is checked by ORDER, not just by presence.
+import engine_names as _en
+check("cf_1h is suppressed", not _en.may_alert("cf_1h")[0], _en.may_alert("cf_1h"))
+check("and its refusal states a reason",
+      bool(_en.may_alert("cf_1h")[1]), "a refusal with no reason is a silent drop")
+
+_cf = open("scheduled_tasks_runner.py", encoding="utf-8").read()
+check("run_cf_scan asks may_alert before posting",
+      'may_alert("cf_1h")' in _cf, "the gate is gone — it would alert again")
+check("the gate comes BEFORE the send",
+      _cf.index('may_alert("cf_1h")') < _cf.index('sent_ok = post('),
+      "it decides after it has already sent")
+check("a refused batch still writes the ledger",
+      _cf.index('may_alert("cf_1h")') < _cf.index("log_to_all_signals("),
+      "filing silently is the whole point — no row, no forward sample")
+check("and records WHY it was not sent, not just that it was not",
+      "mark_alerts_sent(ids, False, why_not)" in _cf,
+      "sent_at NULL with no reason is indistinguishable from a failed send")
+check("the alert gate fails CLOSED",
+      "allowed, why_not = False" in _cf,
+      "an import error must not be why a phone starts buzzing")
+
+# Every cron must resolve to a task. cf_scan ran for ten weeks by accident
+# because it WAS the fallthrough; the arms are explicit now and the fallthrough
+# must stay TASK=none.
+_yml = open(".github/workflows/scheduled_tasks.yml", encoding="utf-8").read()
+_crons = re.findall(r"- cron: '([^']+)'", _yml)
+_arms = set(re.findall(r'"([^"]+)"\)\s*TASK=', _yml))
+_orphans = [c for c in _crons if c not in _arms]
+check("every cron resolves to a named task", not _orphans,
+      f"{_orphans} would fall through")
+check("the fallthrough is still TASK=none",
+      "*)                TASK=none" in _yml,
+      "an unrecognised cron would become a CF scan again")
+check("cf_scan has explicit arms", sum(1 for a in _arms if a in _crons and
+      f'"{a}")  TASK=cf_scan' in _yml.replace("  ", "  ")) >= 0 and
+      _yml.count("TASK=cf_scan") >= 2,
+      "cf_scan is reachable from fewer than its two crons")
 
 _clear_open()
 

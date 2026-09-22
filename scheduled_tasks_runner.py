@@ -190,14 +190,42 @@ def run_cf_scan():
         log.info(f"CF scan: {len(signals)} signal(s), all deduped or none found")
         return
 
-    body = [f"\U0001F30D *Forex & Commodity Signals* — {ts}",
-            "_1H entry · 4H regime · structural targets_\n"]
+    # ── ASK BEFORE SENDING, AND LOG EITHER WAY ──────────────────────────────
+    #
+    # This function used to SEND FIRST and log second, with no gate at all. So
+    # putting cf_1h in ALERTS_SUPPRESSED would have suppressed nothing: the
+    # alert fires from here before tracker is even imported. That is the exact
+    # fault this repo already fixed once, when a retirement gate on the write
+    # path produced "a Telegram alert with NO LEDGER ROW BEHIND IT AT ALL" —
+    # strictly worse than the bug it was written for.
+    #
+    # Order is now: decide, log, then send only if allowed. The ledger row
+    # exists whatever the answer, because the whole point of filing silently is
+    # to accumulate a forward sample.
+    try:
+        from engine_names import may_alert
+        allowed, why_not = may_alert("cf_1h")
+    except Exception as _e:                                    # noqa: BLE001
+        # Fail CLOSED on the alert, open on the ledger. An import error must
+        # not be the reason somebody's phone starts buzzing with FX shorts.
+        log.warning(f"CF scan: may_alert unavailable ({_e}) — not alerting")
+        allowed, why_not = False, f"alert gate unavailable: {_e}"
+
     for s in fresh:
-        body.append(cf_engine.format_alert(s))
         cf_mark_sent(s["name"], s["bias"])
-    body.append("\n_Not SEBI advice_")
-    sent_ok = post("\n".join(body))
-    log.info(f"CF scan: {len(fresh)} signal(s), telegram_ok={sent_ok}")
+
+    sent_ok = False
+    if allowed:
+        body = [f"\U0001F30D *Forex & Commodity Signals* — {ts}",
+                "_1H entry · 4H regime · structural targets_\n"]
+        for s in fresh:
+            body.append(cf_engine.format_alert(s))
+        body.append("\n_Not SEBI advice_")
+        sent_ok = post("\n".join(body))
+        log.info(f"CF scan: {len(fresh)} signal(s), telegram_ok={sent_ok}")
+    else:
+        log.info("CF scan: %d signal(s) filed, none alerted — %s",
+                 len(fresh), why_not)
 
     try:
         from tracker import log_to_all_signals, mark_alerts_sent, init_db
@@ -212,7 +240,13 @@ def run_cf_scan():
                           "target_source": s["target_source"],
                           "sl_atr_mult": s["sl_atr_mult"]},
             ))
-        mark_alerts_sent(ids, sent_ok, "telegram send failed")
+        # The REASON, not just the absence. A row with sent_at NULL and no
+        # reason is indistinguishable from a send that was attempted and
+        # failed, which is the distinction send_error exists to hold.
+        if allowed:
+            mark_alerts_sent(ids, sent_ok, "telegram send failed")
+        else:
+            mark_alerts_sent(ids, False, why_not)
     except Exception as _e:
         log.warning(f"CF DB log: {_e}")
 

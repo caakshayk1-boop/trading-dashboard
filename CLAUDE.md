@@ -143,9 +143,16 @@ Two touches a day, on the operator's clock. Nothing else is scheduled to post.
   previous close).
 - Two touches is a claim about the PHONE, not about how often anything runs.
   Two other scans exist and neither adds a third weekday notification:
-  - **11:30 IST / 14:00 MYT, weekdays** — the midday slot, GUST only. It files
-    to the ledger and is research tier, so `may_alert` refuses it. It is also
-    **silent on success**: the slot used to fall through to the completion
+  - **11:30 IST / 14:00 MYT, weekdays** — the midday slot, GUST only.
+    **GUST was promoted out of research tier on 2026-09-21** and now alerts,
+    so this slot IS a third weekday touch. The decision was about the clock,
+    not the record: it had been out of mandate "for trading a 15-minute chart,
+    which this account cannot", and the account now can. The sample did not
+    change — 17 closed, thirteen short of this book's thirty, all pre-launch,
+    nothing since it was re-wired — and that is written above
+    `ALERTS_SUPPRESSED` in `engine_names.py` rather than glossed.
+    It was **silent on success** while suppressed: the slot used to fall
+    through to the completion
     summary, which "always sends so you know scan ran", so a third message
     arrived every weekday saying nothing had happened — against `daily_scan.yml`'s
     own rationale for the cron, which is that it "adds no message to anybody's
@@ -155,6 +162,20 @@ Two touches a day, on the operator's clock. Nothing else is scheduled to post.
     second list to remember. A FAILURE still alerts.
   - **09:30 IST, Saturday** — the weekly engines (VECTOR, ASCENT, BREACH,
     TIDAL). This one does post its summary; it files entries.
+  - **16:00 and 21:00 IST, weekdays** — `cf_scan`, the FX/commodity 1H channel
+    engine, **filing silently**. It alerts nothing: `cf_1h` is in
+    `ALERTS_SUPPRESSED` and `run_cf_scan` asks `may_alert()` before it posts.
+    **It never had a cron before.** `cf_scan` was the `*)` FALLTHROUGH arm of
+    `scheduled_tasks.yml`'s dispatcher — any unrecognised cron string became a
+    CF scan — so its 367 signals between 03 Jun and 21 Aug were produced by
+    accident, and when the cron strings were corrected the engine stopped dead
+    with nothing reporting it. The arms are explicit now, the fallthrough stays
+    `TASK=none`, and a test asserts every cron resolves to a named task.
+    Its record is the best t-statistic in the ledger (t = +3.85) and cannot
+    carry a promotion: 227 COMEX + 140 FX and zero NSE, 186 of 367 SELL against
+    a long-only book, all of it pre-launch. It rebuilds a forward sample first.
+    Weekdays only — COMEX is shut Saturday, and this repo has already published
+    a natural-gas entry on one off Thursday's close.
   - The 22:00 and 00:00 MYT crons are RETRIES. They stand down when the slot
     already completed, so they normally post nothing.
   - `health_watch.py` runs three times a day and posts **only on failure** —
