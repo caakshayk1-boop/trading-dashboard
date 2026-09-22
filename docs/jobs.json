@@ -1,22 +1,22 @@
 {
- "generated_at": "2026-09-21T10:22:51Z",
- "next_refresh": "2026-09-22T10:22:51Z",
+ "generated_at": "2026-09-22T05:53:21Z",
+ "next_refresh": "2026-09-23T05:53:21Z",
  "sources": [
   {
    "name": "Majid Al Futtaim",
    "kind": "employer",
    "status": "ok",
-   "jobs_found": 19,
+   "jobs_found": 20,
    "detail": "",
-   "last_success": "2026-09-21T10:22:51Z"
+   "last_success": "2026-09-22T05:53:21Z"
   },
   {
    "name": "Chalhoub Group",
    "kind": "employer",
    "status": "ok",
-   "jobs_found": 7,
+   "jobs_found": 6,
    "detail": "",
-   "last_success": "2026-09-21T10:22:51Z"
+   "last_success": "2026-09-22T05:53:21Z"
   },
   {
    "name": "GMG",
@@ -24,15 +24,15 @@
    "status": "ok",
    "jobs_found": 2,
    "detail": "",
-   "last_success": "2026-09-21T10:22:51Z"
+   "last_success": "2026-09-22T05:53:21Z"
   },
   {
    "name": "Al-Futtaim",
    "kind": "employer",
    "status": "ok",
-   "jobs_found": 31,
+   "jobs_found": 33,
    "detail": "",
-   "last_success": "2026-09-21T10:22:51Z"
+   "last_success": "2026-09-22T05:53:21Z"
   },
   {
    "name": "Abdul Latif Jameel",
@@ -40,7 +40,7 @@
    "status": "ok",
    "jobs_found": 2,
    "detail": "",
-   "last_success": "2026-09-21T10:22:51Z"
+   "last_success": "2026-09-22T05:53:21Z"
   },
   {
    "name": "Landmark Group",
@@ -48,7 +48,7 @@
    "status": "ok",
    "jobs_found": 7,
    "detail": "",
-   "last_success": "2026-09-21T10:22:51Z"
+   "last_success": "2026-09-22T05:53:21Z"
   },
   {
    "name": "Al Tayer",
@@ -56,7 +56,7 @@
    "status": "ok",
    "jobs_found": 3,
    "detail": "",
-   "last_success": "2026-09-21T10:22:51Z"
+   "last_success": "2026-09-22T05:53:21Z"
   },
   {
    "name": "Apparel Group",
@@ -64,7 +64,7 @@
    "status": "ok",
    "jobs_found": 7,
    "detail": "",
-   "last_success": "2026-09-21T10:22:51Z"
+   "last_success": "2026-09-22T05:53:21Z"
   },
   {
    "name": "Emaar",
@@ -94,9 +94,9 @@
    "name": "Etihad Airways",
    "kind": "employer",
    "status": "ok",
-   "jobs_found": 13,
+   "jobs_found": 11,
    "detail": "",
-   "last_success": "2026-09-21T10:22:51Z"
+   "last_success": "2026-09-22T05:53:21Z"
   },
   {
    "name": "Aldar",
@@ -104,7 +104,7 @@
    "status": "ok",
    "jobs_found": 7,
    "detail": "",
-   "last_success": "2026-09-21T10:22:51Z"
+   "last_success": "2026-09-22T05:53:21Z"
   },
   {
    "name": "Michael Page",
@@ -117,7 +117,7 @@
  ],
  "stats": {
   "total_active": 59,
-  "high_fit": 4,
+  "high_fit": 6,
   "s_tier": 0,
   "by_country": {
    "UAE": 49,
@@ -126,11 +126,11 @@
    "Oman": 0
   },
   "duplicates_removed": 0,
-  "stale_removed": 1,
+  "stale_removed": 3,
   "sources_ok": 10,
   "sources_attempted": 14,
-  "urls_verified": 74,
-  "urls_unverified": 12,
+  "urls_verified": 78,
+  "urls_unverified": 8,
   "urls_broken": 0
  },
  "jobs": [
@@ -147,8 +147,8 @@
    "employment_type": null,
    "posted_date": "2026-09-02",
    "closing_date": null,
-   "scraped_at": "2026-09-21T10:22:51Z",
-   "last_verified_at": "2026-09-21T10:22:51Z",
+   "scraped_at": "2026-09-22T05:53:21Z",
+   "last_verified_at": "2026-09-22T05:53:21Z",
    "status": "ACTIVE",
    "source": "Landmark Group",
    "sources": [
@@ -259,8 +259,8 @@
    "employment_type": "Experienced hires",
    "posted_date": "2026-07-27",
    "closing_date": null,
-   "scraped_at": "2026-09-21T10:22:51Z",
-   "last_verified_at": "2026-09-21T10:22:51Z",
+   "scraped_at": "2026-09-22T05:53:21Z",
+   "last_verified_at": "2026-09-22T05:53:21Z",
    "status": "STALE",
    "source": "Aldar",
    "sources": [
@@ -352,6 +352,208 @@
    "exclusion_reason": null
   },
   {
+   "id": "05ebb65853fe82224c62dd3c54b73d24bcb6b4c5",
+   "company": "Al-Futtaim",
+   "company_group": "Al-Futtaim",
+   "title": "Financial Control Manager | GBS - Controlling | Corporate Services",
+   "normalized_title": "financial control manager gbs controlling corporate services",
+   "location": null,
+   "country": "UAE",
+   "region": "GCC",
+   "department": null,
+   "employment_type": null,
+   "posted_date": "2026-09-21",
+   "closing_date": "2026-10-08",
+   "scraped_at": "2026-09-22T05:53:21Z",
+   "last_verified_at": "2026-09-22T05:53:21Z",
+   "status": "NEW",
+   "source": "Al-Futtaim",
+   "sources": [
+    "Al-Futtaim"
+   ],
+   "source_url": "https://www.afuturewithus.com/job/Financial-Control-Manager-GBS-Controlling-Corporate-Services/1439576333/",
+   "application_url": "https://www.afuturewithus.com/talentcommunity/apply/1439576333/?locale=en_GB",
+   "is_direct_apply": true,
+   "application_url_verified": true,
+   "source_confidence": "high",
+   "salary_min": null,
+   "salary_max": null,
+   "salary_currency": null,
+   "experience_min": 6,
+   "experience_max": 8,
+   "description": "Job Requisition ID: 181412 \n\n About Al-Futtaim \n\nEstablished in the 1930s, Al-Futtaim is one of the most diversified and progressive privately held regional businesses, headquartered in Dubai. Operating across more than 20 countries, the Group spans automotive, financial services, real estate, retail and health. With more than 40,000 employees, Al-Futtaim represents over 200 of the world’s most recognised brands, including Toyota, Lexus, IKEA, ACE and Marks & Spencer. Driven by its purpose to enrich lives and elevate communities, Al-Futtaim focuses on digital innovation, AI, sustainable growth and strategic partnerships, creating long-term value for customers, communities and partners while building a responsible legacy for future generations.\n\nOverview of the role\n \nAs the Financial Control Manager in Al Futtaim Retail Head Office and lead Central Retail Controlling tasks while complying with organization’s policies and procedures and ensuring necessary checks and balances to mitigate risks.\n\n What you will do\n \n• Ensure compliance with Transfer pricing transactions, Balance Sheet / High Risk Accounts review considering multiple Inter-Company Transactions which are in conjunction with Finance Controls along with weekly / Monthly Reporting in line with Organization requirements. \n• Enhanced Month end closing reviews & timeline management with various stakeholders & support on balance sheet reviews, closed business active clean up, Misstatement proactive reviews & addressing fixes\n• Lead, monitor & establish SLAs across Retail Brands including Cost Allocations, Loyalty Program Management, Revenue Recognition – Budget Vs. Actuals / True Ups, Accruals & Breakage Management \n• Proper implementation and ongoing compliance with IFRS 16 accounting standards for lease accounting & PPE, including tracking, updating & monitoring Reinstatement provisions & providing timely financial reporting and analysis wherever required\n• Oversee & monitor critical areas such as Store Insurances, Gift Voucher / Promotion Management, Blue Loyalty Program, Cost Allocations & Inter Company transactions \n• Ensure compliance with corporate income tax regulations, including preparation & documentation, and any other required filings. assist in tax planning activities, including identifying opportunities for tax optimization, minimizing liabilities, and ensuring compliance with applicable tax laws & regulations. \n• Prepare & lead presentations with cross team / functional stakeholders on monthly & adhoc basis \n• Contribute to the Improvement, Identify Accounting & Financial issues & suggest timely solutions within the team & cross function with an aim to standardize accounting process (FSSC, O2C, Group Tax, Group Finance, P&C etc)\n• Collaborate & lead discussions with external & internal auditors during audits, ensuring that all information is accurately reported & compliant with IFRS / Policy requirements\n• Initiate, establish & support on AI initiatives within the team to optimize automation & address current / future automation opportunities.\n\n What Qualifies You For The Role \n\n• Bachelor's Degree in Accounting, Finance, Commerce, or a related discipline. Professional qualification such as CA, ACCA, CPA, or CIMA is highly preferred\n• 6-8 years of progressive experience in Financial Control, Financial Reporting, Audit, or Retail Finance within a large, complex organization.Familiarity with ERP systems, preferably SAP, and exposure to SAP BW/BPC/SAC.\n• Strong knowledge of IFRS standards, particularly IFRS 15 (Revenue Recognition), IFRS 16 (Lease Accounting), and fixed asset accounting.\n• Experience in developing automation initiatives using Power BI, Power Automate, AI tools, RPA, or other digital finance solutions is highly desirable.\n\n We’re here to provide excellent service but a little help from you can ensure a five-star candidate experience from start to finish.\n\n Before you click “apply”: Please read the job description carefully to ensure you can confidently demonstrate why this opportunity is right for you and take the time to put together a well-crafted and personalised CV to further boost your visibility. Our global Talent Acquisition team members are all assigned to specific businesses to ensure that we make the best matches between talent and opportunities. We not only consider the requisite compatibility of skills and behaviours, but also how candidates align with our Values of Respect, Integrity, Collaboration, and Excellence.\n\n As part of our candidate experience promise, we also want to make ourselves available to you throughout the application process. We make every effort to review and respond to every application.\n\n Apply now » \n\n Find similar jobs: \n\n Finance & Accounting Jobs \n\n HOME PAGE \n\n PRIVACY \n\n CORPORATE WEBSITE \n\n CONTACT US \n\n Opens in a new tab. \n\n Opens in a new tab. \n\n Opens in a new tab. \n\n Opens in a new tab. \n\n © Copyright 2026 | afuturewithus.com\n\n // \n\n // \n\n // \n\n const jobAlertSpans = document.querySelectorAll(\"[data-testid=jobAlertSpanText]\");\n jobAlertSpans?.forEach((jobEl) => {\n jobEl.textContent = window?.jsStr?.tcjobresultscreatejobalertsdetailstext || \"\";\n });\n\n // \n\n // \n\n // \n\n //",
+   "responsibilities": [
+    "HOME PAGE",
+    "CORPORATE WEBSITE",
+    "CONTACT US",
+    "Opens in a new tab",
+    "Opens in a new tab",
+    "Opens in a new tab",
+    "Opens in a new tab"
+   ],
+   "requirements": [],
+   "skills": [
+    "IFRS",
+    "Budgeting",
+    "Power BI",
+    "SAP",
+    "Excel",
+    "IFRS 16"
+   ],
+   "nationality_requirement": null,
+   "work_authorization_requirement": null,
+   "emiratisation_requirement": false,
+   "saudization_requirement": false,
+   "candidate_fit_score": 78,
+   "employer_score": 88,
+   "career_upside_score": 64,
+   "opportunity_score": 78,
+   "score_breakdown": {
+    "seniority": 17,
+    "functional": 18,
+    "industry": 15,
+    "geographic": 10,
+    "scope": 3,
+    "leadership": 2,
+    "qualification": 5,
+    "upside": 8
+   },
+   "tier": "A",
+   "application_priority": "HIGH PRIORITY",
+   "why_fit": [
+    "Multi-country / multi-entity scope maps directly onto his Malaysia + Indonesia P&L ownership across 60+ Max Fashion and Babyshop stores.",
+    "Al-Futtaim is peer retail to his current employer — the 60+ store, multi-brand lifestyle retail P&L he already owns transfers without a sector learning curve.",
+    "IFRS/MPERS group consolidation is day-to-day for him, including IFRS 16 across 60+ retail leases.",
+    "Systems fit — he led the D365 ERP implementation that cut the close cycle 40%, and builds the Power BI reporting on top of it."
+   ],
+   "watch_out": [
+    "SAP is named and his ERP depth is D365, not SAP — expect to address that gap directly."
+   ],
+   "resume_match": {
+    "strong": [
+     "FP&A — budgeting, forecasting, variance analysis on MYR 400M+ P&L",
+     "Multi-country P&L (Malaysia + Indonesia, 60+ stores)",
+     "IFRS / MPERS group consolidation, IFRS 16 across 60+ leases",
+     "D365 ERP implementation lead (close −40%), Power BI reporting",
+     "Retail / fashion / lifestyle sector depth (Max Fashion, Babyshop)"
+    ],
+    "missing": [
+     "SAP",
+     "CPA",
+     "CIMA"
+    ],
+    "tailoring_recommended": true
+   },
+   "duplicate_group": "81ca80cadc903dbf7fe3141721aad45059a3b767",
+   "is_excluded": false,
+   "exclusion_reason": null
+  },
+  {
+   "id": "a4ec6f41a792b2b3b00372311afd62ad7a7be2e7",
+   "company": "Majid Al Futtaim",
+   "company_group": "Majid Al Futtaim",
+   "title": "Finance Manager - (Financial Controller) | Emirati Talent",
+   "normalized_title": "finance manager financial controller",
+   "location": "Dubai",
+   "country": "UAE",
+   "region": "GCC",
+   "department": "Other",
+   "employment_type": "Regular",
+   "posted_date": "2026-08-11",
+   "closing_date": null,
+   "scraped_at": "2026-09-22T05:53:21Z",
+   "last_verified_at": "2026-09-22T05:53:21Z",
+   "status": "AGING",
+   "source": "Majid Al Futtaim",
+   "sources": [
+    "Majid Al Futtaim"
+   ],
+   "source_url": "https://careers.majidalfuttaim.com/global/en/job/21512/Finance-Manager-Financial-Controller-Emirati-Talent",
+   "application_url": "https://careers.majidalfuttaim.com/global/en/apply?jobSeqNo=MAFMAFGLOBAL21512EXTERNALENGLOBAL",
+   "is_direct_apply": true,
+   "application_url_verified": true,
+   "source_confidence": "high",
+   "salary_min": null,
+   "salary_max": null,
+   "salary_currency": null,
+   "experience_min": 5,
+   "experience_max": null,
+   "description": "BUSINESS INTRODUCTION \nMajid Al Futtaim Holding is the leading shopping mall, retail, communities, entertainment developer and operator in the Middle East, North Africa, and Central Asia regions. With over 43,000 people, revenues of over US$ 11 Billion, and operations in 18 countries. Some of the iconic brands we carry include Mall of the Emirates, Carrefour, All Saints, Lego, City Center, Abercrombie & Fitch, & Vox Cinemas. We believe in making Great Moments for Everyone, Every day.\n\n JOB TITLE \nFinance Manager (Financial Controller) | MAF Retail | Head Office UAE\n\n ROLE SUMMARY \nThe Finance Manager (Financial Controller) serves as a strategic finance business partner to Retail Operations, Supply Chain, and Commercial teams, driving profitability and operational efficiency. The role is responsible for managing the operational P&L, overseeing budgeting and forecasting, analyzing margins and costs, and delivering financial insights that support data-driven decisions and performance improvement.\n\n ROLE PROFILE \n Partnered with Store Operations, Supply Chain, and Commercial teams to provide financial insights and support strategic business decisions.\n Owned and managed the operational P&L across stores, regions, and channels, ensuring profitability targets were achieved.\n Led budgeting, rolling forecasts, and flash reporting processes using driver-based assumptions aligned with operational plans.\n Delivered financial performance reports, variance analysis, and KPI dashboards to support timely business decision-making.\n Analyzed gross margin, sales mix, and markdown performance, identifying opportunities to improve profitability.\n Monitored and controlled operating costs, including labor, logistics, utilities, maintenance, and other controllable expenses, driving cost-efficiency initiatives.\n Identified, quantified, and tracked cost-saving and profit improvement opportunities while supporting operational owners in implementing corrective actions.\n Built strong cross-functional relationships with operational leaders, translating financial data into actionable business insights and influencing performance improvement initiatives.\n \n REQUIREMENTS \n Bachelor's degree in Finance or related field\n 5+ years of experience as a financial contoller in retail\n Experience in FMCG retail is a must\n Strong knowledge of budgeting, forecasting, financial planning, and P&L management\n \n WHAT WE OFFER \n At Majid Al Futtaim, we’re on a mission to create great moments, to spread happiness, to build, experiences that stay in our memories for a lifetime. We’re proud to say that over the past 27 years, we have built a reputation as a regional market leader in what we do. Join us!\n Work in a friendly environment, where everyone shares positive vibes and excited about our future.\n Work with over 45,000 diverse and talented colleagues, all guided by our Leadership Model.",
+   "responsibilities": [
+    "Partnered with Store Operations, Supply Chain, and Commercial teams to provide financial insights and support strategic business decisions",
+    "Owned and managed the operational P&L across stores, regions, and channels, ensuring profitability targets were achieved",
+    "Led budgeting, rolling forecasts, and flash reporting processes using driver-based assumptions aligned with operational plans",
+    "Delivered financial performance reports, variance analysis, and KPI dashboards to support timely business decision-making",
+    "Analyzed gross margin, sales mix, and markdown performance, identifying opportunities to improve profitability",
+    "Monitored and controlled operating costs, including labor, logistics, utilities, maintenance, and other controllable expenses, driving cost-efficiency initiatives",
+    "Identified, quantified, and tracked cost-saving and profit improvement opportunities while supporting operational owners in implementing corrective actions",
+    "Built strong cross-functional relationships with operational leaders, translating financial data into actionable business insights and influencing performance improvement initiatives",
+    "Bachelor's degree in Finance or related field",
+    "5+ years of experience as a financial contoller in retail",
+    "Experience in FMCG retail is a must",
+    "Strong knowledge of budgeting, forecasting, financial planning, and P&L management",
+    "At Majid Al Futtaim, we’re on a mission to create great moments, to spread happiness, to build, experiences that stay in our memories for a lifetime. We’re proud to say that over the past 27 years, we have built a reputation as a regional market leader in what we do. Join us!",
+    "Work in a friendly environment, where everyone shares positive vibes and excited about our future",
+    "Work with over 45,000 diverse and talented colleagues, all guided by our Leadership Model"
+   ],
+   "requirements": [],
+   "skills": [
+    "financial planning",
+    "budgeting",
+    "p&l management",
+    "forecasting",
+    "variance analysis",
+    "kpi dashboards",
+    "cost control",
+    "profitability analysis",
+    "cross-functional collaboration",
+    "data-driven decision making",
+    "operational efficiency",
+    "stakeholder engagement"
+   ],
+   "nationality_requirement": null,
+   "work_authorization_requirement": null,
+   "emiratisation_requirement": false,
+   "saudization_requirement": false,
+   "candidate_fit_score": 76,
+   "employer_score": 90,
+   "career_upside_score": 64,
+   "opportunity_score": 78,
+   "score_breakdown": {
+    "seniority": 15,
+    "functional": 20,
+    "industry": 15,
+    "geographic": 10,
+    "scope": 6,
+    "leadership": 2,
+    "qualification": 0,
+    "upside": 8
+   },
+   "tier": "A",
+   "application_priority": "HIGH PRIORITY",
+   "why_fit": [
+    "Multi-country / multi-entity scope maps directly onto his Malaysia + Indonesia P&L ownership across 60+ Max Fashion and Babyshop stores.",
+    "Majid Al Futtaim is peer retail to his current employer — the 60+ store, multi-brand lifestyle retail P&L he already owns transfers without a sector learning curve.",
+    "Core FP&A remit — he runs budgeting, forecasting and variance analysis on an MYR 400M+ P&L as FP&A Manager at Lifestyle Retail Malaysia (Landmark Group) since May 2023.",
+    "UAE is one of his two target markets, and he is already GCC-adjacent inside a Dubai-headquartered group."
+   ],
+   "watch_out": [
+    "Posted 2026-08-11 — this req is aging and may already be filled."
+   ],
+   "resume_match": {
+    "strong": [
+     "FP&A — budgeting, forecasting, variance analysis on MYR 400M+ P&L",
+     "Multi-country P&L (Malaysia + Indonesia, 60+ stores)",
+     "Retail / fashion / lifestyle sector depth (Max Fashion, Babyshop)"
+    ],
+    "missing": [],
+    "tailoring_recommended": true
+   },
+   "duplicate_group": "c005a3ecbf9fa16de0ec14274e7a1d45f6d17fee",
+   "is_excluded": false,
+   "exclusion_reason": null
+  },
+  {
    "id": "f1b57c88441382e6e32dd11a02586f096f2891ea",
    "company": "GMG",
    "company_group": "GMG",
@@ -364,8 +566,8 @@
    "employment_type": "Full-Time",
    "posted_date": "2026-06-26",
    "closing_date": null,
-   "scraped_at": "2026-09-21T10:22:51Z",
-   "last_verified_at": "2026-09-21T10:22:51Z",
+   "scraped_at": "2026-09-22T05:53:21Z",
+   "last_verified_at": "2026-09-22T05:53:21Z",
    "status": "STALE",
    "source": "GMG",
    "sources": [
@@ -445,8 +647,8 @@
    "employment_type": "Experienced hires",
    "posted_date": "2026-09-02",
    "closing_date": null,
-   "scraped_at": "2026-09-21T10:22:51Z",
-   "last_verified_at": "2026-09-21T10:22:51Z",
+   "scraped_at": "2026-09-22T05:53:21Z",
+   "last_verified_at": "2026-09-22T05:53:21Z",
    "status": "ACTIVE",
    "source": "Aldar",
    "sources": [
@@ -550,8 +752,8 @@
    "employment_type": null,
    "posted_date": "2026-09-17",
    "closing_date": "2026-10-11",
-   "scraped_at": "2026-09-21T10:22:51Z",
-   "last_verified_at": "2026-09-21T10:22:51Z",
+   "scraped_at": "2026-09-22T05:53:21Z",
+   "last_verified_at": "2026-09-22T05:53:21Z",
    "status": "NEW",
    "source": "Al-Futtaim",
    "sources": [
@@ -646,8 +848,8 @@
    "employment_type": null,
    "posted_date": "2026-09-04",
    "closing_date": "2026-09-30",
-   "scraped_at": "2026-09-21T10:22:51Z",
-   "last_verified_at": "2026-09-21T10:22:51Z",
+   "scraped_at": "2026-09-22T05:53:21Z",
+   "last_verified_at": "2026-09-22T05:53:21Z",
    "status": "ACTIVE",
    "source": "Al-Futtaim",
    "sources": [
@@ -731,8 +933,8 @@
    "employment_type": "Regular",
    "posted_date": "2026-09-17",
    "closing_date": null,
-   "scraped_at": "2026-09-21T10:22:51Z",
-   "last_verified_at": "2026-09-21T10:22:51Z",
+   "scraped_at": "2026-09-22T05:53:21Z",
+   "last_verified_at": "2026-09-22T05:53:21Z",
    "status": "NEW",
    "source": "Majid Al Futtaim",
    "sources": [
@@ -830,8 +1032,8 @@
    "employment_type": "Regular",
    "posted_date": "2026-06-10",
    "closing_date": null,
-   "scraped_at": "2026-09-21T10:22:51Z",
-   "last_verified_at": "2026-09-21T10:22:51Z",
+   "scraped_at": "2026-09-22T05:53:21Z",
+   "last_verified_at": "2026-09-22T05:53:21Z",
    "status": "STALE",
    "source": "Majid Al Futtaim",
    "sources": [
@@ -928,8 +1130,8 @@
    "employment_type": "Regular",
    "posted_date": "2026-09-07",
    "closing_date": null,
-   "scraped_at": "2026-09-21T10:22:51Z",
-   "last_verified_at": "2026-09-21T10:22:51Z",
+   "scraped_at": "2026-09-22T05:53:21Z",
+   "last_verified_at": "2026-09-22T05:53:21Z",
    "status": "ACTIVE",
    "source": "Majid Al Futtaim",
    "sources": [
@@ -1027,8 +1229,8 @@
    "employment_type": "Experienced hires",
    "posted_date": "2026-08-25",
    "closing_date": null,
-   "scraped_at": "2026-09-21T10:22:51Z",
-   "last_verified_at": "2026-09-21T10:22:51Z",
+   "scraped_at": "2026-09-22T05:53:21Z",
+   "last_verified_at": "2026-09-22T05:53:21Z",
    "status": "AGING",
    "source": "Aldar",
    "sources": [
@@ -1120,8 +1322,8 @@
    "employment_type": null,
    "posted_date": "2026-09-03",
    "closing_date": "2026-10-02",
-   "scraped_at": "2026-09-21T10:22:51Z",
-   "last_verified_at": "2026-09-21T10:22:51Z",
+   "scraped_at": "2026-09-22T05:53:21Z",
+   "last_verified_at": "2026-09-22T05:53:21Z",
    "status": "ACTIVE",
    "source": "Al-Futtaim",
    "sources": [
@@ -1310,8 +1512,8 @@
    "employment_type": null,
    "posted_date": "2026-09-08",
    "closing_date": null,
-   "scraped_at": "2026-09-21T10:22:51Z",
-   "last_verified_at": "2026-09-21T10:22:51Z",
+   "scraped_at": "2026-09-22T05:53:21Z",
+   "last_verified_at": "2026-09-22T05:53:21Z",
    "status": "ACTIVE",
    "source": "Landmark Group",
    "sources": [
@@ -1393,9 +1595,9 @@
    "employment_type": null,
    "posted_date": "2026-09-14",
    "closing_date": "2026-10-09",
-   "scraped_at": "2026-09-21T10:22:51Z",
-   "last_verified_at": "2026-09-21T10:22:51Z",
-   "status": "NEW",
+   "scraped_at": "2026-09-22T05:53:21Z",
+   "last_verified_at": "2026-09-22T05:53:21Z",
+   "status": "ACTIVE",
    "source": "Al-Futtaim",
    "sources": [
     "Al-Futtaim"
@@ -1489,8 +1691,8 @@
    "employment_type": null,
    "posted_date": "2026-09-15",
    "closing_date": "2026-09-26",
-   "scraped_at": "2026-09-21T10:22:51Z",
-   "last_verified_at": "2026-09-21T10:22:51Z",
+   "scraped_at": "2026-09-22T05:53:21Z",
+   "last_verified_at": "2026-09-22T05:53:21Z",
    "status": "NEW",
    "source": "Al-Futtaim",
    "sources": [
@@ -1568,8 +1770,8 @@
    "employment_type": null,
    "posted_date": "2026-09-15",
    "closing_date": "2026-10-15",
-   "scraped_at": "2026-09-21T10:22:51Z",
-   "last_verified_at": "2026-09-21T10:22:51Z",
+   "scraped_at": "2026-09-22T05:53:21Z",
+   "last_verified_at": "2026-09-22T05:53:21Z",
    "status": "NEW",
    "source": "Al-Futtaim",
    "sources": [
@@ -1646,8 +1848,8 @@
    "employment_type": "Full-Time",
    "posted_date": "2026-09-21",
    "closing_date": null,
-   "scraped_at": "2026-09-21T10:22:51Z",
-   "last_verified_at": "2026-09-21T10:22:51Z",
+   "scraped_at": "2026-09-22T05:53:21Z",
+   "last_verified_at": "2026-09-22T05:53:21Z",
    "status": "NEW",
    "source": "Chalhoub Group",
    "sources": [
@@ -2101,8 +2303,8 @@
    "employment_type": null,
    "posted_date": "2026-09-11",
    "closing_date": "2026-09-30",
-   "scraped_at": "2026-09-21T10:22:51Z",
-   "last_verified_at": "2026-09-21T10:22:51Z",
+   "scraped_at": "2026-09-22T05:53:21Z",
+   "last_verified_at": "2026-09-22T05:53:21Z",
    "status": "ACTIVE",
    "source": "Al-Futtaim",
    "sources": [
@@ -2197,8 +2399,8 @@
    "employment_type": null,
    "posted_date": "2026-09-02",
    "closing_date": "2026-10-31",
-   "scraped_at": "2026-09-21T10:22:51Z",
-   "last_verified_at": "2026-09-21T10:22:51Z",
+   "scraped_at": "2026-09-22T05:53:21Z",
+   "last_verified_at": "2026-09-22T05:53:21Z",
    "status": "ACTIVE",
    "source": "Al-Futtaim",
    "sources": [
@@ -2292,8 +2494,8 @@
    "employment_type": "Experienced hires",
    "posted_date": "2026-09-02",
    "closing_date": null,
-   "scraped_at": "2026-09-21T10:22:51Z",
-   "last_verified_at": "2026-09-21T10:22:51Z",
+   "scraped_at": "2026-09-22T05:53:21Z",
+   "last_verified_at": "2026-09-22T05:53:21Z",
    "status": "ACTIVE",
    "source": "Aldar",
    "sources": [
@@ -2473,9 +2675,9 @@
    "employment_type": null,
    "posted_date": "2026-09-14",
    "closing_date": "2026-10-16",
-   "scraped_at": "2026-09-21T10:22:51Z",
-   "last_verified_at": "2026-09-21T10:22:51Z",
-   "status": "NEW",
+   "scraped_at": "2026-09-22T05:53:21Z",
+   "last_verified_at": "2026-09-22T05:53:21Z",
+   "status": "ACTIVE",
    "source": "Apparel Group",
    "sources": [
     "Apparel Group"
@@ -2559,8 +2761,8 @@
    "employment_type": "Full-Time",
    "posted_date": "2026-09-03",
    "closing_date": null,
-   "scraped_at": "2026-09-21T10:22:51Z",
-   "last_verified_at": "2026-09-21T10:22:51Z",
+   "scraped_at": "2026-09-22T05:53:21Z",
+   "last_verified_at": "2026-09-22T05:53:21Z",
    "status": "ACTIVE",
    "source": "Chalhoub Group",
    "sources": [
@@ -2813,8 +3015,8 @@
    "employment_type": null,
    "posted_date": "2026-09-01",
    "closing_date": "2026-10-18",
-   "scraped_at": "2026-09-21T10:22:51Z",
-   "last_verified_at": "2026-09-21T10:22:51Z",
+   "scraped_at": "2026-09-22T05:53:21Z",
+   "last_verified_at": "2026-09-22T05:53:21Z",
    "status": "ACTIVE",
    "source": "Al-Futtaim",
    "sources": [
@@ -2903,9 +3105,9 @@
    "employment_type": null,
    "posted_date": "2026-09-14",
    "closing_date": null,
-   "scraped_at": "2026-09-21T10:22:51Z",
-   "last_verified_at": "2026-09-21T10:22:51Z",
-   "status": "NEW",
+   "scraped_at": "2026-09-22T05:53:21Z",
+   "last_verified_at": "2026-09-22T05:53:21Z",
+   "status": "ACTIVE",
    "source": "Al Tayer",
    "sources": [
     "Al Tayer"
@@ -3001,8 +3203,8 @@
    "employment_type": "Regular",
    "posted_date": "2026-09-01",
    "closing_date": null,
-   "scraped_at": "2026-09-21T10:22:51Z",
-   "last_verified_at": "2026-09-21T10:22:51Z",
+   "scraped_at": "2026-09-22T05:53:21Z",
+   "last_verified_at": "2026-09-22T05:53:21Z",
    "status": "ACTIVE",
    "source": "Majid Al Futtaim",
    "sources": [
@@ -3462,8 +3664,8 @@
    "employment_type": "Experienced hires",
    "posted_date": "2026-04-28",
    "closing_date": null,
-   "scraped_at": "2026-09-21T10:22:51Z",
-   "last_verified_at": "2026-09-21T10:22:51Z",
+   "scraped_at": "2026-09-22T05:53:21Z",
+   "last_verified_at": "2026-09-22T05:53:21Z",
    "status": "STALE",
    "source": "Aldar",
    "sources": [
@@ -3560,7 +3762,7 @@
    "source_url": "https://ae.linkedin.com/jobs/view/finance-manager-at-rightangled-4454020258",
    "application_url": "https://ae.linkedin.com/jobs/view/finance-manager-at-rightangled-4454020258",
    "is_direct_apply": false,
-   "application_url_verified": false,
+   "application_url_verified": true,
    "source_confidence": "medium",
    "salary_min": null,
    "salary_max": null,
@@ -3627,7 +3829,7 @@
    ],
    "watch_out": [
     "The posting date is not published by the source, so this could be an old req — age is unknown, not fresh.",
-    "The application link could not be confirmed reachable — verify it before relying on it."
+    "SAP is named and his ERP depth is D365, not SAP — expect to address that gap directly."
    ],
    "resume_match": null,
    "duplicate_group": "0a4600c07fc768de2ce26a752f46198e475c244e",
@@ -3657,7 +3859,7 @@
    "source_url": "https://ae.linkedin.com/jobs/view/finance-and-business-support-manager-holiday-inn-and-suites-dubai-science-park-at-ihg-hotels-resorts-4457790874",
    "application_url": "https://ae.linkedin.com/jobs/view/finance-and-business-support-manager-holiday-inn-and-suites-dubai-science-park-at-ihg-hotels-resorts-4457790874",
    "is_direct_apply": false,
-   "application_url_verified": false,
+   "application_url_verified": true,
    "source_confidence": "medium",
    "salary_min": null,
    "salary_max": null,
@@ -3708,7 +3910,7 @@
    ],
    "watch_out": [
     "The posting date is not published by the source, so this could be an old req — age is unknown, not fresh.",
-    "The application link could not be confirmed reachable — verify it before relying on it."
+    "Sourced via LinkedIn rather than the employer's own site — confirm the role exists directly with the company."
    ],
    "resume_match": null,
    "duplicate_group": "7ad30e894e27b36df7eddb24d49647be3ff15f6c",
@@ -3738,7 +3940,7 @@
    "source_url": "https://my.linkedin.com/jobs/view/finance-manager-at-dayone-4447258737",
    "application_url": "https://my.linkedin.com/jobs/view/finance-manager-at-dayone-4447258737",
    "is_direct_apply": false,
-   "application_url_verified": false,
+   "application_url_verified": true,
    "source_confidence": "medium",
    "salary_min": null,
    "salary_max": null,
@@ -3798,7 +4000,7 @@
    ],
    "watch_out": [
     "The posting date is not published by the source, so this could be an old req — age is unknown, not fresh.",
-    "The application link could not be confirmed reachable — verify it before relying on it."
+    "SAP is named and his ERP depth is D365, not SAP — expect to address that gap directly."
    ],
    "resume_match": null,
    "duplicate_group": "0b9fd60b6804108dd31af78877de1654013b0249",
@@ -4002,8 +4204,8 @@
    "employment_type": "Regular",
    "posted_date": "2026-09-15",
    "closing_date": null,
-   "scraped_at": "2026-09-21T10:22:51Z",
-   "last_verified_at": "2026-09-21T10:22:51Z",
+   "scraped_at": "2026-09-22T05:53:21Z",
+   "last_verified_at": "2026-09-22T05:53:21Z",
    "status": "NEW",
    "source": "Majid Al Futtaim",
    "sources": [
@@ -4096,8 +4298,8 @@
    "employment_type": "Full-time",
    "posted_date": "2026-09-17",
    "closing_date": null,
-   "scraped_at": "2026-09-21T10:22:51Z",
-   "last_verified_at": "2026-09-21T10:22:51Z",
+   "scraped_at": "2026-09-22T05:53:21Z",
+   "last_verified_at": "2026-09-22T05:53:21Z",
    "status": "NEW",
    "source": "Etihad Airways",
    "sources": [
@@ -4289,8 +4491,8 @@
    "employment_type": "Full-time",
    "posted_date": "2026-09-15",
    "closing_date": null,
-   "scraped_at": "2026-09-21T10:22:51Z",
-   "last_verified_at": "2026-09-21T10:22:51Z",
+   "scraped_at": "2026-09-22T05:53:21Z",
+   "last_verified_at": "2026-09-22T05:53:21Z",
    "status": "NEW",
    "source": "Etihad Airways",
    "sources": [
@@ -4559,8 +4761,8 @@
    "employment_type": "Full-time",
    "posted_date": "2026-06-09",
    "closing_date": null,
-   "scraped_at": "2026-09-21T10:22:51Z",
-   "last_verified_at": "2026-09-21T10:22:51Z",
+   "scraped_at": "2026-09-22T05:53:21Z",
+   "last_verified_at": "2026-09-22T05:53:21Z",
    "status": "STALE",
    "source": "Etihad Airways",
    "sources": [
@@ -4846,7 +5048,7 @@
    "source_url": "https://my.linkedin.com/jobs/view/finance-manager-at-hays-4462776607",
    "application_url": "https://my.linkedin.com/jobs/view/finance-manager-at-hays-4462776607",
    "is_direct_apply": false,
-   "application_url_verified": false,
+   "application_url_verified": true,
    "source_confidence": "medium",
    "salary_min": null,
    "salary_max": null,
@@ -4898,7 +5100,7 @@
    ],
    "watch_out": [
     "The posting date is not published by the source, so this could be an old req — age is unknown, not fresh.",
-    "The application link could not be confirmed reachable — verify it before relying on it."
+    "Sector is outside retail and real estate, so the industry half of his track record does not carry over."
    ],
    "resume_match": null,
    "duplicate_group": "a60785dfad666a371c65b8274f47960b856eef15",
@@ -4918,8 +5120,8 @@
    "employment_type": "Full-time",
    "posted_date": "2026-07-22",
    "closing_date": null,
-   "scraped_at": "2026-09-21T10:22:51Z",
-   "last_verified_at": "2026-09-21T10:22:51Z",
+   "scraped_at": "2026-09-22T05:53:21Z",
+   "last_verified_at": "2026-09-22T05:53:21Z",
    "status": "STALE",
    "source": "Etihad Airways",
    "sources": [
@@ -5009,8 +5211,8 @@
    "employment_type": "Full-time",
    "posted_date": "2026-09-18",
    "closing_date": null,
-   "scraped_at": "2026-09-21T10:22:51Z",
-   "last_verified_at": "2026-09-21T10:22:51Z",
+   "scraped_at": "2026-09-22T05:53:21Z",
+   "last_verified_at": "2026-09-22T05:53:21Z",
    "status": "NEW",
    "source": "Etihad Airways",
    "sources": [
@@ -5182,8 +5384,8 @@
    "employment_type": "Full-time",
    "posted_date": "2026-09-02",
    "closing_date": null,
-   "scraped_at": "2026-09-21T10:22:51Z",
-   "last_verified_at": "2026-09-21T10:22:51Z",
+   "scraped_at": "2026-09-22T05:53:21Z",
+   "last_verified_at": "2026-09-22T05:53:21Z",
    "status": "ACTIVE",
    "source": "Etihad Airways",
    "sources": [
@@ -5251,161 +5453,6 @@
    "exclusion_reason": null
   },
   {
-   "id": "76549a1f3465179ceb3517f3cd267c18b909d1bb",
-   "company": "Etihad Airways",
-   "company_group": "Etihad",
-   "title": "Network Operations Controller",
-   "normalized_title": "network operations controller",
-   "location": "Abu Dhabi",
-   "country": "UAE",
-   "region": "GCC",
-   "department": "Other",
-   "employment_type": "Full-time",
-   "posted_date": "2026-09-08",
-   "closing_date": null,
-   "scraped_at": "2026-09-21T10:22:51Z",
-   "last_verified_at": "2026-09-21T10:22:51Z",
-   "status": "ACTIVE",
-   "source": "Etihad Airways",
-   "sources": [
-    "Etihad Airways"
-   ],
-   "source_url": "https://jobs.smartrecruiters.com/EtihadAirways5/744000148150699-network-operations-controller",
-   "application_url": "https://jobs.smartrecruiters.com/EtihadAirways5/744000148150699-network-operations-controller?oga=true",
-   "is_direct_apply": true,
-   "application_url_verified": true,
-   "source_confidence": "high",
-   "salary_min": null,
-   "salary_max": null,
-   "salary_currency": null,
-   "experience_min": 5,
-   "experience_max": null,
-   "description": "Synopsis \n To provide regulatory oversight and coordination for foreign aircraft operating approvals across the Etihad Airways fleet, ensuring compliance with applicable aviation authority requirements. The role supports operational continuity by enabling charter operations, adhoc operational aircraft projects and new aircraft introductions through timely project management, while ensuring no adverse impact on safety or scheduled operations.\n Accountabilities \n Ensure effective regulatory liaison with local and international regulatory authorities on all issues pertaining to FAOP/FAOC/DG/LVO initial applications and renewals\n Continuously review international regulator standards and requirement to ensure compliance\n Review all required approvals for ACMI operations ensuring to closely work with lessor to provide required documentation to obtain local and foreign regulator approvals\n Ensuring the permissions database is maintained at all times with correct data leading to all aircraft being approved /authorised to fly their destinations with full operational flexibility\n Support charter flying review process and coordinate contracted charter flying ensuring safety and customer satisfaction\n Coordinate all ad-hoc aircraft operational events such as flypasts, aircraft static displays etc\n Coordinate EIS program in parallel to technical department plan for newly delivered aircraft and ensure smooth delivery to operational window\n Support Manager Operations Planning in readiness coordination of new station startups or where required\n\nEducation & Experience \n Bachelors degree in Aviation management, minimum 5 years experience in airline industry\n Project management experience an advantage\n\nEtihad Airways is more than the UAE’s national airline - we’re shaping the future of global aviation. From our hub in Abu Dhabi, we connect people across continents and cultures, while driving our “Journey 2030” ambition to double our fleet, expand our network and grow our people for a new era of excellence. Join us and become part of a vision where the world is your workplace and extraordinary experiences take flight.\n To learn more visit www.etihad.com \n Recruitment Fraud Alert \n\nBeware of fraudulent job offers from individuals or organizations claiming to represent the Etihad group. We will never ask for personal information, bank details, or payment during the recruitment process. Interviews are conducted face-to-face or via video/telephone before any formal offer. If you are asked for money, please treat it as fraudulent.",
-   "responsibilities": [
-    "Accountabilities",
-    "Ensure effective regulatory liaison with local and international regulatory authorities on all issues pertaining to FAOP/FAOC/DG/LVO initial applications and renewals",
-    "Continuously review international regulator standards and requirement to ensure compliance",
-    "Review all required approvals for ACMI operations ensuring to closely work with lessor to provide required documentation to obtain local and foreign regulator approvals",
-    "Ensuring the permissions database is maintained at all times with correct data leading to all aircraft being approved /authorised to fly their destinations with full operational flexibility",
-    "Support charter flying review process and coordinate contracted charter flying ensuring safety and customer satisfaction",
-    "Coordinate all ad-hoc aircraft operational events such as flypasts, aircraft static displays etc",
-    "Coordinate EIS program in parallel to technical department plan for newly delivered aircraft and ensure smooth delivery to operational window",
-    "Support Manager Operations Planning in readiness coordination of new station startups or where required"
-   ],
-   "requirements": [
-    "Education & Experience",
-    "Bachelors degree in Aviation management, minimum 5 years experience in airline industry",
-    "Project management experience an advantage"
-   ],
-   "skills": [
-    "Excel"
-   ],
-   "nationality_requirement": null,
-   "work_authorization_requirement": null,
-   "emiratisation_requirement": false,
-   "saudization_requirement": false,
-   "candidate_fit_score": 36,
-   "employer_score": 55,
-   "career_upside_score": 36,
-   "opportunity_score": 41,
-   "score_breakdown": {
-    "seniority": 16,
-    "functional": 0,
-    "industry": 6,
-    "geographic": 10,
-    "scope": 0,
-    "leadership": 0,
-    "qualification": 0,
-    "upside": 4
-   },
-   "tier": "D",
-   "application_priority": "SKIP",
-   "why_fit": [
-    "UAE is one of his two target markets, and he is already GCC-adjacent inside a Dubai-headquartered group.",
-    "Nothing further in the posted text matches his record. His lane is retail FP&A — MYR 400M+ P&L across 60+ Max Fashion and Babyshop stores in Malaysia and Indonesia, IFRS/MPERS consolidation, and a D365 ERP implementation. Judge the rest of this role against that."
-   ],
-   "watch_out": [
-    "Sector is outside retail and real estate, so the industry half of his track record does not carry over."
-   ],
-   "resume_match": null,
-   "duplicate_group": "a356366a6efc16bfa6dcae288e7f260421b75a82",
-   "is_excluded": false,
-   "exclusion_reason": null
-  },
-  {
-   "id": "f0d627ca5d9bd380f200a143f7bd611091a69c01",
-   "company": "Etihad Airways",
-   "company_group": "Etihad",
-   "title": "Cargo Controller",
-   "normalized_title": "cargo controller",
-   "location": "Abu Dhabi",
-   "country": "UAE",
-   "region": "GCC",
-   "department": "Other",
-   "employment_type": "Full-time",
-   "posted_date": "2026-07-29",
-   "closing_date": null,
-   "scraped_at": "2026-09-21T10:22:51Z",
-   "last_verified_at": "2026-09-21T10:22:51Z",
-   "status": "STALE",
-   "source": "Etihad Airways",
-   "sources": [
-    "Etihad Airways"
-   ],
-   "source_url": "https://jobs.smartrecruiters.com/EtihadAirways5/744000140415649-cargo-controller",
-   "application_url": "https://jobs.smartrecruiters.com/EtihadAirways5/744000140415649-cargo-controller?oga=true",
-   "is_direct_apply": true,
-   "application_url_verified": true,
-   "source_confidence": "high",
-   "salary_min": null,
-   "salary_max": null,
-   "salary_currency": null,
-   "experience_min": null,
-   "experience_max": null,
-   "description": "Synopsis\n Part of a 24/7 Cargo Operations Center that provides live monitoring of shipments focused on high yield products and special loads, service recovery of every irregularity and proactive communication with affected customers. On a shift basis, they will monitor different dashboards and KPls based on defined performance requirements in relation to OTP, Cargo IQ standards, SLAs, FAP, etc. They must ensure safe, secure and on time delivery of all high-profile shipments on key routes flights, by close coordination with relevant stakeholders all across HUB and Network.\n Provide 1st level of investigation on reported service failures and delays, arranging efficient recovery Work independently and be able to assess the financial impact of service recovery alternatives, as well as evaluate solutions to best deliver customer satisfaction. Comply with Etihad communication standards and represent the company values towards external and internal customers. Make day-to-day operational decisions to manage and mitigate operational safety and security-related risks associated with assigned tasks, through effective evaluation and decision-making based on conditions, hazards and threats. Escalate medium or higher-level risks to appropriate management level personnel.\n Monitor and track Special loads and Products via different platforms and system support to ensure they are processed on time as per SLA Communicate with different stakeholders for any identified gaps or delay in processing cargo via different cargo milestone for immediate attention to prevent it from failing Act swiftly and communicate proactively with customers and internal parties about any change in bookings and address root causes on relevant deviations, seeking continuous process improvements.Engage relevant stakeholders in constructive and effective problem resolution, avoiding unnecessary costs and delays in Cargo Delivery Real time monitoring of all Irregularities with dedicated attention to special products and high value customers.Support the Commercial Products and Hub Quality Team by taking full responsibility of the end-to-end shipment process monitoring.\n\nEducated to at least high school level, preferably diploma level in logistics, operations management or related discipline; with acquired specialization in cargo handling operations,. At least three years of cargo operations and/or cargo customer experience. Coad understanding of computer airfreight specifications In depth knowledge of industry standards and Legal Regulations Industry training in DC/AVI/ Cargo Operations/Security/Customer Service Fully conversant with cargo handling processes, procedures and regulatory compliance expectations.\n\nEtihad Airways is more than the UAE’s national airline - we’re shaping the future of global aviation. From our hub in Abu Dhabi, we connect people across continents and cultures, while driving our “Journey 2030” ambition to double our fleet, expand our network and grow our people for a new era of excellence. Join us and become part of a vision where the world is your workplace and extraordinary experiences take flight.\n To learn more visit www.etihad.com \n Recruitment Fraud Alert \n\nBeware of fraudulent job offers from individuals or organizations claiming to represent the Etihad group. We will never ask for personal information, bank details, or payment during the recruitment process. Interviews are conducted face-to-face or via video/telephone before any formal offer. If you are asked for money, please treat it as fraudulent.",
-   "responsibilities": [
-    "To learn more visit www.etihad.com",
-    "Recruitment Fraud Alert",
-    "Beware of fraudulent job offers from individuals or organizations claiming to represent the Etihad group. We will never ask for personal information, bank details, or payment during the recruitment process. Interviews are conducted face-to-face or via video/telephone before any formal offer. If you are asked for money, please treat it as fraudulent"
-   ],
-   "requirements": [],
-   "skills": [
-    "Excel"
-   ],
-   "nationality_requirement": null,
-   "work_authorization_requirement": null,
-   "emiratisation_requirement": false,
-   "saudization_requirement": false,
-   "candidate_fit_score": 35,
-   "employer_score": 55,
-   "career_upside_score": 36,
-   "opportunity_score": 40,
-   "score_breakdown": {
-    "seniority": 15,
-    "functional": 0,
-    "industry": 6,
-    "geographic": 10,
-    "scope": 0,
-    "leadership": 0,
-    "qualification": 0,
-    "upside": 4
-   },
-   "tier": "D",
-   "application_priority": "SKIP",
-   "why_fit": [
-    "UAE is one of his two target markets, and he is already GCC-adjacent inside a Dubai-headquartered group.",
-    "Nothing further in the posted text matches his record. His lane is retail FP&A — MYR 400M+ P&L across 60+ Max Fashion and Babyshop stores in Malaysia and Indonesia, IFRS/MPERS consolidation, and a D365 ERP implementation. Judge the rest of this role against that."
-   ],
-   "watch_out": [
-    "Posted 2026-07-29 — this req is stale and may already be filled.",
-    "Sector is outside retail and real estate, so the industry half of his track record does not carry over."
-   ],
-   "resume_match": null,
-   "duplicate_group": "280d4050bbbbdd0cef866706ceaf0fd0d791c2cf",
-   "is_excluded": false,
-   "exclusion_reason": null
-  },
-  {
    "id": "f46d9a421ddc1f7ed9f96aa10cd326e707f9668d",
    "company": "Etihad Airways",
    "company_group": "Etihad",
@@ -5418,8 +5465,8 @@
    "employment_type": "Full-time",
    "posted_date": "2026-07-28",
    "closing_date": null,
-   "scraped_at": "2026-09-21T10:22:51Z",
-   "last_verified_at": "2026-09-21T10:22:51Z",
+   "scraped_at": "2026-09-22T05:53:21Z",
+   "last_verified_at": "2026-09-22T05:53:21Z",
    "status": "STALE",
    "source": "Etihad Airways",
    "sources": [
@@ -5520,8 +5567,8 @@
    "employment_type": null,
    "posted_date": "2026-09-08",
    "closing_date": "2026-11-30",
-   "scraped_at": "2026-09-21T10:22:51Z",
-   "last_verified_at": "2026-09-21T10:22:51Z",
+   "scraped_at": "2026-09-22T05:53:21Z",
+   "last_verified_at": "2026-09-22T05:53:21Z",
    "status": "ACTIVE",
    "source": "Al-Futtaim",
    "sources": [
@@ -5598,8 +5645,8 @@
    "employment_type": "Experienced hires",
    "posted_date": "2026-09-01",
    "closing_date": null,
-   "scraped_at": "2026-09-21T10:22:51Z",
-   "last_verified_at": "2026-09-21T10:22:51Z",
+   "scraped_at": "2026-09-22T05:53:21Z",
+   "last_verified_at": "2026-09-22T05:53:21Z",
    "status": "ACTIVE",
    "source": "Aldar",
    "sources": [
@@ -5694,8 +5741,8 @@
    "employment_type": null,
    "posted_date": "2026-09-21",
    "closing_date": "2026-10-18",
-   "scraped_at": "2026-09-21T10:22:51Z",
-   "last_verified_at": "2026-09-21T10:22:51Z",
+   "scraped_at": "2026-09-22T05:53:21Z",
+   "last_verified_at": "2026-09-22T05:53:21Z",
    "status": "NEW",
    "source": "Al-Futtaim",
    "sources": [
@@ -5784,8 +5831,8 @@
    "employment_type": null,
    "posted_date": "2026-09-17",
    "closing_date": "2026-10-18",
-   "scraped_at": "2026-09-21T10:22:51Z",
-   "last_verified_at": "2026-09-21T10:22:51Z",
+   "scraped_at": "2026-09-22T05:53:21Z",
+   "last_verified_at": "2026-09-22T05:53:21Z",
    "status": "NEW",
    "source": "Al-Futtaim",
    "sources": [
@@ -5863,8 +5910,8 @@
    "employment_type": null,
    "posted_date": "2026-09-11",
    "closing_date": "2026-10-31",
-   "scraped_at": "2026-09-21T10:22:51Z",
-   "last_verified_at": "2026-09-21T10:22:51Z",
+   "scraped_at": "2026-09-22T05:53:21Z",
+   "last_verified_at": "2026-09-22T05:53:21Z",
    "status": "ACTIVE",
    "source": "Al-Futtaim",
    "sources": [
@@ -5880,7 +5927,7 @@
    "salary_currency": null,
    "experience_min": 5,
    "experience_max": null,
-   "description": "Job Requisition ID: 178416 \n\n Established in the 1930s as a trading business, Al-Futtaim Group today is one of the most diversified and progressive, privately held regional businesses headquartered in Dubai, United Arab Emirates. Structured into five operating divisions; automotive, financial services, real estate, retail and healthcare; employing more than 35,000 employees across more than 20 countries in the Middle East, Asia and Africa, Al-Futtaim Group partners with over 200 of the world's most admired and innovative brands. Al-Futtaim Group’s entrepreneurship and relentless customer focus enables the organization to continue to grow and expand; responding to the changing needs of our customers within the societies in which we operate. \n\n By upholding our values of respect, excellence, collaboration and integrity; Al-Futtaim Group continues to enrich the lives and aspirations of our customers each and every day\n\r\n Overview Of The Role: \r\n The Commercial Vehicles Sales Manager will lead the sales operations for multiple commercial vehicle brands within FAMCO, driving market share growth, profitability, and overall sales performance across the UAE. This role is responsible for developing and executing effective sales strategies, managing and motivating the sales team, and building strong customer relationships within the commercial vehicles sector. \n\r\n The ideal candidate is a results-driven sales leader with strong market knowledge of light, medium, and heavy-duty trucks, combined with the ability to lead high-performing teams in a fast-paced and competitive environment. \n\r\n What You Will Do: \r\n Sales Management \r\n \r\n Achieve and exceed monthly and annual sales targets while maximizing profitability through strong focus on net sales and gross margins. \n\r\n Drive market share growth for multiple commercial vehicle brands through effective sales planning and execution. \n\r\n Develop and implement strategic sales initiatives to identify new business opportunities and expand customer base. \n\r\n Assign and manage sales territories to ensure effective market coverage and customer engagement. \n\r\n Monitor market trends, competitor activities, customer requirements, and economic indicators to adjust sales strategies accordingly. \n\r\n Ensure overdue payments remain within agreed targets and maintain healthy financial performance. \n\n Team Management \r\n \r\n Lead, coach, and motivate the sales team to achieve individual and team objectives. \n\r\n Manage day-to-day sales operations, including planning, scheduling, and performance monitoring. \n\r\n Recruit, onboard, train, and develop sales consultants to build a high-performing commercial vehicles sales team. \n\r\n Conduct regular performance reviews and provide continuous feedback and development support. \n\r\n Drive product knowledge and technical training initiatives for the sales team. \n\n Customer & Business Development \r\n \r\n Build and maintain strong relationships with key customers, fleet accounts, and strategic partners. \n\r\n Ensure high levels of customer satisfaction through effective relationship management and consultative selling. \n\r\n Establish professional networks within the commercial vehicles industry to strengthen market presence and business opportunities. \n\n Professional Development \r\n \r\n Maintain strong commercial and technical knowledge by attending industry workshops, training sessions, and professional development programs. \n\r\n Stay updated on industry trends, product developments, and competitor activities within the commercial vehicles market. \n\n Required Skills To Be Successful: \r\n \r\n Strong leadership and people management skills. \n\r\n Excellent customer service, communication, and negotiation abilities. \n\r\n Proven track record of consistently exceeding sales targets and business objectives. \n\r\n Strong commercial acumen with the ability to drive profitability and market growth. \n\r\n Excellent analytical, problem-solving, and decision-making skills. \n\r\n Ability to thrive in a fast-paced and performance-driven environment. \n\n About The Team: \r\n You will be part of the FAMCO Commercial Vehicles division, working alongside a highly experienced and dynamic team focused on delivering industry-leading commercial vehicle solutions across the UAE. The role works closely with internal stakeholders, fleet customers, and key business partners to drive sustainable business growth and customer success. \n\r\n What Equips You For The Role: \r\n \r\n Minimum 5+ years of commercial vehicle sales experience within a dealership environment in the UAE. \n\r\n Strong experience handling light, medium, and heavy-duty truck sales. \n\r\n Previous experience leading and managing sales teams. \n\r\n Bachelor’s Degree or equivalent professional experience. \n\r\n Strong Microsoft Office and Excel skills. \n\r\n Valid UAE driving license. \n\r\n About Al-Futtaim Automotive \n\r\nA major division of the UAE-based Al-Futtaim Group of companies, Al-Futtaim Automotive is an industry leader with presence in 10 countries across the Middle East, Asia and Africa.\n\r\nOur core business activities at Al-Futtaim Automotive include distribution, manufacturing, leasing and aftersales, and we are firmly established as the regional representative of some of the world’s most iconic automotive brands: Toyota, Lexus, Honda, Jeep, Chrysler, Dodge, Volvo and RAM.\n\r\nWe are driven by a customer-centric approach, constantly pushing the boundaries on innovation, quality standards, and value-added service across our vast universe of customers - right from motoring enthusiasts to fleet operators to contractors. Our mission is to become the leader in custom-made mobility solutions by delivering nothing less than world-class omni-channel experiences. \n\r\nWe channel our local expertise and global trust to deliver one of the most comprehensive portfolios of mobility products and solutions, from passenger cars to SUVs, electric vehicles to high-performance motorbikes, commercial vehicles to industrial & construction equipment.\n\r\nWhat keeps the company moving forward is a 9000-member strong team, with inspiring possibilities for growth, throughout the career path. This is Al-Futtaim Automotive and we empower talent to move forward. \n\n Apply now » \n\n Find similar jobs: \n\n Sales Jobs \n\n HOME PAGE \n\n PRIVACY \n\n CORPORATE WEBSITE \n\n CONTACT US \n\n Opens in a new tab. \n\n Opens in a new tab. \n\n Opens in a new tab. \n\n Opens in a new tab. \n\n © Copyright 2026 | afuturewithus.com\n\n // \n\n // \n\n // \n\n const jobAlertSpans = document.querySelectorAll(\"[data-testid=jobAlertSpanText]\");\n jobAlertSpans?.forEach((jobEl) => {\n jobEl.textContent = window?.jsStr?.tcjobresultscreatejobalertsdetailstext || \"\";\n });\n\n // \n\n // \n\n // \n\n //",
+   "description": "Job Requisition ID: 178416 \n\n Established in the 1930s as a trading business, Al-Futtaim Group today is one of the most diversified and progressive, privately held regional businesses headquartered in Dubai, United Arab Emirates. Structured into five operating divisions; automotive, financial services, real estate, retail and healthcare; employing more than 35,000 employees across more than 20 countries in the Middle East, Asia and Africa, Al-Futtaim Group partners with over 200 of the world's most admired and innovative brands. Al-Futtaim Group’s entrepreneurship and relentless customer focus enables the organization to continue to grow and expand; responding to the changing needs of our customers within the societies in which we operate. \n\n By upholding our values of respect, excellence, collaboration and integrity; Al-Futtaim Group continues to enrich the lives and aspirations of our customers each and every day\n\r\n Overview Of The Role: \r\n The Commercial Vehicles Sales Manager will lead the sales operations for multiple commercial vehicle brands within FAMCO, driving market share growth, profitability, and overall sales performance across the UAE. This role is responsible for developing and executing effective sales strategies, managing and motivating the sales team, and building strong customer relationships within the commercial vehicles sector. \n\r\n The ideal candidate is a results-driven sales leader with strong market knowledge of light, medium, and heavy-duty trucks, combined with the ability to lead high-performing teams in a fast-paced and competitive environment. \n\r\n What You Will Do: \r\n Sales Management \r\n \r\n Achieve and exceed monthly and annual sales targets while maximizing profitability through strong focus on net sales and gross margins. \n\r\n Drive market share growth for multiple commercial vehicle brands through effective sales planning and execution. \n\r\n Develop and implement strategic sales initiatives to identify new business opportunities and expand customer base. \n\r\n Assign and manage sales territories to ensure effective market coverage and customer engagement. \n\r\n Monitor market trends, competitor activities, customer requirements, and economic indicators to adjust sales strategies accordingly. \n\r\n Ensure overdue payments remain within agreed targets and maintain healthy financial performance. \n\n Team Management \r\n \r\n Lead, coach, and motivate the sales team to achieve individual and team objectives. \n\r\n Manage day-to-day sales operations, including planning, scheduling, and performance monitoring. \n\r\n Recruit, onboard, train, and develop sales consultants to build a high-performing commercial vehicles sales team. \n\r\n Conduct regular performance reviews and provide continuous feedback and development support. \n\r\n Drive product knowledge and technical training initiatives for the sales team. \n\n Customer & Business Development \r\n \r\n Build and maintain strong relationships with key customers, fleet accounts, and strategic partners. \n\r\n Ensure high levels of customer satisfaction through effective relationship management and consultative selling. \n\r\n Establish professional networks within the commercial vehicles industry to strengthen market presence and business opportunities. \n\n Professional Development \r\n \r\n Maintain strong commercial and technical knowledge by attending industry workshops, training sessions, and professional development programs. \n\r\n Stay updated on industry trends, product developments, and competitor activities within the commercial vehicles market. \n\n Required Skills To Be Successful: \r\n \r\n Strong leadership and people management skills. \n\r\n Excellent customer service, communication, and negotiation abilities. \n\r\n Proven track record of consistently exceeding sales targets and business objectives. \n\r\n Strong commercial acumen with the ability to drive profitability and market growth. \n\r\n Excellent analytical, problem-solving, and decision-making skills. \n\r\n Ability to thrive in a fast-paced and performance-driven environment. \n\n About The Team: \r\n You will be part of the FAMCO Commercial Vehicles division, working alongside a highly experienced and dynamic team focused on delivering industry-leading commercial vehicle solutions across the UAE. The role works closely with internal stakeholders, fleet customers, and key business partners to drive sustainable business growth and customer success. \n\r\n What Equips You For The Role: \r\n \r\n Minimum 5+ years of commercial vehicle sales experience within a dealership environment in the UAE. \n\r\n Strong experience handling light, medium, and heavy-duty truck sales. \n\r\n Previous experience leading and managing sales teams. \n\r\n Bachelor’s Degree or equivalent professional experience. \n\r\n Strong Microsoft Office and Excel skills. \n\r\n Valid UAE driving license. \n\r\n About Al-Futtaim Automotive \n\r\nA major division of the UAE-based Al-Futtaim Group of companies, Al-Futtaim Automotive is an industry leader with presence in 10 countries across the Middle East, Asia and Africa.\n\r\nOur core business activities at Al-Futtaim Automotive include distribution, manufacturing, leasing and aftersales, and we are firmly established as the regional representative of some of the world’s most iconic automotive brands: Toyota, Lexus, Honda, Jeep, Chrysler, Dodge, Volvo and RAM.\n\r\nWe are driven by a customer-centric approach, constantly pushing the boundaries on innovation, quality standards, and value-added service across our vast universe of customers - right from motoring enthusiasts to fleet operators to contractors. Our mission is to become the leader in custom-made mobility solutions by delivering nothing less than world-class omni-channel experiences. \n\r\nWe channel our local expertise and global trust to deliver one of the most comprehensive portfolios of mobility products and solutions, from passenger cars to SUVs, electric vehicles to high-performance motorbikes, commercial vehicles to industrial & construction equipment.\n\r\nWhat keeps the company moving forward is a 9000-member strong team, with inspiring possibilities for growth, throughout the career path. This is Al-Futtaim Automotive and we empower talent to move forward. \n\n Apply now » \n\n Find similar jobs: \n\n HOME PAGE \n\n PRIVACY \n\n CORPORATE WEBSITE \n\n CONTACT US \n\n Opens in a new tab. \n\n Opens in a new tab. \n\n Opens in a new tab. \n\n Opens in a new tab. \n\n © Copyright 2026 | afuturewithus.com\n\n // \n\n // \n\n // \n\n const jobAlertSpans = document.querySelectorAll(\"[data-testid=jobAlertSpanText]\");\n jobAlertSpans?.forEach((jobEl) => {\n jobEl.textContent = window?.jsStr?.tcjobresultscreatejobalertsdetailstext || \"\";\n });\n\n // \n\n // \n\n // \n\n //",
    "responsibilities": [
     "Achieve and exceed monthly and annual sales targets while maximizing profitability through strong focus on net sales and gross margins",
     "Drive market share growth for multiple commercial vehicle brands through effective sales planning and execution",
@@ -5954,8 +6001,8 @@
    "employment_type": null,
    "posted_date": "2026-09-10",
    "closing_date": "2027-02-23",
-   "scraped_at": "2026-09-21T10:22:51Z",
-   "last_verified_at": "2026-09-21T10:22:51Z",
+   "scraped_at": "2026-09-22T05:53:21Z",
+   "last_verified_at": "2026-09-22T05:53:21Z",
    "status": "ACTIVE",
    "source": "Al-Futtaim",
    "sources": [
@@ -6047,8 +6094,8 @@
    "employment_type": null,
    "posted_date": "2026-09-13",
    "closing_date": "2026-10-14",
-   "scraped_at": "2026-09-21T10:22:51Z",
-   "last_verified_at": "2026-09-21T10:22:51Z",
+   "scraped_at": "2026-09-22T05:53:21Z",
+   "last_verified_at": "2026-09-22T05:53:21Z",
    "status": "ACTIVE",
    "source": "Al-Futtaim",
    "sources": [
@@ -6139,8 +6186,8 @@
    "employment_type": null,
    "posted_date": "2026-09-18",
    "closing_date": "2026-10-18",
-   "scraped_at": "2026-09-21T10:22:51Z",
-   "last_verified_at": "2026-09-21T10:22:51Z",
+   "scraped_at": "2026-09-22T05:53:21Z",
+   "last_verified_at": "2026-09-22T05:53:21Z",
    "status": "NEW",
    "source": "Al-Futtaim",
    "sources": [
@@ -6231,8 +6278,8 @@
    "employment_type": null,
    "posted_date": "2026-09-02",
    "closing_date": null,
-   "scraped_at": "2026-09-21T10:22:51Z",
-   "last_verified_at": "2026-09-21T10:22:51Z",
+   "scraped_at": "2026-09-22T05:53:21Z",
+   "last_verified_at": "2026-09-22T05:53:21Z",
    "status": "ACTIVE",
    "source": "Landmark Group",
    "sources": [
@@ -6328,8 +6375,8 @@
    "employment_type": null,
    "posted_date": "2026-09-15",
    "closing_date": "2026-09-29",
-   "scraped_at": "2026-09-21T10:22:51Z",
-   "last_verified_at": "2026-09-21T10:22:51Z",
+   "scraped_at": "2026-09-22T05:53:21Z",
+   "last_verified_at": "2026-09-22T05:53:21Z",
    "status": "NEW",
    "source": "Al-Futtaim",
    "sources": [
@@ -6416,8 +6463,8 @@
    "employment_type": null,
    "posted_date": "2026-08-06",
    "closing_date": null,
-   "scraped_at": "2026-09-21T10:22:51Z",
-   "last_verified_at": "2026-09-21T10:22:51Z",
+   "scraped_at": "2026-09-22T05:53:21Z",
+   "last_verified_at": "2026-09-22T05:53:21Z",
    "status": "STALE",
    "source": "Aldar",
    "sources": [
@@ -6506,8 +6553,8 @@
    "employment_type": "Full-Time",
    "posted_date": "2026-06-25",
    "closing_date": null,
-   "scraped_at": "2026-09-21T10:22:51Z",
-   "last_verified_at": "2026-09-21T10:22:51Z",
+   "scraped_at": "2026-09-22T05:53:21Z",
+   "last_verified_at": "2026-09-22T05:53:21Z",
    "status": "STALE",
    "source": "GMG",
    "sources": [
@@ -6564,82 +6611,6 @@
    "exclusion_reason": "commercial account-management role, not a finance role"
   },
   {
-   "id": "fb91d33cb0696f22a7bf358d385d01ec8a64d435",
-   "company": "Chalhoub Group",
-   "company_group": "Chalhoub",
-   "title": "Treasury Specialist",
-   "normalized_title": "treasury specialist",
-   "location": "Dubai",
-   "country": "UAE",
-   "region": "GCC",
-   "department": null,
-   "employment_type": "Full-Time",
-   "posted_date": "2026-07-13",
-   "closing_date": null,
-   "scraped_at": "2026-09-21T10:22:51Z",
-   "last_verified_at": "2026-09-21T10:22:51Z",
-   "status": "STALE",
-   "source": "Chalhoub Group",
-   "sources": [
-    "Chalhoub Group"
-   ],
-   "source_url": "https://careers.chalhoubgroup.com/jobs/8057976-treasury-specialist",
-   "application_url": "https://careers.chalhoubgroup.com/jobs/8057976-treasury-specialist/applications/new",
-   "is_direct_apply": true,
-   "application_url_verified": true,
-   "source_confidence": "high",
-   "salary_min": null,
-   "salary_max": null,
-   "salary_currency": null,
-   "experience_min": 3,
-   "experience_max": 5,
-   "description": "<p dir=\"ltr\"><strong>INSPIRE | EXHILARATE | DELIGHT</strong></p><p dir=\"ltr\">For over seven decades, Chalhoub Group has been a partner and creator of luxury experiences in the Middle East. In its pursuit to excel as a hybrid luxury retailer, the Group has curated a portfolio of over 10 owned brands and strengthened its distribution and marketing expertise for over 400 international names across luxury fashion, beauty, jewellery, watches, eyewear, and art de vivre categories.</p><p dir=\"ltr\">Every step at Chalhoub Group is taken to build a future where luxury dreams become reality — bridging cultures and crafting memorable experiences for our consumers. Be it by constantly reinventing itself, committing to innovation, or embracing new technologies, the Group is shaping the future of luxury retail. It delivers seamless omnichannel experiences across more than 950 stores, online platforms, and mobile apps. Driving this innovation journey is The Greenhouse — the Group’s innovation hub, incubator, and accelerator for startups and emerging businesses, regionally and globally.</p><p dir=\"ltr\">Chalhoub Group fosters a people-at-heart culture rooted in diversity, equity, and inclusion, and a workplace catalysed by forward thinking and future-proofing. Today, it brings together over 16,000 talented professionals across eight countries in the Middle East, with a presence in LATAM. Their collective efforts have earned the Group the Great Place to Work® certification in several markets.</p><p dir=\"ltr\">Sustainability is at the core of the Group’s strategy, guided by a clear commitment to people, partners, and the planet. Chalhoub Group is proud to be a member of the United Nations Global Compact, a signatory of the Women’s Empowerment Principles, and to have pledged to reach Net Zero by 2040.<br></p><p dir=\"ltr\"><strong>What you'll be doing</strong>&nbsp;&nbsp;</p><p dir=\"ltr\"><span>As a Treasury Specialist, you will play a key role in managing daily treasury operations, ensuring accurate liquidity monitoring, forecasting, and reporting.</span></p><div><p dir=\"ltr\"><span>The role contributes to treasury optimization initiatives, coordinates with banks, and supports internal stakeholders with treasury-related matters.</span></p></div><div><p dir=\"ltr\"><span>This position requires analytical skills, strong coordination, and knowledge of treasury processes.</span></p><p dir=\"ltr\"><span>Key Responsibilities:</span></p><p dir=\"ltr\"><span>Cash Management, Forecasting and Reporting:</span></p></div><ul dir=\"ltr\"><li><p dir=\"ltr\"><span>Monitor daily Group cash positions and liquidity across banking partners.</span></p></li><li><p dir=\"ltr\"><span>Consolidate cash balances and prepare daily liquidity reports.</span></p></li><li><p dir=\"ltr\"><span>Prepare short-, medium-, and long-term cash flow forecasts in collaboration with Finance .</span></p></li><li><p dir=\"ltr\"><span>Develop treasury dashboards, KPIs, and management reports.</span></p></li><li><p dir=\"ltr\"><span>Support month-end, quarter-end, and year-end treasury reporting.</span></p></li><li><p dir=\"ltr\"><span>Support implementation of best practices in cash management.</span></p></li></ul><div><p><span></span></p></div><div><p dir=\"ltr\"><span>SAP S/4HANA &amp; Treasury Systems:</span></p></div><ul dir=\"ltr\"><li><p dir=\"ltr\"><span>Support treasury processes within SAP S/4HANA Treasury and Risk Management.</span></p></li><li><p dir=\"ltr\"><span>Maintain cash management structures, bank account master data, and liquidity reporting configurations.</span></p></li><li><p dir=\"ltr\"><span>Support system testing, enhancements, and treasury process improvements. </span></p></li><li><p dir=\"ltr\"><span>Collaborate on SAP upgrades and treasury transformation initiatives.</span></p></li></ul><div><p><span></span></p></div><div><p dir=\"ltr\"><span>Credit Facilities &amp; Banking:</span></p></div><ul dir=\"ltr\"><li><p dir=\"ltr\"><span>Monitor Group credit facilities, utilization levels, and available headroom.</span></p></li><li><p dir=\"ltr\"><span>Track financial covenant compliance and support periodic covenant reporting.</span></p></li><li><p dir=\"ltr\"><span>Prepare reports on debt maturities, facility utilization, and financing metrics.</span></p></li><li><p dir=\"ltr\"><span>Liaise with banks and internal stakeholders on treasury-related matters.</span></p></li></ul><div><p><span></span></p></div><div><p dir=\"ltr\"><span>Controls, Governance &amp; Compliance:</span></p></div><ul dir=\"ltr\"><li><p dir=\"ltr\"><span>Ensure compliance with Treasury Policies, Delegation of Authority, and internal procedures. </span></p></li><li><p dir=\"ltr\"><span>Maintain audit-ready documentation for treasury activities.</span></p></li><li><p dir=\"ltr\"><span>Support internal and external audits. </span></p></li><li><p dir=\"ltr\"><span>Ensure the accuracy and integrity of treasury data and reporting.</span></p></li></ul><div><p><span></span></p></div><div><p dir=\"ltr\"><span>Stakeholder Collaboration:</span></p></div><ul dir=\"ltr\"><li><p dir=\"ltr\"><span>Collaborate with Accounting and Finance on treasury reporting, reconciliations, and cash flow forecasting.</span></p></li><li><p dir=\"ltr\"><span>Support business stakeholders with treasury-related queries and reporting requirements.</span></p></li><li><p dir=\"ltr\"><span>Provide treasury insights and analysis to support management decision-making.</span></p></li></ul><div><p></p></div><p dir=\"ltr\"><strong>What you’ll need to succeed</strong>&nbsp;&nbsp;</p><ul dir=\"ltr\"><li><p dir=\"ltr\"><span>You hold a Bachelor’s degree in Finance, Accounting, Economics, or related field Experience.<br>You possess 3 to 5 years of experience in Corporate Treasury, Cash Management, Banking or Financial Planning.</span></p></li><li><p dir=\"ltr\"><span>You preferably have experience with SAP S/4HANA Treasury and Cash Management.</span></p></li><li><p dir=\"ltr\"><span>You preferably have experience with Treasury Management System.</span></p></li><li><p dir=\"ltr\"><span>You have a knowledge of Power BI or other reporting tools.</span></p></li></ul><div><p dir=\"ltr\"><span></span></p></div><p dir=\"ltr\"><span>You have a solid understanding of cash management, liquidity forecasting, banking products, credit facilities, and treasury processes.</span></p><p dir=\"ltr\"><span>You are an effective communicator.</span></p><div><p></p></div><div><p><span></span></p></div><p dir=\"ltr\"><strong>What we can offer you</strong>&nbsp;&nbsp;</p><p dir=\"ltr\">With us,&nbsp;you will turn your aspirations into reality.&nbsp; We will help shape your journey through enriching experiences, learning and development opportunities and exposure to different assignments within your role or through internal mobility. Our Group offers diverse career paths for those who are extraordinary, every day.&nbsp;&nbsp;</p><p dir=\"ltr\">We recognise the value that you bring, and we strive to provide a competitive benefits package which includes health care, child education contribution, remote and flexible working policies as well as exclusive employee&nbsp;discounts.&nbsp;&nbsp;</p><p dir=\"ltr\"><strong>Using GenAI in Your Application Process</strong></p><p dir=\"ltr\"><span>To support a fair and consistent experience for all candidates, we ask that assessments and interviews are completed independently and without assistance from generative AI tools. This ensures we understand your strengths, your thinking, and how you approach real situations.</span></p><p dir=\"ltr\"><strong>We Invite All Applicants to Apply</strong></p><p dir=\"ltr\">It Takes Diversity Of Thought, Culture, Background, Differing Abilities and Perspectives to truly Inspire, Exhilarate and Delight our customers. At Chalhoub Group, we are committed to inclusion and diversity.</p><p dir=\"ltr\">We welcome all applicants to apply and be part of our exciting future. We ensure equal opportunity for all our applicants without regard to gender, age, race, religion, national origin or disability status.</p>",
-   "responsibilities": [],
-   "requirements": [],
-   "skills": [
-    "FP&A",
-    "Consolidation",
-    "Forecasting",
-    "Power BI",
-    "SAP",
-    "Excel"
-   ],
-   "nationality_requirement": null,
-   "work_authorization_requirement": null,
-   "emiratisation_requirement": false,
-   "saudization_requirement": false,
-   "candidate_fit_score": 51,
-   "employer_score": 88,
-   "career_upside_score": 50,
-   "opportunity_score": 60,
-   "score_breakdown": {
-    "seniority": 4,
-    "functional": 12,
-    "industry": 15,
-    "geographic": 10,
-    "scope": 0,
-    "leadership": 2,
-    "qualification": 2,
-    "upside": 6
-   },
-   "tier": "C",
-   "application_priority": "SKIP",
-   "why_fit": [
-    "Chalhoub Group is peer retail to his current employer — the 60+ store, multi-brand lifestyle retail P&L he already owns transfers without a sector learning curve.",
-    "IFRS/MPERS group consolidation is day-to-day for him, including IFRS 16 across 60+ retail leases.",
-    "Systems fit — he led the D365 ERP implementation that cut the close cycle 40%, and builds the Power BI reporting on top of it.",
-    "Core FP&A remit — he runs budgeting, forecasting and variance analysis on an MYR 400M+ P&L as FP&A Manager at Lifestyle Retail Malaysia (Landmark Group) since May 2023."
-   ],
-   "watch_out": [
-    "Posted 2026-07-13 — this req is stale and may already be filled.",
-    "SAP is named and his ERP depth is D365, not SAP — expect to address that gap directly."
-   ],
-   "resume_match": null,
-   "duplicate_group": "5de662af64c4ad7f37eca5c05827d5e39604dbf6",
-   "is_excluded": true,
-   "exclusion_reason": "treasury-only role"
-  },
-  {
    "id": "50a906d29d11d074b357eb464028d5ba872104f0",
    "company": "Al-Futtaim",
    "company_group": "Al-Futtaim",
@@ -6652,8 +6623,8 @@
    "employment_type": null,
    "posted_date": "2026-09-18",
    "closing_date": "2026-10-18",
-   "scraped_at": "2026-09-21T10:22:51Z",
-   "last_verified_at": "2026-09-21T10:22:51Z",
+   "scraped_at": "2026-09-22T05:53:21Z",
+   "last_verified_at": "2026-09-22T05:53:21Z",
    "status": "NEW",
    "source": "Al-Futtaim",
    "sources": [
@@ -6743,8 +6714,8 @@
    "employment_type": null,
    "posted_date": "2026-09-02",
    "closing_date": "2026-09-30",
-   "scraped_at": "2026-09-21T10:22:51Z",
-   "last_verified_at": "2026-09-21T10:22:51Z",
+   "scraped_at": "2026-09-22T05:53:21Z",
+   "last_verified_at": "2026-09-22T05:53:21Z",
    "status": "ACTIVE",
    "source": "Al-Futtaim",
    "sources": [
@@ -6835,8 +6806,8 @@
    "employment_type": null,
    "posted_date": "2026-07-14",
    "closing_date": "2026-09-30",
-   "scraped_at": "2026-09-21T10:22:51Z",
-   "last_verified_at": "2026-09-21T10:22:51Z",
+   "scraped_at": "2026-09-22T05:53:21Z",
+   "last_verified_at": "2026-09-22T05:53:21Z",
    "status": "STALE",
    "source": "Apparel Group",
    "sources": [
@@ -6920,8 +6891,8 @@
    "employment_type": null,
    "posted_date": "2026-09-16",
    "closing_date": "2026-10-01",
-   "scraped_at": "2026-09-21T10:22:51Z",
-   "last_verified_at": "2026-09-21T10:22:51Z",
+   "scraped_at": "2026-09-22T05:53:21Z",
+   "last_verified_at": "2026-09-22T05:53:21Z",
    "status": "NEW",
    "source": "Al-Futtaim",
    "sources": [
@@ -7010,11 +6981,11 @@
    "region": "GCC",
    "department": null,
    "employment_type": null,
-   "posted_date": "2026-08-24",
+   "posted_date": "2026-09-22",
    "closing_date": "2026-10-30",
-   "scraped_at": "2026-09-21T10:22:51Z",
-   "last_verified_at": "2026-09-21T10:22:51Z",
-   "status": "AGING",
+   "scraped_at": "2026-09-22T05:53:21Z",
+   "last_verified_at": "2026-09-22T05:53:21Z",
+   "status": "NEW",
    "source": "Al-Futtaim",
    "sources": [
     "Al-Futtaim"
@@ -7083,8 +7054,8 @@
     "UAE is one of his two target markets, and he is already GCC-adjacent inside a Dubai-headquartered group."
    ],
    "watch_out": [
-    "Posted 2026-08-24 — this req is aging and may already be filled.",
-    "SAP is named and his ERP depth is D365, not SAP — expect to address that gap directly."
+    "SAP is named and his ERP depth is D365, not SAP — expect to address that gap directly.",
+    "Sector is outside retail and real estate, so the industry half of his track record does not carry over."
    ],
    "resume_match": null,
    "duplicate_group": "1ea28082c136707247c3d254b238358f047b11e8",
@@ -7104,8 +7075,8 @@
    "employment_type": null,
    "posted_date": "2026-09-11",
    "closing_date": "2026-12-31",
-   "scraped_at": "2026-09-21T10:22:51Z",
-   "last_verified_at": "2026-09-21T10:22:51Z",
+   "scraped_at": "2026-09-22T05:53:21Z",
+   "last_verified_at": "2026-09-22T05:53:21Z",
    "status": "ACTIVE",
    "source": "Al-Futtaim",
    "sources": [
@@ -7194,8 +7165,8 @@
    "employment_type": "Full-Time",
    "posted_date": "2026-07-22",
    "closing_date": null,
-   "scraped_at": "2026-09-21T10:22:51Z",
-   "last_verified_at": "2026-09-21T10:22:51Z",
+   "scraped_at": "2026-09-22T05:53:21Z",
+   "last_verified_at": "2026-09-22T05:53:21Z",
    "status": "STALE",
    "source": "Chalhoub Group",
    "sources": [
@@ -7252,6 +7223,94 @@
    "exclusion_reason": "intern / graduate programme"
   },
   {
+   "id": "ea6a99d46f367e308a15c2c37c1dbc188f7f7802",
+   "company": "Al-Futtaim",
+   "company_group": "Al-Futtaim",
+   "title": "Technician - Commercial Vehicle (Trucks) | Al-Futtaim Automotive | FAMCO | UAE",
+   "normalized_title": "technician commercial vehicle trucks al futtaim automotive famco uae",
+   "location": null,
+   "country": "UAE",
+   "region": "GCC",
+   "department": null,
+   "employment_type": null,
+   "posted_date": "2026-09-21",
+   "closing_date": "2026-10-21",
+   "scraped_at": "2026-09-22T05:53:21Z",
+   "last_verified_at": "2026-09-22T05:53:21Z",
+   "status": "NEW",
+   "source": "Al-Futtaim",
+   "sources": [
+    "Al-Futtaim"
+   ],
+   "source_url": "https://www.afuturewithus.com/job/Technician-Commercial-Vehicle-%28Trucks%29-Al-Futtaim-Automotive-FAMCO-UAE/1439527533/",
+   "application_url": "https://www.afuturewithus.com/talentcommunity/apply/1439527533/?locale=en_GB",
+   "is_direct_apply": true,
+   "application_url_verified": true,
+   "source_confidence": "high",
+   "salary_min": null,
+   "salary_max": null,
+   "salary_currency": null,
+   "experience_min": 4,
+   "experience_max": 5,
+   "description": "Job Requisition ID: 181497 \n\n About Al-Futtaim \n\nEstablished in the 1930s, Al-Futtaim is one of the most diversified and progressive privately held regional businesses, headquartered in Dubai. Operating across more than 20 countries, the Group spans automotive, financial services, real estate, retail and health. With more than 40,000 employees, Al-Futtaim represents over 200 of the world’s most recognised brands, including Toyota, Lexus, IKEA, ACE and Marks & Spencer. Driven by its purpose to enrich lives and elevate communities, Al-Futtaim focuses on digital innovation, AI, sustainable growth and strategic partnerships, creating long-term value for customers, communities and partners while building a responsible legacy for future generations.\n\n Overview of the Role \n\nOur truck customers run their businesses on vehicle uptime, and many are on service contracts where delays carry penalties. As a Technician in our Truck Division, you'll service and repair heavy commercial vehicles in the workshop and in the field, fixing problems right the first time. We offer 24/7 service support, so you'll also respond to emergency breakdowns when customers need us. You'll do well here if you keep your technical knowledge current and take ownership of the quality of every job.\n\n What you will do: \n\n Carry out vehicle servicing and the checks needed for trouble-free operation\n\r\n Replace wear components such as brake pads, air bellows, belts and pulleys\n\r\n Identify potential problems early while working on jobs in the workshop and on site\n\r\n Follow best practice and service manual procedures to improve productivity and efficiency\n\r\n Read, understand and apply workshop manual instructions, using service checklists where available\n\r\n Explain the work completed clearly to your Foreman and Service Advisor\n\r\n Support customers with round-the-clock service and emergency breakdown response\n\n Required Skills to be successful \n\n At least 4–5 years' experience on heavy commercial vehicles\n\r\n Proven ability to independently service, repair and overhaul components\n\r\n Ability to follow and apply technical instructions from workshop manuals\n\r\n Good communication in English\n\n About the Team \n\n You'll report to the Foreman and work closely with Service Advisors and fellow technicians in the Truck Division.\n\n What qualifies you for the role \n\n Trade certificate or diploma in mechanical or automotive engineering, or a completed apprenticeship\n\r\n 4–5 years' hands-on experience with heavy commercial vehicles\n\r\n UAE driving licence is an advantage\n\r\n Arabic is an advantage\n\r\n Willingness to support emergency and out-of-hours breakdowns\n\n About Al-Futtaim \n\n Al-Futtaim Automotive is one of the region's leading mobility businesses, operating across eight countries in the Middle East, Asia and North Africa.\n\r\n With a portfolio of more than 25 world-leading brands, we deliver one of the region's most comprehensive mobility ecosystems.\n\r\n Our capabilities span passenger vehicles, commercial vehicles and industrial equipment, backed by integrated logistics, leasing, aftersales and financial services that deliver a seamless customer experience across every stage of the mobility journey.\n\r\n Our vision is to become a world-class mobility player, creating better experiences for our customers through innovation, digital transformation and a relentless focus on customer experience. We work alongside some of the world's most trusted automotive brands to shape the future of mobility, delivering solutions that meet the evolving needs of individuals, businesses and communities.\n\r\n Behind everything we do is a team of more than 9,000 colleagues united by ambition, collaboration and a shared commitment to progress. Together, we're shaping the future of mobility, embracing new technologies and creating better experiences for our customers. At Al-Futtaim Automotive, you'll be empowered to turn ambition into action and help move our customers, our business and your career forward.\n\n Apply now » \n\n Find similar jobs: \n\n Health, Safety & Environment Jobs, \n Audit, Risk & Compliance Jobs \n\n HOME PAGE \n\n PRIVACY \n\n CORPORATE WEBSITE \n\n CONTACT US \n\n Opens in a new tab. \n\n Opens in a new tab. \n\n Opens in a new tab. \n\n Opens in a new tab. \n\n © Copyright 2026 | afuturewithus.com\n\n // \n\n // \n\n // \n\n const jobAlertSpans = document.querySelectorAll(\"[data-testid=jobAlertSpanText]\");\n jobAlertSpans?.forEach((jobEl) => {\n jobEl.textContent = window?.jsStr?.tcjobresultscreatejobalertsdetailstext || \"\";\n });\n\n // \n\n // \n\n // \n\n //",
+   "responsibilities": [
+    "Carry out vehicle servicing and the checks needed for trouble-free operation",
+    "Replace wear components such as brake pads, air bellows, belts and pulleys",
+    "Identify potential problems early while working on jobs in the workshop and on site",
+    "Follow best practice and service manual procedures to improve productivity and efficiency",
+    "Read, understand and apply workshop manual instructions, using service checklists where available",
+    "Explain the work completed clearly to your Foreman and Service Advisor",
+    "Support customers with round-the-clock service and emergency breakdown response",
+    "At least 4–5 years' experience on heavy commercial vehicles",
+    "Proven ability to independently service, repair and overhaul components",
+    "Ability to follow and apply technical instructions from workshop manuals",
+    "Good communication in English",
+    "You'll report to the Foreman and work closely with Service Advisors and fellow technicians in the Truck Division",
+    "Trade certificate or diploma in mechanical or automotive engineering, or a completed apprenticeship",
+    "4–5 years' hands-on experience with heavy commercial vehicles",
+    "UAE driving licence is an advantage",
+    "Arabic is an advantage",
+    "Willingness to support emergency and out-of-hours breakdowns",
+    "HOME PAGE",
+    "CORPORATE WEBSITE",
+    "CONTACT US"
+   ],
+   "requirements": [],
+   "skills": [],
+   "nationality_requirement": null,
+   "work_authorization_requirement": null,
+   "emiratisation_requirement": false,
+   "saudization_requirement": false,
+   "candidate_fit_score": 41,
+   "employer_score": 88,
+   "career_upside_score": 50,
+   "opportunity_score": 54,
+   "score_breakdown": {
+    "seniority": 7,
+    "functional": 0,
+    "industry": 15,
+    "geographic": 10,
+    "scope": 3,
+    "leadership": 0,
+    "qualification": 0,
+    "upside": 6
+   },
+   "tier": "C",
+   "application_priority": "SKIP",
+   "why_fit": [
+    "Multi-country / multi-entity scope maps directly onto his Malaysia + Indonesia P&L ownership across 60+ Max Fashion and Babyshop stores.",
+    "Al-Futtaim is peer retail to his current employer — the 60+ store, multi-brand lifestyle retail P&L he already owns transfers without a sector learning curve.",
+    "UAE is one of his two target markets, and he is already GCC-adjacent inside a Dubai-headquartered group."
+   ],
+   "watch_out": [
+    "Nothing disqualifying surfaced in the posted text, which itself means the description is thin — probe scope and reporting line."
+   ],
+   "resume_match": null,
+   "duplicate_group": "a5529748850a68e2b652f846f19cfa6e7389bda8",
+   "is_excluded": true,
+   "exclusion_reason": "not a finance role"
+  },
+  {
    "id": "deec7821d3afb3875329db6480a273ee677288e3",
    "company": "Al-Futtaim",
    "company_group": "Al-Futtaim",
@@ -7264,8 +7323,8 @@
    "employment_type": null,
    "posted_date": "2026-09-16",
    "closing_date": "2026-10-31",
-   "scraped_at": "2026-09-21T10:22:51Z",
-   "last_verified_at": "2026-09-21T10:22:51Z",
+   "scraped_at": "2026-09-22T05:53:21Z",
+   "last_verified_at": "2026-09-22T05:53:21Z",
    "status": "NEW",
    "source": "Al-Futtaim",
    "sources": [
@@ -7354,9 +7413,9 @@
    "employment_type": null,
    "posted_date": "2026-08-31",
    "closing_date": "2026-09-30",
-   "scraped_at": "2026-09-21T10:22:51Z",
-   "last_verified_at": "2026-09-21T10:22:51Z",
-   "status": "ACTIVE",
+   "scraped_at": "2026-09-22T05:53:21Z",
+   "last_verified_at": "2026-09-22T05:53:21Z",
+   "status": "AGING",
    "source": "Al-Futtaim",
    "sources": [
     "Al-Futtaim"
@@ -7424,7 +7483,7 @@
     "UAE is one of his two target markets, and he is already GCC-adjacent inside a Dubai-headquartered group."
    ],
    "watch_out": [
-    "Nothing disqualifying surfaced in the posted text, which itself means the description is thin — probe scope and reporting line."
+    "Posted 2026-08-31 — this req is aging and may already be filled."
    ],
    "resume_match": null,
    "duplicate_group": "0748dccd6c77680e3fea6b320bd21a130e64b981",
@@ -7444,8 +7503,8 @@
    "employment_type": null,
    "posted_date": "2026-09-11",
    "closing_date": "2026-09-30",
-   "scraped_at": "2026-09-21T10:22:51Z",
-   "last_verified_at": "2026-09-21T10:22:51Z",
+   "scraped_at": "2026-09-22T05:53:21Z",
+   "last_verified_at": "2026-09-22T05:53:21Z",
    "status": "ACTIVE",
    "source": "Al-Futtaim",
    "sources": [
@@ -7536,8 +7595,8 @@
    "employment_type": null,
    "posted_date": "2026-09-02",
    "closing_date": "2026-09-30",
-   "scraped_at": "2026-09-21T10:22:51Z",
-   "last_verified_at": "2026-09-21T10:22:51Z",
+   "scraped_at": "2026-09-22T05:53:21Z",
+   "last_verified_at": "2026-09-22T05:53:21Z",
    "status": "ACTIVE",
    "source": "Al-Futtaim",
    "sources": [
@@ -7626,8 +7685,8 @@
    "employment_type": null,
    "posted_date": "2026-08-17",
    "closing_date": null,
-   "scraped_at": "2026-09-21T10:22:51Z",
-   "last_verified_at": "2026-09-21T10:22:51Z",
+   "scraped_at": "2026-09-22T05:53:21Z",
+   "last_verified_at": "2026-09-22T05:53:21Z",
    "status": "AGING",
    "source": "Al Tayer",
    "sources": [
@@ -7711,8 +7770,8 @@
    "employment_type": null,
    "posted_date": "2026-09-08",
    "closing_date": "2026-10-31",
-   "scraped_at": "2026-09-21T10:22:51Z",
-   "last_verified_at": "2026-09-21T10:22:51Z",
+   "scraped_at": "2026-09-22T05:53:21Z",
+   "last_verified_at": "2026-09-22T05:53:21Z",
    "status": "ACTIVE",
    "source": "Apparel Group",
    "sources": [
@@ -7790,8 +7849,8 @@
    "employment_type": "Full-time",
    "posted_date": "2026-08-26",
    "closing_date": null,
-   "scraped_at": "2026-09-21T10:22:51Z",
-   "last_verified_at": "2026-09-21T10:22:51Z",
+   "scraped_at": "2026-09-22T05:53:21Z",
+   "last_verified_at": "2026-09-22T05:53:21Z",
    "status": "AGING",
    "source": "Etihad Airways",
    "sources": [
