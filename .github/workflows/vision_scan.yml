@@ -1,0 +1,76 @@
+# VISION SIGNALS — the two rules vision.askakshay.com publishes.
+#
+# Bottom reversal (daily) and the 4-hour breakout, over the stock screen's
+# ~1,000 names. The rules are scanner.vision_bottom_reversal and
+# scanner.vision_4h_breakout; vision_scan.py fetches, files and grades, and
+# writes feeds/vision_signals.json, which the signal repo's sync-data.yml
+# mirrors.
+#
+# AT THE 4-HOUR CLOSES, like research.yml. An NSE session makes two 4H candles,
+# 09:15–13:15 and 13:15–15:30 IST, and the rule only reads COMPLETED ones.
+# 07:58 UTC is 13:28 IST and 10:15 UTC is 15:45 IST — past each candle's close
+# plus the ten-minute settle the rule itself waits for. The second run is also
+# the first at which today's DAILY bar counts as a close (15:40 IST), so the
+# bottom rule reads today there and yesterday at 13:28.
+#
+# SILENT. Nothing here sends a message. These are new, untested rules; they
+# are not in the ledger and not on anybody's phone.
+#
+# feeds/, NOT docs/: a docs/ commit deploys the newspaper on Vercel, and that
+# is what filled the 10 GB. This file changes twice a trading day.
+name: vision-scan
+on:
+  schedule:
+    - cron: "58 7 * * 1-5"
+    - cron: "15 10 * * 1-5"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+# One harvest at a time against Yahoo, and one writer of the feed. Queued, not
+# cancelled: an interrupted run leaves the feed as it was.
+concurrency:
+  group: vision-scan
+  cancel-in-progress: false
+
+# PLACEHOLDERS, NOT SECRETS. Importing scanner imports config.py, which raises
+# on a missing variable. Nothing in this workflow sends or authenticates.
+env:
+  TELEGRAM_TOKEN: placeholder-not-a-secret
+  TELEGRAM_CHAT_ID: placeholder-not-a-secret
+  GROQ_API_KEY: placeholder-not-a-secret
+
+jobs:
+  scan:
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: "3.11" }
+      - run: pip install numpy pandas ta requests "yfinance>=0.2.40"
+
+      # The rules' own tests first: a scan that files levels from a broken rule
+      # is worse than no scan.
+      - name: Test the rules
+        run: python3 test_vision_signals.py
+
+      - name: Scan the screen universe
+        run: python3 vision_scan.py
+
+      - name: Commit the feed
+        run: |
+          git config user.name  "vision-scan"
+          git config user.email "actions@github.com"
+          git add feeds/vision_signals.json
+          git diff --staged --quiet && exit 0
+          git commit -m "chore: vision signals $(date -u +%F\ %H:%M) [skip ci]"
+          # Other jobs push to main on their own clocks; rebase onto them
+          # rather than failing the run over a race nobody can see.
+          for i in 1 2 3 4; do
+            git push && exit 0
+            git pull --rebase origin main || exit 1
+            sleep $((i * 3))
+          done
+          exit 1

@@ -339,6 +339,30 @@ signals**. `research.yml` runs twice a day at the 4-hour closes.
   workflow must harvest before it scans, and no scan may phrase its own
   coverage.
 
+## Vision signals (`vision_scan.py` → vision.askakshay.com)
+Two rules the operator specified, over the stock screen's ~1,000 names. Rules
+in `scanner.py` (VISION SIGNALS section); `vision_scan.py` fetches, files,
+grades and writes **`feeds/vision_signals.json`** — outside `docs/`, so the
+twice-a-day commit does not deploy the newspaper. `vision_scan.yml` runs at
+13:28 and 15:45 IST on weekdays; the signal repo's `sync-data.yml` mirrors it.
+
+- **Bottom reversal** (daily): close ≥15% above the 52-week low, below the
+  200-day, above the 50-day, weekly RSI(14) > 48; 20-day turnover ≥ ₹5 cr.
+- **4H breakout**: a COMPLETED NSE 4H candle closes above the prior 20
+  candles' high while the candle before had not broken ITS prior high (the
+  first version compared it with a level that included its own high, so the
+  freshness test passed everything); solid bullish body ≥60% of range, close
+  in the top quarter, range ≥1× ATR, volume ≥1.5× average.
+- Levels come from `_tight_sl` / `_structure_targets` / `enforce_r_floor` —
+  the book's functions, not a third formula.
+- A bar the session can still change is never evaluated (daily before 15:40
+  IST; a 4H candle until 10 minutes after it closes).
+- Filed once, levels frozen; the same bar is never filed twice. Graded on
+  later bars; a bar touching both stop and target books the STOP and is
+  flagged `ambiguous`.
+- Not in the ledger, not on Telegram, no win rate until 30 have closed.
+- `python3 test_vision_signals.py` — 41 checks, offline.
+
 ## Page structure
 `SECTION_MAP` order IS document order, and the nav is generated from it.
 `python3 test_page_structure.py` fails the build if the two drift, and requires
