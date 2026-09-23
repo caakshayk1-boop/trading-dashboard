@@ -1940,7 +1940,24 @@ def run_basebreak_scan(time_str):
         ) for r in rows])
         logged = [i for i in (ids or []) if i]
         logging.info("basebreak/%s: %d found, %d logged", engine, len(rows), len(logged))
-        published += rows
+        # ── WHAT WAS FILED, NOT WHAT WAS FOUND ──────────────────────────────
+        #
+        # This appended every row the scan found, whether or not the write
+        # succeeded — and len(published) is what reaches `counts`, which is
+        # three things at once: data/scan_meta.json on the site, the "_New:_"
+        # list in the Telegram completion summary, and job_runs' `records`,
+        # which data_health reads as the attempt's coverage.
+        #
+        # Measured on 2026-09-22: 4 found — ledge=1, keel=3 — and the trend
+        # gate dropped all three KEEL rows inside the batch write, so ONE row
+        # was filed. The phone was sent "BASEBREAK: 4" and the site recorded 4.
+        # A count that reports what an engine looked at, under a heading
+        # saying what it produced, is the same fault as a denominator nobody
+        # re-checks.
+        #
+        # log_batch_to_all_signals returns ids in input order with a falsy
+        # entry for every row it refused, so the two zip cleanly.
+        published += [r for r, i in zip(rows, ids or []) if i]
 
         if engine != "ledge":
             # RESEARCH. Logged above, and that is where it stops.
