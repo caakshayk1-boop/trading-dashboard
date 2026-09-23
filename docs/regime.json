@@ -1,14 +1,14 @@
 {
   "ok": true,
-  "generated_at": "2026-09-22T17:47:05+00:00",
+  "generated_at": "2026-09-23T17:59:36+00:00",
   "today": {
     "regime": "calm_range",
-    "close": 23329.0,
-    "vol_ann_pct": 7.3,
+    "close": 23446.8,
+    "vol_ann_pct": 7.4,
     "vol_pctile": 9.1,
-    "drawdown_pct": 11.39,
+    "drawdown_pct": 10.95,
     "above_200dma": false,
-    "date": "2026-09-22",
+    "date": "2026-09-23",
     "t": "Calm and going nowhere",
     "d": "Quiet, but with no trend to follow. Breakouts fail most often here, because there is nothing behind them."
   },
@@ -22,7 +22,7 @@
   },
   "breadth": {
     "above_200dma_pct": 0,
-    "counted": 983,
+    "counted": 981,
     "note": "Shown for context. Not an input to the label above, because pulse.json keeps no history and a regime that cannot be backfilled cannot be measured."
   },
   "regimes": {
@@ -102,7 +102,7 @@
     "unlabelled_trades": 0,
     "excluded_non_nse": 0,
     "excluded_retired": 151,
-    "excluded_not_published": 441,
+    "excluded_not_published": 442,
     "excluded_short": 0,
     "excluded_pre_launch": 141,
     "launch": "2026-09-02",
@@ -2132,7 +2132,7 @@
       "regime": "calm_range"
     },
     {
-      "date": "2026-09-22",
+      "date": "2026-09-23",
       "regime": "calm_range"
     }
   ]
