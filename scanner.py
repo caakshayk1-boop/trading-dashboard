@@ -3813,3 +3813,219 @@ def scan_basebreak(universe=None):
                  len(found), len(universe),
                  ", ".join(f"{k}={n}" for k, n in sorted(by_engine.items())) or "none")
     return found
+
+
+# ══ VISION SIGNALS ═══════════════════════════════════════════════════════════
+#
+# Two rules the operator specified for vision.askakshay.com, over the same
+# ~1,000 names the stock screen covers. They live HERE because signal logic
+# lives in scanner.py; vision_scan.py only fetches bars, calls these, and
+# writes the feed.
+#
+# WHAT THESE ARE NOT. They are not filed to the ledger, not sent to Telegram and
+# not part of signal.askakshay.com's record — their output is a feed of its own
+# (feeds/vision_signals.json) with its own outcome tracking. Both rules are new
+# and untested against history: nothing about them has been measured yet, and
+# the feed says so rather than borrowing another engine's statistics.
+#
+# ONE LEVEL ARITHMETIC. Stops and targets come from the house functions every
+# other engine uses — _tight_sl (the WIDER of a structural and a 1.41×ATR stop,
+# capped at 6%), _structure_targets (1.6/2.5/3.3 ATR, snapped to nearby
+# resistance, kept apart) and enforce_r_floor (T1 ≥ 1.6R, T2 and T3 stepped
+# above it, the 4R ceiling). A third formula for these two would be how their
+# ladders drift from the rest of the book's.
+#
+# Rules as the operator gave them, and the gates added to make them tradeable
+# (each stated on the page):
+#
+#   BOTTOM REVERSAL (daily bars)
+#     close ≥ 15% above the 52-week low · close < 200-day SMA · close > 50-day
+#     SMA · weekly RSI(14) > 48.  Gate: 20-day turnover ≥ ₹5 cr.
+#
+#   4-HOUR BREAKOUT (hourly bars → NSE 4H candles, 09:15–13:15 and 13:15–15:30)
+#     the last COMPLETED 4H candle closes above the highest high of the prior
+#     20 candles (~10 sessions), and the candle before it did not — a fresh
+#     break on the close, not a name already extended. "Solid bullish": close >
+#     open, body ≥ 60% of the range, close in the top quarter of the range,
+#     range ≥ 1× the 4H ATR, volume ≥ 1.5× the prior 20 candles' average.
+#     Gate: turnover ≥ ₹5 cr a day.
+
+from datetime import datetime as _vdt, timedelta as _vtd, timezone as _vtz
+
+VISION_IST = _vtz(_vtd(hours=5, minutes=30))
+VISION_MIN_TURNOVER_CR = 5.0
+VISION_BRK_LOOKBACK = 20
+VISION_HORIZON = {"bottom": 30, "brk4h": 20}      # bars: 30 sessions / 20 4H candles (~10 sessions)
+
+
+def _vist(ts):
+    return _vdt.fromtimestamp(ts, VISION_IST)
+
+
+def _vision_complete_daily(rows, now=None):
+    """Drop today's daily bar while the session can still change it.
+
+    yfinance returns the day in progress as a bar. A rule evaluated on it is
+    evaluated on a price that has not closed — the fault _own_frame's NaN note
+    describes, one step earlier. Until 15:40 IST today's bar is not a close.
+    """
+    if not rows:
+        return rows
+    now = now or _vdt.now(VISION_IST)
+    last = _vist(rows[-1][0])
+    if last.date() == now.date() and (now.hour, now.minute) < (15, 40):
+        return rows[:-1]
+    return rows
+
+
+def _vision_complete_4h(candles, now=None):
+    """Drop the last 4H candle if its window has not closed (+10 min settle)."""
+    if not candles:
+        return candles
+    now = now or _vdt.now(VISION_IST)
+    d = _vist(candles[-1][0])
+    first = d.hour < 13 or (d.hour == 13 and d.minute < 15)
+    end = d.replace(hour=13, minute=15, second=0, microsecond=0) if first \
+        else d.replace(hour=15, minute=30, second=0, microsecond=0)
+    return candles[:-1] if now < end + _vtd(minutes=10) else candles
+
+
+def _vision_weekly_closes(rows):
+    """Last close of each ISO week, ascending. The current week is week-to-date,
+    which is how a weekly RSI reads on any charting platform mid-week."""
+    wk = {}
+    for ts, _o, _h, _l, c, _v in rows:
+        k = _vist(ts).date().isocalendar()[:2]
+        wk[k] = c
+    return [wk[k] for k in sorted(wk)]
+
+
+def _vfinite(*xs):
+    return all(x is not None and x == x and abs(x) != float("inf") for x in xs)
+
+
+def vision_levels(entry, low_s, high_s, atr_v):
+    """Stop and three targets from the house functions. None if risk is not positive."""
+    if not _vfinite(entry, atr_v) or atr_v <= 0:
+        return None
+    sl = _tight_sl(entry, low_s, atr_v)
+    t1, t2, t3 = _structure_targets(entry, atr_v, high_s)
+    t1, t2, t3 = enforce_r_floor(entry, sl, t1, t2, t3, action="BUY", engine=None)
+    risk = entry - sl
+    if not (risk > 0):
+        return None
+    return {"entry": round(entry, 2), "sl": round(sl, 2), "t1": t1, "t2": t2, "t3": t3,
+            "risk_pct": round(risk / entry * 100, 2),
+            "rr": [round((t - entry) / risk, 2) for t in (t1, t2, t3)],
+            "atr": round(atr_v, 2)}
+
+
+def vision_bottom_reversal(rows, now=None):
+    """The operator's bottom-reversal rule on completed daily bars. Returns a
+    signal dict, or None — including when any input is unmeasured."""
+    rows = _vision_complete_daily(rows, now)
+    if len(rows) < 210:
+        return None
+    df = pd.DataFrame(rows, columns=["t", "o", "h", "l", "c", "v"])
+    c, h, l, v = df["c"], df["h"], df["l"], df["v"]
+    close = float(c.iloc[-1])
+    low52, high52 = float(l.iloc[-252:].min()), float(h.iloc[-252:].max())
+    sma50 = float(c.rolling(50).mean().iloc[-1])
+    sma200 = float(c.rolling(200).mean().iloc[-1])
+    wk = _vision_weekly_closes(rows)
+    if len(wk) < 20:
+        return None
+    wrsi = float(rsi(pd.Series(wk, dtype=float), 14).iloc[-1])
+    turnover = float((c * v).iloc[-20:].mean() / 1e7)
+    if not _vfinite(close, low52, sma50, sma200, wrsi, turnover) or low52 <= 0:
+        return None
+    up = (close / low52 - 1) * 100
+    if not (up >= 15 and close < sma200 and close > sma50 and wrsi > 48):
+        return None
+    if turnover < VISION_MIN_TURNOVER_CR:
+        return None
+    atr_v = float(atr(h, l, c).iloc[-1])
+    lv = vision_levels(close, l, h, atr_v)
+    if not lv:
+        return None
+    return {"engine": "bottom", "fired_at": _vist(rows[-1][0]).date().isoformat(),
+            **lv,
+            "why": [f"{up:.1f}% above the 52-week low of ₹{low52:,.2f}",
+                    f"Above the 50-day (₹{sma50:,.2f}) by {(close / sma50 - 1) * 100:.1f}%",
+                    f"Below the 200-day (₹{sma200:,.2f}) by {(1 - close / sma200) * 100:.1f}%",
+                    f"Weekly RSI {wrsi:.1f} (rule: above 48)"],
+            "ctx": {"low52": round(low52, 2), "high52": round(high52, 2), "sma50": round(sma50, 2),
+                    "sma200": round(sma200, 2), "wrsi": round(wrsi, 1), "up_from_low": round(up, 1),
+                    "turnover_cr": round(turnover, 1)}}
+
+
+def vision_4h_breakout(hourly_rows, now=None, lookback=VISION_BRK_LOOKBACK):
+    """The operator's 4-hour breakout on a solid bullish candle close. Returns a
+    signal dict, or None."""
+    from signals.buoy import to_4h
+    cs = _vision_complete_4h(to_4h(hourly_rows), now)
+    if len(cs) < lookback + 16:                  # 20 for the level, 1 before it, ATR warm-up
+        return None
+    df = pd.DataFrame(cs, columns=["t", "o", "h", "l", "c", "v"])
+    o, h, l, c, v = (float(df[k].iloc[-1]) for k in ("o", "h", "l", "c", "v"))
+    prior = df.iloc[-(lookback + 1):-1]
+    level = float(prior["h"].max())
+    # "Fresh" is judged against the level AS IT STOOD for the previous candle —
+    # the 20 candles before IT. Against today's level, which includes that
+    # candle's own high, its close could never be above it and the test would
+    # pass every name that had already broken out yesterday.
+    prev_level = float(df["h"].iloc[-(lookback + 2):-2].max())
+    prev_close = float(df["c"].iloc[-2])
+    atr_s = atr(df["h"], df["l"], df["c"])
+    atr_prev = float(atr_s.iloc[-2])           # the candle is judged against the ATR BEFORE it
+    avg_v = float(prior["v"].mean())
+    rng, body = h - l, c - o
+    if not _vfinite(o, h, l, c, v, level, prev_level, prev_close, atr_prev, avg_v) or rng <= 0 or atr_prev <= 0:
+        return None
+    turnover = float((df["c"] * df["v"]).iloc[-20:].sum() / 1e7 / 10)   # 20 candles ≈ 10 sessions
+    ok = (c > level and prev_close <= prev_level and c > o and body / rng >= 0.60
+          and (c - l) / rng >= 0.75 and rng >= 1.0 * atr_prev
+          and avg_v > 0 and v >= 1.5 * avg_v and turnover >= VISION_MIN_TURNOVER_CR)
+    if not ok:
+        return None
+    lv = vision_levels(c, df["l"], df["h"], float(atr_s.iloc[-1]))
+    if not lv:
+        return None
+    t = _vist(cs[-1][0])
+    half = "09:15–13:15" if (t.hour < 13 or (t.hour == 13 and t.minute < 15)) else "13:15–15:30"
+    return {"engine": "brk4h", "fired_at": t.isoformat(timespec="minutes"), "candle": f"{t.date().isoformat()} {half} IST",
+            **lv,
+            "why": [f"4H close ₹{c:,.2f} above the prior {lookback}-candle high of ₹{level:,.2f} (+{(c / level - 1) * 100:.1f}%)",
+                    f"Previous 4H close ₹{prev_close:,.2f} had not broken its own prior high of ₹{prev_level:,.2f} — a fresh break",
+                    f"Body {body / rng * 100:.0f}% of the candle, closed in the top {(1 - (c - l) / rng) * 100:.0f}% of its range",
+                    f"Range {rng / atr_prev:.1f}× the 4H ATR · volume {v / avg_v:.1f}× the prior {lookback}-candle average"],
+            "ctx": {"level": round(level, 2), "body_pct": round(body / rng * 100, 1), "vol_x": round(v / avg_v, 2),
+                    "range_atr": round(rng / atr_prev, 2), "turnover_cr": round(turnover, 1)}}
+
+
+def vision_grade(sig, bars_after, horizon):
+    """Where a filed signal stands, from the bars AFTER it fired.
+
+    bars_after: [(ts, o, h, l, c, v), ...] strictly after the signal bar, same
+    timeframe as the rule. Conservative on ambiguity: a bar that touches the
+    stop AND a new target is booked as the stop, and flagged — the bar alone
+    cannot say which came first, and assuming the favourable order is how a
+    record flatters itself.
+    """
+    sl, ts_ = sig["sl"], [sig["t1"], sig["t2"], sig["t3"]]
+    best, n = 0, 0
+    for _ts, _o, hi, lo, cl, _v in bars_after:
+        n += 1
+        nxt = ts_[best] if best < 3 else None
+        if lo <= sl:
+            amb = nxt is not None and hi >= nxt
+            return {"status": "stopped_after_t%d" % best if best else "stopped", "targets_hit": best,
+                    "exit": sl, "bars": n, "ambiguous": amb}
+        while best < 3 and hi >= ts_[best]:
+            best += 1
+        if best == 3:
+            return {"status": "t3", "targets_hit": 3, "exit": ts_[2], "bars": n, "ambiguous": False}
+        if n >= horizon:
+            return {"status": "expired", "targets_hit": best, "exit": round(cl, 2), "bars": n, "ambiguous": False}
+    last = bars_after[-1][4] if bars_after else None
+    return {"status": "open", "targets_hit": best, "last": round(last, 2) if last else None, "bars": n, "ambiguous": False}
