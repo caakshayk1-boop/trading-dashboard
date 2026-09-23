@@ -58,7 +58,7 @@ RULES = {
     "brk4h": {
         "name": "4-hour breakout", "timeframe": "4H (09:15–13:15, 13:15–15:30 IST)",
         "rule": ["A completed 4H candle closes above the highest high of the prior 20 candles",
-                 "The candle before it did not — a fresh break on the close",
+                 "The candle before it had not closed above ITS prior 20-candle high — a fresh break, not a name already extended",
                  "Solid bullish candle: close above open, body ≥ 60% of the range, close in the top quarter",
                  "Range at least 1× the 4H ATR, volume at least 1.5× the prior 20 candles' average"],
         "gate": "Turnover at least ₹5 cr a day",
