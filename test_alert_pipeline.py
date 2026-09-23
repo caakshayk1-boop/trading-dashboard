@@ -14,7 +14,7 @@ Covers the failure that made the site show signals Telegram never sent
 Network is stubbed and the DB is a throwaway temp file — this sends nothing
 and touches no real data.
 """
-import os, re, sys, shutil, tempfile
+import os, re, sys, shutil, tempfile, inspect
 
 REPO = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, REPO)
@@ -1180,6 +1180,80 @@ check("cf_scan has explicit arms", sum(1 for a in _arms if a in _crons and
       "cf_scan is reachable from fewer than its two crons")
 
 _clear_open()
+
+# ── THE SCAN CLOCK WAS FIVE AND A HALF HOURS IN THE FUTURE ───────────────────
+#
+# log_scan_meta stores _now_ist() — datetime.now(_IST).isoformat(), which
+# already carries +05:30. get_last_scan() called .replace(tzinfo=utc) on it,
+# which does not convert: it DISCARDS the offset and relabels the same wall
+# clock as UTC, then astimezone(IST) adds 5:30 again.
+#
+# Measured on the 2026-09-22 eod scan: it started at 16:43 IST, logged
+# "Scan started: 22 Sep 2026 04:43 PM IST" correctly, and published
+# "22 Sep 2026 10:21 PM IST" to data/scan_meta.json. A freshness stamp that
+# always reads NEWER than the truth, on a site whose whole discipline is that
+# nothing may look more current than its data.
+from datetime import datetime as _dt, timezone as _tz, timedelta as _td
+_IST = _tz(_td(hours=5, minutes=30))
+
+def _fmt(iso):
+    """The shape get_last_scan() must have. Kept here so the test states
+    the contract rather than importing whatever the code happens to do."""
+    d = _dt.fromisoformat(iso)
+    if d.tzinfo is None:
+        d = d.replace(tzinfo=_IST)
+    return d.astimezone(_IST).strftime("%d %b %Y %I:%M %p IST")
+
+# The exact row today's scan wrote.
+stored = _dt(2026, 9, 22, 16, 51, 53, tzinfo=_IST).isoformat()
+check("an IST-stamped scan reads back at the hour it ran",
+      _fmt(stored).endswith("04:51 PM IST"), _fmt(stored))
+check("...not 5h30m later, which is what shipped",
+      not _fmt(stored).endswith("10:21 PM IST"))
+check("a naive row is read as IST — the only writer is called _now_ist",
+      _fmt("2026-09-22T16:51:53").endswith("04:51 PM IST"))
+check("a genuinely UTC-stamped row still converts",
+      _fmt("2026-09-22T11:21:53+00:00").endswith("04:51 PM IST"))
+
+# And the live function agrees with that contract.
+import inspect
+_src = inspect.getsource(tracker.get_last_scan)
+check("get_last_scan no longer relabels an offset-aware stamp as UTC",
+      "replace(tzinfo=timezone.utc)" not in _src)
+check("...and converts rather than assuming", "astimezone(_IST)" in _src)
+
+# ── A COUNT MUST REPORT WHAT WAS FILED, NOT WHAT WAS LOOKED AT ───────────────
+#
+# run_basebreak_scan appended every row the scan FOUND, whether or not the
+# write succeeded. len() of that list is three things at once: scan_meta.json
+# on the site, the "_New:_" list in the Telegram completion summary, and
+# job_runs' `records`, which data_health reads as the attempt's coverage.
+#
+# Measured on 2026-09-22: 4 found — ledge=1, keel=3 — and the trend gate
+# dropped all three KEEL rows inside the batch write, so ONE row was filed.
+# The phone was sent "BASEBREAK: 4".
+_src = inspect.getsource(standalone_scan.run_basebreak_scan)
+check("basebreak publishes the rows that were written, not the rows found",
+      "published += [r for r, i in zip(rows, ids or []) if i]" in _src)
+check("...and no longer appends the whole batch",
+      "published += rows\n" not in _src)
+
+# log_batch_to_all_signals promises ids in input order with a falsy entry
+# for every row it refused. The zip above is only correct because of that.
+_doc = (tracker.log_batch_to_all_signals.__doc__ or "")
+check("the batch writer still promises ids in input order",
+      "input order" in _doc, _doc.splitlines()[0] if _doc else "(no docstring)")
+_bsrc = inspect.getsource(tracker.log_batch_to_all_signals)
+check("...and still pads a refused row so the lists stay aligned",
+      "keeps ids aligned with the input list" in _bsrc)
+
+_rows = [{"symbol": "BANDHANBNK"}, {"symbol": "JAINREC"},
+         {"symbol": "SOBHA"}, {"symbol": "VMM"}]
+_today = [1114, None, None, None]        # ledge filed, three keel refused
+check("4 found and 1 filed counts as 1",
+      len([r for r, i in zip(_rows, _today) if i]) == 1)
+check("...and a clean batch of 4 still counts as 4",
+      len([r for r, i in zip(_rows, [1, 2, 3, 4]) if i]) == 4)
 
 shutil.rmtree(TMP, ignore_errors=True)
 print("\n" + ("ALL CHECKS PASSED" if not fails else f"{len(fails)} FAILED: {fails}"))

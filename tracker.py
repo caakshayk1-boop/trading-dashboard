@@ -2575,12 +2575,29 @@ def get_last_scan():
                 "SELECT ts, slot, data FROM scan_meta ORDER BY id DESC LIMIT 1"
             ).fetchone()
         if row:
-            import pytz
-            from datetime import timezone
-            ist = pytz.timezone("Asia/Kolkata")
-            utc_dt = datetime.fromisoformat(row[0]).replace(tzinfo=timezone.utc)
-            ist_dt = utc_dt.astimezone(ist)
-            return ist_dt.strftime("%d %b %Y %I:%M %p IST"), row[1], json.loads(row[2])
+            # ── IST WAS BEING ADDED TWICE ────────────────────────────────────
+            #
+            # log_scan_meta stores _now_ist(), which is
+            # datetime.now(_IST).isoformat() — an ISO string that ALREADY
+            # carries +05:30. This then called .replace(tzinfo=utc) on it,
+            # which does not convert: it DISCARDS the +05:30 and relabels the
+            # same wall clock as UTC. astimezone(IST) then added 5:30 again.
+            #
+            # Measured on the 2026-09-22 eod scan: the run started at 16:43
+            # IST, logged "Scan started: 22 Sep 2026 04:43 PM IST" correctly,
+            # and data/scan_meta.json published "22 Sep 2026 10:21 PM IST".
+            # Every "last scan" stamp the dashboard has ever shown is five and
+            # a half hours in the future — a freshness figure that always reads
+            # NEWER than the truth, on a site whose whole discipline is that a
+            # section may not look more current than its data.
+            #
+            # A naive row is treated as IST rather than UTC, because the only
+            # writer is a function called _now_ist.
+            dt = datetime.fromisoformat(row[0])
+            if dt.tzinfo is None:
+                dt = dt.replace(tzinfo=_IST)
+            return (dt.astimezone(_IST).strftime("%d %b %Y %I:%M %p IST"),
+                    row[1], json.loads(row[2]))
     except Exception:
         pass
     return None, None, {}
