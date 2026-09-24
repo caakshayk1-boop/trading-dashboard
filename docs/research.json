@@ -1,8 +1,8 @@
 {
  "ok": true,
- "generated_at": "2026-09-23T14:57:05+00:00",
+ "generated_at": "2026-09-24T12:57:04+00:00",
  "source": "harvested bars (offline run)",
- "coverage_note": "Harvested 500 of 500 names on hourly bars; 498 of 500 names on 3-year daily bars (0 returned nothing, 2 had too little history), at 2026-09-23T14:55:19+00:00.",
+ "coverage_note": "Harvested 500 of 500 names on hourly bars; 499 of 500 names on 3-year daily bars (0 returned nothing, 1 had too little history), at 2026-09-24T12:55:19+00:00.",
  "engines": [
   {
    "key": "buoy",
@@ -77,7 +77,7 @@
     "note": "more floor tests measured worse, not better; a 5R target is significantly negative"
    },
    "verdict": "No measured edge, but the smallest stop of the three (5.1% of entry, 1.92x ATR) and a 2.5R target genuinely reached a quarter of the time. Sits on zero with a wide interval: not an edge, not refuted.",
-   "scanned": 498,
+   "scanned": 499,
    "fired": 14,
    "top": [
     {
@@ -97,12 +97,12 @@
      "rsi": 33.4,
      "close_strength": 0.79,
      "turnover_cr": 30.98,
-     "bars_ago": 2,
+     "bars_ago": 3,
      "symbol": "NATCOPHARM",
      "lane": null,
      "at": "2026-09-21T00:00:00+00:00",
-     "last": 837.6,
-     "since_pct": 2.61
+     "last": 842.0,
+     "since_pct": 3.15
     },
     {
      "engine": "anchor",
@@ -121,12 +121,12 @@
      "rsi": 36.8,
      "close_strength": 0.83,
      "turnover_cr": 19.95,
-     "bars_ago": 7,
+     "bars_ago": 8,
      "symbol": "ABBOTINDIA",
      "lane": null,
      "at": "2026-09-11T00:00:00+00:00",
-     "last": 26935.0,
-     "since_pct": 5.42
+     "last": 26860.0,
+     "since_pct": 5.13
     },
     {
      "engine": "anchor",
@@ -145,12 +145,12 @@
      "rsi": 44.0,
      "close_strength": 0.97,
      "turnover_cr": 1928.4,
-     "bars_ago": 8,
+     "bars_ago": 9,
      "symbol": "HDFCBANK",
      "lane": null,
      "at": "2026-09-11T00:00:00+00:00",
-     "last": 737.25,
-     "since_pct": 4.09
+     "last": 728.9,
+     "since_pct": 2.92
     },
     {
      "engine": "anchor",
@@ -169,12 +169,12 @@
      "rsi": 36.5,
      "close_strength": 0.72,
      "turnover_cr": 66.22,
-     "bars_ago": 8,
+     "bars_ago": 9,
      "symbol": "ICICIPRULI",
      "lane": null,
      "at": "2026-09-11T00:00:00+00:00",
-     "last": 484.5,
-     "since_pct": 2.76
+     "last": 464.5,
+     "since_pct": -1.48
     },
     {
      "engine": "anchor",
@@ -193,12 +193,12 @@
      "rsi": 37.7,
      "close_strength": 0.83,
      "turnover_cr": 168.21,
-     "bars_ago": 5,
+     "bars_ago": 6,
      "symbol": "DMART",
      "lane": null,
      "at": "2026-09-16T00:00:00+00:00",
-     "last": 3834.8,
-     "since_pct": 3.09
+     "last": 3787.5,
+     "since_pct": 1.81
     },
     {
      "engine": "anchor",
@@ -217,12 +217,12 @@
      "rsi": 39.6,
      "close_strength": 0.71,
      "turnover_cr": 23.4,
-     "bars_ago": 5,
+     "bars_ago": 6,
      "symbol": "RAMCOCEM",
      "lane": null,
      "at": "2026-09-16T00:00:00+00:00",
-     "last": 885.05,
-     "since_pct": 2.54
+     "last": 872.1,
+     "since_pct": 1.04
     },
     {
      "engine": "anchor",
@@ -241,12 +241,12 @@
      "rsi": 33.4,
      "close_strength": 0.69,
      "turnover_cr": 53.29,
-     "bars_ago": 3,
+     "bars_ago": 4,
      "symbol": "MRF",
      "lane": null,
      "at": "2026-09-18T00:00:00+00:00",
-     "last": 124580.0,
-     "since_pct": -0.87
+     "last": 123985.0,
+     "since_pct": -1.34
     },
     {
      "engine": "anchor",
@@ -265,12 +265,12 @@
      "rsi": 38.3,
      "close_strength": 0.8,
      "turnover_cr": 248.49,
-     "bars_ago": 4,
+     "bars_ago": 5,
      "symbol": "JIOFIN",
      "lane": null,
      "at": "2026-09-17T00:00:00+00:00",
-     "last": 232.15,
-     "since_pct": 1.24
+     "last": 227.2,
+     "since_pct": -0.92
     },
     {
      "engine": "anchor",
@@ -289,12 +289,12 @@
      "rsi": 31.5,
      "close_strength": 0.63,
      "turnover_cr": 13.39,
-     "bars_ago": 3,
+     "bars_ago": 4,
      "symbol": "JKTYRE",
      "lane": null,
      "at": "2026-09-18T00:00:00+00:00",
-     "last": 355.35,
-     "since_pct": 1.72
+     "last": 347.2,
+     "since_pct": -0.62
     },
     {
      "engine": "anchor",
@@ -313,12 +313,12 @@
      "rsi": 43.2,
      "close_strength": 0.69,
      "turnover_cr": 111.09,
-     "bars_ago": 4,
+     "bars_ago": 5,
      "symbol": "TATACONSUM",
      "lane": null,
      "at": "2026-09-17T00:00:00+00:00",
-     "last": 994.3,
-     "since_pct": -1.91
+     "last": 986.3,
+     "since_pct": -2.7
     }
    ],
    "new_alerts": 0,
@@ -347,7 +347,7 @@
     "win": 44.1
    },
    "verdict": "REJECTED on measurement. All six configurations tried came out at or below zero, and the FIRST rung \u2014 1.6R \u2014 was reached by between 0% and 12.5% of trades. Published so the evidence is visible, not because it should be traded.",
-   "scanned": 498,
+   "scanned": 499,
    "fired": 0,
    "top": [],
    "new_alerts": 0,
