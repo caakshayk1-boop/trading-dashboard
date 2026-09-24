@@ -1,6 +1,6 @@
 {
   "ok": true,
-  "generated_at": "2026-09-23T17:59:02+00:00",
+  "generated_at": "2026-09-24T17:59:11+00:00",
   "weights": {
     "trend": 30,
     "breadth": 30,
@@ -9,7 +9,7 @@
     "highs": 10
   },
   "today": {
-    "score": 45,
+    "score": 44,
     "band": {
       "k": "mixed",
       "t": "Mixed",
@@ -19,9 +19,9 @@
       {
         "key": "trend",
         "label": "Where the index sits",
-        "score": 30.2,
+        "score": 21.0,
         "weight": 30,
-        "detail": "Nifty is 30% up its own 52-week range, 11.1% below the high"
+        "detail": "Nifty is 21% up its own 52-week range, 12.6% below the high"
       },
       {
         "key": "breadth",
@@ -33,23 +33,23 @@
       {
         "key": "participation",
         "label": "Advancing today",
-        "score": 43.5,
+        "score": 70.2,
         "weight": 15,
-        "detail": "427 of 981 advanced"
+        "detail": "689 of 981 advanced"
       },
       {
         "key": "volatility",
         "label": "Volatility",
-        "score": 85,
+        "score": 70,
         "weight": 15,
-        "detail": "India VIX at 10.35 \u2014 very calm"
+        "detail": "India VIX at 12.69 \u2014 normal"
       },
       {
         "key": "highs",
         "label": "Names at a 52-week high",
-        "score": 2.0,
+        "score": 0.0,
         "weight": 10,
-        "detail": "1 of 981 at a 52-week high"
+        "detail": "0 of 981 at a 52-week high"
       }
     ],
     "coverage": {
@@ -66,10 +66,10 @@
       "c": ""
     },
     "counted": 981,
-    "nifty": 23446.80078125,
-    "drawdown_pct": 11.1,
+    "nifty": 23063.099609375,
+    "drawdown_pct": 12.55,
     "above_200dma_pct": 55.4,
-    "vix": 10.345000267028809
+    "vix": 12.6875
   },
   "history": [
     {
@@ -137,12 +137,26 @@
       "drawdown_pct": 11.1,
       "above_200dma_pct": 55.4,
       "vix": 10.345000267028809
+    },
+    {
+      "date": "2026-09-24",
+      "score": 44,
+      "band": "mixed",
+      "stage": {
+        "k": "early",
+        "t": "Slightly cheaper",
+        "c": ""
+      },
+      "nifty": 23063.099609375,
+      "drawdown_pct": 12.55,
+      "above_200dma_pct": 55.4,
+      "vix": 12.6875
     }
   ],
   "outcomes": {
     "early": {
       "label": "Slightly cheaper",
-      "readings": 3,
+      "readings": 4,
       "m3": null,
       "m6": null,
       "m12": null
