@@ -1,21 +1,21 @@
 {
   "ok": true,
-  "generated_at": "2026-09-23T17:59:36+00:00",
+  "generated_at": "2026-09-24T17:59:27+00:00",
   "today": {
     "regime": "calm_range",
-    "close": 23446.8,
-    "vol_ann_pct": 7.4,
-    "vol_pctile": 9.1,
-    "drawdown_pct": 10.95,
+    "close": 23063.1,
+    "vol_ann_pct": 8.6,
+    "vol_pctile": 26.4,
+    "drawdown_pct": 12.4,
     "above_200dma": false,
-    "date": "2026-09-23",
+    "date": "2026-09-24",
     "t": "Calm and going nowhere",
     "d": "Quiet, but with no trend to follow. Breakouts fail most often here, because there is nothing behind them."
   },
-  "run_days": 51,
+  "run_days": 52,
   "last_year": {
-    "calm_trend": 104,
-    "calm_range": 94,
+    "calm_trend": 103,
+    "calm_range": 95,
     "highvol_trend": 15,
     "highvol_mr": 46,
     "crisis": 1
@@ -50,21 +50,31 @@
   "measured": {
     "cells": {
       "calm_range": {
-        "n": 15,
-        "avg_r": -0.797,
-        "win_rate": 6.7,
-        "t": -3.36,
+        "n": 17,
+        "avg_r": -0.615,
+        "win_rate": 11.8,
+        "t": -2.15,
         "readable": true,
         "engines": [
           {
             "engine": "momentum_quant",
-            "n": 8,
+            "n": 9,
             "retired": null,
-            "avg_r": -0.619,
-            "win_rate": 12.5,
-            "t": -1.38,
+            "avg_r": -0.272,
+            "win_rate": 22.2,
+            "t": -0.52,
             "trusted": false,
             "readable": true
+          },
+          {
+            "engine": "breakout",
+            "n": 3,
+            "retired": null,
+            "avg_r": -1.0,
+            "win_rate": 0.0,
+            "t": null,
+            "trusted": false,
+            "readable": false
           },
           {
             "engine": "keel",
@@ -85,16 +95,6 @@
             "t": null,
             "trusted": false,
             "readable": false
-          },
-          {
-            "engine": "breakout",
-            "n": 2,
-            "retired": null,
-            "avg_r": -1.0,
-            "win_rate": 0.0,
-            "t": null,
-            "trusted": false,
-            "readable": false
           }
         ]
       }
@@ -104,7 +104,7 @@
     "excluded_retired": 151,
     "excluded_not_published": 442,
     "excluded_short": 0,
-    "excluded_pre_launch": 141,
+    "excluded_pre_launch": 143,
     "launch": "2026-09-02",
     "retired_engines": [
       "4h",
@@ -135,10 +135,6 @@
     "A cell needs 8 closed trades before any figure is shown, and the site's actual bar for trusting one is 30 closed at t >= 2.0. Most cells will not clear either, and the page says so rather than printing a multiplier nothing supports."
   ],
   "history": [
-    {
-      "date": "2024-09-16",
-      "regime": "calm_trend"
-    },
     {
       "date": "2024-09-17",
       "regime": "calm_trend"
@@ -2133,6 +2129,10 @@
     },
     {
       "date": "2026-09-23",
+      "regime": "calm_range"
+    },
+    {
+      "date": "2026-09-24",
       "regime": "calm_range"
     }
   ]
