@@ -1,6 +1,6 @@
 {
- "generated_at": "2026-09-25T05:53:31Z",
- "next_refresh": "2026-09-26T05:53:31Z",
+ "generated_at": "2026-09-25T09:58:49Z",
+ "next_refresh": "2026-09-26T09:58:49Z",
  "sources": [
   {
    "name": "Majid Al Futtaim",
@@ -8,7 +8,7 @@
    "status": "ok",
    "jobs_found": 21,
    "detail": "",
-   "last_success": "2026-09-25T05:53:31Z"
+   "last_success": "2026-09-25T09:58:49Z"
   },
   {
    "name": "Chalhoub Group",
@@ -16,7 +16,7 @@
    "status": "ok",
    "jobs_found": 6,
    "detail": "",
-   "last_success": "2026-09-25T05:53:31Z"
+   "last_success": "2026-09-25T09:58:49Z"
   },
   {
    "name": "GMG",
@@ -24,15 +24,15 @@
    "status": "ok",
    "jobs_found": 2,
    "detail": "",
-   "last_success": "2026-09-25T05:53:31Z"
+   "last_success": "2026-09-25T09:58:49Z"
   },
   {
    "name": "Al-Futtaim",
    "kind": "employer",
    "status": "ok",
-   "jobs_found": 38,
+   "jobs_found": 40,
    "detail": "",
-   "last_success": "2026-09-25T05:53:31Z"
+   "last_success": "2026-09-25T09:58:49Z"
   },
   {
    "name": "Abdul Latif Jameel",
@@ -40,7 +40,7 @@
    "status": "ok",
    "jobs_found": 2,
    "detail": "",
-   "last_success": "2026-09-25T05:53:31Z"
+   "last_success": "2026-09-25T09:58:49Z"
   },
   {
    "name": "Landmark Group",
@@ -48,7 +48,7 @@
    "status": "ok",
    "jobs_found": 7,
    "detail": "",
-   "last_success": "2026-09-25T05:53:31Z"
+   "last_success": "2026-09-25T09:58:49Z"
   },
   {
    "name": "Al Tayer",
@@ -56,7 +56,7 @@
    "status": "ok",
    "jobs_found": 5,
    "detail": "",
-   "last_success": "2026-09-25T05:53:31Z"
+   "last_success": "2026-09-25T09:58:49Z"
   },
   {
    "name": "Apparel Group",
@@ -64,7 +64,7 @@
    "status": "ok",
    "jobs_found": 8,
    "detail": "",
-   "last_success": "2026-09-25T05:53:31Z"
+   "last_success": "2026-09-25T09:58:49Z"
   },
   {
    "name": "Emaar",
@@ -96,7 +96,7 @@
    "status": "ok",
    "jobs_found": 9,
    "detail": "",
-   "last_success": "2026-09-25T05:53:31Z"
+   "last_success": "2026-09-25T09:58:49Z"
   },
   {
    "name": "Aldar",
@@ -104,7 +104,7 @@
    "status": "ok",
    "jobs_found": 6,
    "detail": "",
-   "last_success": "2026-09-25T05:53:31Z"
+   "last_success": "2026-09-25T09:58:49Z"
   },
   {
    "name": "Michael Page",
@@ -116,24 +116,132 @@
   }
  ],
  "stats": {
-  "total_active": 61,
-  "high_fit": 6,
+  "total_active": 63,
+  "high_fit": 7,
   "s_tier": 0,
   "by_country": {
-   "UAE": 51,
+   "UAE": 53,
    "Saudi Arabia": 0,
    "Malaysia": 10,
    "Oman": 0
   },
   "duplicates_removed": 0,
-  "stale_removed": 1,
+  "stale_removed": 0,
   "sources_ok": 10,
   "sources_attempted": 14,
-  "urls_verified": 82,
-  "urls_unverified": 11,
+  "urls_verified": 85,
+  "urls_unverified": 10,
   "urls_broken": 0
  },
  "jobs": [
+  {
+   "id": "2faa0a9e6e4cec52841aa8d3fb0b408efcf2937f",
+   "company": "Al-Futtaim",
+   "company_group": "Al-Futtaim",
+   "title": "Senior Manager - Controlling | Corporate Services | GBS Controlling",
+   "normalized_title": "senior manager controlling corporate services gbs controlling",
+   "location": "Dubai",
+   "country": "UAE",
+   "region": "GCC",
+   "department": null,
+   "employment_type": null,
+   "posted_date": "2026-09-25",
+   "closing_date": "2026-10-23",
+   "scraped_at": "2026-09-25T09:58:49Z",
+   "last_verified_at": "2026-09-25T09:58:49Z",
+   "status": "NEW",
+   "source": "Al-Futtaim",
+   "sources": [
+    "Al-Futtaim"
+   ],
+   "source_url": "https://www.afuturewithus.com/job/Dubai-Senior-Manager-Controlling-Corporate-Services-GBS-Controlling/1441224233/",
+   "application_url": "https://www.afuturewithus.com/talentcommunity/apply/1441224233/?locale=en_GB",
+   "is_direct_apply": true,
+   "application_url_verified": true,
+   "source_confidence": "high",
+   "salary_min": null,
+   "salary_max": null,
+   "salary_currency": null,
+   "experience_min": 5,
+   "experience_max": null,
+   "description": "Job Requisition ID: 181518 \n\r\n About Al-Futtaim\nEstablished in the 1930s, Al-Futtaim is one of the most diversified and progressive privately held regional businesses, headquartered in Dubai. Operating across more than 20 countries, the Group spans automotive, financial services, real estate, retail and health. With more than 40,000 employees, Al-Futtaim represents over 200 of the world’s most recognised brands, including Toyota, Lexus, IKEA, ACE and Marks & Spencer. Driven by its purpose to enrich lives and elevate communities, Al-Futtaim focuses on digital innovation, AI, sustainable growth and strategic partnerships, creating long-term value for customers, communities and partners while building a responsible legacy for future generations.\n \n Overview Of The Role: \n\n The Senior Manager - Controlling at the Global Treasury Centre is a pivotal role designed to support the Head of Controlling in managing strategic treasury governance activities. This includes developing comprehensive frameworks for treasury governance, leading transformation initiatives, and implementing AI strategies to enhance treasury operations. The role demands a high level of coordination with internal and external stakeholders, ensuring compliance with audit standards, and driving innovation in treasury systems and processes. The incumbent will be responsible for providing actionable insights through detailed treasury reports and maintain performance alignment with financial goals. This role operates within a large, complex organizational structure and requires a proactive and flexible approach to problem-solving and stakeholder management.\n\n What You Will Do: \n\r\n Treasury Governance and Compliance \r\n \r\n Lead the development, implementation, and continuous enhancement of Treasury governance frameworks, including Treasury Policies, SOPs, SLAs, DOAs, RACI matrix, and operating models.\n\r\n Ensure effective communication, adoption, and compliance across Global Treasury, GBS, and business divisions.\n\r\n Manage the annual review and timely closure of governance and compliance actions.\n\n Treasury Transformation and Process Excellence \r\n \r\n Drive treasury transformation initiatives focused on standardization, automation, control enhancement, and operational efficiency.\n\r\n Govern strategic projects including Cash Pooling, In-House Bank, Trade Finance digitization, and Treasury technology initiatives.\n\r\n Ensure delivery of treasury projects on time and within budget while reducing manual effort and operational risk.\n\n Treasury AI Strategy & Innovation \r\n \r\n Lead Treasury AI governance and innovation by establishing robust controls for AI development and deployment.\n\r\n Ensure compliance with stage-gate processes and drive adoption of AI-enabled reporting, analytics, and decision-support solutions.\n\r\n Partner with EIT and AI office to implement the AI Treasury strategy.\n\r\n Track compliance with AI governance framework and successful deployment of AI use cases.\n\n Treasury Reporting and Financial Control \r\n \r\n Oversee the preparation, review, and analysis of Treasury reports, Treasury P&L, Balance Sheet positions, and treasury operating costs.\n\r\n Provide management with actionable insights.\n\r\n Ensure timely publication of Treasury Reports and alignment of performance with budgets, forecasts, and strategic objectives.\n\r\n Maintain Treasury P&L and cost variances within agreed thresholds.\n\n Audit, Risk Management & Stakeholder Engagement \r\n \r\n Act as the primary point of contact for internal and external audits.\n\r\n Maintain a strong treasury control environment.\n\r\n Ensure timely closure of audit findings and achieve zero repeat high-risk audit observations.\n\n Required Skills To Be Successful: \n\n Advanced analytical skills and thorough understanding of treasury processes.\n\r\n Strong communication and presentation abilities.\n\r\n Experience with ERP systems, especially SAP TRM and Power BI.\n\r\n Proven ability to manage pressure, influence colleagues, and collaborate with stakeholders.\n\n What Qualifies You For The Role: \n\n CA, CFA, CPA, or equivalent certification is required; additional treasury coursework (ACT or similar) is beneficial.\n\r\n Minimum of 5 years of relevant experience within a large organization managing treasury operations and controls.\n\r\n Advanced knowledge in analytical treasury processes, banking, hedging, and trade finance.\n\r\n Proficiency in ERP systems, particularly SAP TRM, and data visualization tools like Power BI.\n\n We’re here to provide excellent service but a little help from you can ensure a five-star candidate experience from start to finish.\n\n Before you click “apply”: Please read the job description carefully to ensure you can confidently demonstrate why this opportunity is right for you and take the time to put together a well-crafted and personalised CV to further boost your visibility. Our global Talent Acquisition team members are all assigned to specific businesses to ensure that we make the best matches between talent and opportunities. We not only consider the requisite compatibility of skills and behaviours, but also how candidates align with our Values of Respect, Integrity, Collaboration, and Excellence.\n\n As part of our candidate experience promise, we also want to make ourselves available to you throughout the application process. We make every effort to review and respond to every application.\n\n Apply now » \n\n Find similar jobs: \n\n Finance & Accounting Jobs \n\n HOME PAGE \n\n PRIVACY \n\n CORPORATE WEBSITE \n\n CONTACT US \n\n Opens in a new tab. \n\n Opens in a new tab. \n\n Opens in a new tab. \n\n Opens in a new tab. \n\n © Copyright 2026 | afuturewithus.com\n\n // \n\n // \n\n // \n\n const jobAlertSpans = document.querySelectorAll(\"[data-testid=jobAlertSpanText]\");\n jobAlertSpans?.forEach((jobEl) => {\n jobEl.textContent = window?.jsStr?.tcjobresultscreatejobalertsdetailstext || \"\";\n });\n\n // \n\n // \n\n // \n\n //",
+   "responsibilities": [
+    "Lead the development, implementation, and continuous enhancement of Treasury governance frameworks, including Treasury Policies, SOPs, SLAs, DOAs, RACI matrix, and operating models",
+    "Ensure effective communication, adoption, and compliance across Global Treasury, GBS, and business divisions",
+    "Manage the annual review and timely closure of governance and compliance actions",
+    "Drive treasury transformation initiatives focused on standardization, automation, control enhancement, and operational efficiency",
+    "Govern strategic projects including Cash Pooling, In-House Bank, Trade Finance digitization, and Treasury technology initiatives",
+    "Ensure delivery of treasury projects on time and within budget while reducing manual effort and operational risk",
+    "Lead Treasury AI governance and innovation by establishing robust controls for AI development and deployment",
+    "Ensure compliance with stage-gate processes and drive adoption of AI-enabled reporting, analytics, and decision-support solutions",
+    "Partner with EIT and AI office to implement the AI Treasury strategy",
+    "Track compliance with AI governance framework and successful deployment of AI use cases",
+    "Oversee the preparation, review, and analysis of Treasury reports, Treasury P&L, Balance Sheet positions, and treasury operating costs",
+    "Provide management with actionable insights",
+    "Ensure timely publication of Treasury Reports and alignment of performance with budgets, forecasts, and strategic objectives",
+    "Maintain Treasury P&L and cost variances within agreed thresholds",
+    "Act as the primary point of contact for internal and external audits",
+    "Maintain a strong treasury control environment",
+    "Ensure timely closure of audit findings and achieve zero repeat high-risk audit observations",
+    "Advanced analytical skills and thorough understanding of treasury processes",
+    "Strong communication and presentation abilities",
+    "Experience with ERP systems, especially SAP TRM and Power BI"
+   ],
+   "requirements": [],
+   "skills": [
+    "Budgeting",
+    "Forecasting",
+    "Power BI",
+    "SAP",
+    "Excel"
+   ],
+   "nationality_requirement": null,
+   "work_authorization_requirement": null,
+   "emiratisation_requirement": false,
+   "saudization_requirement": false,
+   "candidate_fit_score": 81,
+   "employer_score": 88,
+   "career_upside_score": 81,
+   "opportunity_score": 83,
+   "score_breakdown": {
+    "seniority": 18,
+    "functional": 16,
+    "industry": 15,
+    "geographic": 10,
+    "scope": 6,
+    "leadership": 2,
+    "qualification": 5,
+    "upside": 9
+   },
+   "tier": "A",
+   "application_priority": "HIGH PRIORITY",
+   "why_fit": [
+    "Multi-country / multi-entity scope maps directly onto his Malaysia + Indonesia P&L ownership across 60+ Max Fashion and Babyshop stores.",
+    "Al-Futtaim is peer retail to his current employer — the 60+ store, multi-brand lifestyle retail P&L he already owns transfers without a sector learning curve.",
+    "Systems fit — he led the D365 ERP implementation that cut the close cycle 40%, and builds the Power BI reporting on top of it.",
+    "Core FP&A remit — he runs budgeting, forecasting and variance analysis on an MYR 400M+ P&L as FP&A Manager at Lifestyle Retail Malaysia (Landmark Group) since May 2023."
+   ],
+   "watch_out": [
+    "SAP is named and his ERP depth is D365, not SAP — expect to address that gap directly."
+   ],
+   "resume_match": {
+    "strong": [
+     "FP&A — budgeting, forecasting, variance analysis on MYR 400M+ P&L",
+     "Multi-country P&L (Malaysia + Indonesia, 60+ stores)",
+     "D365 ERP implementation lead (close −40%), Power BI reporting",
+     "Retail / fashion / lifestyle sector depth (Max Fashion, Babyshop)"
+    ],
+    "missing": [
+     "SAP",
+     "CFA",
+     "CPA"
+    ],
+    "tailoring_recommended": true
+   },
+   "duplicate_group": "64ad0e528c2a71fba18bd614ce09c6fa1070bf27",
+   "is_excluded": false,
+   "exclusion_reason": null
+  },
   {
    "id": "657a0fa4d92bd831f1a31f4f8dd8ed8b802ca57a",
    "company": "Landmark Group",
@@ -147,8 +255,8 @@
    "employment_type": null,
    "posted_date": "2026-09-02",
    "closing_date": null,
-   "scraped_at": "2026-09-25T05:53:31Z",
-   "last_verified_at": "2026-09-25T05:53:31Z",
+   "scraped_at": "2026-09-25T09:58:49Z",
+   "last_verified_at": "2026-09-25T09:58:49Z",
    "status": "AGING",
    "source": "Landmark Group",
    "sources": [
@@ -260,8 +368,8 @@
    "employment_type": "Experienced hires",
    "posted_date": "2026-07-27",
    "closing_date": null,
-   "scraped_at": "2026-09-25T05:53:31Z",
-   "last_verified_at": "2026-09-25T05:53:31Z",
+   "scraped_at": "2026-09-25T09:58:49Z",
+   "last_verified_at": "2026-09-25T09:58:49Z",
    "status": "STALE",
    "source": "Aldar",
    "sources": [
@@ -365,8 +473,8 @@
    "employment_type": null,
    "posted_date": "2026-09-21",
    "closing_date": "2026-10-08",
-   "scraped_at": "2026-09-25T05:53:31Z",
-   "last_verified_at": "2026-09-25T05:53:31Z",
+   "scraped_at": "2026-09-25T09:58:49Z",
+   "last_verified_at": "2026-09-25T09:58:49Z",
    "status": "NEW",
    "source": "Al-Futtaim",
    "sources": [
@@ -462,8 +570,8 @@
    "employment_type": "Regular",
    "posted_date": "2026-08-11",
    "closing_date": null,
-   "scraped_at": "2026-09-25T05:53:31Z",
-   "last_verified_at": "2026-09-25T05:53:31Z",
+   "scraped_at": "2026-09-25T09:58:49Z",
+   "last_verified_at": "2026-09-25T09:58:49Z",
    "status": "AGING",
    "source": "Majid Al Futtaim",
    "sources": [
@@ -567,8 +675,8 @@
    "employment_type": "Full-Time",
    "posted_date": "2026-06-26",
    "closing_date": null,
-   "scraped_at": "2026-09-25T05:53:31Z",
-   "last_verified_at": "2026-09-25T05:53:31Z",
+   "scraped_at": "2026-09-25T09:58:49Z",
+   "last_verified_at": "2026-09-25T09:58:49Z",
    "status": "STALE",
    "source": "GMG",
    "sources": [
@@ -648,8 +756,8 @@
    "employment_type": "Experienced hires",
    "posted_date": "2026-09-02",
    "closing_date": null,
-   "scraped_at": "2026-09-25T05:53:31Z",
-   "last_verified_at": "2026-09-25T05:53:31Z",
+   "scraped_at": "2026-09-25T09:58:49Z",
+   "last_verified_at": "2026-09-25T09:58:49Z",
    "status": "AGING",
    "source": "Aldar",
    "sources": [
@@ -754,8 +862,8 @@
    "employment_type": null,
    "posted_date": "2026-09-17",
    "closing_date": "2026-10-11",
-   "scraped_at": "2026-09-25T05:53:31Z",
-   "last_verified_at": "2026-09-25T05:53:31Z",
+   "scraped_at": "2026-09-25T09:58:49Z",
+   "last_verified_at": "2026-09-25T09:58:49Z",
    "status": "ACTIVE",
    "source": "Al-Futtaim",
    "sources": [
@@ -850,8 +958,8 @@
    "employment_type": null,
    "posted_date": "2026-09-04",
    "closing_date": "2026-09-30",
-   "scraped_at": "2026-09-25T05:53:31Z",
-   "last_verified_at": "2026-09-25T05:53:31Z",
+   "scraped_at": "2026-09-25T09:58:49Z",
+   "last_verified_at": "2026-09-25T09:58:49Z",
    "status": "ACTIVE",
    "source": "Al-Futtaim",
    "sources": [
@@ -923,6 +1031,104 @@
    "exclusion_reason": null
   },
   {
+   "id": "aca5f890d8302f6f84002be7941b7e99c1094714",
+   "company": "Al-Futtaim",
+   "company_group": "Al-Futtaim",
+   "title": "Finance Executive",
+   "normalized_title": "finance executive",
+   "location": "Dubai",
+   "country": "UAE",
+   "region": "GCC",
+   "department": null,
+   "employment_type": null,
+   "posted_date": "2026-09-25",
+   "closing_date": "2026-10-09",
+   "scraped_at": "2026-09-25T09:58:49Z",
+   "last_verified_at": "2026-09-25T09:58:49Z",
+   "status": "NEW",
+   "source": "Al-Futtaim",
+   "sources": [
+    "Al-Futtaim"
+   ],
+   "source_url": "https://www.afuturewithus.com/job/Dubai-Finance-Executive/1441278733/",
+   "application_url": "https://www.afuturewithus.com/talentcommunity/apply/1441278733/?locale=en_GB",
+   "is_direct_apply": true,
+   "application_url_verified": true,
+   "source_confidence": "high",
+   "salary_min": null,
+   "salary_max": null,
+   "salary_currency": null,
+   "experience_min": 5,
+   "experience_max": null,
+   "description": "Job Requisition ID: 181415 \n\r\n About Al-Futtaim\nEstablished in the 1930s, Al-Futtaim is one of the most diversified and progressive privately held regional businesses, headquartered in Dubai. Operating across more than 20 countries, the Group spans automotive, financial services, real estate, retail and health. With more than 40,000 employees, Al-Futtaim represents over 200 of the world’s most recognised brands, including Toyota, Lexus, IKEA, ACE and Marks & Spencer. Driven by its purpose to enrich lives and elevate communities, Al-Futtaim focuses on digital innovation, AI, sustainable growth and strategic partnerships, creating long-term value for customers, communities and partners while building a responsible legacy for future generations.\n \n Overview Of The Role: \n\n The Assistant Finance Manager position plays a crucial role in financial planning, analysis, and decision-making within Hertz and Moov's Financial Services division. This role involves partnering with operational management to drive revenue, optimize costs, and improve financial performance. The Manager will provide financial guidance, prepare forecasts and budgets, and ensure alignment of financial plans with business objectives. Additionally, they will be involved in reporting, process enhancement, and supporting automation initiatives, ensuring compliance and continuous improvement within financial operations.\n\n What You Will Do: \n\n Commercial Business Partnering & Decision Support \r\n\n Partner proactively with Operation Management to evaluate and drive revenue, margin, cost saving initiatives, and fleet performance across Rental, Leasing, and Subscription business.\n\r\n Support in evaluating investment decisions: non-fleet CAPEX and fleet CAPEX.\n\r\n Manage Profit Center and Cost Center reporting with recommendations on cost/margin efficiency improvements of profit-generating and supporting business functions.\n\r\n Act as a financial thought partner in Leasing and Rental business reviews, challenging assumptions, stress-testing forecasts, and providing commercial perspectives on growth initiatives.\n\r\n Conduct commercial control of OPEX, Direct fleet associated cost, and manpower cost, including validation and assessment of purchase requisitions.\n\r\n Support in fleet utilization and optimization initiatives through analyses of channels, vehicle segments, products, seasonality patterns; revenue yield per unit, idle fleet cost; maintenance and sales cycle lead-times.\n\r\n Monitor, develop, and support the implementation of commercial KPIs in periodic reports/dashboards (daily/weekly), analyzing trends, highlighting deviations from targets and performance risks, and opportunities.\n\n Preparation of Forecasts and Budgets \r\n\n Coordinate quarterly forecasts and planning exercises.\n\r\n Manage entity Cash Flow preparations and coordinate cash planning and transfers with Group Treasury.\n\r\n Prepare Monthly reporting packs, BRM (Business Review Meeting), and FRM (Finance review meeting) presentation decks.\n\r\n Enhance and automate management reporting, trend historical and forward-looking reporting via BI tools or other dashboard solutions.\n\r\n Perform ad hoc FP&A reporting and financial modeling as requested by the manager.\n\r\n Support requirements gathering, design, testing, and implementation of financial planning tools for Lease, Rental, and Subscription financial statements.\n\n Reporting & Analyses \r\n\n Coordinate financial planning inputs from business functions, ensuring accuracy and alignment with business objectives.\n\r\n Prepare Monthly Financials pack for entities.\n\r\n Conduct mid-month forecasts as required.\n\r\n Maintain Group Financial reporting, planning, and analysis tools (upload Budget/Forecast/Flash/Strategic plans and other relevant schedules and reports).\n\r\n Provide periodic analysis of variances between financial plans and actual results, offering explanations for key revenue, cost, and margin drivers.\n\r\n Conduct Monthly, Quarterly, and Ad-hoc reporting for Lease, Rental, and Subscription divisions.\n\n Others \r\n\n Develop, maintain, and enhance internal process controls and implement internal audit recommendations in collaboration with divisional Risk and Operations functions.\n\r\n Develop and customize reports in SAP/BI based on business requirements.\n\r\n Explore and implement process automation using modern tools like AI and BI.\n\r\n Ensure system development documentation access, revision, and validation; represent the Finance department in system testing cycles.\n\n Required Skills To Be Successful: \n\n Advanced proficiency in AI tools, Excel, PowerPoint, Power BI, and SAP.\n\r\n Knowledge and familiarity with IFRS accounting standards.\n\r\n Proven experience working in high-volume, transaction-intensive environments with large business scale and complexity.\n\r\n Strong analytical and problem-solving skills, with the ability to challenge assumptions and stress-test forecasts.\n\n What Qualifies You For The Role: \n\n Master's or bachelor's degree in Economics, Finance, Corporate Finance, or a related field.\n\r\n Professional accounting or finance certification such as CPA, ACCA, CIMA, or an equivalent qualification.\n\r\n 5+ years of experience as a Financial Business Partner and/or FP&A role within large multinational and diversified corporations.\n\r\n Experience in the leasing and rental industry, with an understanding of commercial, operational, and financial drivers; Automotive/Financial services experience is a plus.\n\n About Al-Futtaim Real Estate\n\r\n With a legacy of more than six decades in real estate and asset management, Al-Futtaim Real Estate – part of Al-Futtaim – creates real impact on the communities it serves through long-term investment and growth. As one of the region’s leading private developers, the company plans, creates and manages developments across the MENA region. \n\r\n Al-Futtaim Real Estate has a diversified, multi-billion-dollar portfolio across the real estate value chain and asset types such as residential, commercial, malls and industries including hospitality, healthcare, infrastructure and education. Flagship mixed-use urban communities include Dubai Festival City and Cairo Festival City. \n\r\n Al-Futtaim Real Estate is also responsible for Al-Futtaim Contracting, a fully integrated, end-to-end specialist division operating across the UAE, Saudi Arabia, Qatar and Egypt. The business has delivered industry-leading construction, engineering, technology and FM solutions for more than 50 years.\n\n Apply now » \n\n Find similar jobs: \n\n Finance & Accounting Jobs \n\n HOME PAGE \n\n PRIVACY \n\n CORPORATE WEBSITE \n\n CONTACT US \n\n Opens in a new tab. \n\n Opens in a new tab. \n\n Opens in a new tab. \n\n Opens in a new tab. \n\n © Copyright 2026 | afuturewithus.com\n\n // \n\n // \n\n // \n\n const jobAlertSpans = document.querySelectorAll(\"[data-testid=jobAlertSpanText]\");\n jobAlertSpans?.forEach((jobEl) => {\n jobEl.textContent = window?.jsStr?.tcjobresultscreatejobalertsdetailstext || \"\";\n });\n\n // \n\n // \n\n // \n\n //",
+   "responsibilities": [
+    "Partner proactively with Operation Management to evaluate and drive revenue, margin, cost saving initiatives, and fleet performance across Rental, Leasing, and Subscription business",
+    "Support in evaluating investment decisions: non-fleet CAPEX and fleet CAPEX",
+    "Manage Profit Center and Cost Center reporting with recommendations on cost/margin efficiency improvements of profit-generating and supporting business functions",
+    "Act as a financial thought partner in Leasing and Rental business reviews, challenging assumptions, stress-testing forecasts, and providing commercial perspectives on growth initiatives",
+    "Conduct commercial control of OPEX, Direct fleet associated cost, and manpower cost, including validation and assessment of purchase requisitions",
+    "Support in fleet utilization and optimization initiatives through analyses of channels, vehicle segments, products, seasonality patterns; revenue yield per unit, idle fleet cost; maintenance and sales cycle lead-times",
+    "Monitor, develop, and support the implementation of commercial KPIs in periodic reports/dashboards (daily/weekly), analyzing trends, highlighting deviations from targets and performance risks, and opportunities",
+    "Coordinate quarterly forecasts and planning exercises",
+    "Manage entity Cash Flow preparations and coordinate cash planning and transfers with Group Treasury",
+    "Prepare Monthly reporting packs, BRM (Business Review Meeting), and FRM (Finance review meeting) presentation decks",
+    "Enhance and automate management reporting, trend historical and forward-looking reporting via BI tools or other dashboard solutions",
+    "Perform ad hoc FP&A reporting and financial modeling as requested by the manager",
+    "Support requirements gathering, design, testing, and implementation of financial planning tools for Lease, Rental, and Subscription financial statements",
+    "Coordinate financial planning inputs from business functions, ensuring accuracy and alignment with business objectives",
+    "Prepare Monthly Financials pack for entities",
+    "Conduct mid-month forecasts as required",
+    "Maintain Group Financial reporting, planning, and analysis tools (upload Budget/Forecast/Flash/Strategic plans and other relevant schedules and reports)",
+    "Provide periodic analysis of variances between financial plans and actual results, offering explanations for key revenue, cost, and margin drivers",
+    "Conduct Monthly, Quarterly, and Ad-hoc reporting for Lease, Rental, and Subscription divisions",
+    "Develop, maintain, and enhance internal process controls and implement internal audit recommendations in collaboration with divisional Risk and Operations functions"
+   ],
+   "requirements": [],
+   "skills": [
+    "FP&A",
+    "IFRS",
+    "Budgeting",
+    "Forecasting",
+    "Power BI",
+    "SAP",
+    "Excel",
+    "Business Partnering"
+   ],
+   "nationality_requirement": null,
+   "work_authorization_requirement": null,
+   "emiratisation_requirement": false,
+   "saudization_requirement": false,
+   "candidate_fit_score": 71,
+   "employer_score": 88,
+   "career_upside_score": 50,
+   "opportunity_score": 72,
+   "score_breakdown": {
+    "seniority": 6,
+    "functional": 20,
+    "industry": 15,
+    "geographic": 10,
+    "scope": 7,
+    "leadership": 2,
+    "qualification": 5,
+    "upside": 6
+   },
+   "tier": "B",
+   "application_priority": "GOOD FIT",
+   "why_fit": [
+    "Multi-country / multi-entity scope maps directly onto his Malaysia + Indonesia P&L ownership across 60+ Max Fashion and Babyshop stores.",
+    "Al-Futtaim is peer retail to his current employer — the 60+ store, multi-brand lifestyle retail P&L he already owns transfers without a sector learning curve.",
+    "IFRS/MPERS group consolidation is day-to-day for him, including IFRS 16 across 60+ retail leases.",
+    "Capital allocation fit — he builds the ROI/IRR/NPV store feasibility models that decide new-store capex."
+   ],
+   "watch_out": [
+    "SAP is named and his ERP depth is D365, not SAP — expect to address that gap directly."
+   ],
+   "resume_match": null,
+   "duplicate_group": "269d0c6995c3c4db21ebae05ddb1f95ed42aa7f2",
+   "is_excluded": false,
+   "exclusion_reason": null
+  },
+  {
    "id": "cd5650f4c22f20224b18222437d76f1b80231aba",
    "company": "Majid Al Futtaim",
    "company_group": "Majid Al Futtaim",
@@ -935,8 +1141,8 @@
    "employment_type": "Regular",
    "posted_date": "2026-09-17",
    "closing_date": null,
-   "scraped_at": "2026-09-25T05:53:31Z",
-   "last_verified_at": "2026-09-25T05:53:31Z",
+   "scraped_at": "2026-09-25T09:58:49Z",
+   "last_verified_at": "2026-09-25T09:58:49Z",
    "status": "ACTIVE",
    "source": "Majid Al Futtaim",
    "sources": [
@@ -1034,8 +1240,8 @@
    "employment_type": "Regular",
    "posted_date": "2026-06-10",
    "closing_date": null,
-   "scraped_at": "2026-09-25T05:53:31Z",
-   "last_verified_at": "2026-09-25T05:53:31Z",
+   "scraped_at": "2026-09-25T09:58:49Z",
+   "last_verified_at": "2026-09-25T09:58:49Z",
    "status": "STALE",
    "source": "Majid Al Futtaim",
    "sources": [
@@ -1132,8 +1338,8 @@
    "employment_type": "Regular",
    "posted_date": "2026-09-07",
    "closing_date": null,
-   "scraped_at": "2026-09-25T05:53:31Z",
-   "last_verified_at": "2026-09-25T05:53:31Z",
+   "scraped_at": "2026-09-25T09:58:49Z",
+   "last_verified_at": "2026-09-25T09:58:49Z",
    "status": "ACTIVE",
    "source": "Majid Al Futtaim",
    "sources": [
@@ -1231,8 +1437,8 @@
    "employment_type": "Experienced hires",
    "posted_date": "2026-08-25",
    "closing_date": null,
-   "scraped_at": "2026-09-25T05:53:31Z",
-   "last_verified_at": "2026-09-25T05:53:31Z",
+   "scraped_at": "2026-09-25T09:58:49Z",
+   "last_verified_at": "2026-09-25T09:58:49Z",
    "status": "AGING",
    "source": "Aldar",
    "sources": [
@@ -1324,8 +1530,8 @@
    "employment_type": null,
    "posted_date": "2026-09-03",
    "closing_date": "2026-10-02",
-   "scraped_at": "2026-09-25T05:53:31Z",
-   "last_verified_at": "2026-09-25T05:53:31Z",
+   "scraped_at": "2026-09-25T09:58:49Z",
+   "last_verified_at": "2026-09-25T09:58:49Z",
    "status": "AGING",
    "source": "Al-Futtaim",
    "sources": [
@@ -1515,8 +1721,8 @@
    "employment_type": null,
    "posted_date": "2026-09-08",
    "closing_date": null,
-   "scraped_at": "2026-09-25T05:53:31Z",
-   "last_verified_at": "2026-09-25T05:53:31Z",
+   "scraped_at": "2026-09-25T09:58:49Z",
+   "last_verified_at": "2026-09-25T09:58:49Z",
    "status": "ACTIVE",
    "source": "Landmark Group",
    "sources": [
@@ -1598,8 +1804,8 @@
    "employment_type": null,
    "posted_date": "2026-09-14",
    "closing_date": "2026-10-09",
-   "scraped_at": "2026-09-25T05:53:31Z",
-   "last_verified_at": "2026-09-25T05:53:31Z",
+   "scraped_at": "2026-09-25T09:58:49Z",
+   "last_verified_at": "2026-09-25T09:58:49Z",
    "status": "ACTIVE",
    "source": "Al-Futtaim",
    "sources": [
@@ -1694,8 +1900,8 @@
    "employment_type": null,
    "posted_date": "2026-09-15",
    "closing_date": "2026-09-26",
-   "scraped_at": "2026-09-25T05:53:31Z",
-   "last_verified_at": "2026-09-25T05:53:31Z",
+   "scraped_at": "2026-09-25T09:58:49Z",
+   "last_verified_at": "2026-09-25T09:58:49Z",
    "status": "ACTIVE",
    "source": "Al-Futtaim",
    "sources": [
@@ -1773,8 +1979,8 @@
    "employment_type": null,
    "posted_date": "2026-09-15",
    "closing_date": "2026-10-15",
-   "scraped_at": "2026-09-25T05:53:31Z",
-   "last_verified_at": "2026-09-25T05:53:31Z",
+   "scraped_at": "2026-09-25T09:58:49Z",
+   "last_verified_at": "2026-09-25T09:58:49Z",
    "status": "ACTIVE",
    "source": "Al-Futtaim",
    "sources": [
@@ -1851,8 +2057,8 @@
    "employment_type": null,
    "posted_date": "2026-09-22",
    "closing_date": null,
-   "scraped_at": "2026-09-25T05:53:31Z",
-   "last_verified_at": "2026-09-25T05:53:31Z",
+   "scraped_at": "2026-09-25T09:58:49Z",
+   "last_verified_at": "2026-09-25T09:58:49Z",
    "status": "NEW",
    "source": "Al Tayer",
    "sources": [
@@ -1952,8 +2158,8 @@
    "employment_type": "Full-Time",
    "posted_date": "2026-09-21",
    "closing_date": null,
-   "scraped_at": "2026-09-25T05:53:31Z",
-   "last_verified_at": "2026-09-25T05:53:31Z",
+   "scraped_at": "2026-09-25T09:58:49Z",
+   "last_verified_at": "2026-09-25T09:58:49Z",
    "status": "NEW",
    "source": "Chalhoub Group",
    "sources": [
@@ -2407,8 +2613,8 @@
    "employment_type": null,
    "posted_date": "2026-09-11",
    "closing_date": "2026-09-30",
-   "scraped_at": "2026-09-25T05:53:31Z",
-   "last_verified_at": "2026-09-25T05:53:31Z",
+   "scraped_at": "2026-09-25T09:58:49Z",
+   "last_verified_at": "2026-09-25T09:58:49Z",
    "status": "ACTIVE",
    "source": "Al-Futtaim",
    "sources": [
@@ -2503,8 +2709,8 @@
    "employment_type": null,
    "posted_date": "2026-09-02",
    "closing_date": "2026-10-31",
-   "scraped_at": "2026-09-25T05:53:31Z",
-   "last_verified_at": "2026-09-25T05:53:31Z",
+   "scraped_at": "2026-09-25T09:58:49Z",
+   "last_verified_at": "2026-09-25T09:58:49Z",
    "status": "AGING",
    "source": "Al-Futtaim",
    "sources": [
@@ -2599,8 +2805,8 @@
    "employment_type": "Experienced hires",
    "posted_date": "2026-09-02",
    "closing_date": null,
-   "scraped_at": "2026-09-25T05:53:31Z",
-   "last_verified_at": "2026-09-25T05:53:31Z",
+   "scraped_at": "2026-09-25T09:58:49Z",
+   "last_verified_at": "2026-09-25T09:58:49Z",
    "status": "AGING",
    "source": "Aldar",
    "sources": [
@@ -2781,8 +2987,8 @@
    "employment_type": null,
    "posted_date": "2026-09-14",
    "closing_date": "2026-10-16",
-   "scraped_at": "2026-09-25T05:53:31Z",
-   "last_verified_at": "2026-09-25T05:53:31Z",
+   "scraped_at": "2026-09-25T09:58:49Z",
+   "last_verified_at": "2026-09-25T09:58:49Z",
    "status": "ACTIVE",
    "source": "Apparel Group",
    "sources": [
@@ -2867,8 +3073,8 @@
    "employment_type": "Full-Time",
    "posted_date": "2026-09-03",
    "closing_date": null,
-   "scraped_at": "2026-09-25T05:53:31Z",
-   "last_verified_at": "2026-09-25T05:53:31Z",
+   "scraped_at": "2026-09-25T09:58:49Z",
+   "last_verified_at": "2026-09-25T09:58:49Z",
    "status": "AGING",
    "source": "Chalhoub Group",
    "sources": [
@@ -2938,8 +3144,8 @@
    "employment_type": "Regular",
    "posted_date": "2026-09-22",
    "closing_date": null,
-   "scraped_at": "2026-09-25T05:53:31Z",
-   "last_verified_at": "2026-09-25T05:53:31Z",
+   "scraped_at": "2026-09-25T09:58:49Z",
+   "last_verified_at": "2026-09-25T09:58:49Z",
    "status": "NEW",
    "source": "Majid Al Futtaim",
    "sources": [
@@ -3032,7 +3238,7 @@
    "source_url": "https://my.linkedin.com/jobs/view/finance-manager-commercial-ops-at-hays-4468321871",
    "application_url": "https://my.linkedin.com/jobs/view/finance-manager-commercial-ops-at-hays-4468321871",
    "is_direct_apply": false,
-   "application_url_verified": false,
+   "application_url_verified": true,
    "source_confidence": "medium",
    "salary_min": null,
    "salary_max": null,
@@ -3089,7 +3295,7 @@
    ],
    "watch_out": [
     "The posting date is not published by the source, so this could be an old req — age is unknown, not fresh.",
-    "The application link could not be confirmed reachable — verify it before relying on it."
+    "Sourced via LinkedIn rather than the employer's own site — confirm the role exists directly with the company."
    ],
    "resume_match": null,
    "duplicate_group": "c83aabc7e2583a1eaae9eac68a612a0767f8983c",
@@ -3205,8 +3411,8 @@
    "employment_type": null,
    "posted_date": "2026-09-01",
    "closing_date": "2026-10-18",
-   "scraped_at": "2026-09-25T05:53:31Z",
-   "last_verified_at": "2026-09-25T05:53:31Z",
+   "scraped_at": "2026-09-25T09:58:49Z",
+   "last_verified_at": "2026-09-25T09:58:49Z",
    "status": "AGING",
    "source": "Al-Futtaim",
    "sources": [
@@ -3295,8 +3501,8 @@
    "employment_type": null,
    "posted_date": "2026-09-14",
    "closing_date": null,
-   "scraped_at": "2026-09-25T05:53:31Z",
-   "last_verified_at": "2026-09-25T05:53:31Z",
+   "scraped_at": "2026-09-25T09:58:49Z",
+   "last_verified_at": "2026-09-25T09:58:49Z",
    "status": "ACTIVE",
    "source": "Al Tayer",
    "sources": [
@@ -3393,8 +3599,8 @@
    "employment_type": "Regular",
    "posted_date": "2026-09-01",
    "closing_date": null,
-   "scraped_at": "2026-09-25T05:53:31Z",
-   "last_verified_at": "2026-09-25T05:53:31Z",
+   "scraped_at": "2026-09-25T09:58:49Z",
+   "last_verified_at": "2026-09-25T09:58:49Z",
    "status": "AGING",
    "source": "Majid Al Futtaim",
    "sources": [
@@ -3854,8 +4060,8 @@
    "employment_type": "Experienced hires",
    "posted_date": "2026-04-28",
    "closing_date": null,
-   "scraped_at": "2026-09-25T05:53:31Z",
-   "last_verified_at": "2026-09-25T05:53:31Z",
+   "scraped_at": "2026-09-25T09:58:49Z",
+   "last_verified_at": "2026-09-25T09:58:49Z",
    "status": "STALE",
    "source": "Aldar",
    "sources": [
@@ -4394,8 +4600,8 @@
    "employment_type": "Regular",
    "posted_date": "2026-09-15",
    "closing_date": null,
-   "scraped_at": "2026-09-25T05:53:31Z",
-   "last_verified_at": "2026-09-25T05:53:31Z",
+   "scraped_at": "2026-09-25T09:58:49Z",
+   "last_verified_at": "2026-09-25T09:58:49Z",
    "status": "ACTIVE",
    "source": "Majid Al Futtaim",
    "sources": [
@@ -4488,8 +4694,8 @@
    "employment_type": "Full-time",
    "posted_date": "2026-09-17",
    "closing_date": null,
-   "scraped_at": "2026-09-25T05:53:31Z",
-   "last_verified_at": "2026-09-25T05:53:31Z",
+   "scraped_at": "2026-09-25T09:58:49Z",
+   "last_verified_at": "2026-09-25T09:58:49Z",
    "status": "ACTIVE",
    "source": "Etihad Airways",
    "sources": [
@@ -4681,8 +4887,8 @@
    "employment_type": "Full-time",
    "posted_date": "2026-09-22",
    "closing_date": null,
-   "scraped_at": "2026-09-25T05:53:31Z",
-   "last_verified_at": "2026-09-25T05:53:31Z",
+   "scraped_at": "2026-09-25T09:58:49Z",
+   "last_verified_at": "2026-09-25T09:58:49Z",
    "status": "NEW",
    "source": "Etihad Airways",
    "sources": [
@@ -4951,8 +5157,8 @@
    "employment_type": "Full-time",
    "posted_date": "2026-06-09",
    "closing_date": null,
-   "scraped_at": "2026-09-25T05:53:31Z",
-   "last_verified_at": "2026-09-25T05:53:31Z",
+   "scraped_at": "2026-09-25T09:58:49Z",
+   "last_verified_at": "2026-09-25T09:58:49Z",
    "status": "STALE",
    "source": "Etihad Airways",
    "sources": [
@@ -5310,8 +5516,8 @@
    "employment_type": "Full-time",
    "posted_date": "2026-07-22",
    "closing_date": null,
-   "scraped_at": "2026-09-25T05:53:31Z",
-   "last_verified_at": "2026-09-25T05:53:31Z",
+   "scraped_at": "2026-09-25T09:58:49Z",
+   "last_verified_at": "2026-09-25T09:58:49Z",
    "status": "STALE",
    "source": "Etihad Airways",
    "sources": [
@@ -5401,8 +5607,8 @@
    "employment_type": "Full-time",
    "posted_date": "2026-09-18",
    "closing_date": null,
-   "scraped_at": "2026-09-25T05:53:31Z",
-   "last_verified_at": "2026-09-25T05:53:31Z",
+   "scraped_at": "2026-09-25T09:58:49Z",
+   "last_verified_at": "2026-09-25T09:58:49Z",
    "status": "NEW",
    "source": "Etihad Airways",
    "sources": [
@@ -5574,8 +5780,8 @@
    "employment_type": "Full-time",
    "posted_date": "2026-09-02",
    "closing_date": null,
-   "scraped_at": "2026-09-25T05:53:31Z",
-   "last_verified_at": "2026-09-25T05:53:31Z",
+   "scraped_at": "2026-09-25T09:58:49Z",
+   "last_verified_at": "2026-09-25T09:58:49Z",
    "status": "AGING",
    "source": "Etihad Airways",
    "sources": [
@@ -5656,8 +5862,8 @@
    "employment_type": "Full-time",
    "posted_date": "2026-07-28",
    "closing_date": null,
-   "scraped_at": "2026-09-25T05:53:31Z",
-   "last_verified_at": "2026-09-25T05:53:31Z",
+   "scraped_at": "2026-09-25T09:58:49Z",
+   "last_verified_at": "2026-09-25T09:58:49Z",
    "status": "STALE",
    "source": "Etihad Airways",
    "sources": [
@@ -5758,8 +5964,8 @@
    "employment_type": null,
    "posted_date": "2026-09-24",
    "closing_date": "2026-10-25",
-   "scraped_at": "2026-09-25T05:53:31Z",
-   "last_verified_at": "2026-09-25T05:53:31Z",
+   "scraped_at": "2026-09-25T09:58:49Z",
+   "last_verified_at": "2026-09-25T09:58:49Z",
    "status": "NEW",
    "source": "Al-Futtaim",
    "sources": [
@@ -5859,8 +6065,8 @@
    "employment_type": null,
    "posted_date": "2026-09-08",
    "closing_date": "2026-11-30",
-   "scraped_at": "2026-09-25T05:53:31Z",
-   "last_verified_at": "2026-09-25T05:53:31Z",
+   "scraped_at": "2026-09-25T09:58:49Z",
+   "last_verified_at": "2026-09-25T09:58:49Z",
    "status": "ACTIVE",
    "source": "Al-Futtaim",
    "sources": [
@@ -5937,8 +6143,8 @@
    "employment_type": "Experienced hires",
    "posted_date": "2026-09-01",
    "closing_date": null,
-   "scraped_at": "2026-09-25T05:53:31Z",
-   "last_verified_at": "2026-09-25T05:53:31Z",
+   "scraped_at": "2026-09-25T09:58:49Z",
+   "last_verified_at": "2026-09-25T09:58:49Z",
    "status": "AGING",
    "source": "Aldar",
    "sources": [
@@ -6033,8 +6239,8 @@
    "employment_type": null,
    "posted_date": "2026-09-21",
    "closing_date": "2026-10-18",
-   "scraped_at": "2026-09-25T05:53:31Z",
-   "last_verified_at": "2026-09-25T05:53:31Z",
+   "scraped_at": "2026-09-25T09:58:49Z",
+   "last_verified_at": "2026-09-25T09:58:49Z",
    "status": "NEW",
    "source": "Al-Futtaim",
    "sources": [
@@ -6123,8 +6329,8 @@
    "employment_type": null,
    "posted_date": "2026-09-23",
    "closing_date": null,
-   "scraped_at": "2026-09-25T05:53:31Z",
-   "last_verified_at": "2026-09-25T05:53:31Z",
+   "scraped_at": "2026-09-25T09:58:49Z",
+   "last_verified_at": "2026-09-25T09:58:49Z",
    "status": "NEW",
    "source": "Apparel Group",
    "sources": [
@@ -6217,8 +6423,8 @@
    "employment_type": null,
    "posted_date": "2026-09-17",
    "closing_date": "2026-10-18",
-   "scraped_at": "2026-09-25T05:53:31Z",
-   "last_verified_at": "2026-09-25T05:53:31Z",
+   "scraped_at": "2026-09-25T09:58:49Z",
+   "last_verified_at": "2026-09-25T09:58:49Z",
    "status": "ACTIVE",
    "source": "Al-Futtaim",
    "sources": [
@@ -6296,8 +6502,8 @@
    "employment_type": null,
    "posted_date": "2026-09-11",
    "closing_date": "2026-10-31",
-   "scraped_at": "2026-09-25T05:53:31Z",
-   "last_verified_at": "2026-09-25T05:53:31Z",
+   "scraped_at": "2026-09-25T09:58:49Z",
+   "last_verified_at": "2026-09-25T09:58:49Z",
    "status": "ACTIVE",
    "source": "Al-Futtaim",
    "sources": [
@@ -6387,8 +6593,8 @@
    "employment_type": null,
    "posted_date": "2026-09-10",
    "closing_date": "2026-10-22",
-   "scraped_at": "2026-09-25T05:53:31Z",
-   "last_verified_at": "2026-09-25T05:53:31Z",
+   "scraped_at": "2026-09-25T09:58:49Z",
+   "last_verified_at": "2026-09-25T09:58:49Z",
    "status": "ACTIVE",
    "source": "Al-Futtaim",
    "sources": [
@@ -6480,8 +6686,8 @@
    "employment_type": "Regular",
    "posted_date": "2026-09-24",
    "closing_date": null,
-   "scraped_at": "2026-09-25T05:53:31Z",
-   "last_verified_at": "2026-09-25T05:53:31Z",
+   "scraped_at": "2026-09-25T09:58:49Z",
+   "last_verified_at": "2026-09-25T09:58:49Z",
    "status": "NEW",
    "source": "Majid Al Futtaim",
    "sources": [
@@ -6576,8 +6782,8 @@
    "employment_type": null,
    "posted_date": "2026-09-13",
    "closing_date": "2026-10-14",
-   "scraped_at": "2026-09-25T05:53:31Z",
-   "last_verified_at": "2026-09-25T05:53:31Z",
+   "scraped_at": "2026-09-25T09:58:49Z",
+   "last_verified_at": "2026-09-25T09:58:49Z",
    "status": "ACTIVE",
    "source": "Al-Futtaim",
    "sources": [
@@ -6668,8 +6874,8 @@
    "employment_type": null,
    "posted_date": "2026-09-18",
    "closing_date": "2026-10-18",
-   "scraped_at": "2026-09-25T05:53:31Z",
-   "last_verified_at": "2026-09-25T05:53:31Z",
+   "scraped_at": "2026-09-25T09:58:49Z",
+   "last_verified_at": "2026-09-25T09:58:49Z",
    "status": "NEW",
    "source": "Al-Futtaim",
    "sources": [
@@ -6760,8 +6966,8 @@
    "employment_type": null,
    "posted_date": "2026-09-02",
    "closing_date": null,
-   "scraped_at": "2026-09-25T05:53:31Z",
-   "last_verified_at": "2026-09-25T05:53:31Z",
+   "scraped_at": "2026-09-25T09:58:49Z",
+   "last_verified_at": "2026-09-25T09:58:49Z",
    "status": "AGING",
    "source": "Landmark Group",
    "sources": [
@@ -6858,8 +7064,8 @@
    "employment_type": null,
    "posted_date": "2026-09-15",
    "closing_date": "2026-09-29",
-   "scraped_at": "2026-09-25T05:53:31Z",
-   "last_verified_at": "2026-09-25T05:53:31Z",
+   "scraped_at": "2026-09-25T09:58:49Z",
+   "last_verified_at": "2026-09-25T09:58:49Z",
    "status": "ACTIVE",
    "source": "Al-Futtaim",
    "sources": [
@@ -6946,8 +7152,8 @@
    "employment_type": null,
    "posted_date": "2026-09-22",
    "closing_date": "2026-10-22",
-   "scraped_at": "2026-09-25T05:53:31Z",
-   "last_verified_at": "2026-09-25T05:53:31Z",
+   "scraped_at": "2026-09-25T09:58:49Z",
+   "last_verified_at": "2026-09-25T09:58:49Z",
    "status": "NEW",
    "source": "Al-Futtaim",
    "sources": [
@@ -7025,8 +7231,8 @@
    "employment_type": "Full-Time",
    "posted_date": "2026-06-25",
    "closing_date": null,
-   "scraped_at": "2026-09-25T05:53:31Z",
-   "last_verified_at": "2026-09-25T05:53:31Z",
+   "scraped_at": "2026-09-25T09:58:49Z",
+   "last_verified_at": "2026-09-25T09:58:49Z",
    "status": "STALE",
    "source": "GMG",
    "sources": [
@@ -7095,8 +7301,8 @@
    "employment_type": null,
    "posted_date": "2026-09-18",
    "closing_date": "2026-10-18",
-   "scraped_at": "2026-09-25T05:53:31Z",
-   "last_verified_at": "2026-09-25T05:53:31Z",
+   "scraped_at": "2026-09-25T09:58:49Z",
+   "last_verified_at": "2026-09-25T09:58:49Z",
    "status": "NEW",
    "source": "Al-Futtaim",
    "sources": [
@@ -7186,8 +7392,8 @@
    "employment_type": null,
    "posted_date": "2026-09-02",
    "closing_date": "2026-09-30",
-   "scraped_at": "2026-09-25T05:53:31Z",
-   "last_verified_at": "2026-09-25T05:53:31Z",
+   "scraped_at": "2026-09-25T09:58:49Z",
+   "last_verified_at": "2026-09-25T09:58:49Z",
    "status": "AGING",
    "source": "Al-Futtaim",
    "sources": [
@@ -7279,8 +7485,8 @@
    "employment_type": null,
    "posted_date": "2026-07-14",
    "closing_date": "2026-09-30",
-   "scraped_at": "2026-09-25T05:53:31Z",
-   "last_verified_at": "2026-09-25T05:53:31Z",
+   "scraped_at": "2026-09-25T09:58:49Z",
+   "last_verified_at": "2026-09-25T09:58:49Z",
    "status": "STALE",
    "source": "Apparel Group",
    "sources": [
@@ -7364,8 +7570,8 @@
    "employment_type": null,
    "posted_date": "2026-09-16",
    "closing_date": "2026-10-01",
-   "scraped_at": "2026-09-25T05:53:31Z",
-   "last_verified_at": "2026-09-25T05:53:31Z",
+   "scraped_at": "2026-09-25T09:58:49Z",
+   "last_verified_at": "2026-09-25T09:58:49Z",
    "status": "ACTIVE",
    "source": "Al-Futtaim",
    "sources": [
@@ -7456,8 +7662,8 @@
    "employment_type": null,
    "posted_date": "2026-09-22",
    "closing_date": "2026-10-30",
-   "scraped_at": "2026-09-25T05:53:31Z",
-   "last_verified_at": "2026-09-25T05:53:31Z",
+   "scraped_at": "2026-09-25T09:58:49Z",
+   "last_verified_at": "2026-09-25T09:58:49Z",
    "status": "NEW",
    "source": "Al-Futtaim",
    "sources": [
@@ -7548,8 +7754,8 @@
    "employment_type": null,
    "posted_date": "2026-09-11",
    "closing_date": "2026-12-31",
-   "scraped_at": "2026-09-25T05:53:31Z",
-   "last_verified_at": "2026-09-25T05:53:31Z",
+   "scraped_at": "2026-09-25T09:58:49Z",
+   "last_verified_at": "2026-09-25T09:58:49Z",
    "status": "ACTIVE",
    "source": "Al-Futtaim",
    "sources": [
@@ -7638,8 +7844,8 @@
    "employment_type": "Full-Time",
    "posted_date": "2026-07-22",
    "closing_date": null,
-   "scraped_at": "2026-09-25T05:53:31Z",
-   "last_verified_at": "2026-09-25T05:53:31Z",
+   "scraped_at": "2026-09-25T09:58:49Z",
+   "last_verified_at": "2026-09-25T09:58:49Z",
    "status": "STALE",
    "source": "Chalhoub Group",
    "sources": [
@@ -7708,8 +7914,8 @@
    "employment_type": null,
    "posted_date": "2026-09-22",
    "closing_date": "2026-10-22",
-   "scraped_at": "2026-09-25T05:53:31Z",
-   "last_verified_at": "2026-09-25T05:53:31Z",
+   "scraped_at": "2026-09-25T09:58:49Z",
+   "last_verified_at": "2026-09-25T09:58:49Z",
    "status": "NEW",
    "source": "Al-Futtaim",
    "sources": [
@@ -7799,8 +8005,8 @@
    "employment_type": null,
    "posted_date": "2026-09-21",
    "closing_date": "2026-10-21",
-   "scraped_at": "2026-09-25T05:53:31Z",
-   "last_verified_at": "2026-09-25T05:53:31Z",
+   "scraped_at": "2026-09-25T09:58:49Z",
+   "last_verified_at": "2026-09-25T09:58:49Z",
    "status": "NEW",
    "source": "Al-Futtaim",
    "sources": [
@@ -7887,8 +8093,8 @@
    "employment_type": null,
    "posted_date": "2026-09-16",
    "closing_date": "2026-10-31",
-   "scraped_at": "2026-09-25T05:53:31Z",
-   "last_verified_at": "2026-09-25T05:53:31Z",
+   "scraped_at": "2026-09-25T09:58:49Z",
+   "last_verified_at": "2026-09-25T09:58:49Z",
    "status": "ACTIVE",
    "source": "Al-Futtaim",
    "sources": [
@@ -7977,8 +8183,8 @@
    "employment_type": null,
    "posted_date": "2026-08-31",
    "closing_date": "2026-09-30",
-   "scraped_at": "2026-09-25T05:53:31Z",
-   "last_verified_at": "2026-09-25T05:53:31Z",
+   "scraped_at": "2026-09-25T09:58:49Z",
+   "last_verified_at": "2026-09-25T09:58:49Z",
    "status": "AGING",
    "source": "Al-Futtaim",
    "sources": [
@@ -8067,8 +8273,8 @@
    "employment_type": null,
    "posted_date": "2026-09-11",
    "closing_date": "2026-09-30",
-   "scraped_at": "2026-09-25T05:53:31Z",
-   "last_verified_at": "2026-09-25T05:53:31Z",
+   "scraped_at": "2026-09-25T09:58:49Z",
+   "last_verified_at": "2026-09-25T09:58:49Z",
    "status": "ACTIVE",
    "source": "Al-Futtaim",
    "sources": [
@@ -8159,8 +8365,8 @@
    "employment_type": null,
    "posted_date": "2026-09-02",
    "closing_date": "2026-09-30",
-   "scraped_at": "2026-09-25T05:53:31Z",
-   "last_verified_at": "2026-09-25T05:53:31Z",
+   "scraped_at": "2026-09-25T09:58:49Z",
+   "last_verified_at": "2026-09-25T09:58:49Z",
    "status": "AGING",
    "source": "Al-Futtaim",
    "sources": [
@@ -8250,8 +8456,8 @@
    "employment_type": null,
    "posted_date": "2026-09-24",
    "closing_date": null,
-   "scraped_at": "2026-09-25T05:53:31Z",
-   "last_verified_at": "2026-09-25T05:53:31Z",
+   "scraped_at": "2026-09-25T09:58:49Z",
+   "last_verified_at": "2026-09-25T09:58:49Z",
    "status": "NEW",
    "source": "Al Tayer",
    "sources": [
@@ -8330,8 +8536,8 @@
    "employment_type": null,
    "posted_date": "2026-08-17",
    "closing_date": null,
-   "scraped_at": "2026-09-25T05:53:31Z",
-   "last_verified_at": "2026-09-25T05:53:31Z",
+   "scraped_at": "2026-09-25T09:58:49Z",
+   "last_verified_at": "2026-09-25T09:58:49Z",
    "status": "AGING",
    "source": "Al Tayer",
    "sources": [
@@ -8415,8 +8621,8 @@
    "employment_type": null,
    "posted_date": "2026-09-08",
    "closing_date": "2026-10-31",
-   "scraped_at": "2026-09-25T05:53:31Z",
-   "last_verified_at": "2026-09-25T05:53:31Z",
+   "scraped_at": "2026-09-25T09:58:49Z",
+   "last_verified_at": "2026-09-25T09:58:49Z",
    "status": "ACTIVE",
    "source": "Apparel Group",
    "sources": [
@@ -8494,8 +8700,8 @@
    "employment_type": "Full-time",
    "posted_date": "2026-08-26",
    "closing_date": null,
-   "scraped_at": "2026-09-25T05:53:31Z",
-   "last_verified_at": "2026-09-25T05:53:31Z",
+   "scraped_at": "2026-09-25T09:58:49Z",
+   "last_verified_at": "2026-09-25T09:58:49Z",
    "status": "AGING",
    "source": "Etihad Airways",
    "sources": [
