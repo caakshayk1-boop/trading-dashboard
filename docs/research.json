@@ -1,8 +1,8 @@
 {
  "ok": true,
- "generated_at": "2026-09-24T14:58:23+00:00",
+ "generated_at": "2026-09-25T13:03:18+00:00",
  "source": "harvested bars (offline run)",
- "coverage_note": "Harvested 500 of 500 names on hourly bars; 499 of 500 names on 3-year daily bars (0 returned nothing, 1 had too little history), at 2026-09-24T14:56:27+00:00.",
+ "coverage_note": "Harvested 500 of 500 names on hourly bars; 499 of 500 names on 3-year daily bars (0 returned nothing, 1 had too little history), at 2026-09-25T13:01:30+00:00.",
  "engines": [
   {
    "key": "buoy",
@@ -78,7 +78,7 @@
    },
    "verdict": "No measured edge, but the smallest stop of the three (5.1% of entry, 1.92x ATR) and a 2.5R target genuinely reached a quarter of the time. Sits on zero with a wide interval: not an edge, not refuted.",
    "scanned": 499,
-   "fired": 14,
+   "fired": 13,
    "top": [
     {
      "engine": "anchor",
@@ -97,12 +97,12 @@
      "rsi": 33.4,
      "close_strength": 0.79,
      "turnover_cr": 30.98,
-     "bars_ago": 3,
+     "bars_ago": 4,
      "symbol": "NATCOPHARM",
      "lane": null,
      "at": "2026-09-21T00:00:00+00:00",
-     "last": 842.0,
-     "since_pct": 3.15
+     "last": 839.3,
+     "since_pct": 2.82
     },
     {
      "engine": "anchor",
@@ -121,60 +121,36 @@
      "rsi": 36.8,
      "close_strength": 0.83,
      "turnover_cr": 19.95,
-     "bars_ago": 8,
+     "bars_ago": 9,
      "symbol": "ABBOTINDIA",
      "lane": null,
      "at": "2026-09-11T00:00:00+00:00",
-     "last": 26860.0,
-     "since_pct": 5.13
+     "last": 26955.0,
+     "since_pct": 5.5
     },
     {
      "engine": "anchor",
-     "i": 735,
-     "entry": 708.25,
-     "sl": 668.26,
-     "target1": 772.23,
-     "target2": 808.22,
-     "target3": 840.21,
+     "i": 745,
+     "entry": 753.25,
+     "sl": 711.54,
+     "target1": 819.99,
+     "target2": 857.52,
+     "target3": 890.89,
      "rr": 1.6,
-     "floor": 681.9,
+     "floor": 726.06,
      "touches": 2,
-     "above_floor_pct": 3.86,
-     "risk_pct": 5.65,
-     "risk_atr": 3.16,
-     "rsi": 44.0,
-     "close_strength": 0.97,
-     "turnover_cr": 1928.4,
-     "bars_ago": 9,
-     "symbol": "HDFCBANK",
+     "above_floor_pct": 3.74,
+     "risk_pct": 5.54,
+     "risk_atr": 2.37,
+     "rsi": 33.0,
+     "close_strength": 0.78,
+     "turnover_cr": 21.15,
+     "bars_ago": 0,
+     "symbol": "CANFINHOME",
      "lane": null,
-     "at": "2026-09-11T00:00:00+00:00",
-     "last": 728.9,
-     "since_pct": 2.92
-    },
-    {
-     "engine": "anchor",
-     "i": 735,
-     "entry": 471.5,
-     "sl": 446.19,
-     "target1": 511.99,
-     "target2": 534.77,
-     "target3": 555.01,
-     "rr": 1.6,
-     "floor": 455.3,
-     "touches": 2,
-     "above_floor_pct": 3.56,
-     "risk_pct": 5.37,
-     "risk_atr": 1.85,
-     "rsi": 36.5,
-     "close_strength": 0.72,
-     "turnover_cr": 66.22,
-     "bars_ago": 9,
-     "symbol": "ICICIPRULI",
-     "lane": null,
-     "at": "2026-09-11T00:00:00+00:00",
-     "last": 464.5,
-     "since_pct": -1.48
+     "at": "2026-09-25T00:00:00+00:00",
+     "last": 753.25,
+     "since_pct": 0.0
     },
     {
      "engine": "anchor",
@@ -193,12 +169,12 @@
      "rsi": 37.7,
      "close_strength": 0.83,
      "turnover_cr": 168.21,
-     "bars_ago": 6,
+     "bars_ago": 7,
      "symbol": "DMART",
      "lane": null,
      "at": "2026-09-16T00:00:00+00:00",
-     "last": 3787.5,
-     "since_pct": 1.81
+     "last": 3834.2,
+     "since_pct": 3.07
     },
     {
      "engine": "anchor",
@@ -217,12 +193,12 @@
      "rsi": 39.6,
      "close_strength": 0.71,
      "turnover_cr": 23.4,
-     "bars_ago": 6,
+     "bars_ago": 7,
      "symbol": "RAMCOCEM",
      "lane": null,
      "at": "2026-09-16T00:00:00+00:00",
-     "last": 872.1,
-     "since_pct": 1.04
+     "last": 867.55,
+     "since_pct": 0.51
     },
     {
      "engine": "anchor",
@@ -241,12 +217,12 @@
      "rsi": 33.4,
      "close_strength": 0.69,
      "turnover_cr": 53.29,
-     "bars_ago": 4,
+     "bars_ago": 5,
      "symbol": "MRF",
      "lane": null,
      "at": "2026-09-18T00:00:00+00:00",
-     "last": 123985.0,
-     "since_pct": -1.34
+     "last": 124035.0,
+     "since_pct": -1.3
     },
     {
      "engine": "anchor",
@@ -265,12 +241,12 @@
      "rsi": 38.3,
      "close_strength": 0.8,
      "turnover_cr": 248.49,
-     "bars_ago": 5,
+     "bars_ago": 6,
      "symbol": "JIOFIN",
      "lane": null,
      "at": "2026-09-17T00:00:00+00:00",
-     "last": 227.2,
-     "since_pct": -0.92
+     "last": 227.0,
+     "since_pct": -1.0
     },
     {
      "engine": "anchor",
@@ -289,12 +265,12 @@
      "rsi": 31.5,
      "close_strength": 0.63,
      "turnover_cr": 13.39,
-     "bars_ago": 4,
+     "bars_ago": 5,
      "symbol": "JKTYRE",
      "lane": null,
      "at": "2026-09-18T00:00:00+00:00",
-     "last": 347.2,
-     "since_pct": -0.62
+     "last": 345.85,
+     "since_pct": -1.0
     },
     {
      "engine": "anchor",
@@ -313,16 +289,40 @@
      "rsi": 43.2,
      "close_strength": 0.69,
      "turnover_cr": 111.09,
-     "bars_ago": 5,
+     "bars_ago": 6,
      "symbol": "TATACONSUM",
      "lane": null,
      "at": "2026-09-17T00:00:00+00:00",
-     "last": 986.3,
-     "since_pct": -2.7
+     "last": 983.2,
+     "since_pct": -3.01
+    },
+    {
+     "engine": "anchor",
+     "i": 736,
+     "entry": 375.8,
+     "sl": 359.56,
+     "target1": 401.78,
+     "target2": 416.39,
+     "target3": 429.39,
+     "rr": 1.6,
+     "floor": 366.9,
+     "touches": 2,
+     "above_floor_pct": 2.43,
+     "risk_pct": 4.32,
+     "risk_atr": 2.07,
+     "rsi": 22.4,
+     "close_strength": 0.69,
+     "turnover_cr": 9.11,
+     "bars_ago": 7,
+     "symbol": "CIEINDIA",
+     "lane": null,
+     "at": "2026-09-16T00:00:00+00:00",
+     "last": 390.8,
+     "since_pct": 3.99
     }
    ],
-   "new_alerts": 0,
-   "already_logged": 14
+   "new_alerts": 1,
+   "already_logged": 12
   },
   {
    "key": "bedrock",
