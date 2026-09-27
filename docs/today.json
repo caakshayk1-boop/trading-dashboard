@@ -1,38 +1,94 @@
 {
- "build_id": "20260926T082018",
- "date": "2026-09-26",
- "date_str": "Saturday, September 26 2026",
+ "build_id": "20260927T080657",
+ "date": "2026-09-27",
+ "date_str": "Sunday, September 27 2026",
  "picks": [
   {
-   "symbol": "CRWD",
-   "name": "CRWD",
-   "ext20": 7.5,
-   "vol_ratio": 1.36,
-   "price": 237.65,
-   "change_1d": -3.28,
-   "mom_1m": 17.9,
-   "mom_3m": 40.7,
-   "score": 94,
-   "target": 276.56,
-   "stop_loss": 221.07,
+   "symbol": "SMCI",
+   "name": "SMCI",
+   "ext20": 10.27,
+   "vol_ratio": 1.07,
+   "price": 43.26,
+   "change_1d": 4.22,
+   "mom_1m": 15.7,
+   "mom_3m": 53.7,
+   "score": 92,
+   "target": 58.78,
+   "stop_loss": 39.23,
+   "target_basis": "the 52-week high",
+   "stop_basis": "the 20-day average",
+   "horizon_basis": "36% to go at its recent 17.9%/month",
+   "rr": 3.85,
+   "atr": 2.32,
+   "high_52w": 58.78,
+   "timeframe": "1-3 months",
+   "currency": "$",
+   "factors": [
+    {
+     "k": "Above 20-day avg",
+     "w": 25,
+     "e": 25.0
+    },
+    {
+     "k": "Above 50-day avg",
+     "w": 20,
+     "e": 20.0
+    },
+    {
+     "k": "Averages stacked",
+     "w": 15,
+     "e": 15.0
+    },
+    {
+     "k": "1-month thrust",
+     "w": 20,
+     "e": 20.0
+    },
+    {
+     "k": "3-month trend",
+     "w": 10,
+     "e": 10.0
+    },
+    {
+     "k": "Volume confirming",
+     "w": 10,
+     "e": 1.9
+    }
+   ],
+   "ema20": 39.23,
+   "tv": "SMCI",
+   "thesis": "A 53.7% three\u2011month surge, 15.7% one\u2011month rise, price 10.3% above its 20\u2011day average, volume 1.07\u00d7 norm, composite 92/100."
+  },
+  {
+   "symbol": "NET",
+   "name": "NET",
+   "ext20": 7.26,
+   "vol_ratio": 1.03,
+   "price": 349.02,
+   "change_1d": -2.73,
+   "mom_1m": 22.5,
+   "mom_3m": 43.2,
+   "score": 90,
+   "target": 405.94,
+   "stop_loss": 325.4,
    "target_basis": "2x the 14-day range beyond the 52-week high (the high is too close to be worth the stop)",
    "stop_basis": "the 20-day average",
-   "horizon_basis": "16% to go at its recent 13.6%/month",
-   "rr": 2.35,
-   "atr": 13.12,
-   "high_52w": 250.32,
+   "horizon_basis": "16% to go at its recent 14.4%/month",
+   "rr": 2.41,
+   "atr": 19.26,
+   "high_52w": 367.43,
    "timeframe": "about a month",
    "currency": "$",
    "factors": [
     {
      "k": "Above 20-day avg",
      "w": 25,
-     "e": 23.8
+     "e": 23.2
     },
     {
      "k": "Above 50-day avg",
      "w": 20,
-     "e": 19.9
+     "e": 20.0
     },
     {
      "k": "Averages stacked",
@@ -52,99 +108,155 @@
     {
      "k": "Volume confirming",
      "w": 10,
-     "e": 5.1
+     "e": 1.4
     }
    ],
-   "ema20": 221.07,
+   "ema20": 325.4,
+   "tv": "NET",
+   "thesis": "43.2% three\u2011month gain, 22.5% one\u2011month rise, price 7.3% above its 20\u2011day average, volume 1.03\u00d7 norm, composite 90/100."
+  },
+  {
+   "symbol": "CRWD",
+   "name": "CRWD",
+   "ext20": 7.55,
+   "vol_ratio": 0.84,
+   "price": 252.13,
+   "change_1d": -2.9,
+   "mom_1m": 33.3,
+   "mom_3m": 35.8,
+   "score": 89,
+   "target": 288.2,
+   "stop_loss": 234.43,
+   "target_basis": "2x the 14-day range beyond the 52-week high (the high is too close to be worth the stop)",
+   "stop_basis": "the 20-day average",
+   "horizon_basis": "14% to go at its recent 11.9%/month",
+   "rr": 2.04,
+   "atr": 12.16,
+   "high_52w": 263.87,
+   "timeframe": "about a month",
+   "currency": "$",
+   "factors": [
+    {
+     "k": "Above 20-day avg",
+     "w": 25,
+     "e": 23.9
+    },
+    {
+     "k": "Above 50-day avg",
+     "w": 20,
+     "e": 20.0
+    },
+    {
+     "k": "Averages stacked",
+     "w": 15,
+     "e": 15.0
+    },
+    {
+     "k": "1-month thrust",
+     "w": 20,
+     "e": 20.0
+    },
+    {
+     "k": "3-month trend",
+     "w": 10,
+     "e": 10.0
+    },
+    {
+     "k": "Volume confirming",
+     "w": 10,
+     "e": 0.0
+    }
+   ],
+   "ema20": 234.43,
    "tv": "CRWD",
-   "thesis": "40.7% three\u2011month surge, 17.9% monthly rise, price 7.5% above its 20\u2011day average on 1.36\u00d7 volume, composite 94/100."
+   "thesis": "33.3% one\u2011month gain, 35.8% three\u2011month gain, price 7.5% above 20\u2011day average, volume 0.84\u00d7 norm, composite 89/100."
+  },
+  {
+   "symbol": "ARM",
+   "name": "ARM",
+   "ext20": 10.63,
+   "vol_ratio": 1.66,
+   "price": 310.32,
+   "change_1d": 1.3,
+   "mom_1m": 23.6,
+   "mom_3m": -9.7,
+   "score": 78,
+   "target": 452.7,
+   "stop_loss": 280.51,
+   "target_basis": "the 52-week high",
+   "stop_basis": "the 20-day average",
+   "horizon_basis": "three-month drift is flat or negative \u2014 no pace to extrapolate",
+   "rr": 4.78,
+   "atr": 19.44,
+   "high_52w": 452.7,
+   "timeframe": "no estimate",
+   "currency": "$",
+   "factors": [
+    {
+     "k": "Above 20-day avg",
+     "w": 25,
+     "e": 25.0
+    },
+    {
+     "k": "Above 50-day avg",
+     "w": 20,
+     "e": 18.1
+    },
+    {
+     "k": "Averages stacked",
+     "w": 15,
+     "e": 6.2
+    },
+    {
+     "k": "1-month thrust",
+     "w": 20,
+     "e": 20.0
+    },
+    {
+     "k": "3-month trend",
+     "w": 10,
+     "e": 0.0
+    },
+    {
+     "k": "Volume confirming",
+     "w": 10,
+     "e": 8.4
+    }
+   ],
+   "ema20": 280.51,
+   "tv": "ARM",
+   "thesis": "23.6% one\u2011month gain, 10.6% above 20\u2011day average, volume 1.66\u00d7 norm, yet three\u2011month down 9.7%, composite 78/100."
   },
   {
    "symbol": "HOOD",
    "name": "HOOD",
-   "ext20": 8.9,
-   "vol_ratio": 1.14,
-   "price": 119.82,
-   "change_1d": 9.12,
-   "mom_1m": 25.1,
-   "mom_3m": 13.3,
-   "score": 84,
+   "ext20": 4.11,
+   "vol_ratio": 0.8,
+   "price": 119.4,
+   "change_1d": -1.18,
+   "mom_1m": 10.0,
+   "mom_3m": 17.3,
+   "score": 64,
    "target": 153.86,
-   "stop_loss": 110.03,
+   "stop_loss": 110.08,
    "target_basis": "the 52-week high",
-   "stop_basis": "the 20-day average",
-   "horizon_basis": "28% to go at its recent 4.4%/month",
-   "rr": 3.48,
-   "atr": 7.21,
+   "stop_basis": "1.5x the 14-day range (the 20-day average is inside the noise)",
+   "horizon_basis": "29% to go at its recent 5.8%/month",
+   "rr": 3.7,
+   "atr": 6.21,
    "high_52w": 153.86,
-   "timeframe": "6-12 months",
-   "currency": "$",
-   "factors": [
-    {
-     "k": "Above 20-day avg",
-     "w": 25,
-     "e": 25.0
-    },
-    {
-     "k": "Above 50-day avg",
-     "w": 20,
-     "e": 19.6
-    },
-    {
-     "k": "Averages stacked",
-     "w": 15,
-     "e": 13.2
-    },
-    {
-     "k": "1-month thrust",
-     "w": 20,
-     "e": 20.0
-    },
-    {
-     "k": "3-month trend",
-     "w": 10,
-     "e": 3.8
-    },
-    {
-     "k": "Volume confirming",
-     "w": 10,
-     "e": 2.7
-    }
-   ],
-   "ema20": 110.03,
-   "tv": "HOOD",
-   "thesis": "25.1% one\u2011month gain, 13.3% three\u2011month gain, price 8.9% above its 20\u2011day average, volume 1.14\u00d7 norm, composite 84/100."
-  },
-  {
-   "symbol": "ZS",
-   "name": "ZS",
-   "ext20": 9.29,
-   "vol_ratio": 1.27,
-   "price": 197.31,
-   "change_1d": -0.08,
-   "mom_1m": 6.9,
-   "mom_3m": 59.0,
-   "score": 83,
-   "target": 336.99,
-   "stop_loss": 180.54,
-   "target_basis": "the 52-week high",
-   "stop_basis": "the 20-day average",
-   "horizon_basis": "71% to go at its recent 19.7%/month",
-   "rr": 8.33,
-   "atr": 10.04,
-   "high_52w": 336.99,
    "timeframe": "3-6 months",
    "currency": "$",
    "factors": [
     {
      "k": "Above 20-day avg",
      "w": 25,
-     "e": 25.0
+     "e": 15.3
     },
     {
      "k": "Above 50-day avg",
      "w": 20,
-     "e": 20.0
+     "e": 15.2
     },
     {
      "k": "Averages stacked",
@@ -154,134 +266,22 @@
     {
      "k": "1-month thrust",
      "w": 20,
-     "e": 9.2
+     "e": 13.3
     },
     {
      "k": "3-month trend",
      "w": 10,
-     "e": 10.0
+     "e": 4.9
     },
     {
      "k": "Volume confirming",
      "w": 10,
-     "e": 4.1
+     "e": 0.0
     }
    ],
-   "ema20": 180.54,
-   "tv": "ZS",
-   "thesis": "59% three\u2011month gain, price 9.3% above its 20\u2011day average, volume 1.27\u00d7 norm, composite 83/100 suggests consolidation."
-  },
-  {
-   "symbol": "COIN",
-   "name": "COIN",
-   "ext20": 10.04,
-   "vol_ratio": 1.41,
-   "price": 194.25,
-   "change_1d": 11.66,
-   "mom_1m": 21.3,
-   "mom_3m": 17.8,
-   "score": 81,
-   "target": 402.16,
-   "stop_loss": 176.53,
-   "target_basis": "the 52-week high",
-   "stop_basis": "the 20-day average",
-   "horizon_basis": "107% to go at its recent 5.9%/month",
-   "rr": 11.73,
-   "atr": 12.9,
-   "high_52w": 402.16,
-   "timeframe": "over a year at this pace",
-   "currency": "$",
-   "factors": [
-    {
-     "k": "Above 20-day avg",
-     "w": 25,
-     "e": 25.0
-    },
-    {
-     "k": "Above 50-day avg",
-     "w": 20,
-     "e": 18.0
-    },
-    {
-     "k": "Averages stacked",
-     "w": 15,
-     "e": 7.4
-    },
-    {
-     "k": "1-month thrust",
-     "w": 20,
-     "e": 20.0
-    },
-    {
-     "k": "3-month trend",
-     "w": 10,
-     "e": 5.1
-    },
-    {
-     "k": "Volume confirming",
-     "w": 10,
-     "e": 5.6
-    }
-   ],
-   "ema20": 176.53,
-   "tv": "COIN",
-   "thesis": "21.3% one\u2011month gain, 17.8% three\u2011month rise, price 10% above its 20\u2011day average, volume 1.41\u00d7 norm, composite 81."
-  },
-  {
-   "symbol": "META",
-   "name": "META",
-   "ext20": 5.72,
-   "vol_ratio": 1.07,
-   "price": 665.75,
-   "change_1d": -2.43,
-   "mom_1m": 21.9,
-   "mom_3m": 18.1,
-   "score": 67,
-   "target": 788.22,
-   "stop_loss": 629.74,
-   "target_basis": "the 52-week high",
-   "stop_basis": "the 20-day average",
-   "horizon_basis": "18% to go at its recent 6.0%/month",
-   "rr": 3.4,
-   "atr": 21.79,
-   "high_52w": 788.22,
-   "timeframe": "3-6 months",
-   "currency": "$",
-   "factors": [
-    {
-     "k": "Above 20-day avg",
-     "w": 25,
-     "e": 19.3
-    },
-    {
-     "k": "Above 50-day avg",
-     "w": 20,
-     "e": 13.0
-    },
-    {
-     "k": "Averages stacked",
-     "w": 15,
-     "e": 7.8
-    },
-    {
-     "k": "1-month thrust",
-     "w": 20,
-     "e": 20.0
-    },
-    {
-     "k": "3-month trend",
-     "w": 10,
-     "e": 5.2
-    },
-    {
-     "k": "Volume confirming",
-     "w": 10,
-     "e": 1.8
-    }
-   ],
-   "ema20": 629.74,
-   "tv": "META",
-   "thesis": "21.9% one\u2011month gain, 18.1% three\u2011month rise, price 5.7% above 20\u2011day average, volume 1.07\u00d7 norm, composite 67."
+   "ema20": 114.69,
+   "tv": "HOOD",
+   "thesis": "3\u2011month return of +17.3% with price 4.1% above the 20\u2011day average and volume at 0.80\u00d7 normal, composite 64/100."
   }
  ],
  "engine": [
@@ -411,7 +411,7 @@
  "picks_week": null,
  "open_context": {
   "AAPL": {
-   "price": 335.92,
+   "price": 341.07,
    "sector": "Technology"
   },
   "ACE": {
@@ -426,12 +426,16 @@
    "price": 8889.0,
    "sector": "Healthcare"
   },
+  "ARM": {
+   "price": 310.32,
+   "sector": "Technology"
+  },
   "ASHOKLEY": {
    "price": 159.08,
    "sector": "Industrials"
   },
   "AUROPHARMA": {
-   "price": 1716.0,
+   "price": 1712.0,
    "sector": "Healthcare"
   },
   "BANDHANBNK": {
@@ -463,7 +467,7 @@
    "sector": "Industrials"
   },
   "CHALET": {
-   "price": 894.9,
+   "price": 881.35,
    "sector": "Consumer Cyclical"
   },
   "CHENNPETRO": {
@@ -475,7 +479,7 @@
    "sector": "Energy"
   },
   "COIN": {
-   "price": 199.21,
+   "price": 195.11,
    "sector": ""
   },
   "COROMANDEL": {
@@ -483,19 +487,19 @@
    "sector": "Basic Materials"
   },
   "CRAFTSMAN": {
-   "price": 10710.0,
+   "price": 10735.0,
    "sector": "Consumer Cyclical"
   },
   "CREDITACC": {
-   "price": 1315.1,
+   "price": 1298.8,
    "sector": "Financial Services"
   },
   "CRM": {
-   "price": 238.22,
+   "price": 234.02,
    "sector": "Technology"
   },
   "CRWD": {
-   "price": 259.67,
+   "price": 252.13,
    "sector": "Technology"
   },
   "DRREDDY": {
@@ -503,7 +507,7 @@
    "sector": "Healthcare"
   },
   "ECLERX": {
-   "price": 1890.1,
+   "price": 1898.8,
    "sector": "Technology"
   },
   "EMMVEE": {
@@ -551,11 +555,11 @@
    "sector": "Basic Materials"
   },
   "HOOD": {
-   "price": 120.82,
+   "price": 119.4,
    "sector": "Financial Services"
   },
   "IKS": {
-   "price": 1868.3,
+   "price": 1815.8,
    "sector": "Healthcare"
   },
   "INDGN": {
@@ -563,7 +567,7 @@
    "sector": "Healthcare"
   },
   "INDIANB": {
-   "price": 830.0,
+   "price": 832.0,
    "sector": "Financial Services"
   },
   "J&KBANK": {
@@ -575,7 +579,7 @@
    "sector": "Financial Services"
   },
   "JSL": {
-   "price": 738.95,
+   "price": 748.25,
    "sector": "Basic Materials"
   },
   "JUBLPHARMA": {
@@ -590,6 +594,10 @@
    "price": 3650.0,
    "sector": "Technology"
   },
+  "LAURUSLABS": {
+   "price": 2007.0,
+   "sector": "Healthcare"
+  },
   "MAHABANK": {
    "price": 84.88,
    "sector": "Financial Services"
@@ -599,7 +607,7 @@
    "sector": "Consumer Cyclical"
   },
   "META": {
-   "price": 777.59,
+   "price": 751.66,
    "sector": "Communication Services"
   },
   "MINDACORP": {
@@ -607,7 +615,7 @@
    "sector": "Consumer Cyclical"
   },
   "MOTILALOFS": {
-   "price": 1022.0,
+   "price": 1029.0,
    "sector": "Financial Services"
   },
   "MRPL": {
@@ -618,8 +626,12 @@
    "price": 358.7,
    "sector": "Basic Materials"
   },
+  "NET": {
+   "price": 349.02,
+   "sector": ""
+  },
   "NUVOCO": {
-   "price": 335.0,
+   "price": 335.45,
    "sector": "Basic Materials"
   },
   "PARADEEP": {
@@ -636,18 +648,6 @@
   },
   "PINELABS": {
    "price": 176.57,
-   "sector": "Technology"
-  },
-  "POLYCAB": {
-   "price": 8366.5,
-   "sector": "Industrials"
-  },
-  "RBLBANK": {
-   "price": 412.75,
-   "sector": "Financial Services"
-  },
-  "SAP": {
-   "price": 209.11,
    "sector": "Technology"
   }
  },
@@ -773,38 +773,44 @@
  },
  "data_health": {
   "worst": "DEGRADED",
-  "current": 11,
+  "current": 10,
   "total": 12,
   "degraded": [
    {
     "dataset": "Careers feed",
     "status": "DEGRADED",
-    "age": "14h old",
+    "age": "15h old",
     "note": "partial coverage \u2014 10/14 records"
+   },
+   {
+    "dataset": "New listings",
+    "status": "STALE",
+    "age": "7 days old",
+    "note": "older than its weekly refresh"
    }
   ]
  },
  "desk": {
   "chess": {
-   "title": "Study Plan: 15 Min/Day",
-   "body": "15 minutes daily beats 3 hours once a week. Split: 5 min puzzles (Chess.com/Lichess tactics trainer) + 5 min play (1 game, 10+0 or 15+10) + 5 min review (analyse your game, find the turning point). After 30 days: you'll feel patterns automatically. Tactics + play + review = the triangle of improvement.",
-   "index": 19,
+   "title": "Rating Progress Reality",
+   "body": "800\u21921000: Learn not to blunder pieces for free. 1000\u21921200: Basic tactics (forks, pins). 1200\u21921500: Strategy (plans, pawn structure). 1500\u21921800: Calculation depth + endgames. 1800+: Opening theory + deep calculation. Most adults plateau at 1000-1200 because they skip tactics training. Do 10 puzzles daily \u2014 minimum. No shortcut.",
+   "index": 20,
    "total": 20
   },
   "wisdom": {
-   "title": "Rest is Productive",
-   "body": "High performers rest. Sleep is not laziness \u2014 it's when the brain consolidates learning, the body repairs, emotional regulation resets. Cutting sleep to work more is borrowing from tomorrow's performance to pay today's anxiety. Protect 7 hours. It will make you a better analyst, better father, better human.",
-   "index": 13,
+   "title": "The Identity Question",
+   "body": "Who are you when the job title is gone, when the market is closed, when your daughter is asleep? Define yourself by what you do, not what you've achieved. 'I am someone who learns daily. I love deeply. I show up.' These don't depend on AED 30K or a Dubai visa. They're yours now.",
+   "index": 14,
    "total": 18
   },
   "book": {
    "book": "Never Split the Difference",
    "author": "Chris Voss",
-   "chapter": "Tactical Empathy: The Most Powerful Negotiation Tool",
-   "lesson": "FBI hostage negotiator Chris Voss's core technique: tactical empathy. Not sympathy (feeling what they feel) but empathy (understanding what they feel and why). In any negotiation, the other party has emotional needs underneath their stated position. Label those emotions: 'It seems like you're frustrated by the timeline.' 'It sounds like you feel the value isn't there.' Labelling emotions defuses them and builds trust. When people feel understood, they are more open to creative solutions. The biggest mistake in negotiation is treating it as purely rational \u2014 it is almost always emotional first.",
-   "key_quote": "The fastest path to yes in any negotiation is to make the other person feel genuinely understood first.",
-   "action": "In your next difficult conversation, try one label: 'It seems like...' or 'It sounds like...' and see what happens to the tone.",
-   "index": 37,
+   "chapter": "The Power of No and Calibrated Questions",
+   "lesson": "Voss argues that 'no' is not the opposite of 'yes' in negotiation \u2014 it's the beginning. When someone says no, they feel safe. They feel in control. A fake yes (where they agree to get you off their back) is far worse than a genuine no. His technique: ask questions that invite 'no.' 'Is now a bad time to talk?' gets a more honest response than 'Is now a good time?' His other key tool: calibrated questions \u2014 open-ended questions starting with 'what' and 'how' that force the other person to problem-solve. 'How am I supposed to do that?' puts the problem back on them without being confrontational.",
+   "key_quote": "'No' means 'I'm not comfortable yet.' Your job is to find out what would make them comfortable.",
+   "action": "In your next negotiation, replace 'Can you do X?' with 'How can we make X work?' Notice how differently people respond.",
+   "index": 38,
    "total": 48,
    "crux": [
     "Negotiation is not rational argument. It is emotional intelligence applied under pressure.",
@@ -842,211 +848,211 @@
   },
   "way": {
    "minimalism": {
-    "title": "Sentimental \u2260 Storage",
-    "body": "You are keeping the object to keep the memory. The memory is not in the object. Photograph it, write one line about why it mattered, and release the thing.",
-    "action": "Photograph one sentimental item you have not looked at in a year.",
-    "index": 11,
+    "title": "Gifts Are Not Obligations",
+    "body": "A gift's job ended the moment it was given. Keeping something unwanted out of guilt honours nobody and costs you space every day.",
+    "action": "Release one guilt-kept item. The giver will never know.",
+    "index": 12,
     "total": 20,
     "label": "Minimalism"
    },
    "etiquette": {
-    "title": "Thank The Invisible People",
-    "body": "The security guard, the cleaner, the driver, the tea boy. How you treat people who cannot advance your career is the only honest read on your character \u2014 and senior people watch for it specifically.",
-    "action": "Learn the name of one person whose name you have never asked.",
-    "index": 17,
+    "title": "Do Not Correct Trivia In Public",
+    "body": "Being right about something small in front of an audience costs more in goodwill than the correction is worth. Let it go, or say it privately later.",
+    "action": "Let one minor inaccuracy pass uncorrected today.",
+    "index": 18,
     "total": 20,
     "label": "Etiquette"
    },
    "stillness": {
-    "title": "The Half-Smile",
-    "body": "Thich Nhat Hanh's practice: a slight smile, held, changes state faster than most reasoning about your mood. The body leads the mind more often than the reverse.",
-    "action": "Half-smile for one full minute. Notice the shift.",
-    "index": 15,
+    "title": "Impermanence Applies To The Bad Too",
+    "body": "The difficult period ends. So does the good one. This is not pessimism \u2014 it is the only reliable source of equanimity in both directions.",
+    "action": "Name the current difficulty. Say plainly: this also ends.",
+    "index": 16,
     "total": 20,
     "label": "Stillness"
    },
    "model": {
-    "title": "Incentives",
-    "body": "Show me the incentive and I will show you the outcome. Never explain by malice or stupidity what the incentive structure fully predicts. Ask who gets paid for this to happen.",
-    "action": "For one recommendation you received, map who benefits from you following it.",
-    "index": 7,
+    "title": "Compounding",
+    "body": "Small consistent gains dominate large sporadic ones, and the effect is invisible until suddenly it is not. The counterintuitive part: nearly all the value arrives at the end.",
+    "action": "Identify one habit that compounds. Protect it above anything urgent.",
+    "index": 8,
     "total": 20,
     "label": "Mental Model"
    },
    "arabic": {
-    "script": "\u0645\u0646 \u0641\u0636\u0644\u0643",
-    "translit": "min fadlak",
-    "meaning": "Please",
-    "use": "min fadlik to a woman. Attach it to every request and you will be treated differently.",
-    "index": 3,
+    "script": "\u0625\u0646 \u0634\u0627\u0621 \u0627\u0644\u0644\u0647",
+    "translit": "in shaa Allah",
+    "meaning": "God willing",
+    "use": "Attached to any future plan. Culturally expected \u2014 its absence sounds presumptuous about the future.",
+    "index": 4,
     "total": 30,
     "label": "Arabic"
    },
    "drill": {
-    "title": "Teach One Thing",
-    "body": "Explaining to another person exposes every gap instantly. Teaching is the highest-return study method measured, and it costs ten minutes.",
-    "action": "Teach one concept to someone today. Note where you stumbled.",
-    "index": 19,
+    "title": "Review Your Own Work Cold",
+    "body": "Leave it 24 hours, then review as if a stranger wrote it and you are looking for errors. You will find them. Reviewing immediately finds nothing.",
+    "action": "Re-open yesterday's work. Find three things to fix.",
+    "index": 20,
     "total": 20,
     "label": "Drill"
    },
    "health": {
-    "title": "Grip Strength As A Biomarker",
-    "body": "It correlates with cardiovascular mortality and cognitive decline, and it is trivially measurable. It is a proxy for total-body strength and neuromuscular health.",
-    "action": "Two sets of dead hangs or farmer's carries to failure.",
-    "index": 9,
+    "title": "Zone 5 Once A Week",
+    "body": "Short maximal intervals raise VO2max faster than steady work. Four minutes hard, four easy, four times. Unpleasant, brief, and disproportionately effective.",
+    "action": "One 4x4 interval session. Only if Zone 2 is already habitual.",
+    "index": 10,
     "total": 20,
     "label": "Health"
    }
   },
   "quote": {
-   "name": "Mark Zuckerberg",
-   "quote": "Move fast and break things. Unless you are breaking stuff, you are not moving fast enough.",
-   "index": 14,
+   "name": "Jack Ma",
+   "quote": "Today is hard, tomorrow will be worse, but the day after tomorrow will be sunshine.",
+   "index": 15,
    "total": 96
   },
   "lesson": {
-   "tradition": "Indian Wisdom",
-   "lesson": "The future depends on what you do today.",
-   "source": "Mahatma Gandhi"
+   "tradition": "Greek Philosophy",
+   "lesson": "The unexamined life is not worth living.",
+   "source": "Socrates"
   },
   "case": {
-   "title": "OYO: Growth Before Foundation",
-   "story": "OYO expanded to 80+ countries in 5 years. No standardized product, operational chaos, $600M losses. Had to shut down hundreds of hotels and lay off 5,000 people.",
-   "lesson": "Blitzscaling works only if the unit economics work. Expand when you've proven the model, not before. Speed without structure is just expensive chaos."
+   "title": "Stripe: Developer-First, CEO-Last",
+   "story": "Stripe built payment APIs for developers, not CFOs. 7 lines of code to accept payments. No sales team for the first 3 years \u2014 product sold itself.",
+   "lesson": "The best distribution is built into the product. If developers love it, adoption spreads through word of mouth. Sell to builders, not buyers."
   },
   "fpna": {
-   "title": "EBITDA Bridge",
-   "body": "Walk from prior period: Revenue \u00b1, COGS \u00b1, SG&A \u00b1, Other \u00b1. Bridges tell the story behind the number.",
-   "index": 6,
+   "title": "Scenario Planning",
+   "body": "Always model 3: Base, Bull (+20%), Bear (\u201320%). Present the range. Executives hate surprises.",
+   "index": 7,
    "total": 20
   },
   "cfo": {
-   "title": "CFO Step 2: Investor Relations",
-   "body": "Listed company CFOs speak to markets quarterly. Practice presenting results: 'Revenue grew 18% YoY driven by X. EBITDA margin expanded 200bps due to Y. FY26 guidance: Z.' Short, precise, numbers-first. Record yourself.",
-   "index": 7,
+   "title": "CFO Step 3: M&A Fundamentals",
+   "body": "Basic M&A literacy: DCF valuation, EV/EBITDA multiples, due diligence process, SPA (Share Purchase Agreement), earn-out structures. You don't need to be an investment banker, but you need to read a deal memo and ask smart questions.",
+   "index": 8,
    "total": 15
   },
   "money_hack": {
-   "title": "Term Insurance First",
-   "body": "\u20b91Cr term insurance (\u20b910\u201315K/year at 25). Non-negotiable. Buy this before any investment."
+   "title": "ELSS Lock-in Trick",
+   "body": "ELSS 3-year lock-in: SIP each month \u2192 each instalment unlocks separately. Best 80C option."
   },
   "dubai": {
-   "title": "The offer letter clauses to read twice",
-   "body": "Probation length (usually six months, terminable on 14 days), annual leave (30 calendar days is standard, 22 working days is not the same thing), flight allowance, and whether the visa is sponsored for family from day one or after probation.",
-   "targets": "Family sponsorship after probation means six months of separation nobody mentioned.",
-   "action_label": "Check",
-   "action": "Ask about family visa timing before you accept, in writing.",
-   "index": 29,
+   "title": "Why applications stall at 60%",
+   "body": "Most Gulf portals reject on missing fields, not on merit. Passport number, visa status, notice period, current and expected salary. Leave one blank and the application never reaches a human.",
+   "targets": "Expected salary blank is read as 'unclear', which is worse than a high number.",
+   "action_label": "Fix",
+   "action": "Keep a text file with every field the portals ask for. Paste, do not retype.",
+   "index": 30,
    "total": 30
   },
   "daughter": {
    "months": 9,
-   "days": 275,
+   "days": 276,
    "heading": "Nine months old.",
    "band": "crawling",
    "born": "2025-12-25"
   },
-  "productivity": "Track energy, not just time. Hard work when energy is highest.",
+  "productivity": "Define 'done' before starting. Vague tasks never finish.",
   "father": [
    {
-    "title": "Mirror her expressions",
-    "do": "Copy her face \u2014 surprise, frown, smile \u2014 and hold it so she sees it.",
-    "why": "Facial mirroring is how infants learn that internal states have external signals. It is the earliest form of emotional literacy."
+    "title": "Let her struggle briefly",
+    "do": "When a toy is just out of reach, wait five seconds before helping.",
+    "why": "Effort tolerance is trainable. Instant rescue is comfortable for you and teaches her that difficulty is someone else's problem."
    },
    {
-    "title": "Take her outside daily",
-    "do": "Fifteen minutes outdoors, describing what you both see.",
-    "why": "Daylight anchors circadian rhythm, which is the practical route to better night sleep. The narration doubles as vocabulary exposure in a changing environment."
+    "title": "Do one thing badly",
+    "do": "Take over a task you normally leave to her mother, and accept doing it worse for a fortnight.",
+    "why": "Competence gaps between parents are self-reinforcing \u2014 the more skilled parent does more, and the gap widens. Deliberately absorbing the early incompetence is how it closes."
    }
   ],
   "life_wisdom": [
    {
     "tradition": "Jainism",
-    "term": "Aparigraha for time",
-    "translation": "Non-possessiveness applied to hours",
-    "teaching": "The vow limits accumulation. Applied beyond property, hoarding commitments is a form of grasping \u2014 saying yes to everything is acquisitiveness in a respectable costume.",
-    "apply": "Say no to one thing this week that you would normally accept out of reflex rather than interest."
+    "term": "Samyak Charitra",
+    "translation": "Right conduct",
+    "teaching": "The third jewel, and deliberately placed after right perception and right knowledge \u2014 you cannot act well on a false picture.",
+    "apply": "When a decision feels hard, check whether it is genuinely a conduct problem or actually a perception problem you have not resolved. Most are the latter."
    },
    {
     "tradition": "Buddhism",
-    "term": "Middle Way",
-    "translation": "Avoiding both extremes",
-    "teaching": "The Buddha rejected both indulgence and severe asceticism after trying each. The insight came from testing both, not theorising.",
-    "apply": "Applied to risk: neither all-cash nor all-in. Applied to work: neither burnout nor coasting. The middle is a position you have to keep adjusting, not one you find once."
+    "term": "Metta",
+    "translation": "Loving-kindness, deliberately extended",
+    "teaching": "A practice of extending goodwill outward in rings \u2014 to yourself, someone loved, someone neutral, someone difficult.",
+    "apply": "The difficult person is the point of the exercise. Pick the colleague who frustrates you most and find one thing they are genuinely right about."
    }
   ],
   "spanish": [
    {
-    "word": "revisar",
-    "meaning": "to review / check",
-    "es": "Voy a revisar los n\u00fameros otra vez.",
-    "en": "I am going to check the numbers again.",
+    "word": "contratar",
+    "meaning": "to hire",
+    "es": "Vamos a contratar dos analistas.",
+    "en": "We are going to hire two analysts.",
     "tag": "Business"
    },
    {
-    "word": "el beb\u00e9",
-    "meaning": "the baby",
-    "es": "El beb\u00e9 est\u00e1 aprendiendo a sentarse.",
-    "en": "The baby is learning to sit up.",
+    "word": "comer",
+    "meaning": "to eat",
+    "es": "Ya empieza a comer s\u00f3lidos.",
+    "en": "She is starting to eat solids.",
     "tag": "Family"
    }
   ],
   "vocab": [
    {
-    "word": "Cursory",
-    "say": "KUR-suh-ree",
-    "meaning": "Hasty and not thorough.",
-    "example": "A cursory review would not have caught this.",
-    "note": "Useful for defending the depth of your own work, or flagging the shallowness of someone else's."
+    "word": "Notwithstanding",
+    "say": "not-with-STAN-ding",
+    "meaning": "In spite of.",
+    "example": "Notwithstanding the shortfall, cash generation held.",
+    "note": "Can lead the sentence or follow the noun. A single well-placed use signals command of register."
    },
    {
-    "word": "Corroborate",
-    "say": "kuh-ROB-uh-rayt",
-    "meaning": "To confirm with independent evidence.",
-    "example": "The stock count corroborates the system balance.",
-    "note": "Independence is the point. Two reports from the same system do not corroborate anything."
+    "word": "Exigency",
+    "say": "EK-si-juhn-see",
+    "meaning": "An urgent need or demand.",
+    "example": "Cash exigencies drove the decision, not strategy.",
+    "note": "Explains a decision made under pressure without excusing it."
    }
   ],
   "speaking": {
-   "title": "Slow the Q&A",
-   "drill": "Have someone ask you three questions in a row. Pause two seconds before each answer.",
-   "why": "Rapid answers read as reflexive. A deliberate pause reads as considered, and buys you the sentence you actually want."
+   "title": "Vary sentence length",
+   "drill": "Speak for 90 seconds deliberately alternating one short sentence and one longer one.",
+   "why": "Monotone rhythm loses a room faster than monotone pitch. Your writing already does this \u2014 make speech match."
   },
   "interview_tech": [
    {
-    "q": "You acquire 80% of a subsidiary. Walk me through the consolidation mechanics.",
-    "a": "Recognise 100% of the subsidiary's assets and liabilities at fair value, not 80% \u2014 control, not ownership, drives consolidation. The 20% you do not own becomes non-controlling interest, shown within equity. Goodwill is consideration transferred plus NCI measured either at fair value (full goodwill) or at its share of net assets (partial goodwill) \u2014 an accounting policy choice that changes the goodwill number materially. Eliminate all intragroup balances, transactions and unrealised profit in stock. Post-acquisition profit splits between parent and NCI by ownership.",
-    "who": "Al-Futtaim \u00b7 Landmark Group \u00b7 Unilever"
+    "q": "What is the difference between an associate and a subsidiary in your accounts?",
+    "a": "Control versus significant influence. A subsidiary is controlled \u2014 you consolidate line by line and recognise NCI. An associate is significant influence, presumed at 20\u201350%, accounted for using the equity method: one line on the balance sheet at cost plus your share of post-acquisition reserves, and one line in P&L for your share of profit. Nothing of the associate's revenue or EBITDA enters your group numbers \u2014 a point that catches people out when a joint-venture-heavy group reports headline growth.",
+    "who": "Emaar \u00b7 Chalhoub \u00b7 Nestl\u00e9"
    },
    {
-    "q": "What is shrinkage, what causes it, and what is an acceptable level?",
-    "a": "Shrinkage is the gap between book inventory and counted inventory \u2014 theft (external and internal), administrative error, damage and supplier short-delivery. Fashion retail typically runs 1\u20132% of sales; grocery higher. The important split is internal versus external, because the remedies differ entirely: internal is a controls and rostering problem, external is layout, tagging and security. Any store more than 100bps above the estate average is a process failure, not bad luck \u2014 investigate the receiving dock first.",
-    "who": "Landmark Group \u00b7 Target \u00b7 Alshaya"
+    "q": "Compare owned retail, franchise, and concession from a finance perspective.",
+    "a": "Owned: full revenue, full margin, full capex, full lease and staffing risk. Franchise: you book a royalty and wholesale margin \u2014 far lower revenue, far lower risk, and no control over the customer experience. Concession: you occupy space inside a host retailer, pay a percentage of sales rather than fixed rent, so occupancy cost flexes with trading and downside is capped. In the Gulf, franchise is the dominant international-brand model, which is why groups like Alshaya and Al-Futtaim report differently from the brands they carry.",
+    "who": "Alshaya \u00b7 Al-Futtaim \u00b7 Chalhoub"
    }
   ],
   "interview_soft": [
    {
-    "q": "What do you know about our company?",
-    "a": "The disqualifying answer is anything from the homepage. Come with: their last reported results and one number from them, their format or brand mix and how it differs from peers, one strategic move in the last 18 months, and one question you genuinely cannot answer from outside. For a Gulf retail group that means knowing their franchise portfolio, which markets they operate directly versus through partners, and their exposure to mall footfall.",
-    "who": "Every interview, every time"
+    "q": "Tell me about a time you had to say no to a business partner.",
+    "a": "Retail finance says no constantly \u2014 to a buy outside open-to-buy, a promotion that destroys margin, a headcount request without a business case. Pick one and show the method: you did not just refuse, you showed the number that made it a no, and you offered what would make it a yes. The best answers end with the partner coming back with a version you could approve, because that proves the relationship survived.",
+    "who": "Landmark Group \u00b7 P&G \u00b7 Mars"
    },
    {
-    "q": "How do you build credibility in the first 90 days in a new company?",
-    "a": "Deliver one visible thing early and be accurate about everything. Concretely: get the close done cleanly, learn the actual business by walking the stores rather than reading the reports, and find the one number everyone argues about and fix its definition. Do not restructure anything in the first quarter. Credibility in finance is cumulative and fragile \u2014 it comes from being right repeatedly, not from an early bold move.",
-    "who": "Every incoming CFO"
+    "q": "What motivates you, besides money?",
+    "a": "Be concrete or it sounds rehearsed. Good answers name the specific texture of the work: seeing a decision you modelled play out in real numbers weeks later, building a team member into something they were not when they arrived, or the particular satisfaction of a clean close. Avoid 'challenge' and 'growth' unqualified. If money genuinely is a driver \u2014 Dubai, young family \u2014 it is fine to say it is one of several, and honest beats performed modesty.",
+    "who": "Universal"
    }
   ],
   "cfo_field": [
    {
-    "q": "Learn the lease standard properly. In the Gulf it is not a footnote.",
-    "a": "IFRS 16 put every store lease on the balance sheet as a right-of-use asset and a lease liability. Two consequences a CFO must be able to say out loud: EBITDA is now flattered, because rent that used to sit in operating costs is split into depreciation and interest; and leverage ratios move even though nothing about the business changed. If your covenant is set on a pre-IFRS-16 basis, know it before the bank asks.",
-    "who": "Every leased-store business"
+    "q": "Know your break-even by store, not by chain.",
+    "a": "A chain at group-level profitability can be carrying a quarter of its estate below contribution. Compute store contribution \u2014 gross profit less rent, staff and directly attributable fixed cost \u2014 and rank it. Then, before closing anything: is the lease committed, what does the store contribute to online fulfilment in its catchment, and what is the exit cost. A negative-contribution store with four years left on a non-cancellable lease is usually cheaper to run than to close.",
+    "who": "The analysis that gets you noticed"
    },
    {
-    "q": "Automation without a control map is how a finance function loses its audit trail.",
-    "a": "Before automating a process, write down: who can initiate, who approves, what the system does without a human, and where the exception report goes. Automation does not remove controls; it moves them from people to configuration, and configuration drifts silently. The question 'what breaks if this runs wrong for a month before anyone notices' is the one that separates a finance automation from a finance incident.",
-    "who": "Every CFO agenda, 2024 onward"
+    "q": "VAT in the GCC is a cash-flow instrument, not just a compliance task.",
+    "a": "Registration thresholds, filing frequency and the timing of input recovery all move working capital. A group filing quarterly rather than monthly holds recoverable input VAT longer than it needs to. Know the filing calendar in every jurisdiction the group trades in, and know which entity holds the recoverable balance \u2014 a refund stuck in the wrong entity is cash you own and cannot use.",
+    "who": "UAE \u00b7 KSA \u00b7 Oman"
    }
   ],
   "review": {
@@ -1057,25 +1063,128 @@
    "week": 39,
    "year": 2026,
    "key": "2026-W39",
-   "weekday": 6,
-   "days_left": 1,
+   "weekday": 7,
+   "days_left": 0,
    "is_review_day": true
   },
   "podcasts": {
    "ok": true,
-   "generated_at": "2026-09-26T00:22:02.594301+00:00",
+   "generated_at": "2026-09-27T00:08:18.045769+00:00",
    "episodes": [
+    {
+     "show": "Figuring Out",
+     "author": "Raj Shamani",
+     "category": "Business",
+     "title": "Boring Business Masterclass: \u20b91000 Cr Opportunity | Asish Mohapatra | FO567 Raj Shamani",
+     "guest": "",
+     "published": "2026-09-26",
+     "link": "https://www.youtube.com/watch?v=GhZgfEfz8og",
+     "takeaways": [
+      "The most boring industries hold the biggest business opportunities.",
+      "Solving a customer's entire problem creates an unbeatable moat."
+     ]
+    },
+    {
+     "show": "Ankur Warikoo",
+     "author": "warikoo",
+     "category": "Career",
+     "title": "Same 50,000 INR - 5 Different People. Which One Are You?",
+     "guest": "",
+     "published": "2026-09-26",
+     "link": "https://www.youtube.com/watch?v=BNijrGE-BTA",
+     "takeaways": [
+      "The right financial decision depends on your responsibilities, safety net, and the cost of the problem you\u2019re trying to solve.",
+      "Before focusing on the highest return, first consider what you need the money to do for you."
+     ]
+    },
+    {
+     "show": "Zero1 by Zerodha",
+     "author": "Zero1 by Zerodha",
+     "category": "Money",
+     "title": "Can Indian Parents afford to raise a kid in India?",
+     "guest": "",
+     "published": "2026-09-26",
+     "link": "https://www.youtube.com/watch?v=EUhOrRbQcJY",
+     "takeaways": [
+      "The episode breaks down how much money it really costs to raise a child in today\u2019s economy.",
+      "India\u2019s fertility rate has dropped below replacement levels for the first time."
+     ]
+    },
+    {
+     "show": "The Deshbhakt",
+     "author": "The Deshbhakt",
+     "category": "Society",
+     "title": "The Real Power Of Gyanesh Kumar | Why Modi-Shah Will Never Push The CEC To Resign | Akash Banerjee",
+     "guest": "",
+     "published": "2026-09-26",
+     "link": "https://www.youtube.com/watch?v=UNQNIbAPGIk",
+     "takeaways": [
+      "Faith in India\u2019s Chief Election Commissioner had already been on a dismal low - Indian Express\u2019s investigation has shaken the nation\u2019s faith in the Election Commission.",
+      "Demands for Gyanesh Kumar\u2019s arrest and prosecution is being made - Congress party has gone on a major offensive - the CJP now set to start a national agitation on the matter.."
+     ]
+    },
+    {
+     "show": "The Wire",
+     "author": "The Wire",
+     "category": "Politics",
+     "title": "Do Developing Countries Actually Need FDI? The Shocking Truth | Cracknomics Ep 110",
+     "guest": "",
+     "published": "2026-09-26",
+     "link": "https://www.youtube.com/watch?v=0DGdlcSI7kE",
+     "takeaways": [
+      "In week in Cracknomics, we connect the dots behind India\u2019s biggest economic paradoxes.",
+      "Foreign investors are pulling record money out of Indian markets\u2014net FDI collapsed from $44 billion in FY21 to under $1 billion, even as gross inflows hit a record $94.8 billion."
+     ]
+    },
+    {
+     "show": "ANI Podcast (clips)",
+     "author": "ANI Podcast with Smita Prakash Clips",
+     "category": "Politics",
+     "title": "\u201cMumbai Police Torpedoed Ajit Doval\u2019s Off-The-Books Mission Against Dawood\u201d Vivek Agrawal",
+     "guest": "",
+     "published": "2026-09-26",
+     "link": "https://www.youtube.com/watch?v=iE6AJBnSHJ8",
+     "takeaways": [
+      "\u201cMumbai Police Torpedoed Ajit Doval\u2019s Off-The-Books Mission Against Dawood\u201d Vivek Agrawal #ANIPodcast #SmitaPrakash #DawoodIbrahim  #AjitDoval #Dhurandhar #Mumbai Tune in here: linktr.ee/podcastwithsmitaprakash"
+     ]
+    },
+    {
+     "show": "Sadhguru",
+     "author": "Sadhguru",
+     "category": "Philosophy",
+     "title": "Sadhguru 360 - Ep #6: Sardar Patel: The Man Who United Bharat | 4K UHD",
+     "guest": "",
+     "published": "2026-09-26",
+     "link": "https://www.youtube.com/watch?v=P_P5LY_Cdwc",
+     "takeaways": [
+      "Sadhguru also speaks about Sardar Patel\u2019s foundational role in shaping India\u2019s civil services, which he described as the \u201csteel frame\u201d essential to holding the nation together.",
+      "He further reflects on Patel\u2019s contributions in the Constituent Assembly, including his efforts toward building a framework of national unity, equal citizenship, and administrative stability for a newly independent nation."
+     ]
+    },
+    {
+     "show": "Drishti IAS",
+     "author": "Drishti IAS",
+     "category": "Education",
+     "title": "Class 6 NCERT Geography Complete Revision | Marathon Class | One Shot",
+     "guest": "",
+     "published": "2026-09-26",
+     "link": "https://www.youtube.com/watch?v=OXkmgEd74YA",
+     "takeaways": [
+      "In this special Class 6 NCERT Geography Marathon Revision Class, Priyanka Mam takes you through the complete Class 6 NCERT Geography syllabus in one go, making it easier for students to revise all the important concepts in a single session.",
+      "This marathon session is especially useful for students who want to study and revise Class 6 NCERT Geography in one place and build a strong foundation in Geography."
+     ]
+    },
     {
      "show": "Finance With Sharan",
      "author": "Finance With Sharan",
      "category": "Money",
-     "title": "From \u20b95L to \u20b940L+: The Career Choices That Actually Accelerate Your Salary in the AI Era | FWS",
+     "title": "Ex-HCL CEO's Career Survival Masterclass: How To Stay Valuable When Opportunities Shrink | FWS",
      "guest": "",
      "published": "2026-09-25",
      "link": "https://www.youtube.com/watch?v=jKaTeI9IoTo",
      "takeaways": [
-      "Vineet shares that his sales team in Mumbai grew from under 1% to 50% market share.",
-      "He notes that HCL chose not to lay off a single employee during the 2008 recession."
+      "The conversation opens with leadership at scale.",
+      "Vineet explains why people do not want to be managed but inspired, and how raising an organisation's \"clock speed\" can change results with the same product, service, and customers."
      ]
     },
     {
@@ -1105,45 +1214,6 @@
      ]
     },
     {
-     "show": "The Deshbhakt",
-     "author": "The Deshbhakt",
-     "category": "Society",
-     "title": "UNGA \u201826 | Trump Threatens To Nuke Iran & Bends To China | Netanyahu Faces Biggest Walkout | Akash B",
-     "guest": "",
-     "published": "2026-09-25",
-     "link": "https://www.youtube.com/watch?v=zf74kljc7x8",
-     "takeaways": [
-      "The latest UN General Assembly once again shown how geopolitics is changing at a rapid pace.",
-      "On one hand Donald Trump is threatening Iran\u2019s annihilation - on the other he's bending backwards to please China."
-     ]
-    },
-    {
-     "show": "The Wire",
-     "author": "The Wire",
-     "category": "Politics",
-     "title": "Citizen Protest: Protestors Detained by Delhi Police | Irfan Ki Report",
-     "guest": "",
-     "published": "2026-09-25",
-     "link": "https://www.youtube.com/watch?v=Uiv-3atMdkw",
-     "takeaways": [
-      "On September 25, 2026 (Friday) protesters gathered to demand action against Chief Election Commissioner Gyanesh Kumar Gupta and call for his resignation.",
-      "Unarmed protesters were met with force by the Delhi Police, who packed them in several buses and took them around Delhi for many hours."
-     ]
-    },
-    {
-     "show": "ANI Podcast (clips)",
-     "author": "ANI Podcast with Smita Prakash Clips",
-     "category": "Politics",
-     "title": "Promo | EP-453 with Crime Author & Investigative Journalist Vivek Agrawal Premieres Tomorrow at 5 PM",
-     "guest": "Crime Author",
-     "published": "2026-09-25",
-     "link": "https://www.youtube.com/watch?v=XSjprosiTIo",
-     "takeaways": [
-      "Promo | EP-453 with Crime Author & Investigative Journalist Vivek Agrawal Premieres Tomorrow at 5 PM \u201cThere was a reason the makers of Dhurandhar didn\u2019t use Dawood\u2019s full name.",
-      "Dawood doesn\u2019t spare anyone who insults him.\u201d \u201cAll the underworld gangs in this country are still active."
-     ]
-    },
-    {
      "show": "The Ranveer Show",
      "author": "Ranveer Allahbadia",
      "category": "Philosophy",
@@ -1152,34 +1222,8 @@
      "published": "2026-09-25",
      "link": "https://www.youtube.com/watch?v=GRvShUB2XBc",
      "takeaways": [
-      "Pawan explains that his team is building rockets in India for the global space market.",
-      "He says space technology could transform communication, agriculture, manufacturing and global connectivity."
-     ]
-    },
-    {
-     "show": "Drishti IAS",
-     "author": "Drishti IAS",
-     "category": "Education",
-     "title": "Only Few Months Left for EPFO! | How PYQs Can Shape Your Preparation | Drishti IAS",
-     "guest": "",
-     "published": "2026-09-25",
-     "link": "https://www.youtube.com/watch?v=9-8DHzeF484",
-     "takeaways": [
-      "With only a few months left for the UPSC EPFO 2026 examination, it is important to make every hour of preparation count.",
-      "But how do you know where to focus and which topics deserve more attention?"
-     ]
-    },
-    {
-     "show": "Figuring Out",
-     "author": "Raj Shamani",
-     "category": "Business",
-     "title": "How Much Does It Cost To Own A Private Jet? Business Explained | Abhinav Tripathi | FO566Raj Shamani",
-     "guest": "",
-     "published": "2026-09-24",
-     "link": "https://www.youtube.com/watch?v=pbLFmU1p-7A",
-     "takeaways": [
-      "\u20b925\u202fcrore is the annual cost to run a private jet.",
-      "Charter pricing charges you for the aircraft\u2019s journey rather than your own."
+      "Pawan Kumar Chandana explains that his team is building rockets in India for the global space market.",
+      "He discusses how space technology could transform communication, agriculture, manufacturing and global connectivity."
      ]
     },
     {
@@ -1191,8 +1235,8 @@
      "published": "2026-09-24",
      "link": "https://www.youtube.com/watch?v=UY9H83yQnzc",
      "takeaways": [
-      "A rebel group from Yemen disrupted Saudi Arabia\u2019s oil supply, leaving the kingdom struggling to sell its own oil.",
-      "When the rebels captured three random islands, Brent crude prices rose to $110 a barrel."
+      "The rebel group from Yemen disrupted Saudi Arabia\u2019s oil supply, leaving the kingdom struggling to sell its own oil.",
+      "When the rebels captured three random islands, Brent crude prices jumped to $110 a barrel, sending shockwaves through the global economy."
      ]
     },
     {
@@ -1204,8 +1248,8 @@
      "published": "2026-09-24",
      "link": "https://www.youtube.com/watch?v=y7pwGVQEiKc",
      "takeaways": [
-      "He shares the money principles he teaches his kids before they turn 15.",
-      "He emphasizes that the content is not investment advice and urges viewers to do their own due diligence."
+      "Money principles the host is teaching their kids before they turn 15.",
+      "The content is not investment advice; viewers should do their own due diligence."
      ]
     },
     {
@@ -1217,8 +1261,8 @@
      "published": "2026-09-24",
      "link": "https://www.youtube.com/watch?v=1MoqBEv9BGw",
      "takeaways": [
-      "The episode uses a practical case study of two working professionals in different age groups to demonstrate a retirement calculator.",
-      "It shows how SIP, step\u2011up SIP, SWP and step\u2011up SWP can be combined for retirement planning."
+      "A practical case study of two working professionals with different ages is used to illustrate retirement planning.",
+      "The episode shows how SIP, step\u2011up SIP, SWP and step\u2011up SWP can be combined using a retirement calculator."
      ]
     },
     {
@@ -1230,8 +1274,8 @@
      "published": "2026-09-24",
      "link": "https://www.youtube.com/watch?v=UZta_d0Da0Q",
      "takeaways": [
-      "Demystify complex industry terms like carpet area, built\u2011up area, and super built\u2011up area to understand how usable space is calculated and avoid paying for non\u2011existent square footage.",
-      "Buying a flat is one of the largest financial decisions you\u2019ll make, and navigating the market without clear knowledge can easily lead to costly mistakes."
+      "The video explains industry terms such as carpet area, built\u2011up area, and super built\u2011up area and shows how actual usable space is calculated.",
+      "It aims to help viewers avoid paying premium rates for non\u2011existent square footage when buying a flat."
      ]
     },
     {
@@ -1243,21 +1287,8 @@
      "published": "2026-09-24",
      "link": "https://www.youtube.com/watch?v=SwFk7IIBxtc",
      "takeaways": [
-      "Groww is India\u2019s Best Investment App and the Largest Stock Broker.",
-      "Stock market investing content in Hindi | Finance content in Hindi | Personal finance content in Hindi Investment in securities market are subject to market risks, read all the related documents carefully before investing."
-     ]
-    },
-    {
-     "show": "Sadhguru",
-     "author": "Sadhguru",
-     "category": "Philosophy",
-     "title": "Sadhguru Darshan Part 3 \u2013 Sadhguru Responds To A Seeker Who Lost His Brother",
-     "guest": "",
-     "published": "2026-09-24",
-     "link": "https://www.youtube.com/watch?v=ydT1WdeJ_38",
-     "takeaways": [
-      "Sadhguru speaks about the reality of death, the nature of grief, and why mortality should awaken human beings to the briefness of life.",
-      "The episode is excerpted from Sadhguru Darshan at Isha Yoga Center on 15\u202fSeptember\u202f2026."
+      "These 5 stocks are still strong despite the market downtrend.",
+      "Groww is described as India\u2019s best investment app and the largest stock broker."
      ]
     },
     {
@@ -1269,21 +1300,8 @@
      "published": "2026-09-24",
      "link": "https://www.youtube.com/watch?v=M8m9Yjv42tk",
      "takeaways": [
-      "Companies are quietly rehiring the people they let go after earlier AI job\u2011loss predictions.",
-      "AI\u2019s answers appear convincing on the surface but lack substance behind them, like a film set."
-     ]
-    },
-    {
-     "show": "Ankur Warikoo",
-     "author": "warikoo",
-     "category": "Career",
-     "title": "Can A 29,000 INR Salary Support A Family And Buy A DREAM HOUSE? | Money Matters 126",
-     "guest": "",
-     "published": "2026-09-23",
-     "link": "https://www.youtube.com/watch?v=0KyN6vtAnJM",
-     "takeaways": [
-      "Suraj is investing \u20b94,500 each month while earning a \u20b929,900 salary.",
-      "The episode discusses planning a house purchase without rushing."
+      "In 2003, we were told AI would take 300 million jobs.",
+      "It's 2026, and companies are quietly rehiring the people they let go."
      ]
     },
     {
@@ -1295,21 +1313,8 @@
      "published": "2026-09-22",
      "link": "https://www.youtube.com/watch?v=chOTpc907AE",
      "takeaways": [
-      "Access the full data and references used in this episode.",
-      "The episode includes guests Nikhil\u202fKamath, Rajesh\u202fMagow, and Puneet\u202fChhatwal."
-     ]
-    },
-    {
-     "show": "Zero1 by Zerodha",
-     "author": "Zero1 by Zerodha",
-     "category": "Money",
-     "title": "The Uncomfortable Truth about Mutual Funds!",
-     "guest": "",
-     "published": "2026-09-19",
-     "link": "https://www.youtube.com/watch?v=3GegZ7tT4i0",
-     "takeaways": [
-      "Check metrics beyond just returns when evaluating index funds.",
-      "Avoid common mistakes that can hamper the returns you earn."
+      "Access the full data and references used in this episode below.",
+      "The episode features Nikhil\u202fKamath, Rajesh\u202fMagow, and Puneet\u202fChhatwal as guests."
      ]
     },
     {
@@ -1321,83 +1326,102 @@
      "published": "2026-09-19",
      "link": "https://www.youtube.com/watch?v=IvxYfn5zCPE",
      "takeaways": [
-      "He will answer listeners\u2019 questions submitted via live chat and Superchat.",
-      "The episode references five books, including \u201cDark Stars to Black Holes\u201d and \u201cThe Chandrasekhar Limit.\u201d"
+      "Episode 382 of the #AskAbhijit show: Ask me your best questions in the live chat and Superchat, and I shall answer them.",
+      "Dark Stars to Black Holes: The 250-Year Journey from Impossible Idea to Nobel Prize (The Black Hole Chronicles Book 1) 2."
      ]
     }
    ],
    "shows": 20,
    "source": "each channel's public Atom feed",
-   "built_on": "2026-09-26",
+   "built_on": "2026-09-27",
    "age_days": 0.0,
    "is_fallback": false
   },
   "smart_reads": [
    {
-    "source": "Livemint",
-    "cat": "money",
-    "title": "Income Tax Act 2025: What crypto investors should know about VDA provisions, TDS and ITR filing rules",
-    "link": "https://www.livemint.com/money/personal-finance/income-tax-act-2025-what-crypto-investors-should-know-about-vda-provisions-tds-and-itr-filing-rules-11790360376855.html",
-    "summary": "The Income-tax Act, 2025 largely retains the existing tax treatment of VDAs, including the 30% tax and 1% TDS. However, section numbers have changed and a new reporting framework for crypto transactions will require investors to maintain detailed transaction and wallet records.",
-    "date": "Sep 25, 2026",
-    "_sort": "2026-09-25T19:25:44+00:00",
-    "smart": {
-     "what_happened": [
-      "The Act keeps the 30% tax rate on virtual digital assets and the 1% tax deducted at source.",
-      "It updates section numbers and introduces a reporting framework requiring crypto investors to maintain detailed transaction and wallet records for ITR filing."
-     ],
-     "why_it_matters": "The unchanged tax rates mean crypto investors will continue to face the same fiscal burden, but the new reporting requirements increase compliance obligations and the risk of penalties for inadequate record\u2011keeping, making accurate documentation essential for filing returns and avoiding disputes with tax authorities.",
-     "what_to_watch": "Watch for the tax department's detailed reporting guidelines for crypto transactions, which will specify the exact record\u2011keeping and filing procedures.",
-     "headline": "India's 2025 Income Tax Act retains 30% tax on VDAs and 1% TDS",
-     "read_seconds": 23
-    }
+    "source": "The Marginalian",
+    "cat": "ideas",
+    "title": "How to Handle a Narcissistic and Abusive Parent: Kafka\u2019s Remarkable Letter to Father",
+    "link": "https://www.themarginalian.org/2026/09/26/franz-kafka-letter-father/",
+    "summary": "\"It is, after all, not necessary to fly right into the middle of the sun, but it is necessary to crawl to a clean little spot on earth where the sun sometimes shines and one can warm oneself a little.\"",
+    "date": "Sep 26, 2026",
+    "_sort": "2026-09-26T21:57:57+00:00"
    },
    {
     "source": "ET Opinion",
     "cat": "money",
-    "title": "Smart rice policy would be nice",
-    "link": "https://economictimes.indiatimes.com/opinion/et-commentary/smart-rice-policy-would-be-nice/articleshow/134490143.cms",
-    "summary": "In the 2026-27 cycle, India's rice production is projected to fall by 6.5% compared to the previous year, largely due to monsoon rainfall being 15% below the seasonal average. This shortfall poses significant challenges for farmers, likely leading to financial hardship as both yields and cultivated areas decline. Howev",
-    "date": "Sep 25, 2026",
-    "_sort": "2026-09-25T17:27:15+00:00",
+    "title": "More baby elephants, enough EC: It makes no sense to consume bad news, a world that feels good about good news should only stick to it",
+    "link": "https://economictimes.indiatimes.com/opinion/et-commentary/more-baby-elephants-enough-ec-it-makes-no-sense-to-consume-bad-news-a-world-that-feels-good-about-good-news-should-only-stick-to-it/articleshow/134509171.cms",
+    "summary": "The baby elephant rescue in Siliguri elicited widespread positive sentiment, contrasting with negative political news. Public sentiment often influences markets, regardless of objective economic performance. Reports highlight how perceptions of good news and bad news impact consumer confidence and investment behavior. ",
+    "date": "Sep 26, 2026",
+    "_sort": "2026-09-26T18:33:42+00:00",
     "smart": {
      "what_happened": [
-      "India's rice production is projected to fall 6.5% in the 2026-27 cycle.",
-      "The decline is attributed to monsoon rainfall that is 15% below the seasonal average."
+      "A baby elephant was rescued in Siliguri, generating widespread positive sentiment.",
+      "The rescue contrasted with negative political news and highlighted how public sentiment can influence markets."
      ],
-     "why_it_matters": "The reduced rice output threatens farmer incomes and could tighten domestic supply, potentially prompting policy responses to address food security and price stability in one of the world's largest rice producers.",
-     "what_to_watch": "Release of the official monsoon rainfall data for the 2026-27 season by the Indian Meteorological Department.",
-     "headline": "India rice output to drop 6.5% in 2026-27",
+     "why_it_matters": "The incident illustrates that public perception of good news, such as a high\u2011profile animal rescue, can boost consumer confidence and affect investment behavior, even when broader economic indicators remain unchanged. Understanding the weight of sentiment helps explain market moves that are not directly tied to economic fundamentals.",
+     "what_to_watch": "Track the next consumer confidence index release to see if sentiment improves following the rescue event.",
+     "headline": "Baby elephant rescue in Siliguri sparks positive public sentiment",
      "read_seconds": 26
+    }
+   },
+   {
+    "source": "Livemint",
+    "cat": "money",
+    "title": "\u2018Seems to be an issue between the broker and client; no govt talks on new UPI MDR\u2019: NSE CEO Ashish Chauhan",
+    "link": "https://www.livemint.com/money/personal-finance/seems-to-be-an-issue-between-the-broker-and-client-no-govt-talks-on-new-upi-mdr-nse-ceo-ashish-chauhan-11790433535759.html",
+    "summary": "NSE CEO Ashish Chauhan stated there have been no talks with the government regarding the new Merchant Discount Rate for UPI payments, which he claims is a matter for brokers and clients to resolve. The new MDR framework takes effect on October 15, impacting capital-market transactions.",
+    "date": "Sep 26, 2026",
+    "_sort": "2026-09-26T14:43:34+00:00",
+    "smart": {
+     "what_happened": [
+      "NSE CEO Ashish Chauhan said there have been no discussions with the government about the new Merchant Discount Rate for UPI payments.",
+      "The new MDR framework will take effect on October 15, affecting capital-market transactions."
+     ],
+     "why_it_matters": "The Merchant Discount Rate determines the cost of processing UPI payments in capital-market trades. Without clarity or agreement, brokers and clients may face uncertainty over transaction fees, which could impact trading volumes, pricing of securities, and overall market liquidity. The stance that the issue is between brokers and clients, not the government, signals that regulatory bodies are not intervening, leaving the market to negotiate the fee structure internally.",
+     "what_to_watch": "Watch for any official statements or policy updates from brokers or the government regarding the MDR arrangement after October 15.",
+     "headline": "NSE CEO says no govt talks on new UPI MDR, broker-client issue",
+     "read_seconds": 23
+    }
+   },
+   {
+    "source": "Peter Attia",
+    "cat": "health",
+    "title": "Prioritizing health interventions",
+    "link": "https://peterattiamd.com/prioritizing-interventions/",
+    "summary": "Separating high-impact interventions from those that matter only at the margins\nThe post Prioritizing health interventions appeared first on Peter Attia MD.",
+    "date": "Sep 26, 2026",
+    "_sort": "2026-09-26T11:00:00+00:00",
+    "smart": {
+     "what_happened": [
+      "Peter Attia published a post titled \"Prioritizing health interventions\".",
+      "The post examines separating high\u2011impact interventions from those that matter only at the margins."
+     ],
+     "why_it_matters": "The article highlights the need to focus resources on health measures that deliver the greatest benefit, helping readers prioritize actions that can significantly improve outcomes rather than expending effort on marginal improvements.",
+     "what_to_watch": "Watch for subsequent Peter Attia posts that rank specific health interventions by impact.",
+     "headline": "Prioritizing health interventions",
+     "read_seconds": 20
     }
    },
    {
     "source": "Economic Times",
     "cat": "money",
-    "title": "Fruit seller deposited large amount of cash in bank, got income tax notice of unexplained income; won case in ITAT Bangalore for this reason",
-    "link": "https://economictimes.indiatimes.com/wealth/tax/fruit-seller-deposited-large-amount-of-cash-in-bank-got-income-tax-notice-of-unexplained-income-won-case-in-itat-bangalore-for-this-reason/articleshow/134484279.cms",
-    "summary": "Bangalore landowner wins unexplained money case in ITAT after proving he sold vegetables and fruit for large amount of cash to APMC",
-    "date": "Sep 25, 2026",
-    "_sort": "2026-09-25T12:01:41+00:00",
+    "title": "Purchased property below market value, filed no ITR, got income tax notice, paid the tax but asked to pay Rs 70,000 penalty; ITAT Delhi give",
+    "link": "https://economictimes.indiatimes.com/wealth/tax/purchased-property-below-market-value-filed-no-itr-got-income-tax-notice-paid-the-tax-but-asked-to-pay-rs-70000-penalty-itat-delhi-gives-full-relief/articleshow/134498418.cms",
+    "summary": "Rs 70,000 penalty imposed on man for buying property below market value even though he paid the due tax after getting a notice; ITAT Delhi cancels penalty",
+    "date": "Sep 26, 2026",
+    "_sort": "2026-09-26T06:23:41+00:00",
     "smart": {
      "what_happened": [
-      "A fruit seller in Bangalore deposited a large amount of cash in a bank and received an income tax notice alleging unexplained income.",
-      "The seller proved to the ITAT in Bangalore that the cash came from selling vegetables and fruit to the APMC and the notice was overturned."
+      "The buyer purchased a property below market value, did not file an income tax return, received a notice and paid the assessed tax.",
+      "The tax authorities imposed a Rs\u202f70,000 penalty, which the Delhi ITAT later set aside."
      ],
-     "why_it_matters": "The ruling clarifies that cash-intensive agricultural traders can substantiate income sources by documenting sales to government market committees, reducing the risk of tax notices for unexplained cash and providing guidance for similar businesses facing scrutiny.",
-     "what_to_watch": "Future income tax notices issued to traders who receive cash payments from APMC transactions in Karnataka",
-     "headline": "Bangalore landowner wins ITAT case on unexplained cash from fruit sales",
+     "why_it_matters": "The decision highlights that penalties imposed for alleged tax evasion on property transactions can be successfully contested in the appellate tribunal, reinforcing the need for taxpayers to challenge punitive assessments and clarifying the legal standards for penalty imposition.",
+     "what_to_watch": "Future Delhi ITAT rulings on penalty assessments in similar undervalued property cases",
+     "headline": "ITAT Delhi overturns Rs 70,000 penalty on buyer of undervalued property",
      "read_seconds": 20
     }
-   },
-   {
-    "source": "Aeon",
-    "cat": "ideas",
-    "title": "Reasoning together",
-    "link": "https://aeon.co/essays/habermass-theory-of-truth-meant-he-changed-his-mind",
-    "summary": "J\u00fcrgen Habermas, the great defender of deliberative democracy, lived up to its demands: he never feared changing his mind- by Emilie PratticoRead on Aeon",
-    "date": "Sep 25, 2026",
-    "_sort": "2026-09-25T10:00:00+00:00"
    },
    {
     "source": "NYT Well",
@@ -1415,26 +1439,7 @@
     "link": "https://psyche.co/guides/how-to-cope-with-the-stress-of-anti-lgbtq-prejudice",
     "summary": "A queer psychologist shares skills from dialectical behaviour therapy to help you cope and find joy in a stigmatising world- by Kiki FehlingRead on Psyche",
     "date": "Sep 23, 2026",
-    "_sort": "2026-09-23T10:00:00+00:00",
-    "smart": {
-     "what_happened": [
-      "A queer psychologist shared dialectical behaviour therapy techniques to help people manage stress from anti-LGBTQ+ prejudice.",
-      "The article provides practical strategies aimed at finding joy despite a stigmatising environment."
-     ],
-     "why_it_matters": "The piece addresses the mental\u2011health impact of anti\u2011LGBTQ+ bias, offering evidence\u2011based coping tools that can improve well\u2011being for a population facing heightened stress, which is relevant for clinicians, advocates, and anyone supporting mental health equity.",
-     "what_to_watch": "Monitor follow\u2011up publications from the author or related mental\u2011health outlets for additional DBT\u2011based resources targeting LGBTQ+ stress management.",
-     "headline": "Queer psychologist offers DBT skills to cope with anti-LGBTQ+ stress",
-     "read_seconds": 20
-    }
-   },
-   {
-    "source": "Peter Attia",
-    "cat": "health",
-    "title": "#408 \u2012 AMA #89: Thyroid health: interpreting symptoms, diagnosing and treating dysfunction, and navigating the gray zone",
-    "link": "https://peterattiamd.com/ama89/",
-    "summary": "\u201cThe goal of this podcast, of course, is then to walk people through the physiology carefully enough that you can see both the grains of truth on each side of those schools of thought, but perhaps more importantly, what they might be missing and therefore where we can hopefully land on a place to treat people.\u201d\u2012 Peter ",
-    "date": "Sep 21, 2026",
-    "_sort": "2026-09-21T04:15:00+00:00"
+    "_sort": "2026-09-23T10:00:00+00:00"
    },
    {
     "source": "Farnam Street",
@@ -1457,40 +1462,48 @@
   ],
   "lichess_games": [
    {
-    "id": "ZJj8YfTx",
-    "url": "https://lichess.org/ZJj8YfTx",
-    "result": "Loss",
-    "icon": "\u274c",
-    "cls": "loss",
-    "my_side": "White",
-    "my_rating": 1610,
-    "opp_rating": 1588,
-    "opponent": "Aleksss2020",
-    "me_diff": -6,
-    "opp_diff": 6,
-    "opening": "Queen's Gambit Declined",
-    "eco": "D06",
-    "moves": 63,
+    "id": "FiU2NKys",
+    "url": "https://lichess.org/FiU2NKys",
+    "result": "Win",
+    "icon": "\u2705",
+    "cls": "win",
+    "my_side": "Black",
+    "my_rating": 1604,
+    "opp_rating": 1605,
+    "opponent": "rkmusic",
+    "me_diff": 6,
+    "opp_diff": -6,
+    "opening": "Philidor Defense",
+    "eco": "C41",
+    "moves": 44,
     "termination": "Resignation",
     "speed": "Blitz",
-    "analysis": "Focus on early piece coordination: develop knights before bishops, castle by move\u202f7, and avoid unnecessary queen moves that waste tempo.",
+    "analysis": "Focus on early central tension: after 1.e4 e5 2.Nf3 d6, develop the c8\u2011bishop before playing \u2026Nf6; aim for \u2026c6\u2011\u2026d5 break within 8\u201310 moves to avoid cramped positions.",
     "is_upset": false,
     "is_collapse": false,
     "is_long": true,
     "best_move": {},
     "key_facts": [
-     "Rating gap -22 (1610 vs 1588)",
-     "Endgame from move 44",
-     "63 moves \u00b7 Blitz"
+     "Rating gap +1 (1604 vs 1605)",
+     "Endgame from move 28",
+     "44 moves \u00b7 Blitz"
     ],
-    "standout": "63 moves of grinding. Endgame stamina, not opening prep, settled this one.",
+    "standout": "",
     "game_strength": null,
-    "est_fide": 1210,
+    "est_fide": 1204,
     "accuracy": null,
     "acpl": null,
     "analysed": false,
     "_mode": "full",
     "_trend": [
+     {
+      "day": "09/26",
+      "wins": 1,
+      "losses": 0,
+      "draws": 0,
+      "total": 1,
+      "pct": 100
+     },
      {
       "day": "09/25",
       "wins": 1,
@@ -1538,75 +1551,41 @@
       "draws": 0,
       "total": 2,
       "pct": 0
-     },
-     {
-      "day": "09/17",
-      "wins": 2,
-      "losses": 2,
-      "draws": 0,
-      "total": 4,
-      "pct": 50
      }
     ],
     "_yest_counts": {
      "blitz": {
       "win": 1,
-      "loss": 1,
+      "loss": 0,
       "draw": 0,
       "rp": {
-       "before": 1606,
-       "after": 1604
+       "before": 1604,
+       "after": 1610
       }
      }
     },
-    "_session_date": "2026-09-25",
+    "_session_date": "2026-09-26",
     "_is_yesterday": true
-   },
-   {
-    "id": "6pjpCFEy",
-    "url": "https://lichess.org/6pjpCFEy",
-    "result": "Win",
-    "icon": "\u2705",
-    "cls": "win",
-    "my_side": "Black",
-    "my_rating": 1606,
-    "opp_rating": 1482,
-    "opponent": "Lets52",
-    "me_diff": 4,
-    "opp_diff": -4,
-    "opening": "King's Pawn Game",
-    "eco": "C20",
-    "moves": 40,
-    "termination": "Checkmate",
-    "speed": "Blitz",
-    "analysis": "Focus on early piece development: avoid moving the same piece twice (e.g., 4...Nf6 \u2192 6...Nxe4). Aim for <15\u202f% time spent on each opening move. Use a basic 3\u2011move opening plan (develop knights, bishops, castle) to reduce unnecessary pawn pushes and improve positional accuracy.",
-    "is_upset": false,
-    "is_collapse": false,
-    "is_long": true,
-    "best_move": {},
-    "key_facts": [
-     "Rating gap -124 (1606 vs 1482)",
-     "Endgame from move 22",
-     "40 moves \u00b7 Blitz"
-    ],
-    "standout": "Finished by checkmate on move 40 \u2014 you converted rather than letting it drift.",
-    "game_strength": null,
-    "est_fide": 1206,
-    "accuracy": null,
-    "acpl": null,
-    "analysed": false
    }
   ],
   "lichess_summary": {
    "mode": "full",
-   "total": 2,
+   "total": 1,
    "wins": 1,
-   "losses": 1,
+   "losses": 0,
    "draws": 0,
-   "pct": 50,
-   "icon": "\u2696\ufe0f",
-   "score": "1/2",
+   "pct": 100,
+   "icon": "\u2705",
+   "score": "1/1",
    "trend": [
+    {
+     "day": "09/26",
+     "wins": 1,
+     "losses": 0,
+     "draws": 0,
+     "total": 1,
+     "pct": 100
+    },
     {
      "day": "09/25",
      "wins": 1,
@@ -1654,33 +1633,25 @@
      "draws": 0,
      "total": 2,
      "pct": 0
-    },
-    {
-     "day": "09/17",
-     "wins": 2,
-     "losses": 2,
-     "draws": 0,
-     "total": 4,
-     "pct": 50
     }
    ],
    "weak_op": "",
    "best_op": "",
    "upsets": 0,
    "collapses": 0,
-   "long_games": 2,
-   "session_summary": "Your 50\u202f% score shows you\u2019re merely treading water\u2014every loss erodes confidence and rating faster than any win can restore it. The fact that you have no recorded upsets or collapses means you\u2019re playing at your current level without ever pushing the envelope; you\u2019re neither threatening higher\u2011rated opponents nor exploiting weaker ones, which is the hallmark of stagnation. Stop relying on familiar tricks, drill the first 12 moves of at least three solid, theory\u2011tested openings (e.g., the Caro\u2011Kann, the London System, and the Slav), and commit to playing each of them in every rapid game for the next 30 days to force deeper preparation and force opponents out of their comfort zones.",
-   "session_date": "2026-09-25",
+   "long_games": 1,
+   "session_summary": "AKK_010 blitzes opponents with a 100\u202f% win rate, but the blank \u201cweakest\u201d and \u201cbest\u201d openings reveal a fatal lack of self\u2011analysis\u2014without pinpointing the openings you can\u2019t improve. Stop coasting on raw talent and log every game\u2019s opening; then drill the identified weak line until it\u2019s no longer exploitable. From now on, schedule daily 30\u2011minute focused practice on that opening, review each loss (even the rare ones) for pattern breaks, and replace the vague \u201cbest opening\u201d label with a concrete, repeatable repertoire.",
+   "session_date": "2026-09-26",
    "is_yesterday": true,
    "token_missing": false
   },
   "lichess_puzzle": {
-   "pid": "zC8O2",
-   "rating": 1916,
-   "level": "\ud83d\udd34 stretch",
-   "themes": "Middlegame \u00b7 Crushing \u00b7 Short",
-   "tip": "Calculate 3 moves deep before touching a piece.",
-   "url": "https://lichess.org/training/zC8O2"
+   "pid": "E8IW7",
+   "rating": 1792,
+   "level": "\ud83d\udfe1 at level",
+   "themes": "Endgame \u00b7 Advanced Pawn \u00b7 Short",
+   "tip": "King activity and pawn structure dominate. Technique over tactics here.",
+   "url": "https://lichess.org/training/E8IW7"
   }
  }
 }
