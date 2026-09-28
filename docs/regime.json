@@ -1,6 +1,6 @@
 {
   "ok": true,
-  "generated_at": "2026-09-25T18:06:37+00:00",
+  "generated_at": "2026-09-28T20:15:49+00:00",
   "today": {
     "regime": "calm_range",
     "close": 23140.5,
@@ -22,7 +22,7 @@
   },
   "breadth": {
     "above_200dma_pct": 0,
-    "counted": 981,
+    "counted": 984,
     "note": "Shown for context. Not an input to the label above, because pulse.json keeps no history and a regime that cannot be backfilled cannot be measured."
   },
   "regimes": {
@@ -50,12 +50,22 @@
   "measured": {
     "cells": {
       "calm_range": {
-        "n": 18,
-        "avg_r": -0.636,
-        "win_rate": 11.1,
-        "t": -2.36,
+        "n": 20,
+        "avg_r": -0.602,
+        "win_rate": 15.0,
+        "t": -2.42,
         "readable": true,
         "engines": [
+          {
+            "engine": "ledge",
+            "n": 1,
+            "retired": null,
+            "avg_r": 0.41,
+            "win_rate": 100.0,
+            "t": null,
+            "trusted": false,
+            "readable": false
+          },
           {
             "engine": "momentum_quant",
             "n": 9,
@@ -68,7 +78,7 @@
           },
           {
             "engine": "breakout",
-            "n": 3,
+            "n": 4,
             "retired": null,
             "avg_r": -1.0,
             "win_rate": 0.0,
@@ -102,7 +112,7 @@
     "unlabelled_trades": 0,
     "excluded_non_nse": 0,
     "excluded_retired": 151,
-    "excluded_not_published": 442,
+    "excluded_not_published": 447,
     "excluded_short": 0,
     "excluded_pre_launch": 143,
     "launch": "2026-09-02",
