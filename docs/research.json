@@ -1,8 +1,8 @@
 {
  "ok": true,
- "generated_at": "2026-09-28T16:03:31+00:00",
+ "generated_at": "2026-09-28T18:07:49+00:00",
  "source": "harvested bars (offline run)",
- "coverage_note": "Harvested 500 of 500 names on hourly bars; 499 of 500 names on 3-year daily bars (0 returned nothing, 1 had too little history), at 2026-09-28T16:01:54+00:00.",
+ "coverage_note": "Harvested 499 of 500 names on hourly bars (1 returned nothing, 0 had too little history); 499 of 500 names on 3-year daily bars (0 returned nothing, 1 had too little history), at 2026-09-28T18:06:14+00:00.",
  "engines": [
   {
    "key": "buoy",
@@ -35,7 +35,7 @@
     "t_dma": -0.21
    },
    "verdict": "No measured edge. At n=348 on the wider lane the 95% interval is [-0.108, +0.128]; clearing this book's t>=2 needs about +0.13R, the very top of it. If there is an edge it is smaller than the bar.",
-   "scanned": 500,
+   "scanned": 499,
    "fired": 0,
    "top": [],
    "new_alerts": 0,
@@ -321,8 +321,8 @@
      "since_pct": 0.0
     }
    ],
-   "new_alerts": 7,
-   "already_logged": 4
+   "new_alerts": 0,
+   "already_logged": 11
   },
   {
    "key": "bedrock",
