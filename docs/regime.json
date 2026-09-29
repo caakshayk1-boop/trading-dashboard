@@ -1,21 +1,21 @@
 {
   "ok": true,
-  "generated_at": "2026-09-28T20:15:49+00:00",
+  "generated_at": "2026-09-29T18:54:52+00:00",
   "today": {
     "regime": "calm_range",
-    "close": 23140.5,
-    "vol_ann_pct": 9.0,
-    "vol_pctile": 30.0,
-    "drawdown_pct": 12.11,
+    "close": 22780.25,
+    "vol_ann_pct": 10.0,
+    "vol_pctile": 39.9,
+    "drawdown_pct": 13.48,
     "above_200dma": false,
-    "date": "2026-09-25",
+    "date": "2026-09-28",
     "t": "Calm and going nowhere",
     "d": "Quiet, but with no trend to follow. Breakouts fail most often here, because there is nothing behind them."
   },
-  "run_days": 54,
+  "run_days": 55,
   "last_year": {
-    "calm_trend": 101,
-    "calm_range": 97,
+    "calm_trend": 100,
+    "calm_range": 98,
     "highvol_trend": 15,
     "highvol_mr": 46,
     "crisis": 1
@@ -50,19 +50,19 @@
   "measured": {
     "cells": {
       "calm_range": {
-        "n": 20,
-        "avg_r": -0.602,
-        "win_rate": 15.0,
-        "t": -2.42,
+        "n": 22,
+        "avg_r": -0.587,
+        "win_rate": 13.6,
+        "t": -2.59,
         "readable": true,
         "engines": [
           {
             "engine": "ledge",
-            "n": 1,
+            "n": 3,
             "retired": null,
-            "avg_r": 0.41,
-            "win_rate": 100.0,
-            "t": null,
+            "avg_r": -0.157,
+            "win_rate": 33.3,
+            "t": -0.48,
             "trusted": false,
             "readable": false
           },
@@ -145,10 +145,6 @@
     "A cell needs 8 closed trades before any figure is shown, and the site's actual bar for trusting one is 30 closed at t >= 2.0. Most cells will not clear either, and the page says so rather than printing a multiplier nothing supports."
   ],
   "history": [
-    {
-      "date": "2024-09-19",
-      "regime": "calm_trend"
-    },
     {
       "date": "2024-09-20",
       "regime": "calm_trend"
@@ -2143,6 +2139,10 @@
     },
     {
       "date": "2026-09-25",
+      "regime": "calm_range"
+    },
+    {
+      "date": "2026-09-28",
       "regime": "calm_range"
     }
   ]
