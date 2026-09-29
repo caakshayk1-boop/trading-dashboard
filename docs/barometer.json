@@ -1,6 +1,6 @@
 {
   "ok": true,
-  "generated_at": "2026-09-28T20:14:45+00:00",
+  "generated_at": "2026-09-29T18:53:16+00:00",
   "weights": {
     "trend": 30,
     "breadth": 30,
@@ -19,16 +19,16 @@
       {
         "key": "breadth",
         "label": "Names above their 200-day",
-        "score": 54.5,
+        "score": 54.4,
         "weight": 30,
-        "detail": "536 of 984 hold their 200-day average"
+        "detail": "535 of 984 hold their 200-day average"
       },
       {
         "key": "participation",
         "label": "Advancing today",
-        "score": 38.9,
+        "score": 39.0,
         "weight": 15,
-        "detail": "383 of 984 advanced"
+        "detail": "384 of 984 advanced"
       },
       {
         "key": "highs",
@@ -53,7 +53,7 @@
     "counted": 984,
     "nifty": null,
     "drawdown_pct": null,
-    "above_200dma_pct": 54.5,
+    "above_200dma_pct": 54.4,
     "vix": null
   },
   "history": [
@@ -159,6 +159,16 @@
       "nifty": null,
       "drawdown_pct": null,
       "above_200dma_pct": 54.5,
+      "vix": null
+    },
+    {
+      "date": "2026-09-29",
+      "score": 41,
+      "band": "mixed",
+      "stage": null,
+      "nifty": null,
+      "drawdown_pct": null,
+      "above_200dma_pct": 54.4,
       "vix": null
     }
   ],
