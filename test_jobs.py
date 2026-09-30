@@ -10,6 +10,7 @@ dataset: scoring, deduplication, hard exclusions, freshness, and the
 
 from __future__ import annotations
 
+import json
 import sys
 import unittest
 from unittest import mock
@@ -775,6 +776,51 @@ class TestFailureHandling(unittest.TestCase):
         self.assertEqual(src["adapter"], "oracle")
         self.assertEqual(src["endpoint"]["site"], "CX_1")
         self.assertIn("iaaxey", src["endpoint"]["host"])
+
+    # ── MICHAEL PAGE: TWO SILENT FAILURES, STACKED ─────────────────────────
+    # Reported "empty — reachable, but no senior-finance roles matched" every
+    # morning while the same listings were on LinkedIn. Neither bug raised
+    # anything; both read as an empty market.
+
+    def test_job_links_are_matched_whether_absolute_or_relative(self):
+        """The site moved to absolute hrefs and the pattern required a leading
+        slash, so it matched nothing. Both forms are real — urljoin takes
+        either — so both are asserted, and a future move back cannot break it
+        the other way."""
+        absolute = ('<a href="https://www.michaelpage.ae/job-detail/'
+                    'finance-director/ref/jn-082026-7082100">x</a>')
+        relative = '<a href="/job-detail/finance-manager/ref/jn-072026-7066599">x</a>'
+        self.assertEqual(len(jobs._MP_RE.findall(absolute)), 1, "absolute href")
+        self.assertEqual(len(jobs._MP_RE.findall(relative)), 1, "relative href")
+
+    def test_job_link_pattern_ignores_other_hosts_and_query_strings(self):
+        """Widening to absolute must not start matching anything containing the
+        path, or a tracking link would become a posting."""
+        self.assertEqual(jobs._MP_RE.findall('<a href="/job-detail/x/ref/1?utm=a">x</a>'),
+                         ["/job-detail/x/ref/1"])
+        self.assertEqual(jobs._MP_RE.findall('<a href="/jobs/finance#job-detail">x</a>'), [])
+
+    def test_a_posting_title_still_has_to_look_financial(self):
+        """The widened pattern must not smuggle past TITLE_PREFILTER."""
+        self.assertTrue(jobs.TITLE_PREFILTER.search(
+            "/job-detail/finance-director/ref/jn-1".replace("-", " ").replace("/", " ")))
+        self.assertFalse(jobs.TITLE_PREFILTER.search(
+            "/job-detail/warehouse-picker/ref/jn-2".replace("-", " ").replace("/", " ")))
+
+    def test_ld_json_survives_the_raw_control_characters_the_site_emits(self):
+        """Michael Page embeds the description's HTML unescaped, literal
+        newlines and all. That is invalid JSON by the letter and universally
+        accepted in practice. Strict parsing raised ValueError, the adapter's
+        except swallowed it, and every posting came back None — so fixing the
+        link pattern alone would still have yielded nothing."""
+        body = ('{"@context":"http://schema.org/","@type":"JobPosting",'
+                '"title":"Finance Director ","description":"<p>Lead</p>\n<p>the function</p>",'
+                '"datePosted":"2026-08-12","employmentType":"FULL_TIME"}')
+        with self.assertRaises(ValueError):
+            json.loads(body)
+        parsed = json.loads(body, strict=False)
+        self.assertEqual(parsed["@type"], "JobPosting")
+        self.assertEqual(parsed["datePosted"], "2026-08-12")
 
     # ── RETIRED IS NOT FAILED ──────────────────────────────────────────────
 
