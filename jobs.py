@@ -156,6 +156,18 @@ SOURCES: list[dict[str, Any]] = [
     # That needs its own adapter, and registering it now would add a source
     # that returns zero rows — which would push the Careers coverage ratio
     # down while pretending to be progress. Left out until it is built.
+    # Added 2026-09-30. Three of their UAE finance roles were on LinkedIn and
+    # nowhere in this feed, which is what prompted the probe. Verified live:
+    # the CX_1 site answers recruitingCEJobRequisitions with a
+    # "Finance and Accounting" facet over Dubai and Abu Dhabi. Same adapter as
+    # Landmark and Al Tayer — no new code, only a host and a site number. Note
+    # the host is .ocs. and not .em2./.em3. like the others; that is Oracle's
+    # pod, not a typo.
+    {"name": "Al Ghurair", "kind": "employer", "adapter": "oracle",
+     "group": "Al Ghurair", "confidence": "high",
+     "endpoint": {"host": "https://iaaxey.fa.ocs.oraclecloud.com", "site": "CX_1"},
+     "discover": "https://al-ghurair.com/en/careers"},
+
     {"name": "Etihad Airways", "kind": "employer", "adapter": "smartrecruiters",
      "group": "Etihad", "confidence": "high",
      "endpoint": {"slug": "EtihadAirways5"},
@@ -2541,6 +2553,42 @@ def carry_forward(statuses: list[dict], previous: dict) -> None:
             row["last_success"] = old.get("last_success")
 
 
+# How long a row may be carried without any source re-confirming it.
+#
+# Carry-forward previously delegated expiry entirely to posted_date, and
+# freshness_status() returns ACTIVE for a date it cannot parse — including
+# None. A row with no posted_date from a source that never runs again is
+# therefore immortal: aged by nothing, dropped by nothing, and rendered
+# identically to this morning's data.
+#
+# MEASURED 2026-09-30: 24 of the 59 active rows were LinkedIn, all with
+# posted_date null, all still stamped ACTIVE, none re-verified since
+# 2026-09-17 — the day LinkedIn was retired. Two fifths of the feed was
+# thirteen days old and said nothing about it.
+#
+# 21 days matches the ACTIVE horizon in freshness_status: past it, a row we
+# have not been able to re-confirm is not something to put in front of
+# somebody as a live opening.
+CARRY_MAX_DAYS = 21
+
+
+def _carried_too_long(old: dict, now_iso: str) -> bool:
+    """True if nothing has re-confirmed this row inside CARRY_MAX_DAYS.
+
+    Independent of posted_date on purpose — this is the backstop for exactly
+    the rows whose date is missing or unparseable, which are the ones
+    freshness_status cannot judge."""
+    seen = old.get("last_verified_at") or old.get("scraped_at")
+    if not seen:
+        return True                          # cannot date it, will not carry it
+    try:
+        then = datetime.strptime(str(seen)[:10], "%Y-%m-%d").date()
+        ref = datetime.strptime(str(now_iso)[:10], "%Y-%m-%d").date()
+    except (ValueError, TypeError):
+        return True
+    return (ref - then).days > CARRY_MAX_DAYS
+
+
 def merge_with_previous(fresh: list[dict], previous: dict,
                         statuses: list[dict], now_iso: str) -> tuple[list[dict], int]:
     """Keep prior jobs from sources that failed this run, so a blocked scrape
@@ -2557,7 +2605,24 @@ def merge_with_previous(fresh: list[dict], previous: dict,
             # That source ran fine and did not re-confirm this row — it is gone.
             stale_removed += 1
             continue
-        status = freshness_status(old.get("posted_date"))
+        # RETIRED IS NOT THE SAME AS FAILED, and carry-forward was treating them
+        # identically. A blocked source is expected back tomorrow, so holding
+        # its rows is right. A retired source is never called again — ats.RETIRED
+        # is the record of that decision — so nothing will ever re-confirm these
+        # rows and carrying them just launders last month's scrape as today's.
+        if primary in _ats.RETIRED:
+            stale_removed += 1
+            continue
+        if _carried_too_long(old, now_iso):
+            stale_removed += 1
+            continue
+        # AGED AGAINST now_iso, NOT THE WALL CLOCK. This function is handed the
+        # run's timestamp and then ignored it, so a row's age depended on when
+        # the process happened to execute rather than on the run it belongs to.
+        # Two tests here pinned posted_date and not "now", and went red on their
+        # own on 2026-09-29 when a fixture dated 2026-08-14 crossed 46 days —
+        # failing on main, untouched, for reasons nobody had changed.
+        status = freshness_status(old.get("posted_date"), str(now_iso)[:10])
         if status == "STALE":
             stale_removed += 1
             continue

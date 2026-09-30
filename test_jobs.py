@@ -701,10 +701,17 @@ class TestFailureHandling(unittest.TestCase):
         jobs.carry_forward(statuses, previous)
         self.assertEqual(statuses[0]["last_success"], "2026-08-10T04:30:00Z")
 
+    # THE FIXTURE SOURCE HERE USED TO BE "Alshaya Group", WHICH IS NOW RETIRED.
+    # These four tests are about a source that is BLOCKED — expected back
+    # tomorrow — and retirement is the opposite of that. They kept passing
+    # after Alshaya was retired only because carry-forward could not tell the
+    # two apart, which is the bug the tests below this block now cover. Emaar
+    # is live, so the intent survives the fix.
+
     def test_blocked_source_does_not_blank_its_previous_jobs(self):
-        old = make_job(id="old1", source="Alshaya Group", posted_date="2026-08-14")
+        old = make_job(id="old1", source="Emaar", posted_date="2026-08-14")
         previous = {"jobs": [old]}
-        statuses = [{"name": "Alshaya Group", "status": "blocked",
+        statuses = [{"name": "Emaar", "status": "blocked",
                      "jobs_found": 0, "detail": "HTTP 403", "last_success": None}]
         kept, stale = jobs.merge_with_previous([], previous, statuses,
                                                "2026-08-18T00:00:00Z")
@@ -714,17 +721,17 @@ class TestFailureHandling(unittest.TestCase):
 
     def test_carried_row_keeps_its_old_last_verified_at(self):
         """Only rows re-confirmed by a successful scrape get a fresh stamp."""
-        old = make_job(id="old1", source="Alshaya Group", posted_date="2026-08-14",
+        old = make_job(id="old1", source="Emaar", posted_date="2026-08-14",
                        last_verified_at="2026-08-10T04:30:00Z")
-        statuses = [{"name": "Alshaya Group", "status": "blocked",
+        statuses = [{"name": "Emaar", "status": "blocked",
                      "jobs_found": 0, "detail": "", "last_success": None}]
         kept, _ = jobs.merge_with_previous([], {"jobs": [old]}, statuses,
                                            "2026-08-18T00:00:00Z")
         self.assertEqual(kept[0]["last_verified_at"], "2026-08-10T04:30:00Z")
 
     def test_row_dropped_when_its_source_ran_fine_and_did_not_return_it(self):
-        old = make_job(id="old1", source="Alshaya Group", posted_date="2026-08-14")
-        statuses = [{"name": "Alshaya Group", "status": "ok", "jobs_found": 5,
+        old = make_job(id="old1", source="Emaar", posted_date="2026-08-14")
+        statuses = [{"name": "Emaar", "status": "ok", "jobs_found": 5,
                      "detail": "", "last_success": "2026-08-18T00:00:00Z"}]
         kept, stale = jobs.merge_with_previous([], {"jobs": [old]}, statuses,
                                                "2026-08-18T00:00:00Z")
@@ -732,13 +739,107 @@ class TestFailureHandling(unittest.TestCase):
         self.assertEqual(stale, 1)
 
     def test_stale_rows_are_dropped_on_carry_forward(self):
-        old = make_job(id="old1", source="Alshaya Group", posted_date="2026-01-01")
-        statuses = [{"name": "Alshaya Group", "status": "blocked", "jobs_found": 0,
+        old = make_job(id="old1", source="Emaar", posted_date="2026-01-01")
+        statuses = [{"name": "Emaar", "status": "blocked", "jobs_found": 0,
                      "detail": "", "last_success": None}]
         kept, stale = jobs.merge_with_previous([], {"jobs": [old]}, statuses,
                                                "2026-08-18T00:00:00Z")
         self.assertEqual(kept, [])
         self.assertEqual(stale, 1)
+
+    def test_no_live_source_is_also_retired(self):
+        """The two lists are filtered from one literal, so an entry present in
+        both would silently vanish from SOURCES and read as a deleted source
+        rather than a retired one. Now that carry-forward consults RETIRED by
+        name, the overlap would also decide whether rows survive."""
+        live = {s["name"] for s in jobs.SOURCES}
+        self.assertEqual(live & set(jobs._ats.RETIRED), set())
+
+    def test_every_live_source_is_wired_to_a_real_adapter(self):
+        """A SOURCES entry naming an adapter that does not exist fails at run
+        time, inside a try/except, as 'no endpoint resolved' — which reads as a
+        dead site rather than a typo."""
+        for src in jobs.SOURCES:
+            self.assertIn(src["adapter"], jobs.ADAPTERS, src["name"])
+            for key in ("name", "kind", "confidence", "endpoint"):
+                self.assertIn(key, src, src["name"])
+            self.assertIn(src["kind"], ("employer", "aggregator", "recruiter"),
+                          src["name"])
+
+    def test_al_ghurair_is_configured_for_the_oracle_adapter(self):
+        """Added after three of their UAE finance roles appeared on LinkedIn
+        and nowhere in this feed. The host is an .ocs. pod rather than the
+        .em2./.em3. the other Oracle entries use — that difference is real and
+        a 'correction' to match the others would break it."""
+        src = next(s for s in jobs.SOURCES if s["name"] == "Al Ghurair")
+        self.assertEqual(src["adapter"], "oracle")
+        self.assertEqual(src["endpoint"]["site"], "CX_1")
+        self.assertIn("iaaxey", src["endpoint"]["host"])
+
+    # ── RETIRED IS NOT FAILED ──────────────────────────────────────────────
+
+    def test_a_retired_sources_rows_are_not_carried(self):
+        """MEASURED 2026-09-30: 24 of 59 active rows were LinkedIn, retired on
+        17 Sep, every one posted_date null and still stamped ACTIVE. A blocked
+        source is expected back tomorrow so holding its rows is right; a
+        retired source is never called again, so nothing will ever re-confirm
+        them and carrying them launders last month's scrape as today's."""
+        old = make_job(id="li1", source="LinkedIn", posted_date=None,
+                       last_verified_at="2026-08-17T00:00:00Z")
+        kept, stale = jobs.merge_with_previous([], {"jobs": [old]}, [],
+                                               "2026-08-18T00:00:00Z")
+        self.assertEqual(kept, [])
+        self.assertEqual(stale, 1)
+
+    def test_retirement_beats_a_recent_verification(self):
+        """Even re-confirmed yesterday: the source is gone, the row cannot be
+        checked again, and age is not what disqualifies it."""
+        old = make_job(id="li2", source="GulfTalent", posted_date="2026-08-17",
+                       last_verified_at="2026-08-17T00:00:00Z")
+        kept, _ = jobs.merge_with_previous([], {"jobs": [old]}, [],
+                                           "2026-08-18T00:00:00Z")
+        self.assertEqual(kept, [])
+
+    # ── A CARRIED ROW STILL EXPIRES WHEN ITS DATE CANNOT ───────────────────
+
+    def test_null_dated_row_is_not_carried_forever(self):
+        """freshness_status returns ACTIVE for a date it cannot parse, so
+        carry-forward had no expiry at all for a row without one. That is how
+        a row sat on the page for thirteen days labelled ACTIVE."""
+        old = make_job(id="n1", source="Emaar", posted_date=None,
+                       last_verified_at="2026-07-01T00:00:00Z")
+        kept, stale = jobs.merge_with_previous(
+            [], {"jobs": [old]},
+            [{"name": "Emaar", "status": "blocked", "jobs_found": 0,
+              "detail": "", "last_success": None}],
+            "2026-08-18T00:00:00Z")
+        self.assertEqual(kept, [])
+        self.assertEqual(stale, 1)
+
+    def test_null_dated_row_survives_inside_the_carry_window(self):
+        """The ceiling is a backstop, not a second staleness rule — a source
+        down for a few days must still not blank its rows."""
+        old = make_job(id="n2", source="Emaar", posted_date=None,
+                       last_verified_at="2026-08-14T00:00:00Z")
+        kept, stale = jobs.merge_with_previous(
+            [], {"jobs": [old]},
+            [{"name": "Emaar", "status": "blocked", "jobs_found": 0,
+              "detail": "", "last_success": None}],
+            "2026-08-18T00:00:00Z")
+        self.assertEqual(len(kept), 1)
+        self.assertEqual(stale, 0)
+
+    def test_a_row_with_no_timestamps_at_all_is_not_carried(self):
+        """Undateable and unverifiable is not a state to render as live."""
+        old = make_job(id="n3", source="Emaar", posted_date=None)
+        old["last_verified_at"] = None
+        old["scraped_at"] = None
+        kept, _ = jobs.merge_with_previous(
+            [], {"jobs": [old]},
+            [{"name": "Emaar", "status": "blocked", "jobs_found": 0,
+              "detail": "", "last_success": None}],
+            "2026-08-18T00:00:00Z")
+        self.assertEqual(kept, [])
 
     def test_blocked_source_degrades_with_a_readable_reason(self):
         """A source whose page cannot be extracted fails loudly, not silently.
