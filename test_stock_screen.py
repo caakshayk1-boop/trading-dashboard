@@ -1973,6 +1973,35 @@ def test_short_history_publishes_its_real_range() -> None:
           str(S.MIN_BARS["r1m"]))
 
 
+def test_every_renderer_reads_lenders_with_the_screens_own_rule():
+    """A LENDER'S D/E IS NOT LEVERAGE RISK. _is_financial takes leverage, cash
+    conversion, interest cover, margins and ROCE out of a lender's scores and
+    risk grade — and three renderers judged them anyway, so EDELWEISS read
+    "Risk LOW" beside "heavily geared" in red and a green cash conversion.
+    Each copy of the rule must use the screen's four words, no more, no fewer,
+    or a name is graded one way and described another."""
+    import re, stock_screen as ss
+    words = ("financial", "bank", "insurance", "real estate")
+    check("the screen's lender rule is still these four words",
+          ss._is_financial({"sector": "Financial Services"})
+          and ss._is_financial({"industry": "Banks - Regional"})
+          and not ss._is_financial({"sector": "Industrials"}))
+    want = "|".join(words)
+    for f in ("static/brief_fundamentals.js", "static/next.js", "static/app.js"):
+        src = pathlib.Path(f).read_text(encoding="utf-8")
+        found = re.findall(r"/((?:[a-z ]+\|){3}[a-z ]+)/\.test\(", src)
+        check(f"{f} carries the lender rule", bool(found))
+        check(f"{f}'s lender rule is the screen's four words",
+              all(x == want for x in found), str(found))
+    bf = pathlib.Path("static/brief_fundamentals.js").read_text(encoding="utf-8")
+    check("the shared brief does not call a lender's cash conversion a failure",
+          "lender ? LN : 'Under 1.0 means" in bf)
+    nx = pathlib.Path("static/next.js").read_text(encoding="utf-8")
+    check("a level ratio is not printed as a signed, coloured change",
+          "yoy('Debt / equity'" not in nx and "yoy('Cash conversion" not in nx
+          and "yoy('ROCE'" not in nx)
+
+
 def main() -> int:
     print("stock screen — indicator arithmetic and honesty invariants\n")
     for fn in (test_short_history_publishes_its_real_range,
@@ -2037,7 +2066,8 @@ def main() -> int:
                test_an_unknown_industry_is_not_a_peer_group,
                test_swot_json_is_allow_listed_everywhere_it_must_be,
                test_a_collapsed_price_is_an_entry_problem_too,
-               test_the_universe_extension_stays_additive_and_labelled):
+               test_the_universe_extension_stays_additive_and_labelled,
+               test_every_renderer_reads_lenders_with_the_screens_own_rule):
         try:
             fn()
         except Exception as e:                       # noqa: BLE001

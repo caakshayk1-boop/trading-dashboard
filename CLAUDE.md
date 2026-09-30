@@ -43,7 +43,7 @@ Nifty 500 research screen sitting directly above the Signal Log.
   generate.py overwrites. Editing the artefact silently loses the work.
 - `docs/screen.json` needs allow-listing in THREE places: generate.py writes it,
   `.vercelignore` names it, `vercel-news/build.js` copies it.
-- `python3 test_stock_screen.py` — 421 checks, offline, no pytest.
+- `python3 test_stock_screen.py` — 449 checks, offline, no pytest.
 - **The benchmark vanished at 1,000 names.** 1,000 + `^NSEI` put the index alone
   in the 26th price batch; `fetch_prices` assumed a one-ticker download is flat
   (current yfinance returns `(field, ticker)` columns), the parse raised at
@@ -109,6 +109,14 @@ Honesty rules it must keep (pinned by tests in both repos):
   and "the flags are not in this projection" are different sentences; printing
   the first for a name graded HIGH with three is a projection's omission
   rendered as a measured result.
+- **A lender is read with the screen's own rule.** `_is_financial` takes
+  leverage, cash conversion, interest cover, margins and ROCE out of a bank's
+  or NBFC's scores and risk grade; the renderers judged them anyway, so
+  EDELWEISS read "Risk LOW" beside a red "heavily geared". Every copy of the
+  rule (`brief_fundamentals.js`, `next.js`, `app.js`, and in the signal repo
+  `insight.js`/`signal.js`) must be the same four words — pinned by
+  `test_stock_screen.py` here and `guard.mjs` there. Level ratios are printed
+  as levels: no "+", no green.
 - **Dividend yield is deliberately absent.** `stock_screen.py` ran yfinance's
   `dividendYield` — already percentage points — through `_pct`, so the column
   read ITC 601%, VEDL 1256%, universe median 65.5%. The generator is fixed;
