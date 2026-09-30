@@ -44,6 +44,15 @@ Nifty 500 research screen sitting directly above the Signal Log.
 - `docs/screen.json` needs allow-listing in THREE places: generate.py writes it,
   `.vercelignore` names it, `vercel-news/build.js` copies it.
 - `python3 test_stock_screen.py` — 421 checks, offline, no pytest.
+- **The benchmark vanished at 1,000 names.** 1,000 + `^NSEI` put the index alone
+  in the 26th price batch; `fetch_prices` assumed a one-ticker download is flat
+  (current yfinance returns `(field, ticker)` columns), the parse raised at
+  DEBUG, and `nifty_1m`, `nifty_1y`, `price_date` and every relative-strength
+  figure were published null. It now branches on the frame's shape;
+  `test_screen_prices.py` drives the exact 1,001-ticker split.
+- **`barometer.py` reads closed bars only** (`complete_bars`). A run landing
+  after midnight IST got the new day's row with no Close, and `iloc[-1]` nulled
+  Nifty and VIX — 45 of 100 weight — on 21, 28 and 29 Sep. `test_barometer.py`.
 
 Honesty rules the screen must keep (all pinned by tests):
 - Missing data scores `None` and leaves its parent score's denominator; it is

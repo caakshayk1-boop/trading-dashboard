@@ -95,6 +95,23 @@ def stage_of(drawdown: float, above_pct: float) -> dict:
     return {"k": "none", "t": "Nothing on sale", "c": ""}
 
 
+def complete_bars(df):
+    """Only the bars that closed.
+
+    THE NULL NIFTY OF 21, 28 AND 29 SEPTEMBER. This job's cron is 19:15 IST,
+    but GitHub starts it hours late, and a run that lands after midnight IST
+    gets a row for the NEW trading day from yfinance with no Close yet. The
+    reading took `iloc[-1]` — that NaN row — for both Nifty and VIX, so
+    `trend` and `volatility` (45 of the 100 weight) dropped out and the score
+    was renormalised over breadth alone. The runs that landed before midnight
+    (25 Sep, 23:34 IST) were whole. The last bar with a real Close is the
+    reading; an unfinished one is not a reading of anything.
+    """
+    if df is None or getattr(df, "empty", True) or "Close" not in df:
+        return df
+    return df[df["Close"].notna()]
+
+
 def compute(nifty_close, nifty_hi, nifty_lo, breadth: dict, vix) -> dict | None:
     counted = _n(breadth.get("counted"))
     if not counted:
@@ -224,8 +241,8 @@ def main() -> int:
         return 1
     breadth = (json.loads(PULSE.read_text()) or {}).get("breadth") or {}
 
-    nif = yf.Ticker("^NSEI").history(period="2y", interval="1d", auto_adjust=False)
-    vixh = yf.Ticker("^INDIAVIX").history(period="5d", interval="1d", auto_adjust=False)
+    nif = complete_bars(yf.Ticker("^NSEI").history(period="2y", interval="1d", auto_adjust=False))
+    vixh = complete_bars(yf.Ticker("^INDIAVIX").history(period="5d", interval="1d", auto_adjust=False))
     if nif.empty:
         log.error("no Nifty history — cannot score")
         return 1
@@ -235,6 +252,11 @@ def main() -> int:
     today = compute(float(last["Close"]), float(yr["High"].max()),
                     float(yr["Low"].min()), breadth,
                     None if vixh.empty else float(vixh["Close"].iloc[-1]))
+    if today:
+        # WHICH CLOSE the trend and volatility parts describe, so a reading
+        # recorded after midnight IST says it is describing yesterday's index.
+        today["nifty_date"] = nif.index[-1].strftime("%Y-%m-%d")
+        today["vix_date"] = None if vixh.empty else vixh.index[-1].strftime("%Y-%m-%d")
     if not today:
         log.error("could not compute a score")
         return 1
@@ -251,7 +273,7 @@ def main() -> int:
     history = [h for h in history if h["date"] != stamp]        # one row per day
     history.append({"date": stamp, "score": today["score"],
                     "band": today["band"]["k"], "stage": today["stage"],
-                    "nifty": today["nifty"],
+                    "nifty": today["nifty"], "nifty_date": today.get("nifty_date"),
                     "drawdown_pct": today["drawdown_pct"],
                     "above_200dma_pct": today["above_200dma_pct"],
                     "vix": today["vix"]})
