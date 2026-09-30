@@ -1,6 +1,6 @@
 {
   "ok": true,
-  "generated_at": "2026-09-30T10:09:01+00:00",
+  "generated_at": "2026-09-30T18:35:38+00:00",
   "weights": {
     "trend": 30,
     "breadth": 30,
@@ -19,9 +19,9 @@
       {
         "key": "trend",
         "label": "Where the index sits",
-        "score": 10.4,
+        "score": 12.7,
         "weight": 30,
-        "detail": "Nifty is 10% up its own 52-week range, 14.2% below the high"
+        "detail": "Nifty is 13% up its own 52-week range, 13.9% below the high"
       },
       {
         "key": "breadth",
@@ -42,7 +42,7 @@
         "label": "Volatility",
         "score": 70,
         "weight": 15,
-        "detail": "India VIX at 13.52 \u2014 normal"
+        "detail": "India VIX at 13.41 \u2014 normal"
       },
       {
         "key": "highs",
@@ -66,12 +66,12 @@
       "c": ""
     },
     "counted": 984,
-    "nifty": 22620.44921875,
-    "drawdown_pct": 14.23,
+    "nifty": 22716.19921875,
+    "drawdown_pct": 13.87,
     "above_200dma_pct": 50.5,
-    "vix": 13.517499923706055,
-    "nifty_date": "2026-09-30",
-    "vix_date": "2026-09-30"
+    "vix": 13.40999984741211,
+    "nifty_date": "2026-09-29",
+    "vix_date": "2026-09-29"
   },
   "history": [
     {
@@ -197,17 +197,17 @@
         "t": "Slightly cheaper",
         "c": ""
       },
-      "nifty": 22620.44921875,
-      "nifty_date": "2026-09-30",
-      "drawdown_pct": 14.23,
+      "nifty": 22716.19921875,
+      "nifty_date": "2026-09-29",
+      "drawdown_pct": 13.87,
       "above_200dma_pct": 50.5,
-      "vix": 13.517499923706055
+      "vix": 13.40999984741211
     }
   ],
   "outcomes": {
     "early": {
       "label": "Slightly cheaper",
-      "readings": 7,
+      "readings": 6,
       "m3": null,
       "m6": null,
       "m12": null
