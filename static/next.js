@@ -58,6 +58,11 @@
   const trim = x => String(x.toFixed(2)).replace(/\.?0+$/, '');
   const pct = v => { const n = Number(v); return isFinite(n) ? (n > 0 ? '+' : '') + n.toFixed(2) + '%' : '—'; };
   const dir = v => Number(v) > 0 ? 'up' : Number(v) < 0 ? 'dn' : '';
+  /* LENDERS ARE READ DIFFERENTLY — stock_screen.py::_is_financial, word for
+     word. A bank or NBFC borrows to lend; the screen leaves leverage, cash
+     conversion, interest cover, margins and ROCE out of its scores and risk
+     grade for these names, so this page must not judge them either. */
+  const isLender = r => /financial|bank|insurance|real estate/.test(`${(r && r.sector) || ''} ${(r && r.ind) || ''}`.toLowerCase());
   const ago = ms => { const m = Math.round(ms / 60000); return m < 60 ? m + 'm' : Math.round(m / 60) + 'h'; };
 
   /* Outbound detail links.
@@ -1149,6 +1154,12 @@
     const flags = (r.risk?.flags || []);
     const yoy = (l, v, unit = '%') => v == null ? '' :
       `<div class="yy"><span>${esc(l)}</span><b class="${dir(v)}">${v > 0 ? '+' : ''}${Number(v).toFixed(1)}${unit}</b></div>`;
+    /* A LEVEL IS NOT A CHANGE: no sign, no colour. D/E of 4.02 printed as a
+     * green "+4.0". For a lender the ratios that do not apply say so. */
+    const lvl = (l, v, unit = '', dp = 2) => v == null ? '' :
+      `<div class="yy"><span>${esc(l)}</span><b>${Number(v).toFixed(dp)}${unit}</b></div>`;
+    const na = l => `<div class="yy"><span>${esc(l)}</span><b title="a lender borrows to lend — not judged here">n/a · lender</b></div>`;
+    const lender = isLender(r);
 
     sheet(`${esc(r.sym)} <small>${esc(r.name || '')}</small>`, `
       <p class="hint" style="margin:0 0 12px">₹${esc(r.price)} · ${esc(r.ind || r.sector || '')} ·
@@ -1172,8 +1183,9 @@
       <div class="yoy">${yoy('Revenue', r.rev_yoy)}${yoy('EBITDA', r.ebitda_yoy)}${yoy('Profit', r.pat_yoy)}
         ${yoy('EPS', r.eps_yoy)}${yoy('EBIT margin', r.margin_delta, 'pt')}</div>
       <h4 class="sh">Cash quality</h4>
-      <div class="yoy">${yoy('Cash conversion (CFO/PAT)', r.cfo_pat, 'x')}${yoy('Free cash / profit', r.fcf_pat, 'x')}
-        ${yoy('ROCE', r.roce)}${yoy('Debt / equity', r.de, '')}</div>
+      <div class="yoy">${lender ? na('Cash conversion (CFO/PAT)') + na('Free cash / profit') + na('ROCE') + lvl('ROE', r.roe, '%', 1)
+        : `${lvl('Cash conversion (CFO/PAT)', r.cfo_pat, 'x')}${lvl('Free cash / profit', r.fcf_pat, 'x')}
+        ${lvl('ROCE', r.roce, '%', 1)}${lvl('Debt / equity', r.de)}`}</div>
       <h4 class="sh">Where price sits</h4>
       <div class="yoy">${yoy('vs 50-day', r.sma50 ? (r.price - r.sma50) / r.sma50 * 100 : null)}
         ${yoy('vs 200-day', r.sma200 ? (r.price - r.sma200) / r.sma200 * 100 : null)}

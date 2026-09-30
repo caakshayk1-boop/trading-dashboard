@@ -6017,7 +6017,17 @@ var TV_ALIASES = (function () {
                    + '<span class="v' + cls + '">' + (x[1] > 0 ? '+' : '') + x[1] + x[2] + '</span>';
             }).join('') + '</div>';
       }
-      if (cash.length){
+      /* A LENDER'S CASH CONVERSION IS NOT CASH QUALITY. It borrows to lend, so
+         operating cash flow swings with the loan book, and the screen leaves it
+         out of this name's scores (stock_screen.py::_is_financial — the same
+         four words below). Judging it better/worse here contradicted them. */
+      var lender = /financial|bank|insurance|real estate/.test(((r.sector || '') + ' ' + (r.ind || '')).toLowerCase());
+      if (cash.length && lender){
+        out += '<p class="mono-dim" style="margin-top:11px;font-size:10.5px">'
+          + 'Cash quality is not read for a lender: it borrows to lend, and its '
+          + 'operating cash flow moves with the loan book. Return on equity is the '
+          + 'measure that applies.</p>';
+      } else if (cash.length){
         out += '<div class="sd-peer" style="grid-template-columns:1fr auto;margin-top:11px">'
           + '<span class="h">Cash quality</span><span class="h"></span>'
           + cash.map(function(x){

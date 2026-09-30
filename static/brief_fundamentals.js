@@ -261,21 +261,31 @@
         '</p></div>';
 
     var de = num(row.de);
+    /* LENDERS ARE READ DIFFERENTLY — stock_screen.py::_is_financial, the same
+       four words. A bank or NBFC borrows to lend: debt/equity of 4 is its
+       business model, operating cash flow swings with the loan book, and ROCE
+       and interest cover have no meaning. The screen leaves all of them out of
+       this name's scores and risk grade, so the notes here say that rather
+       than a general definition that reads as a verdict on this company. */
+    var lender = /financial|bank|insurance|real estate/.test(
+      (String(row.sector || '') + ' ' + String(row.ind || '')).toLowerCase());
+    var LN = 'Not read for a lender, which borrows to lend. The screen leaves it out of this name\'s scores and risk grade.';
     var TBL = [
       ['Returns', [
         ['Return on capital', one(row.roce, 1, '%'),
-          'ROCE — EBIT over invested capital. Yahoo publishes no such field; it is computed from the statements.'],
+          lender ? LN : 'ROCE — EBIT over invested capital. Yahoo publishes no such field; it is computed from the statements.'],
         ['ROCE, multi-year median', one(row.roce_med, 1, '%'),
           'The median across the statement history. The score reads this, not the latest year, so a one-off cannot top the table.'],
         ['ROCE trend', row.roce_trend ? esc(String(row.roce_trend)) : NA,
           'Direction of return on capital across the years on file.'],
-        ['Return on equity', one(row.roe, 1, '%'), ''],
+        ['Return on equity', one(row.roe, 1, '%'), lender ? 'The return measure that applies to a lender.' : ''],
       ]],
       ['Balance sheet', [
         ['Debt to equity', de === null ? NA
           : (de < 0 ? de.toFixed(2) + ' <b class="b-warn">negative equity</b>' : de.toFixed(2)),
-          'A negative reading means negative equity, which is insolvency — it scores zero on leverage, not full marks.'],
-        ['Interest cover', one(row.icover, 1, '×'), 'Operating profit against the interest bill.'],
+          lender && de !== null && de >= 0 ? LN
+            : 'A negative reading means negative equity, which is insolvency — it scores zero on leverage, not full marks.'],
+        ['Interest cover', one(row.icover, 1, '×'), lender ? LN : 'Operating profit against the interest bill.'],
         ['Current ratio', one(row.curr, 2, '×'), ''],
         ['Piotroski', num(row.piotroski) === null ? NA
           : Math.round(num(row.piotroski)) + ' / ' + (num(row.piotroski_of) === null ? 9 : Math.round(num(row.piotroski_of))),
@@ -291,7 +301,7 @@
       ]],
       ['Cash', [
         ['Cash from operations / profit', one(row.cfo_pat, 2, '×'),
-          'Under 1.0 means the reported profit is not arriving as cash.'],
+          lender ? LN : 'Under 1.0 means the reported profit is not arriving as cash.'],
         ['Free cash flow / profit', one(row.fcf_pat, 2, '×'), ''],
         ['Cash score', one(row.cf, 0), "The screen's own reading of cash quality, 0 to 100."],
       ]],
