@@ -573,8 +573,21 @@ def fetch_prices(symbols: list[str], period: str = "4y") -> dict[str, dict]:
         for tk in batch:
             sym = tickers[tk]
             try:
-                # A single-ticker batch comes back with flat columns.
-                if len(batch) == 1:
+                # FLAT COLUMNS ARE A SHAPE, NOT A BATCH SIZE.
+                #
+                # This used to branch on len(batch) == 1, on the belief that a
+                # single-ticker download comes back flat. Current yfinance
+                # returns (field, ticker) columns even for one ticker, so
+                # sub["Close"] was a one-column DataFrame, .tolist() raised,
+                # and the log.debug below swallowed it.
+                #
+                # It bit exactly once and silently: when the universe reached
+                # 1,000 names, 1,000 + the benchmark made 25 full batches of
+                # 40 and a 26th holding ^NSEI ALONE. The benchmark vanished,
+                # and with it nifty_1m, nifty_1y, price_date and every
+                # relative-strength figure on the screen — published as null
+                # with nothing saying why. Branch on what the frame IS.
+                if getattr(df.columns, "nlevels", 1) == 1:
                     sub = df
                     cols = {c: c for c in ("Open", "High", "Low", "Close", "Volume")}
                     series = {k: sub[v].dropna() for k, v in cols.items() if v in sub}
@@ -658,7 +671,9 @@ def fetch_prices(symbols: list[str], period: str = "4y") -> dict[str, dict]:
                 }
                 out[sym] = rec
             except Exception as e:
-                log.debug(f"screen: {sym} price parse — {e}")
+                # The benchmark failing is not one name among a thousand: every
+                # relative-strength figure depends on it. Say so at WARNING.
+                (log.warning if tk == BENCHMARK else log.debug)(f"screen: {sym} price parse — {e}")
 
         log.info(f"screen: prices {bi}/{len(batches)} batches, {len(out)} symbols")
         if bi < len(batches):
