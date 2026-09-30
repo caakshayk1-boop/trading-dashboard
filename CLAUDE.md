@@ -361,6 +361,13 @@ twice-a-day commit does not deploy the newspaper. `vision_scan.yml` runs at
   later bars; a bar touching both stop and target books the STOP and is
   flagged `ambiguous`.
 - Not in the ledger, not on Telegram, no win rate until 30 have closed.
+- **GitHub cron started this 5–8 hours late** (first nine runs, 13:04–18:10 UTC against
+  07:58/10:15). It is now an entry in the signal repo's Cloudflare watchdog
+  (`src/watchdog_schedule.js`), which dispatches it 12 minutes after a missed slot — safe, because
+  a duplicate files nothing twice. Move a cron here, move the slot there.
+- The signal repo cuts `public/c/<KEY>.json` per company from `screen.json` at deploy and Vision's
+  company pages (and `/stock/<SYM>` HTML) are written from them — fields dropped from
+  `screen.json`'s rows stop reaching those pages.
 - `python3 test_vision_signals.py` — 41 checks, offline.
 
 ## Page structure
