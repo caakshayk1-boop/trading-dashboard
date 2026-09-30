@@ -2054,7 +2054,21 @@ def fetch_linkedin(src: dict) -> list[dict]:
 
 
 # -- Michael Page --------------------------------------------------------
-_MP_RE = re.compile(r'href="(/job-detail/[^"#?]+)"')
+# ABSOLUTE OR RELATIVE. Michael Page serves
+# href="https://www.michaelpage.ae/job-detail/..." today; this pattern required
+# a leading slash and so matched nothing, and the source reported "empty —
+# reachable, but no senior-finance roles matched" every morning. That reads as
+# an empty market rather than a broken pattern, which is why it sat unnoticed
+# while the same listings were visible on LinkedIn. MEASURED 2026-09-30: one
+# page carries 30 postings, 26 of them senior finance — CFO, Finance Director,
+# Director Finance Regulatory Reporting (DFSA). urljoin already handles both
+# forms, so only the matching had to widen.
+# The trailing [^"]* is not decoration: [^"#?]+ followed by a closing quote
+# means a link carrying ANY query string matches nothing at all rather than
+# matching without it. One tracking parameter would empty this source the same
+# silent way the absolute href did. The capture still stops at ? or #, so the
+# URL collected stays clean.
+_MP_RE = re.compile(r'href="((?:https?://[^"/]+)?/job-detail/[^"#?]+)[^"]*"')
 
 
 def fetch_michaelpage(src: dict) -> list[dict]:
@@ -2088,7 +2102,15 @@ def fetch_michaelpage(src: dict) -> list[dict]:
         for m in re.finditer(r'<script type="application/ld\+json">(.*?)</script>',
                              page, re.S):
             try:
-                cand = json.loads(m.group(1))
+                # strict=False TOLERATES RAW CONTROL CHARACTERS. Michael Page
+                # embeds the description's HTML unescaped, literal newlines and
+                # all, which is invalid JSON by the letter and universally
+                # accepted in practice. Strict parsing raised ValueError, this
+                # except swallowed it, and the caller then returned None for
+                # every posting — a second silent failure stacked on the link
+                # regex above, so fixing either one alone would still have
+                # yielded nothing.
+                cand = json.loads(m.group(1), strict=False)
             except ValueError:
                 continue
             if isinstance(cand, dict) and cand.get("@type") == "JobPosting":
