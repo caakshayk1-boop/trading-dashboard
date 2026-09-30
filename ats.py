@@ -220,6 +220,20 @@ RETIRED: dict[str, str] = {
     "Lulu Group": "careers host negotiates only TLS 1.0, which this client and "
                   "every modern one refuses. Nothing to call.",
     "Cenomi": "careers page is client-rendered and links to no ATS.",
+    # Probed 2026-09-30 after three of their UAE finance roles turned up on
+    # LinkedIn and nowhere here. Both run a real ATS; neither serves it in a
+    # form the current adapters can read. Recorded so the next probe starts
+    # from the measurement instead of the hunch.
+    "Standard Chartered": "SuccessFactors, but the search page ships no job "
+                          "links in server HTML — 93KB of shell and one "
+                          "self-referential /job/ href. The successfactors "
+                          "adapter regexes the response body, so it would "
+                          "report zero forever. Needs its JSON search endpoint "
+                          "found, or a rendering fetch.",
+    "McCain Foods": "Phenom (cdn.phenompeople.com), site path us/en. The "
+                    "adapter POSTs to /widgets and that was not verified from "
+                    "here, so it is not in SOURCES on a guess. Probe it before "
+                    "adding — it is the closest of the unadded candidates.",
 }
 
 
