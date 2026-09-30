@@ -1,8 +1,8 @@
 {
  "ok": true,
- "generated_at": "2026-09-30T14:17:34+00:00",
+ "generated_at": "2026-09-30T16:24:10+00:00",
  "source": "harvested bars (offline run)",
- "coverage_note": "Harvested 500 of 500 names on hourly bars; 498 of 500 names on 3-year daily bars (0 returned nothing, 2 had too little history), at 2026-09-30T14:15:42+00:00.",
+ "coverage_note": "Harvested 500 of 500 names on hourly bars; 498 of 500 names on 3-year daily bars (0 returned nothing, 2 had too little history), at 2026-09-30T16:22:44+00:00.",
  "engines": [
   {
    "key": "buoy",
@@ -321,8 +321,8 @@
      "since_pct": 0.0
     }
    ],
-   "new_alerts": 3,
-   "already_logged": 7
+   "new_alerts": 0,
+   "already_logged": 10
   },
   {
    "key": "bedrock",
