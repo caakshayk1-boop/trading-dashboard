@@ -1,21 +1,21 @@
 {
   "ok": true,
-  "generated_at": "2026-09-29T18:54:52+00:00",
+  "generated_at": "2026-09-30T18:36:35+00:00",
   "today": {
     "regime": "calm_range",
-    "close": 22780.25,
-    "vol_ann_pct": 10.0,
-    "vol_pctile": 39.9,
-    "drawdown_pct": 13.48,
+    "close": 22716.2,
+    "vol_ann_pct": 9.9,
+    "vol_pctile": 39.7,
+    "drawdown_pct": 13.72,
     "above_200dma": false,
-    "date": "2026-09-28",
+    "date": "2026-09-29",
     "t": "Calm and going nowhere",
     "d": "Quiet, but with no trend to follow. Breakouts fail most often here, because there is nothing behind them."
   },
-  "run_days": 55,
+  "run_days": 56,
   "last_year": {
-    "calm_trend": 100,
-    "calm_range": 98,
+    "calm_trend": 99,
+    "calm_range": 99,
     "highvol_trend": 15,
     "highvol_mr": 46,
     "crisis": 1
@@ -50,10 +50,10 @@
   "measured": {
     "cells": {
       "calm_range": {
-        "n": 22,
-        "avg_r": -0.587,
-        "win_rate": 13.6,
-        "t": -2.59,
+        "n": 23,
+        "avg_r": -0.532,
+        "win_rate": 17.4,
+        "t": -2.38,
         "readable": true,
         "engines": [
           {
@@ -77,18 +77,18 @@
             "readable": true
           },
           {
-            "engine": "breakout",
-            "n": 4,
+            "engine": "keel",
+            "n": 6,
             "retired": null,
-            "avg_r": -1.0,
-            "win_rate": 0.0,
-            "t": null,
+            "avg_r": -0.718,
+            "win_rate": 16.7,
+            "t": -2.55,
             "trusted": false,
             "readable": false
           },
           {
-            "engine": "keel",
-            "n": 5,
+            "engine": "breakout",
+            "n": 4,
             "retired": null,
             "avg_r": -1.0,
             "win_rate": 0.0,
@@ -145,10 +145,6 @@
     "A cell needs 8 closed trades before any figure is shown, and the site's actual bar for trusting one is 30 closed at t >= 2.0. Most cells will not clear either, and the page says so rather than printing a multiplier nothing supports."
   ],
   "history": [
-    {
-      "date": "2024-09-20",
-      "regime": "calm_trend"
-    },
     {
       "date": "2024-09-23",
       "regime": "calm_trend"
@@ -2143,6 +2139,10 @@
     },
     {
       "date": "2026-09-28",
+      "regime": "calm_range"
+    },
+    {
+      "date": "2026-09-29",
       "regime": "calm_range"
     }
   ]
