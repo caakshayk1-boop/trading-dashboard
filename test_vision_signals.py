@@ -40,6 +40,9 @@ ROOT = pathlib.Path(__file__).resolve().parent
 sys.path.insert(0, str(ROOT))
 for k in ("TELEGRAM_TOKEN", "TELEGRAM_CHAT_ID", "GROQ_API_KEY"):
     os.environ.setdefault(k, "placeholder-not-a-secret")
+# The legacy Vision grader is frozen at the Signal V2 cutover (v1_cutover.py);
+# these checks keep its archived logic under test. The freeze: test_v1_cutover.py.
+os.environ["V1_UNFREEZE"] = "1"
 
 import scanner                                   # noqa: E402
 import vision_scan                               # noqa: E402

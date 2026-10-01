@@ -365,10 +365,13 @@ NEWS_SITE   = os.environ.get("NEWS_SITE",   "news.askakshay.com")
 # section key → (host, path). The host is the one that OWNS that section, not
 # the one that happens to have a page about it.
 _OWNS = {
-    "ideas":       (SIGNAL_SITE, "/ideas"),      # the ranked board + sized orders
-    "signals":     (SIGNAL_SITE, "/signals"),    # the public ledger
-    "performance": (SIGNAL_SITE, "/signals"),    # closed trades — same ledger
-    "engines":     (SIGNAL_SITE, "/engines"),    # what fired, and its record
+    # Signal V2 (2026-10-01): plans and their record moved. /ideas, /signals
+    # and /engines now show a retired-version notice, so the brief links to
+    # where the content lives.
+    "ideas":       (SIGNAL_SITE, "/opportunities"),  # next-session plans
+    "signals":     (SIGNAL_SITE, "/performance"),    # the V2 forward record
+    "performance": (SIGNAL_SITE, "/performance"),
+    "engines":     (SIGNAL_SITE, "/performance"),    # strategy status lives there
     "screen":      (SIGNAL_SITE, "/screen"),
     "markets":     (SIGNAL_SITE, "/markets"),
     "ipo":         (SIGNAL_SITE, "/ipo"),

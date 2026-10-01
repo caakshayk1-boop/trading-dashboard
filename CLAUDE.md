@@ -22,6 +22,37 @@ Python 3 | SQLite (`signals.db`) | Upstox API | Telegram Bot API
 - Run bot: `python3 telegram_bot.py`
 - Run dashboard: `python3 dashboard.py`
 
+## Signal V2 cutover — 2026-10-01 (READ FIRST)
+Signal V1 is retired. Every engine this repo ran as a trade publisher — BREACH,
+VECTOR, TIDAL (magic/magicmagic), LEDGE, KEEL, PIVOT, ASCENT, NORTH, GUST,
+BUOY/ANCHOR/BEDROCK, PLUMB, cf_1h, commodity, ohl, the US daily picks and the
+Vision legacy engines — files nothing, grades nothing and alerts nothing.
+
+- `v1_cutover.py` is the switch, in CODE: `standalone_scan.main`,
+  `scheduled_tasks_runner` (cf_scan/ai_longterm), `scan_research.main`,
+  `vision_scan.run`, `ai_longterm.main` and every `tracker` ledger writer and
+  grader stand down after 2026-10-01 00:00 IST. `V1_UNFREEZE=1` lifts it for a
+  deliberate restore only. `test_v1_cutover.py` drives each of them.
+- `daily_scan.yml`, `research.yml` and `vision_scan.yml` have NO schedule, and
+  the cf_scan crons are gone from `scheduled_tasks.yml`. Removing a cron alone
+  was not enough (dispatch and the watchdog can still start a job), hence the
+  code switch.
+- V1 rows are not deleted. `v1_archive.py` / `v1_archive.yml` copy every V1
+  table to `v1_archive_<table>` with a checksummed manifest, then end OPEN V1
+  rows with `status=ARCHIVED`, `lifecycle_status=ARCHIVED_V1`. No exit, P&L or
+  R is invented, and `restore-open` reverses it. A private copy of the ledger
+  exports and the V1 public feeds is in the private vision-engine repo,
+  `archive/signal-v1/`.
+- **V2 is not built here.** One private engine (`caakshayk1-boop/vision-engine`)
+  publishes ONE canonical plan feed, `feeds/signal_v2.json`
+  (`signal-v2-public/1`), which Signal and Vision both read. Never add
+  selection logic for V2 to this public repo.
+- The V1 regression suites (`test_alert_pipeline`, `test_engine_regressions`,
+  `test_vision_signals`) still run, with `V1_UNFREEZE=1` set inside them, as
+  tests of archived logic.
+- The brief links (`daily_brief._OWNS`) point at V2 routes: /opportunities and
+  /performance.
+
 ## Stock Screen (`#stocks` on news.askakshay.com)
 Nifty 500 research screen sitting directly above the Signal Log.
 

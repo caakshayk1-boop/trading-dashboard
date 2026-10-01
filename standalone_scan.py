@@ -2403,6 +2403,9 @@ def run_magic_scan(time_str):
 # ── Main ─────────────────────────────────────────────────────────────────────
 
 def main():
+    from v1_cutover import stand_down
+    if stand_down("standalone_scan"):
+        return 0
     from tracker import log_scan_meta, init_db
     init_db()
 

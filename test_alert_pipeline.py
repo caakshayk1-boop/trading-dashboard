@@ -22,6 +22,10 @@ os.environ.pop("TURSO_URL", None)
 os.environ.pop("TURSO_TOKEN", None)
 os.environ["TELEGRAM_TOKEN"] = "test-token"
 os.environ["TELEGRAM_CHAT_ID"] = "test-chat"
+# These checks exercise the V1 alert and ledger code, which is retired and
+# frozen at the Signal V2 cutover (v1_cutover.py). They keep running as
+# regression tests of the archived logic; test_v1_cutover.py proves the freeze.
+os.environ["V1_UNFREEZE"] = "1"
 
 TMP = tempfile.mkdtemp()
 import db

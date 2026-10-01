@@ -518,6 +518,9 @@ def to_telegram(picks: list[dict]) -> str:
 
 
 def main() -> int:
+    from v1_cutover import stand_down
+    if stand_down("ai_longterm"):
+        return 0
     logging.basicConfig(level=logging.INFO, format="%(levelname)s %(message)s")
     ap = argparse.ArgumentParser()
     ap.add_argument("--dry-run", action="store_true")

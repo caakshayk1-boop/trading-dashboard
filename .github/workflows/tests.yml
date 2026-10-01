@@ -106,7 +106,11 @@ jobs:
           # Read by test_engine_names.py. Without it the five cross-repo
           # checks skip; with it they are the thing that would have caught
           # PLUMB filing after its own retirement.
-          SIGNAL_JS: ${{ github.workspace }}/.signal-checkout/public/engines.js
+          # Signal V2 (2026-10-01) removed the V1 engine roster from the live
+          # site. The cross-repo check now pins engine_names.py to the roster
+          # as it stood at the cutover, frozen in legacy/engines_v1.js, so the
+          # archived V1 names cannot drift either.
+          SIGNAL_JS: ${{ github.workspace }}/legacy/engines_v1.js
         run: |
           set +e
           if [ ! -f "$SIGNAL_JS" ]; then

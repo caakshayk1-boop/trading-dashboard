@@ -18,8 +18,8 @@
 # SILENT. Nothing here sends a message.
 name: vision-scan
 on:
-  schedule:
-    - cron: "15 10 * * 1-5"
+  # NO SCHEDULE — Vision legacy grading (bottom, brk4h) retired at the Signal V2 cutover, 2026-10-01
+  # (v1_cutover.py). The old crons are in git history at the cutover commit.
   workflow_dispatch:
 
 permissions:
