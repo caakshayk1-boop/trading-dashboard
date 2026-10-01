@@ -22,9 +22,8 @@
 # run seven times a day to re-answer a question that changes twice.
 name: research-scan
 on:
-  schedule:
-    - cron: "50 7 * * 1-5"
-    - cron: "5 10 * * 1-5"
+  # NO SCHEDULE — BUOY / ANCHOR / BEDROCK research floor retired at the Signal V2 cutover, 2026-10-01
+  # (v1_cutover.py). The old crons are in git history at the cutover commit.
   workflow_dispatch:
 
 permissions:

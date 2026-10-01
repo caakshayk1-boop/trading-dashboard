@@ -168,6 +168,9 @@ def scan_offline():
 
 
 def main():
+    from v1_cutover import stand_down
+    if stand_down("scan_research"):
+        return
     hits, scanned = scan_offline()
     now = datetime.now(timezone.utc)
 

@@ -200,6 +200,9 @@ def tally(history: list) -> dict:
 
 
 def run(limit: int | None = None, now=None) -> int:
+    from v1_cutover import stand_down
+    if stand_down("vision_scan"):
+        return 0
     import harvest_bars
     import scanner
 

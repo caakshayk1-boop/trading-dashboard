@@ -979,6 +979,10 @@ def log_to_all_signals(symbol, signal_type, action, entry, sl, t1, t2, t3, rr,
     ledger must record every signal the scanner produced whether or not
     Telegram was reachable, so this deliberately does not depend on the send.
     """
+    from v1_cutover import v1_frozen, REASON
+    if v1_frozen():
+        log.warning(f"log_to_all_signals stood down — {REASON}")
+        return None
     ok, reason = _validate_signal_ordering(action, entry, sl, t1, t2, t3)
     if not ok:
         log.error(f"all_signals REJECTED: {symbol} {signal_type} {action} — {reason} "
@@ -1152,6 +1156,10 @@ def log_batch_to_all_signals(rows, date=None):
     and a broken idempotence key: the next run finds nothing logged under the
     real dates and writes the whole set again.
     """
+    from v1_cutover import v1_frozen, REASON
+    if v1_frozen():
+        log.warning(f"log_batch_to_all_signals stood down — {REASON}")
+        return [None] * len(rows or [])
     if not rows:
         return []
 
@@ -1329,6 +1337,10 @@ def unmute_asset(symbol):
         _db.sync(c)
 
 def update_outcomes():
+    from v1_cutover import v1_frozen, REASON
+    if v1_frozen():
+        log.warning(f"update_outcomes stood down — {REASON}")
+        return None
     init_db()
     with _conn() as c:
         open_trades = pd.read_sql("SELECT * FROM signals WHERE status='OPEN'", c)
@@ -1411,6 +1423,10 @@ def update_all_outcomes():
     bar that straddles both levels books the stop and sets `exit_ambiguous`, so
     the assumption is counted rather than hidden.
     """
+    from v1_cutover import v1_frozen, REASON
+    if v1_frozen():
+        log.warning(f"update_all_outcomes stood down — {REASON}")
+        return None
     init_db()
     with _conn() as c:
         try:
@@ -2229,6 +2245,10 @@ def log_top5_picks(picks, week_key: str, date=None) -> list:
     Never raises — the picks are already cached and rendered by the time this
     runs, so a ledger failure must not cost the reader the section.
     """
+    from v1_cutover import v1_frozen, REASON
+    if v1_frozen():
+        log.warning(f"log_top5_picks stood down — {REASON}")
+        return []
     if not picks:
         return []
     today = date or _today_ist()
@@ -2321,6 +2341,10 @@ def log_sip_bucket(allocations, month_key: str, date=None) -> list:
     is the NAV/price the allocation was decided at, which is the only honest
     reference point for it.
     """
+    from v1_cutover import v1_frozen, REASON
+    if v1_frozen():
+        log.warning(f"log_sip_bucket stood down — {REASON}")
+        return []
     if not allocations:
         return []
     today = date or _today_ist()
@@ -2377,6 +2401,10 @@ def _log_multibaggers_to_ledger(signals, today):
     time this runs, so a ledger failure must not lose the scan or fail the
     Saturday job. It logs loudly instead.
     """
+    from v1_cutover import v1_frozen, REASON
+    if v1_frozen():
+        log.warning(f"_log_multibaggers_to_ledger stood down — {REASON}")
+        return []
     if not signals:
         return []
     try:
@@ -2455,6 +2483,10 @@ def _log_magic_to_ledger(signals, engine, today):
     delivered by the time this runs, so a ledger failure must not fail the
     Saturday job.
     """
+    from v1_cutover import v1_frozen, REASON
+    if v1_frozen():
+        log.warning(f"_log_magic_to_ledger stood down — {REASON}")
+        return []
     if not signals:
         return []
     if engine not in MAGIC_HORIZONS:

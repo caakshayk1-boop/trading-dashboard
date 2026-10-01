@@ -14,6 +14,7 @@ from __future__ import annotations
 
 import math
 import os
+os.environ["V1_UNFREEZE"] = "1"   # V1 logic under test; the freeze itself: test_v1_cutover.py
 import re
 import sys
 from datetime import date, datetime, timedelta, timezone
@@ -774,7 +775,13 @@ def test_scan_crons_match_their_slot_arms():
     wf = open(".github/workflows/daily_scan.yml", encoding="utf-8").read()
 
     crons = re.findall(r"^\s*-\s*cron:\s*'([^']+)'", wf, re.M)
-    check("daily_scan.yml declares crons", bool(crons), f"found {crons}")
+    # Signal V1 retired 2026-10-01: the workflow has NO schedule now, and that
+    # is asserted (test_v1_cutover.py) rather than the old "declares crons".
+    # The slot arms stay for a manual archival dispatch; with no cron they
+    # cannot be reached by a schedule, so the orphan check no longer applies.
+    check("daily_scan.yml has no schedule after the V2 cutover", crons == [], f"found {crons}")
+    if not crons:
+        return
 
     case_block = re.search(r"case \"\$SCHEDULE\" in(.*?)esac", wf, re.S)
     check("slot case block found", case_block is not None)

@@ -310,3 +310,56 @@
 2026-09-04 12:27:11,859 INFO Scheduler: daily refresh at 06:00 MYT (22:00 UTC)
 2026-09-04 12:27:11,860 INFO THE DAILY SIGNAL — news.askakshay.com — started
 2026-09-04 12:27:11,998 WARNING stock screen: hiding it — newest build is 22.6d old
+2026-10-01 08:37:21,948 WARNING expectancy: ledger query failed (no such table: all_signals) — using defaults
+2026-10-01 08:37:21,957 INFO screen: narrative — 1 written, 0 rejected by the guard, 0 no answer from the model
+2026-10-01 08:37:21,957 INFO screen: narrative — 1 written, 0 rejected by the guard, 0 no answer from the model
+2026-10-01 08:37:21,957 INFO screen: narrative for TCS rejected — numbers not in the facts: ['31']
+2026-10-01 08:37:21,957 INFO screen: narrative — 0 written, 1 rejected by the guard, 0 no answer from the model
+2026-10-01 08:37:21,957 INFO screen: narrative for TCS rejected — advice language
+2026-10-01 08:37:21,957 INFO screen: narrative — 0 written, 1 rejected by the guard, 0 no answer from the model
+2026-10-01 08:37:21,957 INFO screen: no AI callable — narrative skipped, SWOT unaffected
+2026-10-01 08:37:21,957 INFO screen: narrative — 0 written, 0 rejected by the guard, 0 no answer from the model
+2026-10-01 08:37:22,073 INFO Startup: content cache invalidated
+2026-10-01 08:37:22,076 INFO Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2026-10-01 08:37:22,076 INFO Added job "_daily_6am_refresh" to job store "default"
+2026-10-01 08:37:22,076 INFO Scheduler started
+2026-10-01 08:37:22,077 INFO Scheduler: daily refresh at 06:00 MYT (22:00 UTC)
+2026-10-01 08:37:22,077 INFO THE DAILY SIGNAL — news.askakshay.com — started
+2026-10-01 08:37:22,079 INFO picks: warming cache for 2026-W40-v6 — scanning 161 stocks...
+2026-10-01 08:42:44,233 WARNING expectancy: ledger query failed (no such table: all_signals) — using defaults
+2026-10-01 08:42:44,240 INFO screen: narrative — 1 written, 0 rejected by the guard, 0 no answer from the model
+2026-10-01 08:42:44,240 INFO screen: narrative — 1 written, 0 rejected by the guard, 0 no answer from the model
+2026-10-01 08:42:44,240 INFO screen: narrative for TCS rejected — numbers not in the facts: ['31']
+2026-10-01 08:42:44,240 INFO screen: narrative — 0 written, 1 rejected by the guard, 0 no answer from the model
+2026-10-01 08:42:44,240 INFO screen: narrative for TCS rejected — advice language
+2026-10-01 08:42:44,240 INFO screen: narrative — 0 written, 1 rejected by the guard, 0 no answer from the model
+2026-10-01 08:42:44,240 INFO screen: no AI callable — narrative skipped, SWOT unaffected
+2026-10-01 08:42:44,240 INFO screen: narrative — 0 written, 0 rejected by the guard, 0 no answer from the model
+2026-10-01 08:42:44,377 INFO Startup: content cache invalidated
+2026-10-01 08:42:44,378 INFO Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2026-10-01 08:42:44,378 INFO Added job "_daily_6am_refresh" to job store "default"
+2026-10-01 08:42:44,378 INFO Scheduler started
+2026-10-01 08:42:44,378 INFO Scheduler: daily refresh at 06:00 MYT (22:00 UTC)
+2026-10-01 08:42:44,378 INFO picks: warming cache for 2026-W40-v6 — scanning 161 stocks...
+2026-10-01 08:42:44,379 INFO THE DAILY SIGNAL — news.askakshay.com — started
+2026-10-01 08:42:48,586 WARNING vision_scan: Signal V1 retired 2026-10-01 — V2 publishes from the private engine (feeds/signal_v2.json). V1 jobs stand down; nothing is filed or alerted.
+2026-10-01 08:42:48,589 WARNING vision_scan: Signal V1 retired 2026-10-01 — V2 publishes from the private engine (feeds/signal_v2.json). V1 jobs stand down; nothing is filed or alerted.
+2026-10-01 08:42:48,590 WARNING vision_scan: Signal V1 retired 2026-10-01 — V2 publishes from the private engine (feeds/signal_v2.json). V1 jobs stand down; nothing is filed or alerted.
+2026-10-01 08:42:48,592 WARNING vision_scan: Signal V1 retired 2026-10-01 — V2 publishes from the private engine (feeds/signal_v2.json). V1 jobs stand down; nothing is filed or alerted.
+2026-10-01 08:42:48,593 WARNING vision_scan: Signal V1 retired 2026-10-01 — V2 publishes from the private engine (feeds/signal_v2.json). V1 jobs stand down; nothing is filed or alerted.
+2026-10-01 08:47:48,391 WARNING expectancy: ledger query failed (no such table: all_signals) — using defaults
+2026-10-01 08:47:48,400 INFO screen: narrative — 1 written, 0 rejected by the guard, 0 no answer from the model
+2026-10-01 08:47:48,400 INFO screen: narrative — 1 written, 0 rejected by the guard, 0 no answer from the model
+2026-10-01 08:47:48,400 INFO screen: narrative for TCS rejected — numbers not in the facts: ['31']
+2026-10-01 08:47:48,400 INFO screen: narrative — 0 written, 1 rejected by the guard, 0 no answer from the model
+2026-10-01 08:47:48,400 INFO screen: narrative for TCS rejected — advice language
+2026-10-01 08:47:48,400 INFO screen: narrative — 0 written, 1 rejected by the guard, 0 no answer from the model
+2026-10-01 08:47:48,400 INFO screen: no AI callable — narrative skipped, SWOT unaffected
+2026-10-01 08:47:48,401 INFO screen: narrative — 0 written, 0 rejected by the guard, 0 no answer from the model
+2026-10-01 08:47:48,532 INFO Startup: content cache invalidated
+2026-10-01 08:47:48,533 INFO Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2026-10-01 08:47:48,533 INFO Added job "_daily_6am_refresh" to job store "default"
+2026-10-01 08:47:48,533 INFO Scheduler started
+2026-10-01 08:47:48,534 INFO picks: warming cache for 2026-W40-v6 — scanning 161 stocks...
+2026-10-01 08:47:48,534 INFO Scheduler: daily refresh at 06:00 MYT (22:00 UTC)
+2026-10-01 08:47:48,535 INFO THE DAILY SIGNAL — news.askakshay.com — started

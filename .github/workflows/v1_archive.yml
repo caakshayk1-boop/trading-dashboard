@@ -1,0 +1,59 @@
+# Signal V1 → V2 migration, inside the private database (v1_archive.py).
+#
+# By hand only. Order: archive → verify → end-tracking (apply). Each mode is
+# idempotent; end-tracking refuses unless the all_signals archive verifies.
+# The log prints counts and checksums only — no row contents — because this
+# repository is public. Reversal: restore-open / restore-table.
+name: Ledger — V1 archive and V2 cutover
+
+on:
+  workflow_dispatch:
+    inputs:
+      mode:
+        description: "archive | verify | end-tracking | restore-open | restore-table"
+        required: true
+        default: verify
+        type: choice
+        options: [archive, verify, end-tracking, restore-open, restore-table]
+      table:
+        description: "restore-table only"
+        required: false
+        default: ""
+      apply:
+        description: "Write (end-tracking / restore-*). Leave false for a dry run."
+        type: boolean
+        default: false
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ledger-write
+  cancel-in-progress: false
+
+env:
+  TURSO_URL:   ${{ secrets.TURSO_URL }}
+  TURSO_TOKEN: ${{ secrets.TURSO_TOKEN }}
+
+jobs:
+  migrate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: |
+          pip install --upgrade pip
+          pip install libsql-experimental
+      - name: Refuse to run against the local fallback
+        run: |
+          if [ -z "$TURSO_URL" ] || [ -z "$TURSO_TOKEN" ]; then
+            echo "::error::TURSO_URL/TURSO_TOKEN missing — this would migrate an empty local file, not the ledger"
+            exit 1
+          fi
+      - name: Offline self-test first
+        run: python test_v1_archive.py
+      - name: Run
+        run: python v1_archive.py "${{ inputs.mode }}" ${{ inputs.table }} ${{ inputs.apply && '--apply' || '' }}

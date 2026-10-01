@@ -371,6 +371,12 @@ def _post_document(data: bytes, filename: str, caption: str):
 if __name__ == "__main__":
     task = sys.argv[1] if len(sys.argv) > 1 else "auto"
 
+    # V1 publishers retired at the Signal V2 cutover. The brief, the SIP
+    # bucket's data refresh and the subscriber job are not trade publishers.
+    from v1_cutover import stand_down
+    if task in ("cf_scan", "ai_longterm", "auto") and stand_down(f"scheduled_tasks:{task}"):
+        sys.exit(0)
+
     if task == "cf_scan":
         run_cf_scan()
     elif task == "daily_brief":
