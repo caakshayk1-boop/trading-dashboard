@@ -356,36 +356,49 @@ signals**. `research.yml` runs twice a day at the 4-hour closes.
   workflow must harvest before it scans, and no scan may phrase its own
   coverage.
 
-## Vision signals (`vision_scan.py` → vision.askakshay.com)
-Two rules the operator specified, over the stock screen's ~1,000 names. Rules
-in `scanner.py` (VISION SIGNALS section); `vision_scan.py` fetches, files,
-grades and writes **`feeds/vision_signals.json`** — outside `docs/`, so the
-twice-a-day commit does not deploy the newspaper. `vision_scan.yml` runs at
-13:28 and 15:45 IST on weekdays; the signal repo's `sync-data.yml` mirrors it.
+## Vision signals — RETIRED 2026-10-01 (`vision_scan.py`, grading only)
+Bottom reversal and 4H breakout **no longer file**. `vision_scan.LEGACY`
+(`vision-legacy-2.0.0`) switches both off; it is a versioned switch, not a
+deletion, and setting `new_filings` back to True in a NEW version is the
+rollback. The rules stay in `scanner.py` (VISION SIGNALS) because the open
+filings are still graded by them.
 
-- **Bottom reversal** (daily): close ≥15% above the 52-week low, below the
-  200-day, above the 50-day, weekly RSI(14) > 48; 20-day turnover ≥ ₹5 cr.
-- **4H breakout**: a COMPLETED NSE 4H candle closes above the prior 20
-  candles' high while the candle before had not broken ITS prior high (the
-  first version compared it with a level that included its own high, so the
-  freshness test passed everything); solid bullish body ≥60% of range, close
-  in the top quarter, range ≥1× ATR, volume ≥1.5× average.
-- Levels come from `_tight_sl` / `_structure_targets` / `enforce_r_floor` —
-  the book's functions, not a third formula.
-- A bar the session can still change is never evaluated (daily before 15:40
-  IST; a 4H candle until 10 minutes after it closes).
-- Filed once, levels frozen; the same bar is never filed twice. Graded on
-  later bars; a bar touching both stop and target books the STOP and is
-  flagged `ambiguous`.
-- Not in the ledger, not on Telegram, no win rate until 30 have closed.
-- **GitHub cron started this 5–8 hours late** (first nine runs, 13:04–18:10 UTC against
-  07:58/10:15). It is now an entry in the signal repo's Cloudflare watchdog
-  (`src/watchdog_schedule.js`), which dispatches it 12 minutes after a missed slot — safe, because
-  a duplicate files nothing twice. Move a cron here, move the slot there.
-- The signal repo cuts `public/c/<KEY>.json` per company from `screen.json` at deploy and Vision's
-  company pages (and `/stock/<SYM>` HTML) are written from them — fields dropped from
-  `screen.json`'s rows stop reaching those pages.
-- `python3 test_vision_signals.py` — 41 checks, offline.
+- `vision_scan.yml` runs once, 10:15 UTC (15:45 IST), and fetches ONLY names
+  with an open legacy filing. It grades them under the rules they were filed
+  with — `vision_grade`, same bars, same horizon — until stop, T3 or horizon.
+  The 07:58 UTC slot is gone here and from the signal repo's watchdog.
+- `feeds/vision_signals.json` is now the **Legacy Archive**: every filing,
+  loss and timestamp kept, `today` always empty, a `retired` block added.
+- Why retired (full audit in the private engine repo, `docs/AUDIT.md`):
+  - 29 of 45 stops sat at the 6% cap, i.e. clamped INSIDE structure;
+  - 44 of 45 targets were exactly 1.6/2.5/3.3R — risk multiples, not levels;
+  - entries were the signal close, but every filing was published 3–6.6 h
+    after the session ended, a price no reader could pay;
+  - "4H" candles were 4h00 + 2h15, and since every run landed after the
+    close, the morning candle was never evaluated;
+  - `auto_adjust=True` grades dividend-adjusted bars against unadjusted
+    levels.
+- `python3 test_vision_signals.py` — 45 checks, offline, including the
+  retirement: a matching name files nothing, open filings keep grading,
+  losses are kept, only open names are fetched.
+
+## Vision EOD — Risk-First Selection (replacement; PRIVATE repo)
+The replacement engine lives in **`caakshayk1-boop/vision-engine` (private)**:
+rules, thresholds, research and owner diagnostics never enter this public
+repo. Its only output here is **`feeds/vision_eod.json`**, written by its
+`eod.yml` through the GitHub contents API (`PUBLIC_FEED_TOKEN`), from an
+allowlist (`vision_eod/publish.py`) with a leakage test. Do not add strategy
+logic for it to this repo — that would publish it.
+
+- Long-only NSE cash equities, completed daily bars, one setup family
+  (controlled pullback in an uptrend + recovery close), risk-first plans:
+  structural stop (never capped), three targets from existing levels,
+  entry RANGE with a cap for the NEXT session, 40/35/25 partial exits,
+  expiry, time exit. Fills are SIMULATED and labelled as such.
+- Mode **research** until a holdout passes the pre-registered criteria in
+  that repo's `docs/PROMOTION_CRITERIA.md`.
+- The signal repo mirrors `feeds/vision_eod.json` (sync-data.yml +
+  pull-feeds.mjs) and Vision's Setups page renders it.
 
 ## Page structure
 `SECTION_MAP` order IS document order, and the nav is generated from it.

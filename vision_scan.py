@@ -26,9 +26,28 @@ Every commit touching docs/ deploys the newspaper on Vercel (vercel.json's
 ignoreCommand), and deployments are what filled the 10 GB storage. This runs
 twice a trading day; it writes where Vercel does not look.
 
+RETIRED 2026-10-01 — GRADING ONLY
+---------------------------------
+Both rules stopped filing on 2026-10-01 (`LEGACY` below, a versioned switch,
+not a deletion). They were replaced on vision.askakshay.com by "Vision EOD —
+Risk-First Selection", which runs privately and publishes
+feeds/vision_eod.json. What this script still does, and must keep doing:
+
+  * grade every filing that was open at retirement, under the rules it was
+    filed with (vision_grade, the same bars, the same horizon) — a retired
+    engine's open trades are not abandoned mid-flight and not rewritten into
+    the new strategy;
+  * keep every filing, loss and timestamp in the feed's `history`, which is
+    the Legacy Archive the site renders;
+  * fetch ONLY the names with an open filing, so the job costs seconds, not
+    the seven minutes a full-universe harvest took.
+
+When the last legacy filing closes (horizon 30 sessions), the run becomes a
+no-op and the workflow can be removed.
+
 Usage:
-    python3 vision_scan.py              # full screen universe
-    python3 vision_scan.py --limit 40   # a slice, for a smoke test
+    python3 vision_scan.py              # grade open legacy filings
+    python3 vision_scan.py --limit 40   # a slice, for a smoke test (filing engines only)
 """
 from __future__ import annotations
 
@@ -65,6 +84,25 @@ RULES = {
         "horizon": "20 candles (~10 sessions)",
     },
 }
+# Versioned engine switches. 1.x filed; 2.0.0 grades only. Re-enabling an
+# engine is a new version with new_filings True — the rollback path — never
+# an edit that pretends the retirement did not happen.
+LEGACY = {
+    "config_version": "vision-legacy-2.0.0",
+    "effective": "2026-10-01",
+    "replaced_by": "Vision EOD — Risk-First Selection",
+    "engines": {"bottom": {"new_filings": False}, "brk4h": {"new_filings": False}},
+}
+RETIRED_NOTE = ("Retired on 2026-10-01: no new filings. Filings open at retirement are graded to their stop, "
+                "T3 or horizon under the rules they were filed with. Kept as an archive, losses included. "
+                "Entries here were recorded at the signal close, which was published after the session "
+                "had ended — not a price a reader could have paid.")
+
+
+def may_file(engine: str) -> bool:
+    return bool(LEGACY["engines"].get(engine, {}).get("new_filings", False))
+
+
 LEVELS = ("Stop: the wider of the 5-bar swing low less 0.25 ATR and 1.41 ATR below entry, capped at 6%. "
           "Targets: 1.6 / 2.5 / 3.3 ATR, snapped to nearby resistance, then lifted so T1 repays at least "
           "1.6× the risk and T2, T3 step 0.9R and 1.7R above it; a first target past 4R is pulled back. "
@@ -165,29 +203,43 @@ def run(limit: int | None = None, now=None) -> int:
     import harvest_bars
     import scanner
 
-    names = universe(limit)
-    if not names:
-        _log("vision: the screen universe is empty — nothing to scan, feed left as it was")
-        return 1
-    syms = [n["sym"] for n in names]
+    prev = _load_prev()
+    hist0 = prev.get("history") or []
+    filing = [e for e in ("bottom", "brk4h") if may_file(e)]
+    open_by = {e: sorted({h["sym"] for h in hist0 if h["engine"] == e
+                          and (h.get("grade") or {}).get("status", "open") == "open"}) for e in ("bottom", "brk4h")}
+
+    if filing:
+        names = universe(limit)
+        if not names:
+            _log("vision: the screen universe is empty — nothing to scan, feed left as it was")
+            return 1
+    else:
+        names = []
     meta = {n["sym"]: n for n in names}
-    _log(f"vision: {len(syms)} names")
+    want_d = sorted(set([n["sym"] for n in names] if "bottom" in filing else []) | set(open_by["bottom"]))
+    want_h = sorted(set([n["sym"] for n in names] if "brk4h" in filing else []) | set(open_by["brk4h"]))
+    if not filing and not want_d and not want_h and prev.get("retired"):
+        _log("vision: retired, and no legacy filing is open — nothing to grade, feed left as it was")
+        return 0
+    _log(f"vision: filing engines {filing or 'none (retired)'}; grading {len(open_by['bottom'])} daily + "
+         f"{len(open_by['brk4h'])} 4H open filings; fetching {len(want_d)} daily, {len(want_h)} hourly")
 
     harvest_bars.RANGES["vision_d"] = {"interval": "1d", "period": "2y", "min_bars": 210}
     harvest_bars.RANGES["vision_h"] = {"interval": "1h", "period": "60d", "min_bars": 150}
     t0 = time.time()
-    daily, dcov = harvest_bars.harvest(syms, "vision_d")
-    hourly, hcov = harvest_bars.harvest(syms, "vision_h")
+    daily, dcov = harvest_bars.harvest(want_d, "vision_d") if want_d else ({}, {"asked": 0, "got": 0})
+    hourly, hcov = harvest_bars.harvest(want_h, "vision_h") if want_h else ({}, {"asked": 0, "got": 0})
     _log(f"vision: daily {dcov['got']}/{dcov['asked']}, hourly {hcov['got']}/{hcov['asked']} in {time.time() - t0:.0f}s")
-    if not daily or not hourly:
+    if (want_d and not daily) or (want_h and not hourly):
         _log("vision: a fetch came back empty — NOT overwriting the feed with a scan that saw nothing")
         return 1
 
     found = []
-    for s in syms:
-        for fn, bars in ((scanner.vision_bottom_reversal, daily.get(s)),
-                         (scanner.vision_4h_breakout, hourly.get(s))):
-            if not bars:
+    for s in [n["sym"] for n in names]:
+        for eng, fn, bars in (("bottom", scanner.vision_bottom_reversal, daily.get(s)),
+                              ("brk4h", scanner.vision_4h_breakout, hourly.get(s))):
+            if eng not in filing or not bars:
                 continue
             try:
                 sig = fn(bars, now) if now else fn(bars)
@@ -198,9 +250,8 @@ def run(limit: int | None = None, now=None) -> int:
                 sig.update({"sym": s, "name": meta[s].get("name"), "sector": meta[s].get("sector")})
                 found.append(sig)
 
-    prev = _load_prev()
     now_iso = datetime.now(timezone.utc).isoformat(timespec="seconds")
-    history, new = file_signals(prev.get("history") or [], found, now_iso)
+    history, new = file_signals(hist0, found, now_iso)
     grade_history(history, daily, hourly, now_iso, now)
     history = history[:HISTORY_CAP]
     counts = tally(history)
@@ -208,27 +259,32 @@ def run(limit: int | None = None, now=None) -> int:
     feed = {
         "ok": True,
         "generated_at": now_iso,
-        "universe": len(syms),
+        "universe": len(names) if filing else prev.get("universe"),
         "coverage": {"daily": {"asked": dcov["asked"], "got": dcov["got"]},
                      "hourly": {"asked": hcov["asked"], "got": hcov["got"]}},
         "rules": RULES,
         "levels": LEVELS,
-        "note": ("Two new rules, untested against history. They are not filed to the signal ledger, "
+        "note": (RETIRED_NOTE if not filing else
+                 "Two new rules, untested against history. They are not filed to the signal ledger, "
                  "not sent to Telegram, and carry no win rate or expectancy until 30 have closed."),
         # What qualifies on this run, shown with the levels it was FILED at —
         # the newest filing for that name — not today's recomputed ones.
+        # Retired engines qualify nothing, so this is empty after retirement.
         "today": [next(h for h in history if (h["engine"], h["sym"]) == (s["engine"], s["sym"]))
                   for s in found if any((h["engine"], h["sym"]) == (s["engine"], s["sym"]) for h in history)],
         "counts": counts,
         "history": history,
     }
+    if not filing:
+        feed["retired"] = {**LEGACY, "grading_only": True,
+                           "open_at_run": sum(1 for h in history if (h.get("grade") or {}).get("status", "open") == "open")}
     os.makedirs(os.path.dirname(FEED), exist_ok=True)
     tmp = FEED + ".tmp"
     with open(tmp, "w", encoding="utf-8") as f:
         json.dump(feed, f, ensure_ascii=False, separators=(",", ":"))
     os.replace(tmp, FEED)
-    _log(f"vision: {len(found)} matching now ({sum(1 for s in found if s['engine'] == 'bottom')} bottom, "
-         f"{sum(1 for s in found if s['engine'] == 'brk4h')} 4H), {new} newly filed, {len(history)} in history → {FEED}")
+    _log(f"vision: {len(found)} matching now, {new} newly filed, {len(history)} in history, "
+         f"{feed.get('retired', {}).get('open_at_run', '-')} legacy open → {FEED}")
     return 0
 
 
