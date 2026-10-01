@@ -3817,6 +3817,12 @@ def scan_basebreak(universe=None):
 
 # ══ VISION SIGNALS ═══════════════════════════════════════════════════════════
 #
+# RETIRED 2026-10-01. Neither rule files anything any more (vision_scan.LEGACY).
+# The code stays because filings open at retirement are graded to the end
+# under exactly these rules and levels, and because re-enabling is the
+# documented rollback. Do not extend these rules; the replacement lives in a
+# private repository and is not signal logic for this file.
+#
 # Two rules the operator specified for vision.askakshay.com, over the same
 # ~1,000 names the stock screen covers. They live HERE because signal logic
 # lives in scanner.py; vision_scan.py only fetches bars, calls these, and

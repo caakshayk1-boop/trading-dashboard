@@ -17,6 +17,9 @@ What is pinned:
   * a filing's levels do not move while it is open, and the same bar is never
     filed twice
   * the feed is written outside docs/, and an empty fetch never overwrites it
+  * RETIRED 2026-10-01: neither rule files anything, open filings keep being
+    graded under their original rules, every past filing and loss is kept,
+    and only the names with an open filing are fetched
 
 Offline. No network, no pytest.
 
@@ -459,6 +462,19 @@ def _():
     assert s["grade"]["status"] == "stopped" and "graded_at" not in s
 
 
+class _filing_enabled:
+    """The rollback path: a config version with filing switched back on. The
+    filing code is kept working so a rollback is a version bump, not a rewrite."""
+    def __enter__(self):
+        self.saved = json.loads(json.dumps(vision_scan.LEGACY))
+        for e in vision_scan.LEGACY["engines"].values():
+            e["new_filings"] = True
+
+    def __exit__(self, *a):
+        vision_scan.LEGACY.clear()
+        vision_scan.LEGACY.update(self.saved)
+
+
 @check("feed: written under feeds/, not docs/ — a docs/ commit deploys the newspaper")
 def _():
     rel = pathlib.Path(vision_scan.FEED).relative_to(ROOT)
@@ -471,20 +487,23 @@ def _():
     real_h, real_feed, real_screen = harvest_bars.harvest, vision_scan.FEED, vision_scan.SCREEN
     with tempfile.TemporaryDirectory() as td:
         feed, screen = os.path.join(td, "v.json"), os.path.join(td, "s.json")
+        body = json.dumps({"ok": True, "history": [dict(_sig(), grade={"status": "open", "targets_hit": 0})]})
         with open(feed, "w") as f:
-            f.write('{"ok":true,"history":[1]}')
+            f.write(body)
         with open(screen, "w") as f:
             json.dump({"rows": [{"sym": "ABC"}]}, f)
         try:
             vision_scan.FEED, vision_scan.SCREEN = feed, screen
             harvest_bars.harvest = lambda syms, name: ({}, {"asked": len(syms), "got": 0})
-            assert vision_scan.run() == 1
-            assert open(feed).read() == '{"ok":true,"history":[1]}'
+            assert vision_scan.run() == 1                      # grading-only, and the fetch failed
+            with _filing_enabled():
+                assert vision_scan.run() == 1                  # filing path too
+            assert open(feed).read() == body
         finally:
             harvest_bars.harvest, vision_scan.FEED, vision_scan.SCREEN = real_h, real_feed, real_screen
 
 
-@check("feed: a full run files, grades and publishes the rules and the no-win-rate note")
+@check("feed: with filing switched on (the rollback path), a full run files, grades and publishes")
 def _():
     import harvest_bars
     d = daily(bottom_closes())
@@ -498,7 +517,8 @@ def _():
             vision_scan.FEED, vision_scan.SCREEN = feed, screen
             harvest_bars.harvest = lambda syms, name: (
                 ({"ABC": d} if name == "vision_d" else {"ABC": h}), {"asked": 1, "got": 1})
-            assert vision_scan.run(now=after_4h(h)) == 0
+            with _filing_enabled():
+                assert vision_scan.run(now=after_4h(h)) == 0
             out = json.load(open(feed))
         finally:
             harvest_bars.harvest, vision_scan.FEED, vision_scan.SCREEN = real_h, real_feed, real_screen
@@ -507,6 +527,87 @@ def _():
     assert set(out["rules"]) == {"bottom", "brk4h"} and out["levels"]
     assert "no win rate" in out["note"]
     assert out["counts"]["bottom"]["filed"] == 1 and out["counts"]["brk4h"]["filed"] == 1
+
+
+# ── RETIREMENT (2026-10-01) ─────────────────────────────────────────────────
+
+@check("retired: both engines are off by an explicit, versioned switch")
+def _():
+    L = vision_scan.LEGACY
+    assert L["config_version"].startswith("vision-legacy-2.") and L["effective"] == "2026-10-01"
+    assert not vision_scan.may_file("bottom") and not vision_scan.may_file("brk4h")
+
+
+def _retired_run(history, d_rows, h_rows, seen):
+    import harvest_bars
+    real_h, real_feed, real_screen = harvest_bars.harvest, vision_scan.FEED, vision_scan.SCREEN
+    with tempfile.TemporaryDirectory() as td:
+        feed, screen = os.path.join(td, "v.json"), os.path.join(td, "s.json")
+        with open(feed, "w") as f:
+            json.dump({"ok": True, "history": history, "universe": 984}, f)
+        with open(screen, "w") as f:
+            json.dump({"rows": [{"sym": "ABC"}, {"sym": "NEW"}, {"sym": "OLD"}]}, f)
+        try:
+            vision_scan.FEED, vision_scan.SCREEN = feed, screen
+
+            def fake(syms, name):
+                seen.setdefault(name, []).extend(syms)
+                rows = d_rows if name == "vision_d" else h_rows
+                return ({s: rows for s in syms}, {"asked": len(syms), "got": len(syms)})
+            harvest_bars.harvest = fake
+            code = vision_scan.run(now=after_4h(h_rows))
+            return code, json.load(open(feed))
+        finally:
+            harvest_bars.harvest, vision_scan.FEED, vision_scan.SCREEN = real_h, real_feed, real_screen
+
+
+@check("retired: a name that meets a rule files NOTHING; open filings are still graded; losses are kept")
+def _():
+    d = daily(bottom_closes())                                  # meets the bottom rule today
+    h = hourly_from_4h(range_candles() + [BREAKOUT])            # meets the 4H rule today
+    fired = datetime.fromtimestamp(d[-6][0], IST).date().isoformat()
+    open_one = _sig(sym="ABC", fired=fired, entry=110.0)
+    open_one.update(sl=50.0, t1=999.0, t2=1000.0, t3=1001.0, grade={"status": "open", "targets_hit": 0})
+    lost = dict(_sig(sym="OLD", fired="2026-09-01"), grade={"status": "stopped", "targets_hit": 0, "exit": 95.0, "bars": 2})
+    seen = {}
+    code, out = _retired_run([open_one, lost], d, h, seen)
+    assert code == 0
+    assert out["today"] == [] and len(out["history"]) == 2, out["today"]
+    assert {x["sym"] for x in out["history"]} == {"ABC", "OLD"}
+    assert next(x for x in out["history"] if x["sym"] == "OLD")["grade"]["status"] == "stopped"
+    g = next(x for x in out["history"] if x["sym"] == "ABC")
+    assert g["grade"]["bars"] >= 1 and g.get("graded_at"), g["grade"]     # graded on later bars
+    assert g["entry"] == 110.0 and g["sl"] == 50.0                         # levels as filed, not rewritten
+    assert out["retired"]["grading_only"] and out["retired"]["config_version"] == "vision-legacy-2.0.0"
+    assert "Retired on 2026-10-01" in out["note"] and out["universe"] == 984
+
+
+@check("retired: only names with an open legacy filing are fetched — not the universe")
+def _():
+    d = daily(bottom_closes())
+    h = hourly_from_4h(range_candles() + [BREAKOUT])
+    open_one = dict(_sig(sym="ABC"), grade={"status": "open", "targets_hit": 0})
+    seen = {}
+    _retired_run([open_one], d, h, seen)
+    assert seen == {"vision_d": ["ABC"]}, seen
+
+
+@check("retired: nothing open and already marked retired is a no-op that leaves the feed alone")
+def _():
+    import harvest_bars
+    real_h, real_feed = harvest_bars.harvest, vision_scan.FEED
+    with tempfile.TemporaryDirectory() as td:
+        feed = os.path.join(td, "v.json")
+        body = json.dumps({"ok": True, "retired": {"x": 1}, "history": [
+            dict(_sig(), grade={"status": "stopped", "targets_hit": 0, "exit": 95.0})]})
+        open(feed, "w").write(body)
+        try:
+            vision_scan.FEED = feed
+            harvest_bars.harvest = lambda *a: (_ for _ in ()).throw(AssertionError("must not fetch"))
+            assert vision_scan.run() == 0
+            assert open(feed).read() == body
+        finally:
+            harvest_bars.harvest, vision_scan.FEED = real_h, real_feed
 
 
 def main() -> int:

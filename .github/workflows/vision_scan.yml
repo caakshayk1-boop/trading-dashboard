@@ -1,27 +1,24 @@
-# VISION SIGNALS — the two rules vision.askakshay.com publishes.
+# VISION LEGACY GRADING — the retired bottom-reversal and 4H-breakout engines.
 #
-# Bottom reversal (daily) and the 4-hour breakout, over the stock screen's
-# ~1,000 names. The rules are scanner.vision_bottom_reversal and
-# scanner.vision_4h_breakout; vision_scan.py fetches, files and grades, and
-# writes feeds/vision_signals.json, which the signal repo's sync-data.yml
-# mirrors.
+# RETIRED 2026-10-01 (vision_scan.LEGACY, config vision-legacy-2.0.0). Neither
+# rule files anything now. This job only grades the filings that were open at
+# retirement, under the rules they were filed with, until each reaches its
+# stop, T3 or horizon (30 sessions at most) — and keeps the whole history in
+# feeds/vision_signals.json as the Legacy Archive Vision renders.
 #
-# AT THE 4-HOUR CLOSES, like research.yml. An NSE session makes two 4H candles,
-# 09:15–13:15 and 13:15–15:30 IST, and the rule only reads COMPLETED ones.
-# 07:58 UTC is 13:28 IST and 10:15 UTC is 15:45 IST — past each candle's close
-# plus the ten-minute settle the rule itself waits for. The second run is also
-# the first at which today's DAILY bar counts as a close (15:40 IST), so the
-# bottom rule reads today there and yesterday at 13:28.
+# ONE slot, after the close. The 07:58 UTC (13:28 IST) slot existed to read
+# the morning 4H candle for NEW breakouts; with filing off it has nothing to
+# do, so it is gone (and from the signal repo's watchdog). 10:15 UTC is
+# 15:45 IST, after both 4H candles and the daily bar have closed, which is
+# all grading needs. It fetches only the names with an open filing.
 #
-# SILENT. Nothing here sends a message. These are new, untested rules; they
-# are not in the ledger and not on anybody's phone.
+# The replacement, "Vision EOD — Risk-First Selection", runs in a private
+# repository and publishes feeds/vision_eod.json here; it is NOT this job.
 #
-# feeds/, NOT docs/: a docs/ commit deploys the newspaper on Vercel, and that
-# is what filled the 10 GB. This file changes twice a trading day.
+# SILENT. Nothing here sends a message.
 name: vision-scan
 on:
   schedule:
-    - cron: "58 7 * * 1-5"
     - cron: "15 10 * * 1-5"
   workflow_dispatch:
 
@@ -56,7 +53,7 @@ jobs:
       - name: Test the rules
         run: python3 test_vision_signals.py
 
-      - name: Scan the screen universe
+      - name: Grade the open legacy filings
         run: python3 vision_scan.py
 
       - name: Commit the feed
@@ -65,7 +62,7 @@ jobs:
           git config user.email "actions@github.com"
           git add feeds/vision_signals.json
           git diff --staged --quiet && exit 0
-          git commit -m "chore: vision signals $(date -u +%F\ %H:%M) [skip ci]"
+          git commit -m "chore: vision legacy grading $(date -u +%F\ %H:%M) [skip ci]"
           # Other jobs push to main on their own clocks; rebase onto them
           # rather than failing the run over a race nobody can see.
           for i in 1 2 3 4; do
