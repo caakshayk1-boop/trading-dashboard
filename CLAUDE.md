@@ -367,8 +367,10 @@ filings are still graded by them.
   with an open legacy filing. It grades them under the rules they were filed
   with — `vision_grade`, same bars, same horizon — until stop, T3 or horizon.
   The 07:58 UTC slot is gone here and from the signal repo's watchdog.
-- `feeds/vision_signals.json` is now the **Legacy Archive**: every filing,
-  loss and timestamp kept, `today` always empty, a `retired` block added.
+- `feeds/vision_signals.json` keeps the record: every filing, loss and
+  timestamp, `today` always empty, a `retired` block added. **It is not shown
+  or linked anywhere on either site** (owner decision 2026-10-01): the signal
+  repo no longer mirrors it, and its guard fails if anything fetches it.
 - Why retired (full audit in the private engine repo, `docs/AUDIT.md`):
   - 29 of 45 stops sat at the 6% cap, i.e. clamped INSIDE structure;
   - 44 of 45 targets were exactly 1.6/2.5/3.3R — risk multiples, not levels;
@@ -396,7 +398,11 @@ logic for it to this repo — that would publish it.
   entry RANGE with a cap for the NEXT session, 40/35/25 partial exits,
   expiry, time exit. Fills are SIMULATED and labelled as such.
 - Mode **research** until a holdout passes the pre-registered criteria in
-  that repo's `docs/PROMOTION_CRITERIA.md`.
+  that repo's `docs/PROMOTION_CRITERIA.md`. **New plans are PAUSED**
+  (`vision-eod-1.0.1`, 2026-10-01): the 1.0.0 setup showed no reliable edge
+  in backtest (train −0.111R, validation +0.007R, −0.082R at 2× costs), and
+  the next-open entry variant (H2) failed on train too. The nightly run still
+  publishes status; a bottom-reversal replacement is being researched there.
 - The signal repo mirrors `feeds/vision_eod.json` (sync-data.yml +
   pull-feeds.mjs) and Vision's Setups page renders it.
 
