@@ -1,0 +1,28 @@
+# Read-only check that db.py reaches Turso directly (no embedded replica) and
+# behaves the way the jobs use it. Runs on any push that changes db.py — so a
+# connector change is proven against the real database BEFORE it merges — and
+# by hand. It writes nothing. See db.py for why the replica was removed.
+name: turso smoke
+on:
+  workflow_dispatch:
+  push:
+    paths: ["db.py", "turso_smoke.py", ".github/workflows/turso_smoke.yml"]
+permissions:
+  contents: read
+concurrency:
+  group: turso-smoke-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  smoke:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      TURSO_URL: ${{ secrets.TURSO_URL }}
+      TURSO_TOKEN: ${{ secrets.TURSO_TOKEN }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: "3.11" }
+      - run: pip install "libsql-experimental>=0.0.1"
+      - run: python3 test_db_remote.py
+      - run: python3 turso_smoke.py
