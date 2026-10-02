@@ -1,5 +1,5 @@
 {
- "generated_at": "2026-10-02T01:19:21",
+ "generated_at": "2026-10-02T01:49:59",
  "source": "NSE public issue endpoints",
  "mainboard_only": true,
  "open": [
@@ -289,7 +289,7 @@
    "ofs_cr": 232.0,
    "face_value": 1.0,
    "anchor_cr": 165.6,
-   "gmp_text": null,
+   "gmp_text": "\u20b9107",
    "revenue_cr": 490.94,
    "revenue_growth_pct": null,
    "pat_cr": 32.78,
@@ -311,16 +311,8 @@
    "issue_size_cr": 552.0,
    "enriched_url": "https://www.chittorgarh.com/ipo/orient-cables-ipo/2532/",
    "ipopremium_url": "https://www.ipopremium.in/view/ipo/1383/orient-cables",
-   "subscription_by_category": {
-    "QIB": 192.68,
-    "HNI": 121.9,
-    "Retail": 32.21,
-    "Total": 97.28
-   },
-   "category_source": "ipopremium.in",
    "reads_for": [
-    "Priced at 23.6x post-issue earnings against a 48x median for its 8 listed peers \u2014 a discount of more than 30% to the group it will trade beside.",
-    "Institutions are in at 192.68x, which is where the research budgets are."
+    "Priced at 23.6x post-issue earnings against a 48x median for its 8 listed peers \u2014 a discount of more than 30% to the group it will trade beside."
    ],
    "reads_against": null
   },
@@ -337,7 +329,7 @@
    "ofs_cr": null,
    "face_value": 2.0,
    "anchor_cr": 148.95,
-   "gmp_text": null,
+   "gmp_text": "\u20b95",
    "revenue_cr": 1850.79,
    "revenue_growth_pct": 76.0,
    "pat_cr": 185.76,
@@ -359,14 +351,6 @@
    "issue_size_cr": 500.0,
    "enriched_url": "https://www.chittorgarh.com/ipo/runwal-enterprises-ipo/2298/",
    "ipopremium_url": "https://www.ipopremium.in/view/ipo/1386/runwal-enterprises-ltd",
-   "subscription_by_category": {
-    "QIB": 4.1,
-    "HNI": 4.14,
-    "Retail": 1.18,
-    "Employee": 1.2,
-    "Total": 2.63
-   },
-   "category_source": "ipopremium.in",
    "reads_for": [
     "Revenue grew 76% year on year.",
     "Profit grew faster than revenue (234% against 76%), so margins widened rather than bought growth.",
@@ -381,7 +365,7 @@
    "company": "German Green Steel and Power Limited",
    "price_band": "Rs.132 to Rs.139",
    "close_date": "2026-09-29",
-   "listing_date": null,
+   "listing_date": "Oct 5, 2026",
    "days_since_close": 3,
    "lot_size": 107.0,
    "min_investment": 14873.0,
@@ -410,18 +394,9 @@
    "enriched_source": "chittorgarh.com",
    "issue_size_cr": 303.9,
    "enriched_url": "https://www.chittorgarh.com/ipo/german-green-steel-and-power-ipo/2497/",
-   "ipopremium_url": "https://www.ipopremium.in/view/ipo/1382/german-green-steel-power-ltd",
-   "subscription_by_category": {
-    "QIB": 21.91,
-    "HNI": 56.77,
-    "Retail": 23.98,
-    "Total": 30.42
-   },
-   "category_source": "ipopremium.in",
    "reads_for": [
     "Priced at 13.1x post-issue earnings against a 23x median for its 5 listed peers \u2014 a discount of more than 30% to the group it will trade beside.",
-    "Profit grew faster than revenue (33% against 11%), so margins widened rather than bought growth.",
-    "Institutions are in at 21.91x, which is where the research budgets are."
+    "Profit grew faster than revenue (33% against 11%), so margins widened rather than bought growth."
    ],
    "reads_against": null
   },
@@ -625,42 +600,6 @@
  ],
  "recent_listed": [
   {
-   "symbol": "ELEVATE",
-   "company": "Elevate Campuses Limited",
-   "price_band": "Rs.343 to Rs.362",
-   "close_date": "2026-09-25",
-   "listing_date": "2026-09-30",
-   "days_since_close": 7,
-   "measured": true,
-   "first_close": 322.95,
-   "last_close": 344.8,
-   "since_listing_pct": 6.8,
-   "from_high_pct": -7.5,
-   "high": 372.75,
-   "low": 290.1,
-   "months_listed": null,
-   "sessions": 2,
-   "measured_by": "yahoo"
-  },
-  {
-   "symbol": "ARMEE",
-   "company": "ArMee Infotech Limited",
-   "price_band": "Rs.350 to Rs.375",
-   "close_date": "2026-09-25",
-   "listing_date": "2026-09-30",
-   "days_since_close": 7,
-   "measured": true,
-   "first_close": 300.0,
-   "last_close": 273.35,
-   "since_listing_pct": -8.9,
-   "from_high_pct": -27.1,
-   "high": 375.0,
-   "low": 258.5,
-   "months_listed": null,
-   "sessions": 2,
-   "measured_by": "yahoo"
-  },
-  {
    "symbol": "VARMORA",
    "company": "Varmora Granito Limited",
    "price_band": "Rs.140 to Rs.148",
@@ -694,24 +633,6 @@
    "low": 80.5,
    "months_listed": null,
    "sessions": 7,
-   "measured_by": "yahoo"
-  },
-  {
-   "symbol": "SSRETAIL",
-   "company": "SS Retail Limited",
-   "price_band": "Rs.403 to Rs.424",
-   "close_date": "2026-09-18",
-   "listing_date": "2026-09-23",
-   "days_since_close": 14,
-   "measured": true,
-   "first_close": 748.8,
-   "last_close": 749.5,
-   "since_listing_pct": 0.1,
-   "from_high_pct": -15.6,
-   "high": 888.0,
-   "low": 603.05,
-   "months_listed": null,
-   "sessions": 6,
    "measured_by": "yahoo"
   },
   {
@@ -3660,6 +3581,57 @@
    "sessions": null
   },
   {
+   "symbol": "ELEVATE",
+   "company": "Elevate Campuses Limited",
+   "price_band": "Rs.343 to Rs.362",
+   "close_date": "2026-09-25",
+   "listing_date": "2026-09-30",
+   "days_since_close": 7,
+   "measured": false,
+   "first_close": null,
+   "last_close": null,
+   "since_listing_pct": null,
+   "from_high_pct": null,
+   "high": null,
+   "low": null,
+   "months_listed": null,
+   "sessions": null
+  },
+  {
+   "symbol": "ARMEE",
+   "company": "ArMee Infotech Limited",
+   "price_band": "Rs.350 to Rs.375",
+   "close_date": "2026-09-25",
+   "listing_date": "2026-09-30",
+   "days_since_close": 7,
+   "measured": false,
+   "first_close": null,
+   "last_close": null,
+   "since_listing_pct": null,
+   "from_high_pct": null,
+   "high": null,
+   "low": null,
+   "months_listed": null,
+   "sessions": null
+  },
+  {
+   "symbol": "SSRETAIL",
+   "company": "SS Retail Limited",
+   "price_band": "Rs.403 to Rs.424",
+   "close_date": "2026-09-18",
+   "listing_date": "2026-09-23",
+   "days_since_close": 14,
+   "measured": false,
+   "first_close": null,
+   "last_close": null,
+   "since_listing_pct": null,
+   "from_high_pct": null,
+   "high": null,
+   "low": null,
+   "months_listed": null,
+   "sessions": null
+  },
+  {
    "symbol": "LEAP",
    "company": "Leap India Limited",
    "price_band": "Rs.151 to Rs.159",
@@ -3785,7 +3757,7 @@
   "upcoming": 0,
   "awaiting": 7,
   "listed_12m": 177,
-  "listed_measured": 168,
+  "listed_measured": 165,
   "listed_via_screen": 23,
   "apply": 0,
   "avoid": 0
