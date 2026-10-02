@@ -115,6 +115,17 @@ try {
   ok("no NaN, undefined or Infinity anywhere", !/NaN|undefined|Infinity/.test(body),
      (body.match(/NaN|undefined|Infinity/g) || []).slice(0, 3));
 
+  /* No open setup is a state, not a fault (the page says so). Since the old
+     engines stood down on 1 Oct 2026 the ledger has no open row, the brief
+     renders its empty state, and there is no dial, chart or plan to check —
+     waiting 30 s for #dialN then failed the whole newspaper build and stopped
+     it publishing. The empty state is checked for honesty instead. */
+  const emptyBrief = /No setup is live right now\./.test(body);
+  if (emptyBrief) {
+    ok("an empty brief says so and prints no figures",
+       /An empty brief is a result, not a fault\./.test(body) && await p.locator("#dialN").count() === 0
+       && await p.locator("#pxc").count() === 0);
+  } else {
   // The count-up must land on its value even where rAF never runs.
   const conf = (await p.locator("#dialN").innerText()).trim();
   ok("confidence resolves to a number", /^(\d+|—)$/.test(conf), conf);
@@ -306,6 +317,7 @@ try {
     return cap ? Math.round(cap.getBoundingClientRect().top - Math.max(...rows)) : 99;
   });
   ok("the lowest label clears the caption", capGap >= 8, capGap + "px");
+  }
 
   ok("no JS errors on either route", errs.length === 0, errs.slice(0, 3));
   await ctx.close();
@@ -318,6 +330,7 @@ try {
   await rp.waitForTimeout(SETTLE);
   ok("every section is visible", await rp.locator(".b-reveal:not(.in)").count() === 0);
   ok("every chart overlay is visible", await rp.locator(".b-ov:not(.on)").count() === 0);
+  if (!emptyBrief) {
   ok("the confidence figure is written", /^\d+$/.test((await rp.locator("#dialN").innerText()).trim()));
   // The assertion is that the FILL STEP RAN, not that every score is positive:
   // a component genuinely scoring 0 renders a 0% bar, and treating that as
@@ -326,6 +339,7 @@ try {
   const widths = await rp.locator(".b-crow .tr i").evaluateAll(es => es.map(e => e.style.width));
   ok("every score bar was given a width", widths.length > 0 && widths.every(w => !!w), widths);
   ok("at least one score bar is non-zero", widths.some(w => w && w !== "0%"), widths);
+  }
   await rmCtx.close();
 
   /* ── NARROW ──────────────────────────────────────────────────────────── */
