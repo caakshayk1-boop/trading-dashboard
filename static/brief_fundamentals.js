@@ -174,6 +174,12 @@
     '.bf-flags li{padding-left:14px;border-left:2px solid var(--b-line2,#ccc)}',
     '.bf-flags li.sev-high{border-left-color:var(--b-bear,#AE3325)}',
     '.bf-flags li.sev-med{border-left-color:var(--b-gold,#8A6208)}',
+    /* The edge colour is the flag's weight in the risk grade (3/2/1). Keyed
+       above the list: a red edge with no key reads as "worse", not "weighs 3". */
+    '.bf-key{display:flex;flex-wrap:wrap;gap:4px 14px;margin:0 0 12px;font:400 var(--t-3,12px)/1.4 var(--ui,system-ui);color:var(--b-dim,#6E7681)}',
+    '.bf-key span{display:inline-flex;align-items:center;gap:6px}',
+    '.bf-key i{display:inline-block;width:3px;height:14px;border-radius:1px;background:var(--b-line2,#ccc)}',
+    '.bf-key i.sev-high{background:var(--b-bear,#AE3325)} .bf-key i.sev-med{background:var(--b-gold,#8A6208)}',
     '.bf-flags li b{display:block;font:500 var(--t-5,14px)/1.45 var(--ui,system-ui);color:var(--b-ink,#111)}',
     '.bf-flags li span{display:block;margin-top:3px;font:500 var(--t-3,12px)/1.4 var(--mono,monospace);color:var(--b-dim,#6E7681)}',
     '.bf-flags a{color:var(--b-acc,#3b6fd4);text-decoration:underline;text-underline-offset:2px}',
@@ -360,7 +366,10 @@
       risk = '<p class="bf-note">The screen published no risk grade for this name. That is a gap ' +
              'in the data, not a clean bill of health.</p>';
     } else if (flags.length) {
-      risk = '<div class="bf-flags">' + head + '<ul>' + flags.map(function (f) {
+      risk = '<div class="bf-flags">' + head +
+        '<p class="bf-key" role="note"><span>Edge colour, how much each weighs in the grade:</span>' +
+        '<span><i class="sev-high" aria-hidden="true"></i>serious</span><span><i class="sev-med" aria-hidden="true"></i>moderate</span>' +
+        '<span><i aria-hidden="true"></i>minor</span></p>' + '<ul>' + flags.map(function (f) {
         return '<li class="sev-' + esc(String(f.s || 'low')) + '"><b>' + esc(String(f.t || '')) + '</b>' +
           (f.k ? '<span>' + esc(String(f.k)) + '</span>' : '') + '</li>';
       }).join('') + '</ul><p class="bf-note">' + flags.length + ' flag' +
