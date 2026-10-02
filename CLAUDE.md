@@ -81,6 +81,16 @@ Nifty 500 research screen sitting directly above the Signal Log.
   DEBUG, and `nifty_1m`, `nifty_1y`, `price_date` and every relative-strength
   figure were published null. It now branches on the frame's shape;
   `test_screen_prices.py` drives the exact 1,001-ticker split.
+- **The 52-week range is the TRADED range; a finished session keeps its day.**
+  Prices download raw (`auto_adjust=False`); `_adjusted()` rebuilds the
+  dividend-adjusted series for returns exactly as yfinance does, and `hr`/`lr`
+  keep the prices that traded for `high52`/`low52` — what NSE and TradingView
+  publish. And Yahoo served 1 Oct with no Close: the per-field `dropna()` lost
+  the whole day, so the screen built at 03:35 IST on 2 Oct published 30 Sep, and
+  ABLBL's low read ₹75.1 against a traded ₹73.41. A finished session with no
+  close is now rebuilt from its last hourly bar (15:15 IST), never invented;
+  what cannot be rebuilt is counted in `coverage.missing_close`/`behind`, and
+  Data Health marks the screen DEGRADED above 2%. `test_screen_prices.py`.
 - **`barometer.py` reads closed bars only** (`complete_bars`). A run landing
   after midnight IST got the new day's row with no Close, and `iloc[-1]` nulled
   Nifty and VIX — 45 of 100 weight — on 21, 28 and 29 Sep. `test_barometer.py`.
