@@ -14,8 +14,21 @@ All files use:
     ...
     db.sync(con)   # call after writes to push to Turso
 
-Local replica path on Railway: /tmp/signals_replica.db  (ephemeral is fine —
-Turso is the source of truth; the replica is rebuilt on each container start).
+HOW IT CONNECTS (2 Oct 2026): DIRECTLY, over HTTP. No local copy.
+
+It used to open an EMBEDDED REPLICA at /tmp/signals_replica.db and sync it.
+That was built for one long-lived Railway container. The jobs now run on
+GitHub Actions, where every run starts with an empty /tmp, so the first
+connect() of EVERY run downloaded the whole database again. September 2026:
+38.16 GB "bytes synced" against a 10 GB allowance — $10.15 of a $16.14 Turso
+bill — while rows read (61.6M) and written (5,449) were a rounding error.
+
+A remote connection syncs nothing: each query is one round trip and is
+counted as rows read/written, which this workload barely touches. The cost
+is latency per statement, which a batch job can afford.
+
+TURSO_MODE=replica restores the old embedded-replica behaviour for a
+deliberate rollback; anything else (the default) is remote.
 """
 
 from __future__ import annotations
@@ -27,18 +40,23 @@ log = logging.getLogger(__name__)
 
 TURSO_URL   = os.environ.get("TURSO_URL", "")
 TURSO_TOKEN = os.environ.get("TURSO_TOKEN", "")
+TURSO_MODE  = os.environ.get("TURSO_MODE", "remote").strip().lower()
 
 # Local SQLite path — used when TURSO_URL is not set (dev / GitHub Actions)
 _DATA_DIR = "/app/data" if os.path.isdir("/app/data") else os.path.dirname(os.path.abspath(__file__))
 LOCAL_DB   = os.path.join(_DATA_DIR, "signals.db")
 
-# Embedded replica path — used when TURSO_URL is set (Railway production)
-# /tmp is fine: Turso is the source of truth, replica syncs on connect()
+# Embedded replica path — used ONLY with TURSO_MODE=replica (rollback).
 REPLICA_DB = "/tmp/signals_replica.db"
 
 
 def _use_turso() -> bool:
     return bool(TURSO_URL and TURSO_TOKEN)
+
+
+def _replica_mode() -> bool:
+    """True only for the embedded-replica rollback. Remote is the default."""
+    return _use_turso() and TURSO_MODE == "replica"
 
 
 class _ConnWrapper:
@@ -52,6 +70,9 @@ class _ConnWrapper:
     _OWN = frozenset({"_conn", "_turso"})
 
     def __init__(self, conn, turso: bool = False):
+        # `turso` means "this connection has a local replica to push", which
+        # is true only in replica mode. A remote connection has nothing to
+        # sync: its commit IS the write to Turso.
         object.__setattr__(self, "_conn", conn)
         object.__setattr__(self, "_turso", turso)
 
@@ -122,9 +143,14 @@ def connect(timeout: int = 30) -> _ConnWrapper:
     if _use_turso():
         try:
             import libsql_experimental as libsql
-            conn = libsql.connect(REPLICA_DB, sync_url=TURSO_URL, auth_token=TURSO_TOKEN)
-            conn.sync()   # pull latest from Turso before any operation
-            return _ConnWrapper(conn, turso=True)
+            if _replica_mode():
+                conn = libsql.connect(REPLICA_DB, sync_url=TURSO_URL, auth_token=TURSO_TOKEN)
+                conn.sync()   # pull latest from Turso before any operation
+                return _ConnWrapper(conn, turso=True)
+            # Remote: every statement goes straight to Turso over HTTP. No file,
+            # no bootstrap download, nothing to sync afterwards.
+            conn = libsql.connect(TURSO_URL, auth_token=TURSO_TOKEN)
+            return _ConnWrapper(conn, turso=False)
         except ImportError:
             log.warning("libsql_experimental not installed — falling back to local SQLite.")
         except Exception as e:
@@ -142,8 +168,16 @@ def connect(timeout: int = 30) -> _ConnWrapper:
 
 
 def sync(conn) -> None:
-    """Push pending writes to Turso. No-op for local SQLite connections."""
+    """Push pending writes to Turso in replica mode. A no-op for a remote
+    connection (its commit already reached Turso) and for local SQLite.
+    Callers keep calling it, so a rollback to replica mode needs no edits."""
     if not _use_turso():
+        return
+    if not _replica_mode():
+        try:
+            conn.commit()
+        except Exception as e:
+            log.warning(f"db.sync (remote commit) error: {e}")
         return
     try:
         conn.sync()

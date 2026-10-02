@@ -449,6 +449,20 @@ means moving its template block AND its SECTION_MAP row; the test checks both.
 ## Hosting cost
 Turso is the only paid line. Everything else must stay inside a free tier.
 
+- **Turso: `db.py` connects DIRECTLY (remote, over HTTP), never through an
+  embedded replica.** Until 2 Oct 2026 it opened a replica at
+  `/tmp/signals_replica.db`, built for one long-lived Railway container. On
+  GitHub Actions every run starts with an empty `/tmp`, so every run
+  re-downloaded the database: **38.16 GB "bytes synced" in September, $10.15
+  of a $16.14 bill**, while rows read (61.6M) and written (5,449) were nothing.
+  Remote mode syncs nothing; the cost is ~0.7 s per query from a runner, fine
+  for batch jobs of a few hundred statements. `TURSO_MODE=replica` is the
+  rollback. At this usage the **Free plan** (500M reads, 10M writes, 5 GB
+  storage, 3 GB syncs) covers everything. Never reintroduce a `sync_url`
+  connection on an ephemeral runner. `test_db_remote.py` pins it offline;
+  `turso_smoke.yml` proves it read-only against the real database on any push
+  touching `db.py`.
+
 - **news.askakshay.com** is on Vercel and hit **100% of the 10 GB free Function
   Storage**. Two causes, both now fixed in config, neither of which reclaims
   what is already stored:
