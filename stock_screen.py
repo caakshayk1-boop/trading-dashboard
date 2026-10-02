@@ -543,9 +543,10 @@ def fetch_prices(symbols: list[str], period: str = "4y") -> dict[str, dict]:
     """Daily OHLCV per symbol, batched. Returns {symbol: {o,h,l,c,v}}.
 
     Batched rather than per-symbol (one request per 40 names instead of 500),
-    and paced between batches. auto_adjust=True, so the close series is split
-    and dividend adjusted — which is what a multi-year return needs and means
-    the 3Y figure is a total return, not price appreciation alone.
+    and paced between batches. Downloaded raw; the close series is then split
+    and dividend adjusted (see _adjusted) — which is what a multi-year return
+    needs, so the 3Y figure is a total return — while hr/lr keep the prices
+    that traded, which is what a 52-week high or low is.
     """
     try:
         import yfinance as yf
@@ -555,6 +556,8 @@ def fetch_prices(symbols: list[str], period: str = "4y") -> dict[str, dict]:
         return {}
 
     out: dict[str, dict] = {}
+    pending: dict[str, tuple] = {}
+    FETCH_REPORT.clear()
     tickers = {to_yahoo(s): s for s in symbols}
     keys = list(tickers)
     batches = [keys[i:i + PRICE_BATCH] for i in range(0, len(keys), PRICE_BATCH)]
@@ -562,7 +565,7 @@ def fetch_prices(symbols: list[str], period: str = "4y") -> dict[str, dict]:
     for bi, batch in enumerate(batches, 1):
         try:
             df = yf.download(batch, period=period, interval="1d", progress=False,
-                             threads=False, auto_adjust=True, group_by="column")
+                             threads=False, auto_adjust=False, group_by="column")
         except Exception as e:
             log.warning(f"screen: price batch {bi}/{len(batches)} failed — {e}")
             continue
@@ -588,16 +591,15 @@ def fetch_prices(symbols: list[str], period: str = "4y") -> dict[str, dict]:
                 # relative-strength figure on the screen — published as null
                 # with nothing saying why. Branch on what the frame IS.
                 if getattr(df.columns, "nlevels", 1) == 1:
-                    sub = df
-                    cols = {c: c for c in ("Open", "High", "Low", "Close", "Volume")}
-                    series = {k: sub[v].dropna() for k, v in cols.items() if v in sub}
+                    raw = {f: df[f] for f in _FIELDS if f in df.columns}
                 else:
-                    series = {}
-                    for f in ("Open", "High", "Low", "Close", "Volume"):
-                        if (f, tk) in df.columns:
-                            series[f] = df[(f, tk)].dropna()
+                    raw = {f: df[(f, tk)] for f in _FIELDS if (f, tk) in df.columns}
+                series = _adjusted(raw)
                 if "Close" not in series or series["Close"].empty:
                     continue
+                miss = _missing_close(raw, datetime.now(IST))
+                if miss is not None:
+                    pending[sym] = (tk, miss)
                 idx = series["Close"].index
 
                 # ── A CORPORATE ACTION YAHOO DID NOT ADJUST ────────────────
@@ -663,6 +665,9 @@ def fetch_prices(symbols: list[str], period: str = "4y") -> dict[str, dict]:
                     "c": [float(x) for x in series["Close"].tolist()],
                     "h": [float(x) for x in series.get("High", series["Close"]).reindex(idx).ffill().tolist()],
                     "l": [float(x) for x in series.get("Low", series["Close"]).reindex(idx).ffill().tolist()],
+                    # The prices that TRADED, for the 52-week range — see _adjusted.
+                    "hr": [float(x) for x in series.get("HighRaw", series["Close"]).reindex(idx).ffill().tolist()],
+                    "lr": [float(x) for x in series.get("LowRaw", series["Close"]).reindex(idx).ffill().tolist()],
                     "v": [float(x) for x in series.get("Volume", series["Close"] * 0).reindex(idx).fillna(0).tolist()],
                     # Dates alongside the closes so valuation_history can price a
                     # fiscal year end. Transient — never shipped in the payload.
@@ -678,7 +683,135 @@ def fetch_prices(symbols: list[str], period: str = "4y") -> dict[str, dict]:
         log.info(f"screen: prices {bi}/{len(batches)} batches, {len(out)} symbols")
         if bi < len(batches):
             time.sleep(PRICE_PAUSE)
+    rebuilt = _rebuild_closes(yf, pending, out) if pending else 0
+    FETCH_REPORT.update(missing_close=len(pending), rebuilt=rebuilt)
     return out
+
+
+# What the last fetch_prices could not repair, for coverage(): a screen built
+# tonight from yesterday's prices must say so, not read as current.
+FETCH_REPORT: dict = {}
+
+
+# ── THE PRICES THAT TRADED, AND THE ONES A RETURN NEEDS ─────────────────────
+#
+# This downloaded with auto_adjust=True, which rescales every past Open, High,
+# Low and Close by the dividends paid since. That is right for a return — a 3Y
+# figure should be a total return — and wrong for a LEVEL. A 52-week high or
+# low is a price somebody paid; NSE, TradingView and every broker publish the
+# traded one. After a year of dividends the adjusted high sits below the real
+# one by roughly the yield, so a 5%-yielder's "52w high" was ~5% too low and
+# its brk52w could fire below the real high.
+#
+# So the download is raw, and the adjusted series is rebuilt here exactly as
+# yfinance builds it (factor = Adj Close / Close, applied to O/H/L). Every
+# consumer of c/h/l is unchanged; HighRaw/LowRaw carry the traded prices for
+# the range. Without an Adj Close column the factor is 1 and the two agree.
+_FIELDS = ("Open", "High", "Low", "Close", "Adj Close", "Volume")
+
+
+def _adjusted(raw: dict) -> dict:
+    close = raw.get("Close")
+    if close is None:
+        return {}
+    adj = raw.get("Adj Close")
+    f = (adj / close) if adj is not None else close * 0 + 1.0
+    out = {"Close": (adj if adj is not None else close).dropna()}
+    for k in ("Open", "High", "Low"):
+        if k in raw:
+            out[k] = (raw[k] * f).dropna()
+    if "High" in raw:
+        out["HighRaw"] = raw["High"].where(close.notna()).dropna()
+    if "Low" in raw:
+        out["LowRaw"] = raw["Low"].where(close.notna()).dropna()
+    if "Volume" in raw:
+        out["Volume"] = raw["Volume"].dropna()
+    return out
+
+
+# ── A FINISHED SESSION WITH NO CLOSE (1 Oct 2026) ───────────────────────────
+#
+# Yahoo served the session before the Gandhi Jayanti holiday with Open, High,
+# Low and Volume and NO Close, for most of the universe. Every field is
+# dropna()'d and aligned to Close, so the whole day vanished: the screen built
+# at 03:35 IST on 2 Oct published price_date 2026-09-30, and ABLBL's 52-week
+# low read ₹75.1 while it had traded at ₹73.41 on 1 Oct.
+#
+# The close is not invented. The session's last hourly bar (15:15–15:30 IST)
+# closes at the session close, the same rebuild the private engine performs.
+# A bar series that does not reach 15:15, or a close outside the day's own
+# range, rebuilds nothing — the day stays out and the log says how many.
+def _missing_close(raw: dict, now: datetime):
+    """The last traded row when it has a range but no close, and its session
+    is over; else None. Returns (date, open, high, low, volume)."""
+    hi, lo, cl = raw.get("High"), raw.get("Low"), raw.get("Close")
+    if hi is None or lo is None or cl is None:
+        return None
+    traded = hi.dropna()
+    if traded.empty:
+        return None
+    ts = traded.index[-1]
+    if not (cl.get(ts) != cl.get(ts)) or lo.get(ts) != lo.get(ts):    # NaN != NaN
+        return None
+    d = ts.date() if hasattr(ts, "date") else ts
+    today = now.date()
+    if d > today or (d == today and (now.hour, now.minute) < (15, 40)):
+        return None
+    op, vol = raw.get("Open"), raw.get("Volume")
+    o = op.get(ts) if op is not None else None
+    v = vol.get(ts) if vol is not None else None
+    return (d, None if o != o else o, float(hi[ts]), float(lo[ts]), 0.0 if v is None or v != v else float(v))
+
+
+def _session_close(frame, d):
+    """The close of session d from hourly bars, or None if they stop short."""
+    s = frame.dropna()
+    if s.empty:
+        return None
+    ix = s.index
+    ix = ix.tz_localize("UTC") if ix.tz is None else ix
+    ix = ix.tz_convert("Asia/Kolkata")
+    day = [(t, float(v)) for t, v in zip(ix, s.tolist()) if t.date() == d]
+    if not day or (day[-1][0].hour, day[-1][0].minute) < (15, 15):
+        return None
+    return day[-1][1]
+
+
+def _rebuild_closes(yf, pending: dict, out: dict) -> int:
+    keys = [pending[s][0] for s in pending]
+    sym_of = {pending[s][0]: s for s in pending}
+    rebuilt = 0
+    for i in range(0, len(keys), PRICE_BATCH):
+        batch = keys[i:i + PRICE_BATCH]
+        try:
+            hf = yf.download(batch, period="5d", interval="1h", progress=False,
+                             threads=False, auto_adjust=False, group_by="column")
+        except Exception as e:
+            log.warning(f"screen: hourly close rebuild batch failed — {e}")
+            continue
+        if hf is None or hf.empty:
+            continue
+        for tk in batch:
+            sym = sym_of[tk]
+            d, _o, hi, lo, vol = pending[sym][1]
+            rec = out.get(sym)
+            if rec is None or rec["last_date"] >= str(d):
+                continue
+            col = hf["Close"] if getattr(hf.columns, "nlevels", 1) == 1 else hf.get(("Close", tk))
+            close = _session_close(col, d) if col is not None else None
+            if close is None or not (lo - 1e-6 <= close <= hi + 1e-6):
+                continue
+            # The newest bar carries no dividend adjustment: adjusted == raw.
+            for k, x in (("c", close), ("h", hi), ("l", lo), ("hr", hi), ("lr", lo), ("v", vol)):
+                rec[k].append(x)
+            rec["dates"].append(str(d))
+            rec["last_date"] = str(d)
+            rebuilt += 1
+        if i + PRICE_BATCH < len(keys):
+            time.sleep(PRICE_PAUSE)
+    log.warning(f"screen: {len(pending)} symbols had a finished session with no close; "
+                f"rebuilt {rebuilt} from hourly bars, {len(pending) - rebuilt} left a day behind")
+    return rebuilt
 
 
 def technicals(px: dict, bench: dict | None) -> dict:
@@ -755,9 +888,10 @@ def technicals(px: dict, bench: dict | None) -> dict:
     # being at it, and scored as a full breakout for closing at a new CLOSING
     # high. The lows are wrong the same way, in the flattering direction: the
     # published low is above the real one.
+    hr, lr = px.get("hr") or h, px.get("lr") or l      # traded, not dividend-adjusted
     if n >= MIN_BARS["high52"]:
-        wh = h[-250:] if len(h) >= len(c[-250:]) else c[-250:]
-        wl = l[-250:] if len(l) >= len(c[-250:]) else c[-250:]
+        wh = hr[-250:] if len(hr) >= len(c[-250:]) else c[-250:]
+        wl = lr[-250:] if len(lr) >= len(c[-250:]) else c[-250:]
         hi, lo = max(wh), min(wl)
         t["high52"], t["low52"] = hi, lo
         t["from_high52"] = (last / hi - 1.0) if hi else None
@@ -787,8 +921,8 @@ def technicals(px: dict, bench: dict | None) -> dict:
         # sessions it covers, and every consumer must label it from that rather
         # than calling four months a year. The 52-week keys stay None.
         if n >= MIN_BARS["r1m"]:
-            rwh = h[-n:] if len(h) >= n else c[-n:]
-            rwl = l[-n:] if len(l) >= n else c[-n:]
+            rwh = hr[-n:] if len(hr) >= n else c[-n:]
+            rwl = lr[-n:] if len(lr) >= n else c[-n:]
             rhi, rlo = max(rwh), min(rwl)
             t["rng_hi"], t["rng_lo"] = rhi, rlo
             t["rng_from_hi"] = (last / rhi - 1.0) if rhi else None
@@ -2622,8 +2756,13 @@ def coverage(rows: list[dict]) -> dict:
     n = len(rows)
     stmts = sum(1 for x in rows if x.get("has_stmts"))
     roce = sum(1 for x in rows if x.get("roce") is not None)
+    # A row priced to an earlier session than the newest one in the build.
+    newest = max((x.get("last_date") or "" for x in rows), default="")
+    behind = sum(1 for x in rows if (x.get("last_date") or "") < newest)
     return {
         "priced": n,
+        "behind": behind,
+        "missing_close": max(0, FETCH_REPORT.get("missing_close", 0) - FETCH_REPORT.get("rebuilt", 0)),
         "statements": stmts,
         "roce": roce,
         "statements_pct": round(100.0 * stmts / n, 1) if n else 0,

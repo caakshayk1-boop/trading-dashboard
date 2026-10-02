@@ -157,9 +157,17 @@ def _register_health(*, now, news, markets, regime, smart_reads, brief, market_i
     # 24, not 168: the screen rebuilds nightly as of 2026-08-27. Leaving this
     # at a week would have marked a two-day-old screen FRESH — the freshness
     # badge must describe the promise the schedule actually makes.
+    # A build can be fresh and its PRICES a session old: on 2 Oct the screen was
+    # built at 03:35 IST from 30 Sep closes, because Yahoo served 1 Oct with no
+    # close. Fresh build, stale data — DEGRADED, and the badge says which.
+    _cv = (stock_screen or {}).get("coverage") or {}
+    _n = (stock_screen or {}).get("count") or 0
+    _lag = max(_cv.get("missing_close") or 0, _cv.get("behind") or 0)
     cached("Stock screen", "Yahoo Finance + statements", stock_screen, 24,
            record_count=(stock_screen or {}).get("count"),
-           expected_records=_job.get("expected") or (stock_screen or {}).get("attempted"))
+           expected_records=_job.get("expected") or (stock_screen or {}).get("attempted"),
+           error=(f"{_lag} of {_n} names priced a session behind"
+                  if _n and _lag > _n * 0.02 else None))
 
     # Probed, not published: the denominator is how many of the universe the
     # run could actually READ, which is the number that decides whether a
