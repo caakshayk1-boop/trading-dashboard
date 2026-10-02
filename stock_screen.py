@@ -2460,14 +2460,14 @@ def build(limit: int | None = None, allow_fetch: bool = True,
             "vol_spike": _round(t.get("vol_spike"), 1, 2),
             "turnover_cr": _round(t.get("turnover_cr"), 1, 1),
             "liquid": t.get("liquid"),
-            "high52": _round(t.get("high52"), 1, 1),
-            "low52": _round(t.get("low52"), 1, 1),
+            "high52": _round(t.get("high52"), 1, 2),
+            "low52": _round(t.get("low52"), 1, 2),
             "from_high": _pct(t.get("from_high52")),
             # The shorter window, for a name with less than a year of bars.
             # Carries its own length so nothing downstream can print it as a
             # year — see the note beside its computation.
-            "rng_hi": _round(t.get("rng_hi"), 1, 1),
-            "rng_lo": _round(t.get("rng_lo"), 1, 1),
+            "rng_hi": _round(t.get("rng_hi"), 1, 2),
+            "rng_lo": _round(t.get("rng_lo"), 1, 2),
             "rng_from_hi": _pct(t.get("rng_from_hi")),
             "rng_sessions": t.get("rng_sessions"),
             "r1d": _pct(t.get("r1d")),
