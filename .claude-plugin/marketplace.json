@@ -1,0 +1,14 @@
+{
+  "name": "askakshay",
+  "description": "Claude Code mods for the askakshay trading-dashboard repo.",
+  "owner": {
+    "name": "Akshay"
+  },
+  "plugins": [
+    {
+      "name": "askakshay",
+      "source": "./mods/askakshay",
+      "description": "Guards this repo's own rules (config.py, data/, docs/ build artefacts, pushes to main) and adds /paper, the paper setups in plain words."
+    }
+  ]
+}

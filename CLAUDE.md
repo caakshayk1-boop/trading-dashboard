@@ -519,6 +519,18 @@ scan that refused to run. The repo is public, so Actions minutes are free.
     tested started refusing that candidate — correctly — the test blamed the
     code.
 
+## Claude Code mod (`mods/askakshay/`)
+A plugin with a mod that turns the Rules below from words into refused tool
+calls: Read/Edit/Write/Grep/Bash on `config.py`, Edit/Write in `data/`, Edit/Write
+of a `docs/` file whose source is in `static/` (generate.py overwrites it), and
+`git push` to main. It also adds `/paper` (the paper setups from
+`feeds/signal_v2.json`, in plain words) and puts one line under the prompt only
+when that feed is over four days old. It does nothing outside this repo.
+- Install: `/plugin marketplace add caakshayk1-boop/trading-dashboard`, then
+  `/plugin install askakshay@askakshay`. Develop with `claude --plugin-dir ./mods/askakshay`.
+- `claude plugin validate ./mods/askakshay` · `cd mods/askakshay && claude plugin test` (8 tests).
+- Shell-text matching is a reminder for Claude, not a security boundary.
+
 ## Rules
 - NEVER read or modify `config.py` (contains API keys)
 - All market data: fetch live, never hardcode prices
