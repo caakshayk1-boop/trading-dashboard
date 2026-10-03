@@ -1,6 +1,6 @@
 {
- "generated_at": "2026-10-02T10:51:51Z",
- "next_refresh": "2026-10-03T10:51:51Z",
+ "generated_at": "2026-10-03T06:03:45Z",
+ "next_refresh": "2026-10-04T06:03:45Z",
  "sources": [
   {
    "name": "Majid Al Futtaim",
@@ -8,15 +8,15 @@
    "status": "ok",
    "jobs_found": 19,
    "detail": "",
-   "last_success": "2026-10-02T10:51:51Z"
+   "last_success": "2026-10-03T06:03:45Z"
   },
   {
    "name": "Chalhoub Group",
    "kind": "employer",
    "status": "ok",
-   "jobs_found": 6,
+   "jobs_found": 5,
    "detail": "",
-   "last_success": "2026-10-02T10:51:51Z"
+   "last_success": "2026-10-03T06:03:45Z"
   },
   {
    "name": "GMG",
@@ -24,15 +24,15 @@
    "status": "ok",
    "jobs_found": 2,
    "detail": "",
-   "last_success": "2026-10-02T10:51:51Z"
+   "last_success": "2026-10-03T06:03:45Z"
   },
   {
    "name": "Al-Futtaim",
    "kind": "employer",
    "status": "ok",
-   "jobs_found": 38,
+   "jobs_found": 39,
    "detail": "",
-   "last_success": "2026-10-02T10:51:51Z"
+   "last_success": "2026-10-03T06:03:45Z"
   },
   {
    "name": "Abdul Latif Jameel",
@@ -40,7 +40,7 @@
    "status": "ok",
    "jobs_found": 2,
    "detail": "",
-   "last_success": "2026-10-02T10:51:51Z"
+   "last_success": "2026-10-03T06:03:45Z"
   },
   {
    "name": "Landmark Group",
@@ -48,7 +48,7 @@
    "status": "ok",
    "jobs_found": 7,
    "detail": "",
-   "last_success": "2026-10-02T10:51:51Z"
+   "last_success": "2026-10-03T06:03:45Z"
   },
   {
    "name": "Al Tayer",
@@ -56,7 +56,7 @@
    "status": "ok",
    "jobs_found": 2,
    "detail": "",
-   "last_success": "2026-10-02T10:51:51Z"
+   "last_success": "2026-10-03T06:03:45Z"
   },
   {
    "name": "Apparel Group",
@@ -64,7 +64,7 @@
    "status": "ok",
    "jobs_found": 5,
    "detail": "",
-   "last_success": "2026-10-02T10:51:51Z"
+   "last_success": "2026-10-03T06:03:45Z"
   },
   {
    "name": "Emaar",
@@ -94,9 +94,9 @@
    "name": "Al Ghurair",
    "kind": "employer",
    "status": "ok",
-   "jobs_found": 4,
+   "jobs_found": 3,
    "detail": "",
-   "last_success": "2026-10-02T10:51:51Z"
+   "last_success": "2026-10-03T06:03:45Z"
   },
   {
    "name": "Etihad Airways",
@@ -104,7 +104,7 @@
    "status": "ok",
    "jobs_found": 12,
    "detail": "",
-   "last_success": "2026-10-02T10:51:51Z"
+   "last_success": "2026-10-03T06:03:45Z"
   },
   {
    "name": "Aldar",
@@ -112,7 +112,7 @@
    "status": "ok",
    "jobs_found": 6,
    "detail": "",
-   "last_success": "2026-10-02T10:51:51Z"
+   "last_success": "2026-10-03T06:03:45Z"
   },
   {
    "name": "Michael Page",
@@ -120,21 +120,21 @@
    "status": "ok",
    "jobs_found": 30,
    "detail": "",
-   "last_success": "2026-10-02T10:51:51Z"
+   "last_success": "2026-10-03T06:03:45Z"
   }
  ],
  "stats": {
-  "total_active": 48,
+  "total_active": 49,
   "high_fit": 6,
   "s_tier": 0,
   "by_country": {
-   "UAE": 48,
+   "UAE": 49,
    "Saudi Arabia": 0,
    "Malaysia": 0,
    "Oman": 0
   },
   "duplicates_removed": 1,
-  "stale_removed": 0,
+  "stale_removed": 2,
   "sources_ok": 12,
   "sources_attempted": 15,
   "urls_verified": 80,
@@ -155,9 +155,9 @@
    "employment_type": null,
    "posted_date": "2026-09-25",
    "closing_date": "2026-10-23",
-   "scraped_at": "2026-10-02T10:51:51Z",
-   "last_verified_at": "2026-10-02T10:51:51Z",
-   "status": "NEW",
+   "scraped_at": "2026-10-03T06:03:45Z",
+   "last_verified_at": "2026-10-03T06:03:45Z",
+   "status": "ACTIVE",
    "source": "Al-Futtaim",
    "sources": [
     "Al-Futtaim"
@@ -263,8 +263,8 @@
    "employment_type": null,
    "posted_date": "2026-09-02",
    "closing_date": null,
-   "scraped_at": "2026-10-02T10:51:51Z",
-   "last_verified_at": "2026-10-02T10:51:51Z",
+   "scraped_at": "2026-10-03T06:03:45Z",
+   "last_verified_at": "2026-10-03T06:03:45Z",
    "status": "AGING",
    "source": "Landmark Group",
    "sources": [
@@ -376,8 +376,8 @@
    "employment_type": "Experienced hires",
    "posted_date": "2026-07-27",
    "closing_date": null,
-   "scraped_at": "2026-10-02T10:51:51Z",
-   "last_verified_at": "2026-10-02T10:51:51Z",
+   "scraped_at": "2026-10-03T06:03:45Z",
+   "last_verified_at": "2026-10-03T06:03:45Z",
    "status": "STALE",
    "source": "Aldar",
    "sources": [
@@ -481,8 +481,8 @@
    "employment_type": null,
    "posted_date": "2026-09-21",
    "closing_date": "2026-10-08",
-   "scraped_at": "2026-10-02T10:51:51Z",
-   "last_verified_at": "2026-10-02T10:51:51Z",
+   "scraped_at": "2026-10-03T06:03:45Z",
+   "last_verified_at": "2026-10-03T06:03:45Z",
    "status": "ACTIVE",
    "source": "Al-Futtaim",
    "sources": [
@@ -578,8 +578,8 @@
    "employment_type": "Full-Time",
    "posted_date": "2026-06-26",
    "closing_date": null,
-   "scraped_at": "2026-10-02T10:51:51Z",
-   "last_verified_at": "2026-10-02T10:51:51Z",
+   "scraped_at": "2026-10-03T06:03:45Z",
+   "last_verified_at": "2026-10-03T06:03:45Z",
    "status": "STALE",
    "source": "GMG",
    "sources": [
@@ -659,8 +659,8 @@
    "employment_type": "Experienced hires",
    "posted_date": "2026-09-02",
    "closing_date": null,
-   "scraped_at": "2026-10-02T10:51:51Z",
-   "last_verified_at": "2026-10-02T10:51:51Z",
+   "scraped_at": "2026-10-03T06:03:45Z",
+   "last_verified_at": "2026-10-03T06:03:45Z",
    "status": "AGING",
    "source": "Aldar",
    "sources": [
@@ -765,8 +765,8 @@
    "employment_type": null,
    "posted_date": "2026-09-17",
    "closing_date": "2026-10-11",
-   "scraped_at": "2026-10-02T10:51:51Z",
-   "last_verified_at": "2026-10-02T10:51:51Z",
+   "scraped_at": "2026-10-03T06:03:45Z",
+   "last_verified_at": "2026-10-03T06:03:45Z",
    "status": "ACTIVE",
    "source": "Al-Futtaim",
    "sources": [
@@ -849,6 +849,97 @@
    "exclusion_reason": null
   },
   {
+   "id": "6914b09d017ae1e9deee29e093798e3e731f22b3",
+   "company": "Al-Futtaim",
+   "company_group": "Al-Futtaim",
+   "title": "Vice President - Property Insurance I Dubai | Financial Services| Orient Insurance PJSC",
+   "normalized_title": "vice president property insurance i dubai financial services orient insurance pjsc",
+   "location": null,
+   "country": "UAE",
+   "region": "GCC",
+   "department": null,
+   "employment_type": null,
+   "posted_date": "2026-10-02",
+   "closing_date": "2026-10-11",
+   "scraped_at": "2026-10-03T06:03:45Z",
+   "last_verified_at": "2026-10-03T06:03:45Z",
+   "status": "NEW",
+   "source": "Al-Futtaim",
+   "sources": [
+    "Al-Futtaim"
+   ],
+   "source_url": "https://www.afuturewithus.com/job/Vice-President-Property-Insurance-I-Dubai-Financial-Services-Orient-Insurance-PJSC/1433441533/",
+   "application_url": "https://www.afuturewithus.com/talentcommunity/apply/1433441533/?locale=en_GB",
+   "is_direct_apply": true,
+   "application_url_verified": true,
+   "source_confidence": "high",
+   "salary_min": null,
+   "salary_max": null,
+   "salary_currency": null,
+   "experience_min": 8,
+   "experience_max": 12,
+   "description": "Job Requisition ID: 181086 \n\n Established in the 1930s as a trading business, Al-Futtaim Group today is one of the most diversified and progressive, privately held regional businesses headquartered in Dubai, United A”rab Emirates. Structured into five operating divisions; automotive, financial services, real estate, retail and healthcare; employing more than 35,000 employees across more than 20 countries in the Middle East, Asia and Africa, Al-Futtaim Group partners with over 200 of the world's most admired and innovative brands. Al-Futtaim Group’s entrepreneurship and relentless customer focus enables the organisation to continue to grow and expand; responding to the changing needs of our customers within the societies in which we operate. \n\n By upholding our values of respect, excellence, collaboration and integrity; Al-Futtaim Group continues to enrich the lives and aspirations of our customers each and every day. \n\n JOB PURPOSE: \n\n To generate and secure new Property Insurance business and retain renewal business to achieve and exceed the company’s business and operational objectives in a profitable manner consistent with high standard of professionalism and client satisfaction. \n\n KEY ACCOUNTABILITIES: \n\n Description of the Accountability \n\n Performance Indicators (How accountability is measured) \n\n RISK MANAGEMENT \n\n Arrangement of favourable reinsurance \n\n CUSTOMER CENTRIC \n\n Customer Satisfaction \n\n OPERATIONAL MANAGEMENT \n\n Team / Department development \n\n Reporting to Senior Vice President – Property, the primary role of VP – Property Insurance is to manage client relationships with potential distribution channels including Brokers, Intermediaries and company’s own development team to promote Orient Energy insurance products and develop the current portfolio profitability. \n\n Being a member of the Senior Management, VP – Property Insurance performs a very critical function of risk management & business development to contribute towards enhancing the Company’s Profitability. \n\n BUSINESS DEVELOPMENT / PROFITABLITY \n\n Plan, analyse and develop sales strategies and actions in order to secure new/renewal of business and enhance market share. \n\n BUSINESS TARGETS \n\n Produce the required target of insurance business from the designated areas to achieve or exceed the assigned premium target. \n\n PREMIUM COLLECTION (OUTSTANDING) \n\n Review and monitor the due Premiums payment status to actively follow up timely collection of the outstanding premiums. \n\n MANAGEMENT REPORTS/ COMPETITION \n\n Collect and collate business and market conditions related information and prepare reports and formulate appropriate recommendations for Management Information and Decision Making to counter competition and increase the company’s market share of the business. \n\n BROKER & CLIENT SERVICE \n\n Promote the growth of the insurance business by establishing and maintaining close liaison with Brokers and clients to ensure customer satisfaction and profitability. \n\n UNDERWITING \n\n Ensure proper underwriting of insurance risks in keeping with the guidelines by supplying experience statistics and market intelligence. Compute appropriate premium accurately and allocate reinsurance cessions with the specified criteria to facilitate proper data entry process and generation of appropriate policy documents. \n\n RISK INSPECTION \n\n Ensure proper conducting risk inspection to assess and report acceptability of risks and recommend appropriate risk improvement measures in order to ensure sound insurability of risks. \n\n 8. POLICY DOCUMENTS \n\n Review and ensure accuracy of the contents of the policy documents and arrange prompt dispatch in order to provide an efficient service to customers, brokers, development officers and participating re-insurers. \n\n 9. COORDINATION \n\n Co-ordinate with customers, brokers and development officers and other insurance companies to obtain required additional underwriting particulars in order to carry out proper risk assessment and provide appropriate solutions to their problems. \n\n QUALIFICATIONS, EXPERIENCE, & SKILLS \n\n Minimum Qualifications and Knowledge: \n\n Bachelor Degree (Commerce/Science / Arts / Business Administration) \n\n Associate of Chartered Insurance Institute, London or equivalent (Desirable) \n\n Minimum Experience: \n\n 8-12 years’ experience in a progressive organisation (Including a minimum of 5 years of experience in a Senior Managerial position). \n\n Job-Specific Skills: \n\n General Insurance with particular emphasis on Property, Underwriting, Claims & Re-insurance. \n\n Behavioural Competencies : \n\n Strong interpersonal & analytical skills. \n\n Dynamic personality with good communication skills. \n\n Excellent presentation skills. \n\n About Orient Insurance PJSC \n\n Orient Insurance Company commenced operations in 1982 as a part of the reputed Al-Futtaim Group and has since recorded a progressively steady growth. The Company is counted among the leaders in the UAE insurance market. Orient Insurance Company has a paid-up capital of AED 500 Million which is the highest in the insurance industry in UAE. With head office in Dubai, the company serves its clientele through an extensive branch network in Jebel Ali, Abu Dhabi, Al Ain, Sharjah and Ras Al Khaimah in UAE, Muscat in Sultanate of Oman, Riyadh in Kingdom of Saudi Arabia and Bahrain. \n\n Apply now » \n\n Find similar jobs: \n\n General Management & Business Support Jobs \n\n HOME PAGE \n\n PRIVACY \n\n CORPORATE WEBSITE \n\n CONTACT US \n\n Opens in a new tab. \n\n Opens in a new tab. \n\n Opens in a new tab. \n\n Opens in a new tab. \n\n © Copyright 2026 | afuturewithus.com\n\n // \n\n // \n\n // \n\n const jobAlertSpans = document.querySelectorAll(\"[data-testid=jobAlertSpanText]\");\n jobAlertSpans?.forEach((jobEl) => {\n jobEl.textContent = window?.jsStr?.tcjobresultscreatejobalertsdetailstext || \"\";\n });\n\n // \n\n // \n\n // \n\n //",
+   "responsibilities": [
+    "RISK MANAGEMENT",
+    "Arrangement of favourable reinsurance",
+    "CUSTOMER CENTRIC",
+    "Customer Satisfaction",
+    "OPERATIONAL MANAGEMENT",
+    "Team / Department development",
+    "BUSINESS DEVELOPMENT / PROFITABLITY",
+    "BUSINESS TARGETS",
+    "PREMIUM COLLECTION (OUTSTANDING)",
+    "MANAGEMENT REPORTS/ COMPETITION",
+    "BROKER & CLIENT SERVICE",
+    "UNDERWITING",
+    "RISK INSPECTION",
+    "Bachelor Degree (Commerce/Science / Arts / Business Administration)",
+    "Associate of Chartered Insurance Institute, London or equivalent (Desirable)",
+    "8-12 years’ experience in a progressive organisation (Including a minimum of 5 years of experience in a Senior Managerial position)",
+    "General Insurance with particular emphasis on Property, Underwriting, Claims & Re-insurance",
+    "Strong interpersonal & analytical skills",
+    "Dynamic personality with good communication skills",
+    "Excellent presentation skills"
+   ],
+   "requirements": [],
+   "skills": [
+    "Excel"
+   ],
+   "nationality_requirement": null,
+   "work_authorization_requirement": null,
+   "emiratisation_requirement": false,
+   "saudization_requirement": false,
+   "candidate_fit_score": 64,
+   "employer_score": 88,
+   "career_upside_score": 81,
+   "opportunity_score": 73,
+   "score_breakdown": {
+    "seniority": 20,
+    "functional": 7,
+    "industry": 15,
+    "geographic": 10,
+    "scope": 3,
+    "leadership": 0,
+    "qualification": 0,
+    "upside": 9
+   },
+   "tier": "B",
+   "application_priority": "GOOD FIT",
+   "why_fit": [
+    "Multi-country / multi-entity scope maps directly onto his Malaysia + Indonesia P&L ownership across 60+ Max Fashion and Babyshop stores.",
+    "Al-Futtaim is peer retail to his current employer — the 60+ store, multi-brand lifestyle retail P&L he already owns transfers without a sector learning curve.",
+    "Core FP&A remit — he runs budgeting, forecasting and variance analysis on an MYR 400M+ P&L as FP&A Manager at Lifestyle Retail Malaysia (Landmark Group) since May 2023.",
+    "UAE is one of his two target markets, and he is already GCC-adjacent inside a Dubai-headquartered group."
+   ],
+   "watch_out": [
+    "Nothing disqualifying surfaced in the posted text, which itself means the description is thin — probe scope and reporting line."
+   ],
+   "resume_match": null,
+   "duplicate_group": "cac3d313a4b9eed499821ec1510d4c3f8d542a03",
+   "is_excluded": false,
+   "exclusion_reason": null
+  },
+  {
    "id": "aca5f890d8302f6f84002be7941b7e99c1094714",
    "company": "Al-Futtaim",
    "company_group": "Al-Futtaim",
@@ -861,9 +952,9 @@
    "employment_type": null,
    "posted_date": "2026-09-25",
    "closing_date": "2026-10-06",
-   "scraped_at": "2026-10-02T10:51:51Z",
-   "last_verified_at": "2026-10-02T10:51:51Z",
-   "status": "NEW",
+   "scraped_at": "2026-10-03T06:03:45Z",
+   "last_verified_at": "2026-10-03T06:03:45Z",
+   "status": "ACTIVE",
    "source": "Al-Futtaim",
    "sources": [
     "Al-Futtaim"
@@ -959,8 +1050,8 @@
    "employment_type": "Regular",
    "posted_date": "2026-09-17",
    "closing_date": null,
-   "scraped_at": "2026-10-02T10:51:51Z",
-   "last_verified_at": "2026-10-02T10:51:51Z",
+   "scraped_at": "2026-10-03T06:03:45Z",
+   "last_verified_at": "2026-10-03T06:03:45Z",
    "status": "ACTIVE",
    "source": "Majid Al Futtaim",
    "sources": [
@@ -1041,7 +1132,7 @@
     "Nothing disqualifying surfaced in the posted text, which itself means the description is thin — probe scope and reporting line."
    ],
    "resume_match": null,
-   "duplicate_group": "0aea3ce400a2d2f41ae8bb09e00a5b3757f41557",
+   "duplicate_group": "d7dc6c2a012797f6b504351f51349f6484dd4098",
    "is_excluded": false,
    "exclusion_reason": null
   },
@@ -1058,8 +1149,8 @@
    "employment_type": "Regular",
    "posted_date": "2026-06-10",
    "closing_date": null,
-   "scraped_at": "2026-10-02T10:51:51Z",
-   "last_verified_at": "2026-10-02T10:51:51Z",
+   "scraped_at": "2026-10-03T06:03:45Z",
+   "last_verified_at": "2026-10-03T06:03:45Z",
    "status": "STALE",
    "source": "Majid Al Futtaim",
    "sources": [
@@ -1156,8 +1247,8 @@
    "employment_type": "Regular",
    "posted_date": "2026-09-07",
    "closing_date": null,
-   "scraped_at": "2026-10-02T10:51:51Z",
-   "last_verified_at": "2026-10-02T10:51:51Z",
+   "scraped_at": "2026-10-03T06:03:45Z",
+   "last_verified_at": "2026-10-03T06:03:45Z",
    "status": "AGING",
    "source": "Majid Al Futtaim",
    "sources": [
@@ -1256,8 +1347,8 @@
    "employment_type": "Experienced hires",
    "posted_date": "2026-08-25",
    "closing_date": null,
-   "scraped_at": "2026-10-02T10:51:51Z",
-   "last_verified_at": "2026-10-02T10:51:51Z",
+   "scraped_at": "2026-10-03T06:03:45Z",
+   "last_verified_at": "2026-10-03T06:03:45Z",
    "status": "AGING",
    "source": "Aldar",
    "sources": [
@@ -1337,100 +1428,6 @@
    "exclusion_reason": null
   },
   {
-   "id": "382a0930d31eb459d284d5df9a5acf47c4e0a40a",
-   "company": "Al-Futtaim",
-   "company_group": "Al-Futtaim",
-   "title": "Manager - Financial Controlling",
-   "normalized_title": "manager financial controlling",
-   "location": "Dubai",
-   "country": "UAE",
-   "region": "GCC",
-   "department": null,
-   "employment_type": null,
-   "posted_date": "2026-10-02",
-   "closing_date": "2026-10-02",
-   "scraped_at": "2026-10-02T10:51:51Z",
-   "last_verified_at": "2026-10-02T10:51:51Z",
-   "status": "NEW",
-   "source": "Al-Futtaim",
-   "sources": [
-    "Al-Futtaim"
-   ],
-   "source_url": "https://www.afuturewithus.com/job/Dubai-Manager-Financial-Controlling/1433260733/",
-   "application_url": "https://www.afuturewithus.com/talentcommunity/apply/1433260733/?locale=en_GB",
-   "is_direct_apply": true,
-   "application_url_verified": true,
-   "source_confidence": "high",
-   "salary_min": null,
-   "salary_max": null,
-   "salary_currency": null,
-   "experience_min": 5,
-   "experience_max": null,
-   "description": "Job Requisition ID: 180826 \n\n Established in the 1930s as a trading business, Al-Futtaim Group today is one of the most diversified and progressive, privately held regional businesses headquartered in Dubai, United A”rab Emirates. Structured into five operating divisions; automotive, financial services, real estate, retail and healthcare; employing more than 35,000 employees across more than 20 countries in the Middle East, Asia and Africa, Al-Futtaim Group partners with over 200 of the world's most admired and innovative brands. Al-Futtaim Group’s entrepreneurship and relentless customer focus enables the organisation to continue to grow and expand; responding to the changing needs of our customers within the societies in which we operate. \n\n By upholding our values of respect, excellence, collaboration and integrity; Al-Futtaim Group continues to enrich the lives and aspirations of our customers each and every day.\n\n Overview Of The Role: \n\r\n As a Manager in Financial Controlling, you will support in driving the division's accounting policy requirements and collaborating with Group Finance for policy development. You will provide advisory services on accounting standards compliance and lead the implementation of internal controls. Your role involves rolling out collection infrastructure and maintaining quality financials through meticulous process reviews. Additionally, you will oversee the adoption of AI and automation tools to enhance efficiency and precision in financial operations.\n\n What You Will Do: \n\n Support Group and Divisional Policy and Advisory Head in developing Financial Internal Controls, assessment, and standardization framework.\n\r\n Draft Divisional Accounting Policies and assist in implementing new accounting policies through technical analysis.\n\r\n Prepare and present accounting training sessions to Finance & Operations teams on IAS, IFRS, and Accounting Policies.\n\r\n Provide support and guidance on complex accounting judgments.\n\r\n Stay updated with accounting standards to provide accurate guidance for a sustainable control environment.\n\r\n Develop a detailed understanding of the accounting process for risk identification and advising on accounting positions.\n\r\n Liaise with Shared Service Centres and BU Finance Team for timely Financial Period Close processes.\n\r\n Drive Balance Sheet Substantiation implementation and conduct periodic reviews.\n\r\n Prepare details/reports for Entity Level Scorecards and Issues Resolution Drive.\n\r\n Review SSF KPI/SLA and discuss improvement areas with stakeholders.\n\r\n Conduct regular reviews of Trial balances for substantiation.\n\r\n Maintain strong controls over issues identified from Balance Sheet Substantiation.\n\r\n Support overall tracking of Audit Progress and Alignment with Audit Program.\n\r\n Coordinate with Shared Services and BU team for timely and accurate auditor requirements.\n\r\n Support FM/Sr. FM in preparation of Standalone/Consolidated Financial Statements.\n\r\n Liaise with auditors on certification requirements (Revenue Certificates, ICV Certificate ESR).\n\r\n Prepare Financial Statement Drafts and discuss them with auditors.\n\r\n Ensure timely completion of external audits with satisfactory resolution of ML points from the previous year.\n\r\n Drive adoption of AI and automation tools in Divisional Controlling.\n\r\n Build automation solutions for recurring controlling deliverables.\n\r\n Collaborate with Group Finance, IT, and Shared Service Centres on AI initiatives.\n\r\n Establish data governance and review protocols over AI outputs.\n\r\n Deliver training sessions to drive capability building and adoption.\n\r\n Identify and deliver AI use cases with measurable improvements.\n\n Required Skills To Be Successful: \n\n Strong analytical skills.\n\r\n Excellent communication and presentation skills.\n\r\n Experience with ERP systems, especially SAP.\n\r\n Ability to plan, prioritize tasks, and strong team player attitude.\n\n What Qualifies You For The Role: \n\n Professional accounting qualification CA/ACCA/others.\n\r\n At least 5 years of relevant experience within a large organization at a supervisory level.\n\r\n Strong analytical and process-oriented skills, excellent communication and presentation abilities.\n\r\n Familiarity with ERP systems, preferably SAP, and exposure to SAP BW/BPC/SAC.\n\n We’re here to provide excellent service but a little help from you can ensure a five-star candidate experience from start to finish.\n\n Before you click “apply”: Please read the job description carefully to ensure you can confidently demonstrate why this opportunity is right for you and take the time to put together a well-crafted and personalised CV to further boost your visibility. Our global Talent Acquisition team members are all assigned to specific businesses to ensure that we make the best matches between talent and opportunities. We not only consider the requisite compatibility of skills and behaviours, but also how candidates align with our Values of Respect, Integrity, Collaboration, and Excellence.\n\n As part of our candidate experience promise, we also want to make ourselves available to you throughout the application process. We make every effort to review and respond to every application.\n\n Apply now » \n\n Find similar jobs: \n\n Finance & Accounting Jobs \n\n HOME PAGE \n\n PRIVACY \n\n CORPORATE WEBSITE \n\n CONTACT US \n\n Opens in a new tab. \n\n Opens in a new tab. \n\n Opens in a new tab. \n\n Opens in a new tab. \n\n © Copyright 2026 | afuturewithus.com\n\n // \n\n // \n\n // \n\n const jobAlertSpans = document.querySelectorAll(\"[data-testid=jobAlertSpanText]\");\n jobAlertSpans?.forEach((jobEl) => {\n jobEl.textContent = window?.jsStr?.tcjobresultscreatejobalertsdetailstext || \"\";\n });\n\n // \n\n // \n\n // \n\n //",
-   "responsibilities": [
-    "Support Group and Divisional Policy and Advisory Head in developing Financial Internal Controls, assessment, and standardization framework",
-    "Draft Divisional Accounting Policies and assist in implementing new accounting policies through technical analysis",
-    "Prepare and present accounting training sessions to Finance & Operations teams on IAS, IFRS, and Accounting Policies",
-    "Provide support and guidance on complex accounting judgments",
-    "Stay updated with accounting standards to provide accurate guidance for a sustainable control environment",
-    "Develop a detailed understanding of the accounting process for risk identification and advising on accounting positions",
-    "Liaise with Shared Service Centres and BU Finance Team for timely Financial Period Close processes",
-    "Drive Balance Sheet Substantiation implementation and conduct periodic reviews",
-    "Prepare details/reports for Entity Level Scorecards and Issues Resolution Drive",
-    "Review SSF KPI/SLA and discuss improvement areas with stakeholders",
-    "Conduct regular reviews of Trial balances for substantiation",
-    "Maintain strong controls over issues identified from Balance Sheet Substantiation",
-    "Support overall tracking of Audit Progress and Alignment with Audit Program",
-    "Coordinate with Shared Services and BU team for timely and accurate auditor requirements",
-    "Support FM/Sr. FM in preparation of Standalone/Consolidated Financial Statements",
-    "Liaise with auditors on certification requirements (Revenue Certificates, ICV Certificate ESR)",
-    "Prepare Financial Statement Drafts and discuss them with auditors",
-    "Ensure timely completion of external audits with satisfactory resolution of ML points from the previous year",
-    "Drive adoption of AI and automation tools in Divisional Controlling",
-    "Build automation solutions for recurring controlling deliverables"
-   ],
-   "requirements": [],
-   "skills": [
-    "IFRS",
-    "Consolidation",
-    "SAP",
-    "Excel"
-   ],
-   "nationality_requirement": null,
-   "work_authorization_requirement": null,
-   "emiratisation_requirement": false,
-   "saudization_requirement": false,
-   "candidate_fit_score": 61,
-   "employer_score": 88,
-   "career_upside_score": 64,
-   "opportunity_score": 68,
-   "score_breakdown": {
-    "seniority": 15,
-    "functional": 5,
-    "industry": 15,
-    "geographic": 10,
-    "scope": 3,
-    "leadership": 0,
-    "qualification": 5,
-    "upside": 8
-   },
-   "tier": "B",
-   "application_priority": "GOOD FIT",
-   "why_fit": [
-    "Multi-country / multi-entity scope maps directly onto his Malaysia + Indonesia P&L ownership across 60+ Max Fashion and Babyshop stores.",
-    "Al-Futtaim is peer retail to his current employer — the 60+ store, multi-brand lifestyle retail P&L he already owns transfers without a sector learning curve.",
-    "IFRS/MPERS group consolidation is day-to-day for him, including IFRS 16 across 60+ retail leases.",
-    "Systems fit — he led the D365 ERP implementation that cut the close cycle 40%, and builds the Power BI reporting on top of it."
-   ],
-   "watch_out": [
-    "SAP is named and his ERP depth is D365, not SAP — expect to address that gap directly."
-   ],
-   "resume_match": null,
-   "duplicate_group": "501bb8eaf34264cf8a066a9280b4c7dfb396b5b4",
-   "is_excluded": false,
-   "exclusion_reason": null
-  },
-  {
    "id": "980d2f2934db6f2107c16735953bd529c8e3e0e1",
    "company": "Al-Futtaim",
    "company_group": "Al-Futtaim",
@@ -1443,8 +1440,8 @@
    "employment_type": null,
    "posted_date": "2026-09-12",
    "closing_date": "2026-10-31",
-   "scraped_at": "2026-10-02T10:51:51Z",
-   "last_verified_at": "2026-10-02T10:51:51Z",
+   "scraped_at": "2026-10-03T06:03:45Z",
+   "last_verified_at": "2026-10-03T06:03:45Z",
    "status": "ACTIVE",
    "source": "Al-Futtaim",
    "sources": [
@@ -1533,8 +1530,8 @@
    "employment_type": null,
    "posted_date": "2026-09-08",
    "closing_date": null,
-   "scraped_at": "2026-10-02T10:51:51Z",
-   "last_verified_at": "2026-10-02T10:51:51Z",
+   "scraped_at": "2026-10-03T06:03:45Z",
+   "last_verified_at": "2026-10-03T06:03:45Z",
    "status": "AGING",
    "source": "Landmark Group",
    "sources": [
@@ -1616,8 +1613,8 @@
    "employment_type": null,
    "posted_date": "2026-09-14",
    "closing_date": "2026-10-09",
-   "scraped_at": "2026-10-02T10:51:51Z",
-   "last_verified_at": "2026-10-02T10:51:51Z",
+   "scraped_at": "2026-10-03T06:03:45Z",
+   "last_verified_at": "2026-10-03T06:03:45Z",
    "status": "ACTIVE",
    "source": "Al-Futtaim",
    "sources": [
@@ -1700,6 +1697,98 @@
    "exclusion_reason": null
   },
   {
+   "id": "634eec2d1b7ac6666e29520f10e431e3e474e22b",
+   "company": "Al-Futtaim",
+   "company_group": "Al-Futtaim",
+   "title": "Senior Design Manager | Real Estate | Residential & Commercial",
+   "normalized_title": "senior design manager real estate residential & commercial",
+   "location": "Dubai",
+   "country": "UAE",
+   "region": "GCC",
+   "department": null,
+   "employment_type": null,
+   "posted_date": "2026-09-15",
+   "closing_date": "2026-10-30",
+   "scraped_at": "2026-10-03T06:03:45Z",
+   "last_verified_at": "2026-10-03T06:03:45Z",
+   "status": "ACTIVE",
+   "source": "Al-Futtaim",
+   "sources": [
+    "Al-Futtaim"
+   ],
+   "source_url": "https://www.afuturewithus.com/job/Dubai-Senior-Design-Manager-Real-Estate-Residential-&-Commercial/1436949933/",
+   "application_url": "https://www.afuturewithus.com/talentcommunity/apply/1436949933/?locale=en_GB",
+   "is_direct_apply": true,
+   "application_url_verified": true,
+   "source_confidence": "high",
+   "salary_min": null,
+   "salary_max": null,
+   "salary_currency": null,
+   "experience_min": 12,
+   "experience_max": null,
+   "description": "Job Requisition ID: 181055 \n\r\n About Al-Futtaim\nEstablished in the 1930s, Al-Futtaim is one of the most diversified and progressive privately held regional businesses, headquartered in Dubai. Operating across more than 20 countries, the Group spans automotive, financial services, real estate, retail and health. With more than 40,000 employees, Al-Futtaim represents over 200 of the world’s most recognised brands, including Toyota, Lexus, IKEA, ACE and Marks & Spencer. Driven by its purpose to enrich lives and elevate communities, Al-Futtaim focuses on digital innovation, AI, sustainable growth and strategic partnerships, creating long-term value for customers, communities and partners while building a responsible legacy for future generations.\n \n Overview Of The Role: \n\nThe Senior Design Manager at Resicom+ within Al-Futtaim Group is responsible for overseeing the design and delivery of high-quality architectural projects. The role demands excellence in managing timelines, budgets, and collaborating with diverse teams to ensure projects are aesthetically pleasing and technically sound while aligning with organizational goals. The Senior Design Manager is pivotal in developing design strategies, solving complex challenges, and continually delivering projects that enhance user experiences.\n\n What You Will Do: \n\n Project Excellence \r\n\n Deliver high-end quality projects focusing on the best user experience.\n\r\n Ensure projects are completed on time or earlier, proactively managing timelines.\n\r\n Maintain project budgets while delivering tangible results, focusing on cost, quality, and time-saving measures.\n\r\n Adhere to company processes, strategic goals, and policies ensuring projects align with set objectives.\n\r\n Foster a collaborative and respectful team environment, promoting continuous development and staying updated on architectural trends.\n\n Design Management \r\n\n Support the Director of Architecture in developing and implementing design strategies for various projects.\n\r\n Independently manage the end-to-end design process, from brief preparation to procurement, including technical reviews and consultant appointments.\n\r\n Deliver projects from concept through to tender and construction documentation, including obtaining building permits.\n\r\n Solve design issues creatively and communicate solutions effectively.\n\r\n Identify and prioritize tasks for addressing new requests efficiently.\n\n Risk and Collaboration Management \r\n\n Create systems with typical processes and templates for handling complex tasks consistently.\n\r\n Anticipate and manage risks by clarifying uncertainties between stakeholders.\n\r\n Maintain effective communication with all project stakeholders, including managing complexities at site and throughout the procurement process.\n\n Required Skills To Be Successful: \n\n Excellence in project management and delivery within budget and timeline constraints.\n\r\n Strong problem-solving skills with an ability to manage complex design challenges.\n\r\n Exceptional communication and presentation skills to lead consultants and stakeholders.\n\r\n In-depth knowledge of architectural practices with a focus on user experience and technical efficiency.\n\n What Qualifies You For The Role: \n\n Minimum of a bachelor's degree in architecture.\n\r\n At least 12 years of experience in design and management roles, preferably with leading local developers.\n\r\n Extensive experience managing residential and commercial office projects.\n\r\n Comprehensive knowledge of coordinating across architectural, interior, landscape, structural, MEP, and infrastructure disciplines.\n\r\n Ability to prepare and deliver compelling presentations to executive management.\n\r\n Familiarity with UAE local requirements and regulations.\n\n About Al-Futtaim Real Estate\n\r\n With a legacy of more than six decades in real estate and asset management, Al-Futtaim Real Estate – part of Al-Futtaim – creates real impact on the communities it serves through long-term investment and growth. As one of the region’s leading private developers, the company plans, creates and manages developments across the MENA region. \n\r\n Al-Futtaim Real Estate has a diversified, multi-billion-dollar portfolio across the real estate value chain and asset types such as residential, commercial, malls and industries including hospitality, healthcare, infrastructure and education. Flagship mixed-use urban communities include Dubai Festival City and Cairo Festival City. \n\r\n Al-Futtaim Real Estate is also responsible for Al-Futtaim Contracting, a fully integrated, end-to-end specialist division operating across the UAE, Saudi Arabia, Qatar and Egypt. The business has delivered industry-leading construction, engineering, technology and FM solutions for more than 50 years.\n\n Apply now » \n\n Find similar jobs: \n\n Health, Safety & Environment Jobs, \n Audit, Risk & Compliance Jobs \n\n HOME PAGE \n\n PRIVACY \n\n CORPORATE WEBSITE \n\n CONTACT US \n\n Opens in a new tab. \n\n Opens in a new tab. \n\n Opens in a new tab. \n\n Opens in a new tab. \n\n © Copyright 2026 | afuturewithus.com\n\n // \n\n // \n\n // \n\n const jobAlertSpans = document.querySelectorAll(\"[data-testid=jobAlertSpanText]\");\n jobAlertSpans?.forEach((jobEl) => {\n jobEl.textContent = window?.jsStr?.tcjobresultscreatejobalertsdetailstext || \"\";\n });\n\n // \n\n // \n\n // \n\n //",
+   "responsibilities": [
+    "Deliver high-end quality projects focusing on the best user experience",
+    "Ensure projects are completed on time or earlier, proactively managing timelines",
+    "Maintain project budgets while delivering tangible results, focusing on cost, quality, and time-saving measures",
+    "Adhere to company processes, strategic goals, and policies ensuring projects align with set objectives",
+    "Foster a collaborative and respectful team environment, promoting continuous development and staying updated on architectural trends",
+    "Support the Director of Architecture in developing and implementing design strategies for various projects",
+    "Independently manage the end-to-end design process, from brief preparation to procurement, including technical reviews and consultant appointments",
+    "Deliver projects from concept through to tender and construction documentation, including obtaining building permits",
+    "Solve design issues creatively and communicate solutions effectively",
+    "Identify and prioritize tasks for addressing new requests efficiently",
+    "Create systems with typical processes and templates for handling complex tasks consistently",
+    "Anticipate and manage risks by clarifying uncertainties between stakeholders",
+    "Maintain effective communication with all project stakeholders, including managing complexities at site and throughout the procurement process",
+    "Excellence in project management and delivery within budget and timeline constraints",
+    "Strong problem-solving skills with an ability to manage complex design challenges",
+    "Exceptional communication and presentation skills to lead consultants and stakeholders",
+    "In-depth knowledge of architectural practices with a focus on user experience and technical efficiency",
+    "Minimum of a bachelor's degree in architecture",
+    "At least 12 years of experience in design and management roles, preferably with leading local developers",
+    "Extensive experience managing residential and commercial office projects"
+   ],
+   "requirements": [],
+   "skills": [
+    "Budgeting",
+    "Excel"
+   ],
+   "nationality_requirement": null,
+   "work_authorization_requirement": null,
+   "emiratisation_requirement": false,
+   "saudization_requirement": false,
+   "candidate_fit_score": 61,
+   "employer_score": 88,
+   "career_upside_score": 50,
+   "opportunity_score": 66,
+   "score_breakdown": {
+    "seniority": 17,
+    "functional": 7,
+    "industry": 15,
+    "geographic": 10,
+    "scope": 6,
+    "leadership": 0,
+    "qualification": 0,
+    "upside": 6
+   },
+   "tier": "B",
+   "application_priority": "GOOD FIT",
+   "why_fit": [
+    "Multi-country / multi-entity scope maps directly onto his Malaysia + Indonesia P&L ownership across 60+ Max Fashion and Babyshop stores.",
+    "Al-Futtaim is peer retail to his current employer — the 60+ store, multi-brand lifestyle retail P&L he already owns transfers without a sector learning curve.",
+    "Core FP&A remit — he runs budgeting, forecasting and variance analysis on an MYR 400M+ P&L as FP&A Manager at Lifestyle Retail Malaysia (Landmark Group) since May 2023.",
+    "UAE is one of his two target markets, and he is already GCC-adjacent inside a Dubai-headquartered group."
+   ],
+   "watch_out": [
+    "Asks for 12+ years; he has 10+ total and 7+ post-qualification, so this is a stretch on paper."
+   ],
+   "resume_match": null,
+   "duplicate_group": "21bdec1983c3c93c1c03caab38c26b792aa75fba",
+   "is_excluded": false,
+   "exclusion_reason": null
+  },
+  {
    "id": "bb0d2a70cac83349b6275ea0e7d7b569f36b3e2e",
    "company": "Al-Futtaim",
    "company_group": "Al-Futtaim",
@@ -1712,8 +1801,8 @@
    "employment_type": null,
    "posted_date": "2026-09-15",
    "closing_date": "2026-10-15",
-   "scraped_at": "2026-10-02T10:51:51Z",
-   "last_verified_at": "2026-10-02T10:51:51Z",
+   "scraped_at": "2026-10-03T06:03:45Z",
+   "last_verified_at": "2026-10-03T06:03:45Z",
    "status": "ACTIVE",
    "source": "Al-Futtaim",
    "sources": [
@@ -1790,8 +1879,8 @@
    "employment_type": "Full-Time",
    "posted_date": "2026-09-21",
    "closing_date": null,
-   "scraped_at": "2026-10-02T10:51:51Z",
-   "last_verified_at": "2026-10-02T10:51:51Z",
+   "scraped_at": "2026-10-03T06:03:45Z",
+   "last_verified_at": "2026-10-03T06:03:45Z",
    "status": "ACTIVE",
    "source": "Chalhoub Group",
    "sources": [
@@ -1861,8 +1950,8 @@
    "employment_type": null,
    "posted_date": "2026-10-01",
    "closing_date": "2026-10-31",
-   "scraped_at": "2026-10-02T10:51:51Z",
-   "last_verified_at": "2026-10-02T10:51:51Z",
+   "scraped_at": "2026-10-03T06:03:45Z",
+   "last_verified_at": "2026-10-03T06:03:45Z",
    "status": "NEW",
    "source": "Al-Futtaim",
    "sources": [
@@ -1956,8 +2045,8 @@
    "employment_type": "Full-Time",
    "posted_date": "2026-08-25",
    "closing_date": null,
-   "scraped_at": "2026-10-02T10:51:51Z",
-   "last_verified_at": "2026-10-02T10:51:51Z",
+   "scraped_at": "2026-10-03T06:03:45Z",
+   "last_verified_at": "2026-10-03T06:03:45Z",
    "status": "AGING",
    "source": "Michael Page",
    "sources": [
@@ -2033,8 +2122,8 @@
    "employment_type": "Full-Time",
    "posted_date": "2026-03-23",
    "closing_date": null,
-   "scraped_at": "2026-10-02T10:51:51Z",
-   "last_verified_at": "2026-10-02T10:51:51Z",
+   "scraped_at": "2026-10-03T06:03:45Z",
+   "last_verified_at": "2026-10-03T06:03:45Z",
    "status": "STALE",
    "source": "Michael Page",
    "sources": [
@@ -2128,8 +2217,8 @@
    "employment_type": "Experienced hires",
    "posted_date": "2026-09-02",
    "closing_date": null,
-   "scraped_at": "2026-10-02T10:51:51Z",
-   "last_verified_at": "2026-10-02T10:51:51Z",
+   "scraped_at": "2026-10-03T06:03:45Z",
+   "last_verified_at": "2026-10-03T06:03:45Z",
    "status": "AGING",
    "source": "Aldar",
    "sources": [
@@ -2222,9 +2311,9 @@
    "employment_type": null,
    "posted_date": "2026-09-25",
    "closing_date": "2026-10-25",
-   "scraped_at": "2026-10-02T10:51:51Z",
-   "last_verified_at": "2026-10-02T10:51:51Z",
-   "status": "NEW",
+   "scraped_at": "2026-10-03T06:03:45Z",
+   "last_verified_at": "2026-10-03T06:03:45Z",
+   "status": "ACTIVE",
    "source": "Al Ghurair",
    "sources": [
     "Al Ghurair"
@@ -2333,8 +2422,8 @@
    "employment_type": null,
    "posted_date": "2026-09-14",
    "closing_date": "2026-10-16",
-   "scraped_at": "2026-10-02T10:51:51Z",
-   "last_verified_at": "2026-10-02T10:51:51Z",
+   "scraped_at": "2026-10-03T06:03:45Z",
+   "last_verified_at": "2026-10-03T06:03:45Z",
    "status": "ACTIVE",
    "source": "Apparel Group",
    "sources": [
@@ -2419,8 +2508,8 @@
    "employment_type": "Full-Time",
    "posted_date": "2026-09-03",
    "closing_date": null,
-   "scraped_at": "2026-10-02T10:51:51Z",
-   "last_verified_at": "2026-10-02T10:51:51Z",
+   "scraped_at": "2026-10-03T06:03:45Z",
+   "last_verified_at": "2026-10-03T06:03:45Z",
    "status": "AGING",
    "source": "Chalhoub Group",
    "sources": [
@@ -2490,8 +2579,8 @@
    "employment_type": "Regular",
    "posted_date": "2026-09-22",
    "closing_date": null,
-   "scraped_at": "2026-10-02T10:51:51Z",
-   "last_verified_at": "2026-10-02T10:51:51Z",
+   "scraped_at": "2026-10-03T06:03:45Z",
+   "last_verified_at": "2026-10-03T06:03:45Z",
    "status": "ACTIVE",
    "source": "Majid Al Futtaim",
    "sources": [
@@ -2557,7 +2646,7 @@
     "Nothing disqualifying surfaced in the posted text, which itself means the description is thin — probe scope and reporting line."
    ],
    "resume_match": null,
-   "duplicate_group": "d7dc6c2a012797f6b504351f51349f6484dd4098",
+   "duplicate_group": "0aea3ce400a2d2f41ae8bb09e00a5b3757f41557",
    "is_excluded": false,
    "exclusion_reason": null
   },
@@ -2574,8 +2663,8 @@
    "employment_type": "Full-Time",
    "posted_date": "2026-02-04",
    "closing_date": null,
-   "scraped_at": "2026-10-02T10:51:51Z",
-   "last_verified_at": "2026-10-02T10:51:51Z",
+   "scraped_at": "2026-10-03T06:03:45Z",
+   "last_verified_at": "2026-10-03T06:03:45Z",
    "status": "STALE",
    "source": "Michael Page",
    "sources": [
@@ -2651,8 +2740,8 @@
    "employment_type": null,
    "posted_date": "2026-09-29",
    "closing_date": "2026-10-28",
-   "scraped_at": "2026-10-02T10:51:51Z",
-   "last_verified_at": "2026-10-02T10:51:51Z",
+   "scraped_at": "2026-10-03T06:03:45Z",
+   "last_verified_at": "2026-10-03T06:03:45Z",
    "status": "NEW",
    "source": "Al Ghurair",
    "sources": [
@@ -2754,8 +2843,8 @@
    "employment_type": "Full-Time",
    "posted_date": "2026-07-20",
    "closing_date": null,
-   "scraped_at": "2026-10-02T10:51:51Z",
-   "last_verified_at": "2026-10-02T10:51:51Z",
+   "scraped_at": "2026-10-03T06:03:45Z",
+   "last_verified_at": "2026-10-03T06:03:45Z",
    "status": "STALE",
    "source": "Michael Page",
    "sources": [
@@ -2835,8 +2924,8 @@
    "employment_type": "Full-Time",
    "posted_date": "2026-07-20",
    "closing_date": null,
-   "scraped_at": "2026-10-02T10:51:51Z",
-   "last_verified_at": "2026-10-02T10:51:51Z",
+   "scraped_at": "2026-10-03T06:03:45Z",
+   "last_verified_at": "2026-10-03T06:03:45Z",
    "status": "STALE",
    "source": "Michael Page",
    "sources": [
@@ -2912,8 +3001,8 @@
    "employment_type": "Full-Time",
    "posted_date": "2026-09-28",
    "closing_date": null,
-   "scraped_at": "2026-10-02T10:51:51Z",
-   "last_verified_at": "2026-10-02T10:51:51Z",
+   "scraped_at": "2026-10-03T06:03:45Z",
+   "last_verified_at": "2026-10-03T06:03:45Z",
    "status": "NEW",
    "source": "Michael Page",
    "sources": [
@@ -3006,8 +3095,8 @@
    "employment_type": null,
    "posted_date": "2026-09-30",
    "closing_date": "2026-10-18",
-   "scraped_at": "2026-10-02T10:51:51Z",
-   "last_verified_at": "2026-10-02T10:51:51Z",
+   "scraped_at": "2026-10-03T06:03:45Z",
+   "last_verified_at": "2026-10-03T06:03:45Z",
    "status": "NEW",
    "source": "Al-Futtaim",
    "sources": [
@@ -3096,8 +3185,8 @@
    "employment_type": "Regular",
    "posted_date": "2026-09-01",
    "closing_date": null,
-   "scraped_at": "2026-10-02T10:51:51Z",
-   "last_verified_at": "2026-10-02T10:51:51Z",
+   "scraped_at": "2026-10-03T06:03:45Z",
+   "last_verified_at": "2026-10-03T06:03:45Z",
    "status": "AGING",
    "source": "Majid Al Futtaim",
    "sources": [
@@ -3197,8 +3286,8 @@
    "employment_type": "Full-Time",
    "posted_date": "2026-09-17",
    "closing_date": null,
-   "scraped_at": "2026-10-02T10:51:51Z",
-   "last_verified_at": "2026-10-02T10:51:51Z",
+   "scraped_at": "2026-10-03T06:03:45Z",
+   "last_verified_at": "2026-10-03T06:03:45Z",
    "status": "ACTIVE",
    "source": "Michael Page",
    "sources": [
@@ -3292,8 +3381,8 @@
    "employment_type": "Temporary",
    "posted_date": "2026-09-09",
    "closing_date": null,
-   "scraped_at": "2026-10-02T10:51:51Z",
-   "last_verified_at": "2026-10-02T10:51:51Z",
+   "scraped_at": "2026-10-03T06:03:45Z",
+   "last_verified_at": "2026-10-03T06:03:45Z",
    "status": "AGING",
    "source": "Michael Page",
    "sources": [
@@ -3381,8 +3470,8 @@
    "employment_type": "Experienced hires",
    "posted_date": "2026-04-28",
    "closing_date": null,
-   "scraped_at": "2026-10-02T10:51:51Z",
-   "last_verified_at": "2026-10-02T10:51:51Z",
+   "scraped_at": "2026-10-03T06:03:45Z",
+   "last_verified_at": "2026-10-03T06:03:45Z",
    "status": "STALE",
    "source": "Aldar",
    "sources": [
@@ -3469,8 +3558,8 @@
    "employment_type": "Full-Time",
    "posted_date": "2026-06-22",
    "closing_date": null,
-   "scraped_at": "2026-10-02T10:51:51Z",
-   "last_verified_at": "2026-10-02T10:51:51Z",
+   "scraped_at": "2026-10-03T06:03:45Z",
+   "last_verified_at": "2026-10-03T06:03:45Z",
    "status": "STALE",
    "source": "Michael Page",
    "sources": [
@@ -3556,8 +3645,8 @@
    "employment_type": "Regular",
    "posted_date": "2026-09-15",
    "closing_date": null,
-   "scraped_at": "2026-10-02T10:51:51Z",
-   "last_verified_at": "2026-10-02T10:51:51Z",
+   "scraped_at": "2026-10-03T06:03:45Z",
+   "last_verified_at": "2026-10-03T06:03:45Z",
    "status": "ACTIVE",
    "source": "Majid Al Futtaim",
    "sources": [
@@ -3650,8 +3739,8 @@
    "employment_type": "Full-time",
    "posted_date": "2026-09-17",
    "closing_date": null,
-   "scraped_at": "2026-10-02T10:51:51Z",
-   "last_verified_at": "2026-10-02T10:51:51Z",
+   "scraped_at": "2026-10-03T06:03:45Z",
+   "last_verified_at": "2026-10-03T06:03:45Z",
    "status": "ACTIVE",
    "source": "Etihad Airways",
    "sources": [
@@ -3750,8 +3839,8 @@
    "employment_type": "Full-time",
    "posted_date": "2026-09-22",
    "closing_date": null,
-   "scraped_at": "2026-10-02T10:51:51Z",
-   "last_verified_at": "2026-10-02T10:51:51Z",
+   "scraped_at": "2026-10-03T06:03:45Z",
+   "last_verified_at": "2026-10-03T06:03:45Z",
    "status": "ACTIVE",
    "source": "Etihad Airways",
    "sources": [
@@ -3847,8 +3936,8 @@
    "employment_type": "Full-time",
    "posted_date": "2026-10-01",
    "closing_date": null,
-   "scraped_at": "2026-10-02T10:51:51Z",
-   "last_verified_at": "2026-10-02T10:51:51Z",
+   "scraped_at": "2026-10-03T06:03:45Z",
+   "last_verified_at": "2026-10-03T06:03:45Z",
    "status": "NEW",
    "source": "Etihad Airways",
    "sources": [
@@ -3931,8 +4020,8 @@
    "employment_type": "Full-time",
    "posted_date": "2026-06-09",
    "closing_date": null,
-   "scraped_at": "2026-10-02T10:51:51Z",
-   "last_verified_at": "2026-10-02T10:51:51Z",
+   "scraped_at": "2026-10-03T06:03:45Z",
+   "last_verified_at": "2026-10-03T06:03:45Z",
    "status": "STALE",
    "source": "Etihad Airways",
    "sources": [
@@ -4021,8 +4110,8 @@
    "employment_type": "Temporary",
    "posted_date": "2026-09-14",
    "closing_date": null,
-   "scraped_at": "2026-10-02T10:51:51Z",
-   "last_verified_at": "2026-10-02T10:51:51Z",
+   "scraped_at": "2026-10-03T06:03:45Z",
+   "last_verified_at": "2026-10-03T06:03:45Z",
    "status": "ACTIVE",
    "source": "Michael Page",
    "sources": [
@@ -4113,8 +4202,8 @@
    "employment_type": "Full-time",
    "posted_date": "2026-07-22",
    "closing_date": null,
-   "scraped_at": "2026-10-02T10:51:51Z",
-   "last_verified_at": "2026-10-02T10:51:51Z",
+   "scraped_at": "2026-10-03T06:03:45Z",
+   "last_verified_at": "2026-10-03T06:03:45Z",
    "status": "STALE",
    "source": "Etihad Airways",
    "sources": [
@@ -4204,8 +4293,8 @@
    "employment_type": "Full-Time",
    "posted_date": "2026-09-09",
    "closing_date": null,
-   "scraped_at": "2026-10-02T10:51:51Z",
-   "last_verified_at": "2026-10-02T10:51:51Z",
+   "scraped_at": "2026-10-03T06:03:45Z",
+   "last_verified_at": "2026-10-03T06:03:45Z",
    "status": "AGING",
    "source": "Michael Page",
    "sources": [
@@ -4278,8 +4367,8 @@
    "employment_type": "Full-time",
    "posted_date": "2026-09-28",
    "closing_date": null,
-   "scraped_at": "2026-10-02T10:51:51Z",
-   "last_verified_at": "2026-10-02T10:51:51Z",
+   "scraped_at": "2026-10-03T06:03:45Z",
+   "last_verified_at": "2026-10-03T06:03:45Z",
    "status": "NEW",
    "source": "Etihad Airways",
    "sources": [
@@ -4366,8 +4455,8 @@
    "employment_type": "Full-time",
    "posted_date": "2026-09-02",
    "closing_date": null,
-   "scraped_at": "2026-10-02T10:51:51Z",
-   "last_verified_at": "2026-10-02T10:51:51Z",
+   "scraped_at": "2026-10-03T06:03:45Z",
+   "last_verified_at": "2026-10-03T06:03:45Z",
    "status": "AGING",
    "source": "Etihad Airways",
    "sources": [
@@ -4448,8 +4537,8 @@
    "employment_type": "Full-time",
    "posted_date": "2026-07-28",
    "closing_date": null,
-   "scraped_at": "2026-10-02T10:51:51Z",
-   "last_verified_at": "2026-10-02T10:51:51Z",
+   "scraped_at": "2026-10-03T06:03:45Z",
+   "last_verified_at": "2026-10-03T06:03:45Z",
    "status": "STALE",
    "source": "Etihad Airways",
    "sources": [
@@ -4550,8 +4639,8 @@
    "employment_type": null,
    "posted_date": "2026-09-24",
    "closing_date": "2026-10-25",
-   "scraped_at": "2026-10-02T10:51:51Z",
-   "last_verified_at": "2026-10-02T10:51:51Z",
+   "scraped_at": "2026-10-03T06:03:45Z",
+   "last_verified_at": "2026-10-03T06:03:45Z",
    "status": "ACTIVE",
    "source": "Al-Futtaim",
    "sources": [
@@ -4651,8 +4740,8 @@
    "employment_type": null,
    "posted_date": "2026-10-01",
    "closing_date": "2026-10-31",
-   "scraped_at": "2026-10-02T10:51:51Z",
-   "last_verified_at": "2026-10-02T10:51:51Z",
+   "scraped_at": "2026-10-03T06:03:45Z",
+   "last_verified_at": "2026-10-03T06:03:45Z",
    "status": "NEW",
    "source": "Al-Futtaim",
    "sources": [
@@ -4742,8 +4831,8 @@
    "employment_type": null,
    "posted_date": "2026-09-08",
    "closing_date": "2026-11-30",
-   "scraped_at": "2026-10-02T10:51:51Z",
-   "last_verified_at": "2026-10-02T10:51:51Z",
+   "scraped_at": "2026-10-03T06:03:45Z",
+   "last_verified_at": "2026-10-03T06:03:45Z",
    "status": "AGING",
    "source": "Al-Futtaim",
    "sources": [
@@ -4820,8 +4909,8 @@
    "employment_type": "Experienced hires",
    "posted_date": "2026-09-01",
    "closing_date": null,
-   "scraped_at": "2026-10-02T10:51:51Z",
-   "last_verified_at": "2026-10-02T10:51:51Z",
+   "scraped_at": "2026-10-03T06:03:45Z",
+   "last_verified_at": "2026-10-03T06:03:45Z",
    "status": "AGING",
    "source": "Aldar",
    "sources": [
@@ -4916,8 +5005,8 @@
    "employment_type": null,
    "posted_date": "2026-09-21",
    "closing_date": "2026-10-18",
-   "scraped_at": "2026-10-02T10:51:51Z",
-   "last_verified_at": "2026-10-02T10:51:51Z",
+   "scraped_at": "2026-10-03T06:03:45Z",
+   "last_verified_at": "2026-10-03T06:03:45Z",
    "status": "ACTIVE",
    "source": "Al-Futtaim",
    "sources": [
@@ -5006,8 +5095,8 @@
    "employment_type": null,
    "posted_date": "2026-09-23",
    "closing_date": null,
-   "scraped_at": "2026-10-02T10:51:51Z",
-   "last_verified_at": "2026-10-02T10:51:51Z",
+   "scraped_at": "2026-10-03T06:03:45Z",
+   "last_verified_at": "2026-10-03T06:03:45Z",
    "status": "ACTIVE",
    "source": "Apparel Group",
    "sources": [
@@ -5088,85 +5177,6 @@
    "exclusion_reason": "assistant manager grade, below his current FP&A Manager level"
   },
   {
-   "id": "27f91343d85fb52cf1c8978d4431a332abae969f",
-   "company": "Al-Futtaim",
-   "company_group": "Al-Futtaim",
-   "title": "Key Account Manager | Al-Futtaim Automotive | FAMCO",
-   "normalized_title": "key account manager al futtaim automotive famco",
-   "location": "Abu Dhabi",
-   "country": "UAE",
-   "region": "GCC",
-   "department": null,
-   "employment_type": null,
-   "posted_date": "2026-09-17",
-   "closing_date": "2026-10-18",
-   "scraped_at": "2026-10-02T10:51:51Z",
-   "last_verified_at": "2026-10-02T10:51:51Z",
-   "status": "ACTIVE",
-   "source": "Al-Futtaim",
-   "sources": [
-    "Al-Futtaim"
-   ],
-   "source_url": "https://www.afuturewithus.com/job/Abu-Dhabi-Key-Account-Manager-Al-Futtaim-Automotive-FAMCO/1438044333/",
-   "application_url": "https://www.afuturewithus.com/talentcommunity/apply/1438044333/?locale=en_GB",
-   "is_direct_apply": true,
-   "application_url_verified": true,
-   "source_confidence": "high",
-   "salary_min": null,
-   "salary_max": null,
-   "salary_currency": null,
-   "experience_min": null,
-   "experience_max": null,
-   "description": "Job Requisition ID: 181177 \n\n About Al-Futtaim \n\nEstablished in the 1930s, Al-Futtaim is one of the most diversified and progressive privately held regional businesses, headquartered in Dubai. Operating across more than 20 countries, the Group spans automotive, financial services, real estate, retail and health. With more than 40,000 employees, Al-Futtaim represents over 200 of the world’s most recognised brands, including Toyota, Lexus, IKEA, ACE and Marks & Spencer. Driven by its purpose to enrich lives and elevate communities, Al-Futtaim focuses on digital innovation, AI, sustainable growth and strategic partnerships, creating long-term value for customers, communities and partners while building a responsible legacy for future generations.\n\n Overview of the Role \n\nWe are looking for a highly motivated and results-driven Key Account Manager to join our Commercial Vehicles team at FAMCO in Abu Dhabi. Success in this position requires a deep understanding of commercial vehicles, fleet customers, transport operators, and the competitive landscape of the truck industry. The successful candidate will play a critical role in building the customer base, growing market share, and establishing the brand as a leading choice for fleet and transport customers across the United Arab Emirates.\n\n What You Will Do \n\n• Identify, develop, and win new business opportunities within the truck sector.\n• Build strong relationships with fleet operators, logistics companies, transportation businesses, contractors, and key commercial customers.\n• Achieve monthly, quarterly, and annual sales targets.\n• Develop and maintain a healthy sales pipeline through active prospecting and customer engagement.\n• Conduct regular customer visits to understand business requirements and identify sales opportunities.\n• Present vehicle solutions, coordinate demonstrations, and support customer test drives.\n• Manage the full sales cycle from prospecting and lead generation through quotation, negotiation, order placement, delivery, and payment collection.\n• Protect profitability while delivering competitive commercial solutions.\n• Maintain accurate customer records, sales forecasts, and pipeline updates within the Customer Relationship Management system.\n• Support collections activities and follow up on outstanding payments when required.\n• Gather market intelligence and competitor information to support business growth strategies.\n\n Required Skills to Be Successful \n\n• Bachelor's degree or equivalent professional experience.\n• Proven experience selling trucks in the United Arab Emirates.\n• Experience managing fleet customers, transport companies, logistics operators, and contractors.\n• Strong knowledge of trucks, fleet operations, transport businesses, and the United Arab Emirates truck market.\n\n About The Team \n\n You will join Al-Futtaim Industrial Equipment and Commercial Vehicles, working as part of the Commercial Vehicles Sales team and reporting directly to the Sales Manager – Commercial Vehicles.\n\n What Equips You For The Role \n\n • Strong truck sales experience within the United Arab Emirates market.\n• Excellent business development and key account management capabilities.\n• Strong understanding of commercial vehicle sales processes and fleet customer requirements.\n• Proven ability to generate new business and achieve sales targets.\n• Strong negotiation, presentation, and relationship-building skills.\n• Commercially focused with the ability to balance customer needs and profitability.\n• Excellent communication and stakeholder management skills.\n• Ability to work independently and manage multiple customer opportunities simultaneously.\n• Experience within a commercial vehicle dealership environment is highly preferred.\n• Demonstrated track record of consistently achieving or exceeding sales targets.\n• Valid United Arab Emirates driving license.\n\n About Al-Futtaim \n\n Al-Futtaim Automotive is one of the region's leading mobility businesses, operating across eight countries in the Middle East, Asia and North Africa.\n\n With a portfolio of more than 25 world-leading brands, we deliver one of the region's most comprehensive mobility ecosystems. Our capabilities span passenger vehicles, commercial vehicles and industrial equipment, backed by integrated logistics, leasing, aftersales and financial services that deliver a seamless customer experience across every stage of the mobility journey.\n\n Our vision is to become a world-class mobility player, creating better experiences for our customers through innovation, digital transformation and a relentless focus on customer experience. We work alongside some of the world's most trusted automotive brands to shape the future of mobility, delivering solutions that meet the evolving needs of individuals, businesses and communities.\n\n Behind everything we do is a team of more than 9,000 colleagues united by ambition, collaboration and a shared commitment to progress. Together, we're shaping the future of mobility, embracing new technologies and creating better experiences for our customers. At Al-Futtaim Automotive, you'll be empowered to turn ambition into action and help move our customers, our business and your career forward.\n\n Apply now » \n\n Find similar jobs: \n\n Sales Jobs \n\n HOME PAGE \n\n PRIVACY \n\n CORPORATE WEBSITE \n\n CONTACT US \n\n Opens in a new tab. \n\n Opens in a new tab. \n\n Opens in a new tab. \n\n Opens in a new tab. \n\n © Copyright 2026 | afuturewithus.com\n\n // \n\n // \n\n // \n\n const jobAlertSpans = document.querySelectorAll(\"[data-testid=jobAlertSpanText]\");\n jobAlertSpans?.forEach((jobEl) => {\n jobEl.textContent = window?.jsStr?.tcjobresultscreatejobalertsdetailstext || \"\";\n });\n\n // \n\n // \n\n // \n\n //",
-   "responsibilities": [
-    "HOME PAGE",
-    "CORPORATE WEBSITE",
-    "CONTACT US",
-    "Opens in a new tab",
-    "Opens in a new tab",
-    "Opens in a new tab",
-    "Opens in a new tab"
-   ],
-   "requirements": [],
-   "skills": [
-    "Forecasting",
-    "Excel"
-   ],
-   "nationality_requirement": null,
-   "work_authorization_requirement": null,
-   "emiratisation_requirement": false,
-   "saudization_requirement": false,
-   "candidate_fit_score": 58,
-   "employer_score": 88,
-   "career_upside_score": 50,
-   "opportunity_score": 64,
-   "score_breakdown": {
-    "seniority": 15,
-    "functional": 7,
-    "industry": 15,
-    "geographic": 10,
-    "scope": 3,
-    "leadership": 2,
-    "qualification": 0,
-    "upside": 6
-   },
-   "tier": "C",
-   "application_priority": "SKIP",
-   "why_fit": [
-    "Multi-country / multi-entity scope maps directly onto his Malaysia + Indonesia P&L ownership across 60+ Max Fashion and Babyshop stores.",
-    "Al-Futtaim is peer retail to his current employer — the 60+ store, multi-brand lifestyle retail P&L he already owns transfers without a sector learning curve.",
-    "Core FP&A remit — he runs budgeting, forecasting and variance analysis on an MYR 400M+ P&L as FP&A Manager at Lifestyle Retail Malaysia (Landmark Group) since May 2023.",
-    "UAE is one of his two target markets, and he is already GCC-adjacent inside a Dubai-headquartered group."
-   ],
-   "watch_out": [
-    "Nothing disqualifying surfaced in the posted text, which itself means the description is thin — probe scope and reporting line."
-   ],
-   "resume_match": null,
-   "duplicate_group": "951c3894ccf1b64d8b9ef77f97171b2f6236c8b2",
-   "is_excluded": true,
-   "exclusion_reason": "commercial account-management role, not a finance role"
-  },
-  {
    "id": "b0d7eb77ba35138ed22178bc11e5525c1d139045",
    "company": "Al-Futtaim",
    "company_group": "Al-Futtaim",
@@ -5179,8 +5189,8 @@
    "employment_type": null,
    "posted_date": "2026-09-29",
    "closing_date": "2026-10-29",
-   "scraped_at": "2026-10-02T10:51:51Z",
-   "last_verified_at": "2026-10-02T10:51:51Z",
+   "scraped_at": "2026-10-03T06:03:45Z",
+   "last_verified_at": "2026-10-03T06:03:45Z",
    "status": "NEW",
    "source": "Al-Futtaim",
    "sources": [
@@ -5246,6 +5256,85 @@
    "exclusion_reason": "commercial account-management role, not a finance role"
   },
   {
+   "id": "27f91343d85fb52cf1c8978d4431a332abae969f",
+   "company": "Al-Futtaim",
+   "company_group": "Al-Futtaim",
+   "title": "Key Account Manager | Al-Futtaim Automotive | FAMCO",
+   "normalized_title": "key account manager al futtaim automotive famco",
+   "location": "Abu Dhabi",
+   "country": "UAE",
+   "region": "GCC",
+   "department": null,
+   "employment_type": null,
+   "posted_date": "2026-09-17",
+   "closing_date": "2026-10-18",
+   "scraped_at": "2026-10-03T06:03:45Z",
+   "last_verified_at": "2026-10-03T06:03:45Z",
+   "status": "ACTIVE",
+   "source": "Al-Futtaim",
+   "sources": [
+    "Al-Futtaim"
+   ],
+   "source_url": "https://www.afuturewithus.com/job/Abu-Dhabi-Key-Account-Manager-Al-Futtaim-Automotive-FAMCO/1438044333/",
+   "application_url": "https://www.afuturewithus.com/talentcommunity/apply/1438044333/?locale=en_GB",
+   "is_direct_apply": true,
+   "application_url_verified": true,
+   "source_confidence": "high",
+   "salary_min": null,
+   "salary_max": null,
+   "salary_currency": null,
+   "experience_min": null,
+   "experience_max": null,
+   "description": "Job Requisition ID: 181177 \n\n About Al-Futtaim \n\nEstablished in the 1930s, Al-Futtaim is one of the most diversified and progressive privately held regional businesses, headquartered in Dubai. Operating across more than 20 countries, the Group spans automotive, financial services, real estate, retail and health. With more than 40,000 employees, Al-Futtaim represents over 200 of the world’s most recognised brands, including Toyota, Lexus, IKEA, ACE and Marks & Spencer. Driven by its purpose to enrich lives and elevate communities, Al-Futtaim focuses on digital innovation, AI, sustainable growth and strategic partnerships, creating long-term value for customers, communities and partners while building a responsible legacy for future generations.\n\n Overview of the Role \n\nWe are looking for a highly motivated and results-driven Key Account Manager to join our Commercial Vehicles team at FAMCO in Abu Dhabi. Success in this position requires a deep understanding of commercial vehicles, fleet customers, transport operators, and the competitive landscape of the truck industry. The successful candidate will play a critical role in building the customer base, growing market share, and establishing the brand as a leading choice for fleet and transport customers across the United Arab Emirates.\n\n What You Will Do \n\n• Identify, develop, and win new business opportunities within the truck sector.\n• Build strong relationships with fleet operators, logistics companies, transportation businesses, contractors, and key commercial customers.\n• Achieve monthly, quarterly, and annual sales targets.\n• Develop and maintain a healthy sales pipeline through active prospecting and customer engagement.\n• Conduct regular customer visits to understand business requirements and identify sales opportunities.\n• Present vehicle solutions, coordinate demonstrations, and support customer test drives.\n• Manage the full sales cycle from prospecting and lead generation through quotation, negotiation, order placement, delivery, and payment collection.\n• Protect profitability while delivering competitive commercial solutions.\n• Maintain accurate customer records, sales forecasts, and pipeline updates within the Customer Relationship Management system.\n• Support collections activities and follow up on outstanding payments when required.\n• Gather market intelligence and competitor information to support business growth strategies.\n\n Required Skills to Be Successful \n\n• Bachelor's degree or equivalent professional experience.\n• Proven experience selling trucks in the United Arab Emirates.\n• Experience managing fleet customers, transport companies, logistics operators, and contractors.\n• Strong knowledge of trucks, fleet operations, transport businesses, and the United Arab Emirates truck market.\n\n About The Team \n\n You will join Al-Futtaim Industrial Equipment and Commercial Vehicles, working as part of the Commercial Vehicles Sales team and reporting directly to the Sales Manager – Commercial Vehicles.\n\n What Equips You For The Role \n\n • Strong truck sales experience within the United Arab Emirates market.\n• Excellent business development and key account management capabilities.\n• Strong understanding of commercial vehicle sales processes and fleet customer requirements.\n• Proven ability to generate new business and achieve sales targets.\n• Strong negotiation, presentation, and relationship-building skills.\n• Commercially focused with the ability to balance customer needs and profitability.\n• Excellent communication and stakeholder management skills.\n• Ability to work independently and manage multiple customer opportunities simultaneously.\n• Experience within a commercial vehicle dealership environment is highly preferred.\n• Demonstrated track record of consistently achieving or exceeding sales targets.\n• Valid United Arab Emirates driving license.\n\n About Al-Futtaim \n\n Al-Futtaim Automotive is one of the region's leading mobility businesses, operating across eight countries in the Middle East, Asia and North Africa.\n\n With a portfolio of more than 25 world-leading brands, we deliver one of the region's most comprehensive mobility ecosystems. Our capabilities span passenger vehicles, commercial vehicles and industrial equipment, backed by integrated logistics, leasing, aftersales and financial services that deliver a seamless customer experience across every stage of the mobility journey.\n\n Our vision is to become a world-class mobility player, creating better experiences for our customers through innovation, digital transformation and a relentless focus on customer experience. We work alongside some of the world's most trusted automotive brands to shape the future of mobility, delivering solutions that meet the evolving needs of individuals, businesses and communities.\n\n Behind everything we do is a team of more than 9,000 colleagues united by ambition, collaboration and a shared commitment to progress. Together, we're shaping the future of mobility, embracing new technologies and creating better experiences for our customers. At Al-Futtaim Automotive, you'll be empowered to turn ambition into action and help move our customers, our business and your career forward.\n\n Apply now » \n\n Find similar jobs: \n\n Sales Jobs \n\n HOME PAGE \n\n PRIVACY \n\n CORPORATE WEBSITE \n\n CONTACT US \n\n Opens in a new tab. \n\n Opens in a new tab. \n\n Opens in a new tab. \n\n Opens in a new tab. \n\n © Copyright 2026 | afuturewithus.com\n\n // \n\n // \n\n // \n\n const jobAlertSpans = document.querySelectorAll(\"[data-testid=jobAlertSpanText]\");\n jobAlertSpans?.forEach((jobEl) => {\n jobEl.textContent = window?.jsStr?.tcjobresultscreatejobalertsdetailstext || \"\";\n });\n\n // \n\n // \n\n // \n\n //",
+   "responsibilities": [
+    "HOME PAGE",
+    "CORPORATE WEBSITE",
+    "CONTACT US",
+    "Opens in a new tab",
+    "Opens in a new tab",
+    "Opens in a new tab",
+    "Opens in a new tab"
+   ],
+   "requirements": [],
+   "skills": [
+    "Forecasting",
+    "Excel"
+   ],
+   "nationality_requirement": null,
+   "work_authorization_requirement": null,
+   "emiratisation_requirement": false,
+   "saudization_requirement": false,
+   "candidate_fit_score": 58,
+   "employer_score": 88,
+   "career_upside_score": 50,
+   "opportunity_score": 64,
+   "score_breakdown": {
+    "seniority": 15,
+    "functional": 7,
+    "industry": 15,
+    "geographic": 10,
+    "scope": 3,
+    "leadership": 2,
+    "qualification": 0,
+    "upside": 6
+   },
+   "tier": "C",
+   "application_priority": "SKIP",
+   "why_fit": [
+    "Multi-country / multi-entity scope maps directly onto his Malaysia + Indonesia P&L ownership across 60+ Max Fashion and Babyshop stores.",
+    "Al-Futtaim is peer retail to his current employer — the 60+ store, multi-brand lifestyle retail P&L he already owns transfers without a sector learning curve.",
+    "Core FP&A remit — he runs budgeting, forecasting and variance analysis on an MYR 400M+ P&L as FP&A Manager at Lifestyle Retail Malaysia (Landmark Group) since May 2023.",
+    "UAE is one of his two target markets, and he is already GCC-adjacent inside a Dubai-headquartered group."
+   ],
+   "watch_out": [
+    "Nothing disqualifying surfaced in the posted text, which itself means the description is thin — probe scope and reporting line."
+   ],
+   "resume_match": null,
+   "duplicate_group": "951c3894ccf1b64d8b9ef77f97171b2f6236c8b2",
+   "is_excluded": true,
+   "exclusion_reason": "commercial account-management role, not a finance role"
+  },
+  {
    "id": "f0bcd23cf9abe1db1cf17b6fd76ec2bbb093cfd5",
    "company": "Al-Futtaim",
    "company_group": "Al-Futtaim",
@@ -5258,9 +5347,9 @@
    "employment_type": null,
    "posted_date": "2026-09-11",
    "closing_date": "2026-10-31",
-   "scraped_at": "2026-10-02T10:51:51Z",
-   "last_verified_at": "2026-10-02T10:51:51Z",
-   "status": "ACTIVE",
+   "scraped_at": "2026-10-03T06:03:45Z",
+   "last_verified_at": "2026-10-03T06:03:45Z",
+   "status": "AGING",
    "source": "Al-Futtaim",
    "sources": [
     "Al-Futtaim"
@@ -5329,7 +5418,7 @@
     "UAE is one of his two target markets, and he is already GCC-adjacent inside a Dubai-headquartered group."
    ],
    "watch_out": [
-    "Nothing disqualifying surfaced in the posted text, which itself means the description is thin — probe scope and reporting line."
+    "Posted 2026-09-11 — this req is aging and may already be filled."
    ],
    "resume_match": null,
    "duplicate_group": "472515f7f54a871ea804381dbe4e5ed9812f204a",
@@ -5349,8 +5438,8 @@
    "employment_type": null,
    "posted_date": "2026-09-10",
    "closing_date": "2026-10-22",
-   "scraped_at": "2026-10-02T10:51:51Z",
-   "last_verified_at": "2026-10-02T10:51:51Z",
+   "scraped_at": "2026-10-03T06:03:45Z",
+   "last_verified_at": "2026-10-03T06:03:45Z",
    "status": "AGING",
    "source": "Al-Futtaim",
    "sources": [
@@ -5442,8 +5531,8 @@
    "employment_type": "Regular",
    "posted_date": "2026-09-24",
    "closing_date": null,
-   "scraped_at": "2026-10-02T10:51:51Z",
-   "last_verified_at": "2026-10-02T10:51:51Z",
+   "scraped_at": "2026-10-03T06:03:45Z",
+   "last_verified_at": "2026-10-03T06:03:45Z",
    "status": "ACTIVE",
    "source": "Majid Al Futtaim",
    "sources": [
@@ -5538,8 +5627,8 @@
    "employment_type": null,
    "posted_date": "2026-09-13",
    "closing_date": "2026-10-14",
-   "scraped_at": "2026-10-02T10:51:51Z",
-   "last_verified_at": "2026-10-02T10:51:51Z",
+   "scraped_at": "2026-10-03T06:03:45Z",
+   "last_verified_at": "2026-10-03T06:03:45Z",
    "status": "ACTIVE",
    "source": "Al-Futtaim",
    "sources": [
@@ -5630,8 +5719,8 @@
    "employment_type": null,
    "posted_date": "2026-09-18",
    "closing_date": "2026-10-18",
-   "scraped_at": "2026-10-02T10:51:51Z",
-   "last_verified_at": "2026-10-02T10:51:51Z",
+   "scraped_at": "2026-10-03T06:03:45Z",
+   "last_verified_at": "2026-10-03T06:03:45Z",
    "status": "ACTIVE",
    "source": "Al-Futtaim",
    "sources": [
@@ -5722,9 +5811,9 @@
    "employment_type": null,
    "posted_date": "2026-09-25",
    "closing_date": "2026-10-26",
-   "scraped_at": "2026-10-02T10:51:51Z",
-   "last_verified_at": "2026-10-02T10:51:51Z",
-   "status": "NEW",
+   "scraped_at": "2026-10-03T06:03:45Z",
+   "last_verified_at": "2026-10-03T06:03:45Z",
+   "status": "ACTIVE",
    "source": "Al-Futtaim",
    "sources": [
     "Al-Futtaim"
@@ -5816,8 +5905,8 @@
    "employment_type": null,
    "posted_date": "2026-09-02",
    "closing_date": null,
-   "scraped_at": "2026-10-02T10:51:51Z",
-   "last_verified_at": "2026-10-02T10:51:51Z",
+   "scraped_at": "2026-10-03T06:03:45Z",
+   "last_verified_at": "2026-10-03T06:03:45Z",
    "status": "AGING",
    "source": "Landmark Group",
    "sources": [
@@ -5914,8 +6003,8 @@
    "employment_type": null,
    "posted_date": "2026-09-22",
    "closing_date": "2026-10-22",
-   "scraped_at": "2026-10-02T10:51:51Z",
-   "last_verified_at": "2026-10-02T10:51:51Z",
+   "scraped_at": "2026-10-03T06:03:45Z",
+   "last_verified_at": "2026-10-03T06:03:45Z",
    "status": "ACTIVE",
    "source": "Al-Futtaim",
    "sources": [
@@ -5993,8 +6082,8 @@
    "employment_type": "Full-Time",
    "posted_date": "2026-07-23",
    "closing_date": null,
-   "scraped_at": "2026-10-02T10:51:51Z",
-   "last_verified_at": "2026-10-02T10:51:51Z",
+   "scraped_at": "2026-10-03T06:03:45Z",
+   "last_verified_at": "2026-10-03T06:03:45Z",
    "status": "STALE",
    "source": "Michael Page",
    "sources": [
@@ -6087,8 +6176,8 @@
    "employment_type": "Full-Time",
    "posted_date": "2026-06-25",
    "closing_date": null,
-   "scraped_at": "2026-10-02T10:51:51Z",
-   "last_verified_at": "2026-10-02T10:51:51Z",
+   "scraped_at": "2026-10-03T06:03:45Z",
+   "last_verified_at": "2026-10-03T06:03:45Z",
    "status": "STALE",
    "source": "GMG",
    "sources": [
@@ -6157,8 +6246,8 @@
    "employment_type": null,
    "posted_date": "2026-09-18",
    "closing_date": "2026-10-18",
-   "scraped_at": "2026-10-02T10:51:51Z",
-   "last_verified_at": "2026-10-02T10:51:51Z",
+   "scraped_at": "2026-10-03T06:03:45Z",
+   "last_verified_at": "2026-10-03T06:03:45Z",
    "status": "ACTIVE",
    "source": "Al-Futtaim",
    "sources": [
@@ -6248,8 +6337,8 @@
    "employment_type": null,
    "posted_date": "2026-09-22",
    "closing_date": "2026-10-30",
-   "scraped_at": "2026-10-02T10:51:51Z",
-   "last_verified_at": "2026-10-02T10:51:51Z",
+   "scraped_at": "2026-10-03T06:03:45Z",
+   "last_verified_at": "2026-10-03T06:03:45Z",
    "status": "ACTIVE",
    "source": "Al-Futtaim",
    "sources": [
@@ -6340,9 +6429,9 @@
    "employment_type": null,
    "posted_date": "2026-09-11",
    "closing_date": "2026-12-31",
-   "scraped_at": "2026-10-02T10:51:51Z",
-   "last_verified_at": "2026-10-02T10:51:51Z",
-   "status": "ACTIVE",
+   "scraped_at": "2026-10-03T06:03:45Z",
+   "last_verified_at": "2026-10-03T06:03:45Z",
+   "status": "AGING",
    "source": "Al-Futtaim",
    "sources": [
     "Al-Futtaim"
@@ -6410,82 +6499,12 @@
     "UAE is one of his two target markets, and he is already GCC-adjacent inside a Dubai-headquartered group."
    ],
    "watch_out": [
-    "Nothing disqualifying surfaced in the posted text, which itself means the description is thin — probe scope and reporting line."
+    "Posted 2026-09-11 — this req is aging and may already be filled."
    ],
    "resume_match": null,
    "duplicate_group": "00aa6c193fe941f2486839fd51def7e0186de559",
    "is_excluded": true,
    "exclusion_reason": "commercial account-management role, not a finance role"
-  },
-  {
-   "id": "68133fe7e488888b621ec2b7a86b05b7c569f2ea",
-   "company": "Chalhoub Group",
-   "company_group": "Chalhoub",
-   "title": "Finance Trainee Emiratization - Luxury Homeware",
-   "normalized_title": "finance trainee luxury homeware",
-   "location": "Dubai",
-   "country": "UAE",
-   "region": "GCC",
-   "department": null,
-   "employment_type": "Full-Time",
-   "posted_date": "2026-07-22",
-   "closing_date": null,
-   "scraped_at": "2026-10-02T10:51:51Z",
-   "last_verified_at": "2026-10-02T10:51:51Z",
-   "status": "STALE",
-   "source": "Chalhoub Group",
-   "sources": [
-    "Chalhoub Group"
-   ],
-   "source_url": "https://careers.chalhoubgroup.com/jobs/8108231-finance-trainee-emiratization-luxury-homeware",
-   "application_url": "https://careers.chalhoubgroup.com/jobs/8108231-finance-trainee-emiratization-luxury-homeware/applications/new",
-   "is_direct_apply": true,
-   "application_url_verified": true,
-   "source_confidence": "high",
-   "salary_min": null,
-   "salary_max": null,
-   "salary_currency": null,
-   "experience_min": null,
-   "experience_max": null,
-   "description": "<p><strong>INSPIRE | EXHILARATE | DELIGHT</strong></p><p>For over seven decades, Chalhoub Group has been a partner and creator of luxury experiences in the Middle East. In its pursuit to excel as a hybrid luxury retailer, the Group has curated a portfolio of over 10 owned brands and strengthened its distribution and marketing expertise for over 400 international names across luxury fashion, beauty, jewellery, watches, eyewear, and art de vivre categories.</p><p>Every step at Chalhoub Group is taken to build a future where luxury dreams become reality — bridging cultures and crafting memorable experiences for our consumers. Be it by constantly reinventing itself, committing to innovation, or embracing new technologies, the Group is shaping the future of luxury retail. It delivers seamless omnichannel experiences across more than 950 stores, online platforms, and mobile apps. Driving this innovation journey is The Greenhouse — the Group’s innovation hub, incubator, and accelerator for startups and emerging businesses, regionally and globally.</p><p>Chalhoub Group fosters a people-at-heart culture rooted in diversity, equity, and inclusion, and a workplace catalysed by forward thinking and future-proofing. Today, it brings together over 16,000 talented professionals across eight countries in the Middle East, with a presence in LATAM. Their collective efforts have earned the Group the Great Place to Work® certification in several markets.</p><p>Sustainability is at the core of the Group’s strategy, guided by a clear commitment to people, partners, and the planet. Chalhoub Group is proud to be a member of the United Nations Global Compact, a signatory of the Women’s Empowerment Principles, and to have pledged to reach Net Zero by 2040.</p><p><strong>Role Overview</strong></p><p>This Traineeship is a 6-month contract based within Tanagra's Finance team. During the training period, the candidate will support key reporting, data consolidation, and month-end closing activities in a fast-paced retail environment, gaining hands-on exposure to core finance operations while receiving a monthly salary and benefits. The objective is not only to provide valuable experience, but also to identify and develop long-term talent that could potentially become part of the team after the trainee program.</p><p><strong>Key Responsibilities:</strong><br>· Support the month-end closing process, including reconciliations and data validation.<br>· Assist in preparing financial reports, presentations, and consolidated data trackers.<br>· Support financial monitoring and reporting activities using Excel and PowerPoint.<br>· Help organize and maintain accurate financial data with strong attention to detail.<br>· Assist the team with day-to-day finance coordination and ad-hoc reporting tasks.<br>· Contribute to ongoing finance initiatives and process improvements where needed.</p><p><strong>What you'll need to succeed</strong><br>· Currently pursuing or recently completed a degree in Finance, Accounting, Business Administration, or a related field.<br>· Basic understanding of finance and accounting principles.<br>· Strong proficiency in Microsoft Excel and PowerPoint.<br>· Strong attention to detail and ability to handle data accurately.<br>· Well-organized with the ability to manage tasks efficiently.<br>· Motivated, proactive, and eager to learn within a team environment.</p><p><strong>What we can offer you</strong>&nbsp;&nbsp;</p><p>With us,&nbsp;you will turn your aspirations into reality.&nbsp; We will help shape your journey through enriching experiences, learning and development opportunities and exposure to different assignments within your role or through internal mobility. Our Group offers diverse career paths for those who are extraordinary, every day.&nbsp;&nbsp;</p><p>We recognise the value that you bring, and we strive to provide a competitive benefits package which includes health care, child education contribution, remote and flexible working policies as well as exclusive employee&nbsp;discounts.&nbsp;&nbsp;</p><p><strong>Using GenAI in Your Application Process</strong></p><p><span>To support a fair and consistent experience for all candidates, we ask that assessments and interviews are completed independently and without assistance from generative AI tools. This ensures we understand your strengths, your thinking, and how you approach real situations.</span></p><p><strong>We Invite All Applicants to Apply</strong></p><p>It Takes Diversity Of Thought, Culture, Background, Differing Abilities and Perspectives to truly Inspire, Exhilarate and Delight our customers. At Chalhoub Group, we are committed to inclusion and diversity.</p><p>We welcome all applicants to apply and be part of our exciting future. We ensure equal opportunity for all our applicants without regard to gender, age, race, religion, national origin or disability status.</p>",
-   "responsibilities": [],
-   "requirements": [],
-   "skills": [
-    "Consolidation",
-    "Excel"
-   ],
-   "nationality_requirement": null,
-   "work_authorization_requirement": null,
-   "emiratisation_requirement": false,
-   "saudization_requirement": false,
-   "candidate_fit_score": 42,
-   "employer_score": 88,
-   "career_upside_score": 50,
-   "opportunity_score": 55,
-   "score_breakdown": {
-    "seniority": 6,
-    "functional": 5,
-    "industry": 15,
-    "geographic": 10,
-    "scope": 0,
-    "leadership": 0,
-    "qualification": 0,
-    "upside": 6
-   },
-   "tier": "C",
-   "application_priority": "SKIP",
-   "why_fit": [
-    "Chalhoub Group is peer retail to his current employer — the 60+ store, multi-brand lifestyle retail P&L he already owns transfers without a sector learning curve.",
-    "IFRS/MPERS group consolidation is day-to-day for him, including IFRS 16 across 60+ retail leases.",
-    "UAE is one of his two target markets, and he is already GCC-adjacent inside a Dubai-headquartered group."
-   ],
-   "watch_out": [
-    "Posted 2026-07-22 — this req is stale and may already be filled."
-   ],
-   "resume_match": null,
-   "duplicate_group": "9026bc7ea41d3bad483b98fa987ad33b14c6480b",
-   "is_excluded": true,
-   "exclusion_reason": "intern / graduate programme"
   },
   {
    "id": "07f5d7dcb7103714ee023a67bac841a3fd5a2b08",
@@ -6500,8 +6519,8 @@
    "employment_type": null,
    "posted_date": "2026-09-22",
    "closing_date": "2026-10-22",
-   "scraped_at": "2026-10-02T10:51:51Z",
-   "last_verified_at": "2026-10-02T10:51:51Z",
+   "scraped_at": "2026-10-03T06:03:45Z",
+   "last_verified_at": "2026-10-03T06:03:45Z",
    "status": "ACTIVE",
    "source": "Al-Futtaim",
    "sources": [
@@ -6591,8 +6610,8 @@
    "employment_type": null,
    "posted_date": "2026-09-21",
    "closing_date": "2026-10-21",
-   "scraped_at": "2026-10-02T10:51:51Z",
-   "last_verified_at": "2026-10-02T10:51:51Z",
+   "scraped_at": "2026-10-03T06:03:45Z",
+   "last_verified_at": "2026-10-03T06:03:45Z",
    "status": "ACTIVE",
    "source": "Al-Futtaim",
    "sources": [
@@ -6679,8 +6698,8 @@
    "employment_type": null,
    "posted_date": "2026-09-16",
    "closing_date": "2026-10-31",
-   "scraped_at": "2026-10-02T10:51:51Z",
-   "last_verified_at": "2026-10-02T10:51:51Z",
+   "scraped_at": "2026-10-03T06:03:45Z",
+   "last_verified_at": "2026-10-03T06:03:45Z",
    "status": "ACTIVE",
    "source": "Al-Futtaim",
    "sources": [
@@ -6769,8 +6788,8 @@
    "employment_type": "Full-Time",
    "posted_date": "2026-07-28",
    "closing_date": null,
-   "scraped_at": "2026-10-02T10:51:51Z",
-   "last_verified_at": "2026-10-02T10:51:51Z",
+   "scraped_at": "2026-10-03T06:03:45Z",
+   "last_verified_at": "2026-10-03T06:03:45Z",
    "status": "STALE",
    "source": "Michael Page",
    "sources": [
@@ -6862,8 +6881,8 @@
    "employment_type": "Full-Time",
    "posted_date": "2026-09-10",
    "closing_date": null,
-   "scraped_at": "2026-10-02T10:51:51Z",
-   "last_verified_at": "2026-10-02T10:51:51Z",
+   "scraped_at": "2026-10-03T06:03:45Z",
+   "last_verified_at": "2026-10-03T06:03:45Z",
    "status": "AGING",
    "source": "Michael Page",
    "sources": [
@@ -6959,8 +6978,8 @@
    "employment_type": null,
    "posted_date": "2026-09-24",
    "closing_date": null,
-   "scraped_at": "2026-10-02T10:51:51Z",
-   "last_verified_at": "2026-10-02T10:51:51Z",
+   "scraped_at": "2026-10-03T06:03:45Z",
+   "last_verified_at": "2026-10-03T06:03:45Z",
    "status": "ACTIVE",
    "source": "Al Tayer",
    "sources": [
@@ -7039,8 +7058,8 @@
    "employment_type": null,
    "posted_date": "2026-09-08",
    "closing_date": "2026-10-31",
-   "scraped_at": "2026-10-02T10:51:51Z",
-   "last_verified_at": "2026-10-02T10:51:51Z",
+   "scraped_at": "2026-10-03T06:03:45Z",
+   "last_verified_at": "2026-10-03T06:03:45Z",
    "status": "AGING",
    "source": "Apparel Group",
    "sources": [
@@ -7119,8 +7138,8 @@
    "employment_type": "Full-Time",
    "posted_date": "2026-09-29",
    "closing_date": null,
-   "scraped_at": "2026-10-02T10:51:51Z",
-   "last_verified_at": "2026-10-02T10:51:51Z",
+   "scraped_at": "2026-10-03T06:03:45Z",
+   "last_verified_at": "2026-10-03T06:03:45Z",
    "status": "NEW",
    "source": "Michael Page",
    "sources": [
@@ -7208,8 +7227,8 @@
    "employment_type": "Full-Time",
    "posted_date": "2026-08-04",
    "closing_date": null,
-   "scraped_at": "2026-10-02T10:51:51Z",
-   "last_verified_at": "2026-10-02T10:51:51Z",
+   "scraped_at": "2026-10-03T06:03:45Z",
+   "last_verified_at": "2026-10-03T06:03:45Z",
    "status": "STALE",
    "source": "Michael Page",
    "sources": [
@@ -7303,8 +7322,8 @@
    "employment_type": "Full-time",
    "posted_date": "2026-08-26",
    "closing_date": null,
-   "scraped_at": "2026-10-02T10:51:51Z",
-   "last_verified_at": "2026-10-02T10:51:51Z",
+   "scraped_at": "2026-10-03T06:03:45Z",
+   "last_verified_at": "2026-10-03T06:03:45Z",
    "status": "AGING",
    "source": "Etihad Airways",
    "sources": [
