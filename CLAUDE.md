@@ -101,7 +101,11 @@ Nifty 500 research screen sitting directly above the Signal Log.
   real estate (the screen's lender rule), utilities, market cap under ₹1,000 cr,
   missing or >18-month-old statements, and EBIT/EV not positive are UNRANKED with
   their reason, never zero-filled. It reads the LATEST year by definition, unlike
-  the medians the scores read, so a margin jump is flagged `one_off`, not hidden.
+  the medians the scores read, so a year whose EBIT margin moved 15+ points is
+  UNRANKED as a one-off: the first real build put five of them at the top
+  (KIRIINDUS 190% earnings yield, ASHOKA 90% — exceptional gains). EV has no
+  minority-interest line, so a holdco consolidating a listed subsidiary (BBTC)
+  reads cheap; stated in `rules.deviation`, not yet fixed.
   Separate from WEIGHTS and the composite; an input to nothing. The paper book
   that buys its top names lives in the private engine (`vision_eod/magic.py`).
 
