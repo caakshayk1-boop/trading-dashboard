@@ -95,6 +95,16 @@ Nifty 500 research screen sitting directly above the Signal Log.
   after midnight IST got the new day's row with no Close, and `iloc[-1]` nulled
   Nifty and VIX — 45 of 100 weight — on 21, 28 and 29 Sep. `test_barometer.py`.
 
+- **The Magic Formula (`magic_formula()`, `mf` on every row, `magic_formula` on
+  the payload).** Greenblatt's two ranks, summed: ROCE (the screen's own, latest
+  year) and EBIT/EV (EV = market cap + total debt − cash). Lenders, insurers and
+  real estate (the screen's lender rule), utilities, market cap under ₹1,000 cr,
+  missing or >18-month-old statements, and EBIT/EV not positive are UNRANKED with
+  their reason, never zero-filled. It reads the LATEST year by definition, unlike
+  the medians the scores read, so a margin jump is flagged `one_off`, not hidden.
+  Separate from WEIGHTS and the composite; an input to nothing. The paper book
+  that buys its top names lives in the private engine (`vision_eod/magic.py`).
+
 Honesty rules the screen must keep (all pinned by tests):
 - Missing data scores `None` and leaves its parent score's denominator; it is
   never zero-filled, and confidence drops instead of the score rising.

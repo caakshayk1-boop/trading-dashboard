@@ -2002,6 +2002,61 @@ def test_every_renderer_reads_lenders_with_the_screens_own_rule():
           and "yoy('ROCE'" not in nx)
 
 
+def test_the_magic_formula_ranks_honestly():
+    """Greenblatt's two ranks, summed — and every way a row can fail to qualify
+    says so instead of being ranked on a guess."""
+    from datetime import date
+    today = date(2026, 10, 4)
+    end = "2026-03-31"
+
+    def row(sym, roce, ebit_cr, mcap, debt_cr=0, cash_cr=0, sector="Industrials", ind="Engineering", **kw):
+        r = {"sym": sym, "sector": sector, "ind": ind, "mcap_cr": mcap, "roce": roce,
+             "_mf": {"ebit": None if ebit_cr is None else ebit_cr * 1e7, "debt": None if debt_cr is None else debt_cr * 1e7,
+                     "cash": None if cash_cr is None else cash_cr * 1e7, "end": kw.pop("end", end), "one_off": kw.pop("one_off", False)}}
+        r.update(kw)
+        return r
+
+    rows = [
+        # A: best ROCE, middling yield.  B: middling ROCE, best yield.  C: worst of both.
+        row("AAA", 60.0, 100, 5000),            # EV 5000 → EY 2.0%
+        row("BBB", 30.0, 300, 4000),            # EY 7.5%
+        row("CCC", 10.0, 50, 5000),             # EY 1.0%
+        row("DDD", 30.0, 200, 4000, debt_cr=1000, cash_cr=1000),   # EV 4000 → EY 5.0%, ROCE ties BBB
+        row("BANK", 18.0, 500, 9000, sector="Financial Services", ind="Banks"),
+        row("UTIL", 12.0, 300, 9000, sector="Utilities", ind="Power"),
+        row("TINY", 40.0, 50, 400),
+        row("NOSTM", 25.0, None, 5000),
+        row("LOSS", 5.0, -20, 5000),
+        row("CASHY", 30.0, 100, 1500, debt_cr=0, cash_cr=2000),     # EV negative
+        row("OLD", 30.0, 100, 5000, end="2024-09-30"),
+        row("NODEBT", 30.0, 100, 5000, debt_cr=None),
+        row("JUMP", 45.0, 400, 5000, one_off=True),
+    ]
+    meta = S.magic_formula(rows, today=today)
+    by = {r["sym"]: r for r in rows}
+    check("magic formula: no private input survives into a row", all("_mf" not in r for r in rows))
+    ranked = sorted((r for r in rows if r["mf"].get("rank")), key=lambda r: r["mf"]["rank"])
+    check("magic formula: five qualify, and the summary counts them", meta["ranked"] == 5 and len(ranked) == 5, str(meta))
+    check("magic formula: ROCE ties share a rank (competition ranking)",
+          by["BBB"]["mf"]["roc_rank"] == by["DDD"]["mf"]["roc_rank"], f"{by['BBB']['mf']} {by['DDD']['mf']}")
+    check("magic formula: the sum of the two ranks orders the list",
+          [r["mf"]["score"] for r in ranked] == sorted(r["mf"]["score"] for r in ranked))
+    check("magic formula: the worst on both measures ranks last", ranked[-1]["sym"] == "CCC", [r["sym"] for r in ranked])
+    check("magic formula: EV nets cash and adds debt", abs(by["DDD"]["mf"]["ey"] - 5.0) < 1e-9 and by["DDD"]["mf"]["ev_cr"] == 4000)
+    check("magic formula: a one-off year is ranked but flagged", by["JUMP"]["mf"].get("one_off") is True and by["JUMP"]["mf"]["rank"])
+    expect = {"BANK": "lender", "UTIL": "utility", "TINY": "market cap", "NOSTM": "no statements",
+              "LOSS": "EBIT not positive", "CASHY": "EV not positive", "OLD": "older than 18 months", "NODEBT": "no debt or cash"}
+    for sym, word in expect.items():
+        mf = by[sym]["mf"]
+        check(f"magic formula: {sym} is unranked, with its reason", mf.get("rank") is None and word in mf.get("why", ""), str(mf))
+    check("magic formula: every exclusion is counted", sum(meta["excluded"].values()) == len(expect), str(meta["excluded"]))
+    check("magic formula: the deviation from the book is stated", "net working capital" in meta["rules"]["deviation"])
+    check("magic formula: it makes no forecast", not re.search(r"will (rise|beat|outperform)|expected return|probabilit", json.dumps(meta), re.I))
+    # It is not an input to anything else on the screen.
+    check("magic formula: WEIGHTS never mention it", "magic" not in json.dumps(S.WEIGHTS).lower() and "mf" not in S.WEIGHTS)
+    check("magic formula: the lite payload keeps its column", "mf" not in S.LITE_DROP_FIELDS and "mf" not in S.DETAIL_FIELDS)
+
+
 def main() -> int:
     print("stock screen — indicator arithmetic and honesty invariants\n")
     for fn in (test_short_history_publishes_its_real_range,
@@ -2067,7 +2122,8 @@ def main() -> int:
                test_swot_json_is_allow_listed_everywhere_it_must_be,
                test_a_collapsed_price_is_an_entry_problem_too,
                test_the_universe_extension_stays_additive_and_labelled,
-               test_every_renderer_reads_lenders_with_the_screens_own_rule):
+               test_every_renderer_reads_lenders_with_the_screens_own_rule,
+               test_the_magic_formula_ranks_honestly):
         try:
             fn()
         except Exception as e:                       # noqa: BLE001
