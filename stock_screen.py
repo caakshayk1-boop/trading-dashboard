@@ -1667,10 +1667,13 @@ MF_RULES = {
     "ey": "EBIT ÷ enterprise value; EV = market cap + total debt − cash",
     "combine": "rank each separately (1 = best), add the two ranks, lowest sum first; ties go to the higher earnings yield",
     "exclude": ("lenders, insurers and real estate (the screen's lender rule), utilities, market cap under "
-                f"₹{MF_MIN_MCAP_CR:,} cr, no statements, statements older than 18 months, EBIT or EV not positive"),
+                f"₹{MF_MIN_MCAP_CR:,} cr, no statements, statements older than 18 months, a one-off year, "
+                "EBIT or EV not positive"),
     "source": "Joel Greenblatt, The Little Book That Still Beats the Market (2010)",
     "deviation": ("Return on capital uses ROCE on invested capital, not Greenblatt's net working capital + net fixed "
-                  "assets; EBIT is the last fiscal year, not the trailing twelve months."),
+                  "assets; EBIT is the last fiscal year, not the trailing twelve months; a year whose EBIT margin moved "
+                  "15+ points is unranked as a likely one-off; EV carries no minority-interest line, so a holding "
+                  "company that consolidates a listed subsidiary can read cheaper than it is."),
 }
 
 
@@ -1701,6 +1704,12 @@ def magic_formula(rows: list[dict], today=None) -> dict:
             reason = f"market cap under ₹{MF_MIN_MCAP_CR:,} cr"
         elif roce is None:
             reason = "no ROCE"
+        elif src.get("one_off"):
+            # The screen's own rule: a one-off must not top the table. On the
+            # first real build the top five were all this — KIRIINDUS at a
+            # 190% earnings yield, ASHOKA at 90% — exceptional gains read as
+            # operating earnings. Unranked with the reason, not quietly kept.
+            reason = f"one-off year (EBIT margin moved {ONE_OFF_MARGIN_PT:.0f}+ points)"
         elif src.get("debt") is None or src.get("cash") is None:
             reason = "no debt or cash line in the balance sheet"
         else:

@@ -2036,21 +2036,20 @@ def test_the_magic_formula_ranks_honestly():
     by = {r["sym"]: r for r in rows}
     check("magic formula: no private input survives into a row", all("_mf" not in r for r in rows))
     ranked = sorted((r for r in rows if r["mf"].get("rank")), key=lambda r: r["mf"]["rank"])
-    check("magic formula: five qualify, and the summary counts them", meta["ranked"] == 5 and len(ranked) == 5, str(meta))
+    check("magic formula: four qualify, and the summary counts them", meta["ranked"] == 4 and len(ranked) == 4, str(meta))
     check("magic formula: ROCE ties share a rank (competition ranking)",
           by["BBB"]["mf"]["roc_rank"] == by["DDD"]["mf"]["roc_rank"], f"{by['BBB']['mf']} {by['DDD']['mf']}")
     check("magic formula: the sum of the two ranks orders the list",
           [r["mf"]["score"] for r in ranked] == sorted(r["mf"]["score"] for r in ranked))
     check("magic formula: the worst on both measures ranks last", ranked[-1]["sym"] == "CCC", [r["sym"] for r in ranked])
     check("magic formula: EV nets cash and adds debt", abs(by["DDD"]["mf"]["ey"] - 5.0) < 1e-9 and by["DDD"]["mf"]["ev_cr"] == 4000)
-    check("magic formula: a one-off year is ranked but flagged", by["JUMP"]["mf"].get("one_off") is True and by["JUMP"]["mf"]["rank"])
-    expect = {"BANK": "lender", "UTIL": "utility", "TINY": "market cap", "NOSTM": "no statements",
+    expect = {"JUMP": "one-off year", "BANK": "lender", "UTIL": "utility", "TINY": "market cap", "NOSTM": "no statements",
               "LOSS": "EBIT not positive", "CASHY": "EV not positive", "OLD": "older than 18 months", "NODEBT": "no debt or cash"}
     for sym, word in expect.items():
         mf = by[sym]["mf"]
         check(f"magic formula: {sym} is unranked, with its reason", mf.get("rank") is None and word in mf.get("why", ""), str(mf))
     check("magic formula: every exclusion is counted", sum(meta["excluded"].values()) == len(expect), str(meta["excluded"]))
-    check("magic formula: the deviation from the book is stated", "net working capital" in meta["rules"]["deviation"])
+    check("magic formula: the deviations from the book are stated", all(w in meta["rules"]["deviation"] for w in ("net working capital", "one-off", "minority")))
     check("magic formula: it makes no forecast", not re.search(r"will (rise|beat|outperform)|expected return|probabilit", json.dumps(meta), re.I))
     # It is not an input to anything else on the screen.
     check("magic formula: WEIGHTS never mention it", "magic" not in json.dumps(S.WEIGHTS).lower() and "mf" not in S.WEIGHTS)
