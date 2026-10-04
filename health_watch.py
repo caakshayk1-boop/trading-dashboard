@@ -84,6 +84,28 @@ CHECKS = [
 ]
 
 
+# The newspaper builds once a day at 06:00 MYT (newspaper.yml, cron 0 22 UTC)
+# and stamps the edition with that MYT date. Until it lands, yesterday's
+# edition IS the current one. 07:30 leaves the build 90 minutes, because a
+# GitHub cron routinely starts late.
+EDITION_DUE_MYT = (7, 30)
+
+
+def current_editions(now: datetime) -> set[str]:
+    """The build dates that count as current at `now`: today's in MYT, and
+    before the day's edition is due, yesterday's too.
+
+    Comparing against today's MYT date alone failed this job twice in two
+    days: the 15:00 UTC slot fired at 19:37 UTC (03:37 MYT) on 2 Oct and at
+    18:23 UTC (02:23 MYT) on 3 Oct, read a correct edition from the day
+    before, called it STALE and alerted the phone at night."""
+    m = now.astimezone(MYT)
+    ok = {m.date().isoformat()}
+    if (m.hour, m.minute) < EDITION_DUE_MYT:
+        ok.add((m.date() - timedelta(days=1)).isoformat())
+    return ok
+
+
 def fetch(url: str, as_json: bool):
     req = urllib.request.Request(url, headers=UA)
     with urllib.request.urlopen(req, timeout=25) as r:
@@ -156,7 +178,7 @@ def main() -> int:
         # right, it was 01:29 on the 13th in Malaysia — and this failed the job
         # against IST's 2026-09-12. Compare in the clock it was written in.
         today = datetime.now(MYT).date().isoformat()
-        if built and built != today:
+        if built and built not in current_editions(datetime.now(MYT)):
             problems.append(f"*edition* — page still says {built}, today is {today}")
             lines.append(f"  edition      STALE ({built})")
         else:
