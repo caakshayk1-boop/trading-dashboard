@@ -1,6 +1,6 @@
 {
- "generated_at": "2026-10-03T10:11:11Z",
- "next_refresh": "2026-10-04T10:11:11Z",
+ "generated_at": "2026-10-04T06:38:31Z",
+ "next_refresh": "2026-10-05T06:38:31Z",
  "sources": [
   {
    "name": "Majid Al Futtaim",
@@ -8,7 +8,7 @@
    "status": "ok",
    "jobs_found": 19,
    "detail": "",
-   "last_success": "2026-10-03T10:11:11Z"
+   "last_success": "2026-10-04T06:38:31Z"
   },
   {
    "name": "Chalhoub Group",
@@ -16,7 +16,7 @@
    "status": "ok",
    "jobs_found": 5,
    "detail": "",
-   "last_success": "2026-10-03T10:11:11Z"
+   "last_success": "2026-10-04T06:38:31Z"
   },
   {
    "name": "GMG",
@@ -24,15 +24,15 @@
    "status": "ok",
    "jobs_found": 2,
    "detail": "",
-   "last_success": "2026-10-03T10:11:11Z"
+   "last_success": "2026-10-04T06:38:31Z"
   },
   {
    "name": "Al-Futtaim",
    "kind": "employer",
    "status": "ok",
-   "jobs_found": 38,
+   "jobs_found": 39,
    "detail": "",
-   "last_success": "2026-10-03T10:11:11Z"
+   "last_success": "2026-10-04T06:38:31Z"
   },
   {
    "name": "Abdul Latif Jameel",
@@ -40,7 +40,7 @@
    "status": "ok",
    "jobs_found": 2,
    "detail": "",
-   "last_success": "2026-10-03T10:11:11Z"
+   "last_success": "2026-10-04T06:38:31Z"
   },
   {
    "name": "Landmark Group",
@@ -48,7 +48,7 @@
    "status": "ok",
    "jobs_found": 7,
    "detail": "",
-   "last_success": "2026-10-03T10:11:11Z"
+   "last_success": "2026-10-04T06:38:31Z"
   },
   {
    "name": "Al Tayer",
@@ -56,7 +56,7 @@
    "status": "ok",
    "jobs_found": 2,
    "detail": "",
-   "last_success": "2026-10-03T10:11:11Z"
+   "last_success": "2026-10-04T06:38:31Z"
   },
   {
    "name": "Apparel Group",
@@ -64,7 +64,7 @@
    "status": "ok",
    "jobs_found": 5,
    "detail": "",
-   "last_success": "2026-10-03T10:11:11Z"
+   "last_success": "2026-10-04T06:38:31Z"
   },
   {
    "name": "Emaar",
@@ -96,15 +96,15 @@
    "status": "ok",
    "jobs_found": 3,
    "detail": "",
-   "last_success": "2026-10-03T10:11:11Z"
+   "last_success": "2026-10-04T06:38:31Z"
   },
   {
    "name": "Etihad Airways",
    "kind": "employer",
    "status": "ok",
-   "jobs_found": 12,
+   "jobs_found": 10,
    "detail": "",
-   "last_success": "2026-10-03T10:11:11Z"
+   "last_success": "2026-10-04T06:38:31Z"
   },
   {
    "name": "Aldar",
@@ -112,7 +112,7 @@
    "status": "ok",
    "jobs_found": 6,
    "detail": "",
-   "last_success": "2026-10-03T10:11:11Z"
+   "last_success": "2026-10-04T06:38:31Z"
   },
   {
    "name": "Michael Page",
@@ -120,26 +120,26 @@
    "status": "ok",
    "jobs_found": 30,
    "detail": "",
-   "last_success": "2026-10-03T10:11:11Z"
+   "last_success": "2026-10-04T06:38:31Z"
   }
  ],
  "stats": {
-  "total_active": 48,
+  "total_active": 47,
   "high_fit": 6,
   "s_tier": 0,
   "by_country": {
-   "UAE": 48,
+   "UAE": 47,
    "Saudi Arabia": 0,
    "Malaysia": 0,
    "Oman": 0
   },
   "duplicates_removed": 1,
-  "stale_removed": 1,
+  "stale_removed": 2,
   "sources_ok": 12,
   "sources_attempted": 15,
-  "urls_verified": 70,
-  "urls_unverified": 9,
-  "urls_broken": 9
+  "urls_verified": 78,
+  "urls_unverified": 0,
+  "urls_broken": 0
  },
  "jobs": [
   {
@@ -155,8 +155,8 @@
    "employment_type": null,
    "posted_date": "2026-09-25",
    "closing_date": "2026-10-23",
-   "scraped_at": "2026-10-03T10:11:11Z",
-   "last_verified_at": "2026-10-03T10:11:11Z",
+   "scraped_at": "2026-10-04T06:38:31Z",
+   "last_verified_at": "2026-10-04T06:38:31Z",
    "status": "ACTIVE",
    "source": "Al-Futtaim",
    "sources": [
@@ -263,8 +263,8 @@
    "employment_type": null,
    "posted_date": "2026-09-02",
    "closing_date": null,
-   "scraped_at": "2026-10-03T10:11:11Z",
-   "last_verified_at": "2026-10-03T10:11:11Z",
+   "scraped_at": "2026-10-04T06:38:31Z",
+   "last_verified_at": "2026-10-04T06:38:31Z",
    "status": "AGING",
    "source": "Landmark Group",
    "sources": [
@@ -376,8 +376,8 @@
    "employment_type": "Experienced hires",
    "posted_date": "2026-07-27",
    "closing_date": null,
-   "scraped_at": "2026-10-03T10:11:11Z",
-   "last_verified_at": "2026-10-03T10:11:11Z",
+   "scraped_at": "2026-10-04T06:38:31Z",
+   "last_verified_at": "2026-10-04T06:38:31Z",
    "status": "STALE",
    "source": "Aldar",
    "sources": [
@@ -481,8 +481,8 @@
    "employment_type": null,
    "posted_date": "2026-09-21",
    "closing_date": "2026-10-08",
-   "scraped_at": "2026-10-03T10:11:11Z",
-   "last_verified_at": "2026-10-03T10:11:11Z",
+   "scraped_at": "2026-10-04T06:38:31Z",
+   "last_verified_at": "2026-10-04T06:38:31Z",
    "status": "ACTIVE",
    "source": "Al-Futtaim",
    "sources": [
@@ -578,8 +578,8 @@
    "employment_type": "Full-Time",
    "posted_date": "2026-06-26",
    "closing_date": null,
-   "scraped_at": "2026-10-03T10:11:11Z",
-   "last_verified_at": "2026-10-03T10:11:11Z",
+   "scraped_at": "2026-10-04T06:38:31Z",
+   "last_verified_at": "2026-10-04T06:38:31Z",
    "status": "STALE",
    "source": "GMG",
    "sources": [
@@ -659,8 +659,8 @@
    "employment_type": "Experienced hires",
    "posted_date": "2026-09-02",
    "closing_date": null,
-   "scraped_at": "2026-10-03T10:11:11Z",
-   "last_verified_at": "2026-10-03T10:11:11Z",
+   "scraped_at": "2026-10-04T06:38:31Z",
+   "last_verified_at": "2026-10-04T06:38:31Z",
    "status": "AGING",
    "source": "Aldar",
    "sources": [
@@ -765,8 +765,8 @@
    "employment_type": null,
    "posted_date": "2026-09-17",
    "closing_date": "2026-10-11",
-   "scraped_at": "2026-10-03T10:11:11Z",
-   "last_verified_at": "2026-10-03T10:11:11Z",
+   "scraped_at": "2026-10-04T06:38:31Z",
+   "last_verified_at": "2026-10-04T06:38:31Z",
    "status": "ACTIVE",
    "source": "Al-Futtaim",
    "sources": [
@@ -849,6 +849,97 @@
    "exclusion_reason": null
   },
   {
+   "id": "6914b09d017ae1e9deee29e093798e3e731f22b3",
+   "company": "Al-Futtaim",
+   "company_group": "Al-Futtaim",
+   "title": "Vice President - Property Insurance I Dubai | Financial Services| Orient Insurance PJSC",
+   "normalized_title": "vice president property insurance i dubai financial services orient insurance pjsc",
+   "location": null,
+   "country": "UAE",
+   "region": "GCC",
+   "department": null,
+   "employment_type": null,
+   "posted_date": "2026-10-02",
+   "closing_date": "2026-10-11",
+   "scraped_at": "2026-10-04T06:38:31Z",
+   "last_verified_at": "2026-10-04T06:38:31Z",
+   "status": "NEW",
+   "source": "Al-Futtaim",
+   "sources": [
+    "Al-Futtaim"
+   ],
+   "source_url": "https://www.afuturewithus.com/job/Vice-President-Property-Insurance-I-Dubai-Financial-Services-Orient-Insurance-PJSC/1433441533/",
+   "application_url": "https://www.afuturewithus.com/talentcommunity/apply/1433441533/?locale=en_GB",
+   "is_direct_apply": true,
+   "application_url_verified": true,
+   "source_confidence": "high",
+   "salary_min": null,
+   "salary_max": null,
+   "salary_currency": null,
+   "experience_min": 8,
+   "experience_max": 12,
+   "description": "Job Requisition ID: 181086 \n\n Established in the 1930s as a trading business, Al-Futtaim Group today is one of the most diversified and progressive, privately held regional businesses headquartered in Dubai, United A”rab Emirates. Structured into five operating divisions; automotive, financial services, real estate, retail and healthcare; employing more than 35,000 employees across more than 20 countries in the Middle East, Asia and Africa, Al-Futtaim Group partners with over 200 of the world's most admired and innovative brands. Al-Futtaim Group’s entrepreneurship and relentless customer focus enables the organisation to continue to grow and expand; responding to the changing needs of our customers within the societies in which we operate. \n\n By upholding our values of respect, excellence, collaboration and integrity; Al-Futtaim Group continues to enrich the lives and aspirations of our customers each and every day. \n\n JOB PURPOSE: \n\n To generate and secure new Property Insurance business and retain renewal business to achieve and exceed the company’s business and operational objectives in a profitable manner consistent with high standard of professionalism and client satisfaction. \n\n KEY ACCOUNTABILITIES: \n\n Description of the Accountability \n\n Performance Indicators (How accountability is measured) \n\n RISK MANAGEMENT \n\n Arrangement of favourable reinsurance \n\n CUSTOMER CENTRIC \n\n Customer Satisfaction \n\n OPERATIONAL MANAGEMENT \n\n Team / Department development \n\n Reporting to Senior Vice President – Property, the primary role of VP – Property Insurance is to manage client relationships with potential distribution channels including Brokers, Intermediaries and company’s own development team to promote Orient Energy insurance products and develop the current portfolio profitability. \n\n Being a member of the Senior Management, VP – Property Insurance performs a very critical function of risk management & business development to contribute towards enhancing the Company’s Profitability. \n\n BUSINESS DEVELOPMENT / PROFITABLITY \n\n Plan, analyse and develop sales strategies and actions in order to secure new/renewal of business and enhance market share. \n\n BUSINESS TARGETS \n\n Produce the required target of insurance business from the designated areas to achieve or exceed the assigned premium target. \n\n PREMIUM COLLECTION (OUTSTANDING) \n\n Review and monitor the due Premiums payment status to actively follow up timely collection of the outstanding premiums. \n\n MANAGEMENT REPORTS/ COMPETITION \n\n Collect and collate business and market conditions related information and prepare reports and formulate appropriate recommendations for Management Information and Decision Making to counter competition and increase the company’s market share of the business. \n\n BROKER & CLIENT SERVICE \n\n Promote the growth of the insurance business by establishing and maintaining close liaison with Brokers and clients to ensure customer satisfaction and profitability. \n\n UNDERWITING \n\n Ensure proper underwriting of insurance risks in keeping with the guidelines by supplying experience statistics and market intelligence. Compute appropriate premium accurately and allocate reinsurance cessions with the specified criteria to facilitate proper data entry process and generation of appropriate policy documents. \n\n RISK INSPECTION \n\n Ensure proper conducting risk inspection to assess and report acceptability of risks and recommend appropriate risk improvement measures in order to ensure sound insurability of risks. \n\n 8. POLICY DOCUMENTS \n\n Review and ensure accuracy of the contents of the policy documents and arrange prompt dispatch in order to provide an efficient service to customers, brokers, development officers and participating re-insurers. \n\n 9. COORDINATION \n\n Co-ordinate with customers, brokers and development officers and other insurance companies to obtain required additional underwriting particulars in order to carry out proper risk assessment and provide appropriate solutions to their problems. \n\n QUALIFICATIONS, EXPERIENCE, & SKILLS \n\n Minimum Qualifications and Knowledge: \n\n Bachelor Degree (Commerce/Science / Arts / Business Administration) \n\n Associate of Chartered Insurance Institute, London or equivalent (Desirable) \n\n Minimum Experience: \n\n 8-12 years’ experience in a progressive organisation (Including a minimum of 5 years of experience in a Senior Managerial position). \n\n Job-Specific Skills: \n\n General Insurance with particular emphasis on Property, Underwriting, Claims & Re-insurance. \n\n Behavioural Competencies : \n\n Strong interpersonal & analytical skills. \n\n Dynamic personality with good communication skills. \n\n Excellent presentation skills. \n\n About Orient Insurance PJSC \n\n Orient Insurance Company commenced operations in 1982 as a part of the reputed Al-Futtaim Group and has since recorded a progressively steady growth. The Company is counted among the leaders in the UAE insurance market. Orient Insurance Company has a paid-up capital of AED 500 Million which is the highest in the insurance industry in UAE. With head office in Dubai, the company serves its clientele through an extensive branch network in Jebel Ali, Abu Dhabi, Al Ain, Sharjah and Ras Al Khaimah in UAE, Muscat in Sultanate of Oman, Riyadh in Kingdom of Saudi Arabia and Bahrain. \n\n Apply now » \n\n Find similar jobs: \n\n General Management & Business Support Jobs \n\n HOME PAGE \n\n PRIVACY \n\n CORPORATE WEBSITE \n\n CONTACT US \n\n Opens in a new tab. \n\n Opens in a new tab. \n\n Opens in a new tab. \n\n Opens in a new tab. \n\n © Copyright 2026 | afuturewithus.com\n\n // \n\n // \n\n // \n\n const jobAlertSpans = document.querySelectorAll(\"[data-testid=jobAlertSpanText]\");\n jobAlertSpans?.forEach((jobEl) => {\n jobEl.textContent = window?.jsStr?.tcjobresultscreatejobalertsdetailstext || \"\";\n });\n\n // \n\n // \n\n // \n\n //",
+   "responsibilities": [
+    "RISK MANAGEMENT",
+    "Arrangement of favourable reinsurance",
+    "CUSTOMER CENTRIC",
+    "Customer Satisfaction",
+    "OPERATIONAL MANAGEMENT",
+    "Team / Department development",
+    "BUSINESS DEVELOPMENT / PROFITABLITY",
+    "BUSINESS TARGETS",
+    "PREMIUM COLLECTION (OUTSTANDING)",
+    "MANAGEMENT REPORTS/ COMPETITION",
+    "BROKER & CLIENT SERVICE",
+    "UNDERWITING",
+    "RISK INSPECTION",
+    "Bachelor Degree (Commerce/Science / Arts / Business Administration)",
+    "Associate of Chartered Insurance Institute, London or equivalent (Desirable)",
+    "8-12 years’ experience in a progressive organisation (Including a minimum of 5 years of experience in a Senior Managerial position)",
+    "General Insurance with particular emphasis on Property, Underwriting, Claims & Re-insurance",
+    "Strong interpersonal & analytical skills",
+    "Dynamic personality with good communication skills",
+    "Excellent presentation skills"
+   ],
+   "requirements": [],
+   "skills": [
+    "Excel"
+   ],
+   "nationality_requirement": null,
+   "work_authorization_requirement": null,
+   "emiratisation_requirement": false,
+   "saudization_requirement": false,
+   "candidate_fit_score": 64,
+   "employer_score": 88,
+   "career_upside_score": 81,
+   "opportunity_score": 73,
+   "score_breakdown": {
+    "seniority": 20,
+    "functional": 7,
+    "industry": 15,
+    "geographic": 10,
+    "scope": 3,
+    "leadership": 0,
+    "qualification": 0,
+    "upside": 9
+   },
+   "tier": "B",
+   "application_priority": "GOOD FIT",
+   "why_fit": [
+    "Multi-country / multi-entity scope maps directly onto his Malaysia + Indonesia P&L ownership across 60+ Max Fashion and Babyshop stores.",
+    "Al-Futtaim is peer retail to his current employer — the 60+ store, multi-brand lifestyle retail P&L he already owns transfers without a sector learning curve.",
+    "Core FP&A remit — he runs budgeting, forecasting and variance analysis on an MYR 400M+ P&L as FP&A Manager at Lifestyle Retail Malaysia (Landmark Group) since May 2023.",
+    "UAE is one of his two target markets, and he is already GCC-adjacent inside a Dubai-headquartered group."
+   ],
+   "watch_out": [
+    "Nothing disqualifying surfaced in the posted text, which itself means the description is thin — probe scope and reporting line."
+   ],
+   "resume_match": null,
+   "duplicate_group": "cac3d313a4b9eed499821ec1510d4c3f8d542a03",
+   "is_excluded": false,
+   "exclusion_reason": null
+  },
+  {
    "id": "aca5f890d8302f6f84002be7941b7e99c1094714",
    "company": "Al-Futtaim",
    "company_group": "Al-Futtaim",
@@ -861,8 +952,8 @@
    "employment_type": null,
    "posted_date": "2026-09-25",
    "closing_date": "2026-10-06",
-   "scraped_at": "2026-10-03T10:11:11Z",
-   "last_verified_at": "2026-10-03T10:11:11Z",
+   "scraped_at": "2026-10-04T06:38:31Z",
+   "last_verified_at": "2026-10-04T06:38:31Z",
    "status": "ACTIVE",
    "source": "Al-Futtaim",
    "sources": [
@@ -959,8 +1050,8 @@
    "employment_type": "Regular",
    "posted_date": "2026-09-17",
    "closing_date": null,
-   "scraped_at": "2026-10-03T10:11:11Z",
-   "last_verified_at": "2026-10-03T10:11:11Z",
+   "scraped_at": "2026-10-04T06:38:31Z",
+   "last_verified_at": "2026-10-04T06:38:31Z",
    "status": "ACTIVE",
    "source": "Majid Al Futtaim",
    "sources": [
@@ -1058,8 +1149,8 @@
    "employment_type": "Regular",
    "posted_date": "2026-06-10",
    "closing_date": null,
-   "scraped_at": "2026-10-03T10:11:11Z",
-   "last_verified_at": "2026-10-03T10:11:11Z",
+   "scraped_at": "2026-10-04T06:38:31Z",
+   "last_verified_at": "2026-10-04T06:38:31Z",
    "status": "STALE",
    "source": "Majid Al Futtaim",
    "sources": [
@@ -1156,8 +1247,8 @@
    "employment_type": "Regular",
    "posted_date": "2026-09-07",
    "closing_date": null,
-   "scraped_at": "2026-10-03T10:11:11Z",
-   "last_verified_at": "2026-10-03T10:11:11Z",
+   "scraped_at": "2026-10-04T06:38:31Z",
+   "last_verified_at": "2026-10-04T06:38:31Z",
    "status": "AGING",
    "source": "Majid Al Futtaim",
    "sources": [
@@ -1256,8 +1347,8 @@
    "employment_type": "Experienced hires",
    "posted_date": "2026-08-25",
    "closing_date": null,
-   "scraped_at": "2026-10-03T10:11:11Z",
-   "last_verified_at": "2026-10-03T10:11:11Z",
+   "scraped_at": "2026-10-04T06:38:31Z",
+   "last_verified_at": "2026-10-04T06:38:31Z",
    "status": "AGING",
    "source": "Aldar",
    "sources": [
@@ -1349,9 +1440,9 @@
    "employment_type": null,
    "posted_date": "2026-09-12",
    "closing_date": "2026-10-31",
-   "scraped_at": "2026-10-03T10:11:11Z",
-   "last_verified_at": "2026-10-03T10:11:11Z",
-   "status": "ACTIVE",
+   "scraped_at": "2026-10-04T06:38:31Z",
+   "last_verified_at": "2026-10-04T06:38:31Z",
+   "status": "AGING",
    "source": "Al-Futtaim",
    "sources": [
     "Al-Futtaim"
@@ -1419,7 +1510,7 @@
     "UAE is one of his two target markets, and he is already GCC-adjacent inside a Dubai-headquartered group."
    ],
    "watch_out": [
-    "Nothing disqualifying surfaced in the posted text, which itself means the description is thin — probe scope and reporting line."
+    "Posted 2026-09-12 — this req is aging and may already be filled."
    ],
    "resume_match": null,
    "duplicate_group": "f924fd27e41a6608cb029bf3538bb12ec46f914d",
@@ -1439,8 +1530,8 @@
    "employment_type": null,
    "posted_date": "2026-09-08",
    "closing_date": null,
-   "scraped_at": "2026-10-03T10:11:11Z",
-   "last_verified_at": "2026-10-03T10:11:11Z",
+   "scraped_at": "2026-10-04T06:38:31Z",
+   "last_verified_at": "2026-10-04T06:38:31Z",
    "status": "AGING",
    "source": "Landmark Group",
    "sources": [
@@ -1522,8 +1613,8 @@
    "employment_type": null,
    "posted_date": "2026-09-14",
    "closing_date": "2026-10-09",
-   "scraped_at": "2026-10-03T10:11:11Z",
-   "last_verified_at": "2026-10-03T10:11:11Z",
+   "scraped_at": "2026-10-04T06:38:31Z",
+   "last_verified_at": "2026-10-04T06:38:31Z",
    "status": "ACTIVE",
    "source": "Al-Futtaim",
    "sources": [
@@ -1618,8 +1709,8 @@
    "employment_type": null,
    "posted_date": "2026-09-15",
    "closing_date": "2026-10-30",
-   "scraped_at": "2026-10-03T10:11:11Z",
-   "last_verified_at": "2026-10-03T10:11:11Z",
+   "scraped_at": "2026-10-04T06:38:31Z",
+   "last_verified_at": "2026-10-04T06:38:31Z",
    "status": "ACTIVE",
    "source": "Al-Futtaim",
    "sources": [
@@ -1710,8 +1801,8 @@
    "employment_type": null,
    "posted_date": "2026-09-15",
    "closing_date": "2026-10-15",
-   "scraped_at": "2026-10-03T10:11:11Z",
-   "last_verified_at": "2026-10-03T10:11:11Z",
+   "scraped_at": "2026-10-04T06:38:31Z",
+   "last_verified_at": "2026-10-04T06:38:31Z",
    "status": "ACTIVE",
    "source": "Al-Futtaim",
    "sources": [
@@ -1788,8 +1879,8 @@
    "employment_type": "Full-Time",
    "posted_date": "2026-09-21",
    "closing_date": null,
-   "scraped_at": "2026-10-03T10:11:11Z",
-   "last_verified_at": "2026-10-03T10:11:11Z",
+   "scraped_at": "2026-10-04T06:38:31Z",
+   "last_verified_at": "2026-10-04T06:38:31Z",
    "status": "ACTIVE",
    "source": "Chalhoub Group",
    "sources": [
@@ -1859,8 +1950,8 @@
    "employment_type": null,
    "posted_date": "2026-10-01",
    "closing_date": "2026-10-31",
-   "scraped_at": "2026-10-03T10:11:11Z",
-   "last_verified_at": "2026-10-03T10:11:11Z",
+   "scraped_at": "2026-10-04T06:38:31Z",
+   "last_verified_at": "2026-10-04T06:38:31Z",
    "status": "NEW",
    "source": "Al-Futtaim",
    "sources": [
@@ -1954,8 +2045,8 @@
    "employment_type": "Full-Time",
    "posted_date": "2026-08-25",
    "closing_date": null,
-   "scraped_at": "2026-10-03T10:11:11Z",
-   "last_verified_at": "2026-10-03T10:11:11Z",
+   "scraped_at": "2026-10-04T06:38:31Z",
+   "last_verified_at": "2026-10-04T06:38:31Z",
    "status": "AGING",
    "source": "Michael Page",
    "sources": [
@@ -2014,7 +2105,7 @@
     "Sourced via Michael Page rather than the employer's own site — confirm the role exists directly with the company."
    ],
    "resume_match": null,
-   "duplicate_group": "8caa17e9fc0bbae4168f080cb1f8d02b69f0ede9",
+   "duplicate_group": "c7ee38ca11c71c22e4e46cf2195de91078357753",
    "is_excluded": false,
    "exclusion_reason": null
   },
@@ -2031,8 +2122,8 @@
    "employment_type": "Full-Time",
    "posted_date": "2026-03-23",
    "closing_date": null,
-   "scraped_at": "2026-10-03T10:11:11Z",
-   "last_verified_at": "2026-10-03T10:11:11Z",
+   "scraped_at": "2026-10-04T06:38:31Z",
+   "last_verified_at": "2026-10-04T06:38:31Z",
    "status": "STALE",
    "source": "Michael Page",
    "sources": [
@@ -2126,8 +2217,8 @@
    "employment_type": "Experienced hires",
    "posted_date": "2026-09-02",
    "closing_date": null,
-   "scraped_at": "2026-10-03T10:11:11Z",
-   "last_verified_at": "2026-10-03T10:11:11Z",
+   "scraped_at": "2026-10-04T06:38:31Z",
+   "last_verified_at": "2026-10-04T06:38:31Z",
    "status": "AGING",
    "source": "Aldar",
    "sources": [
@@ -2220,8 +2311,8 @@
    "employment_type": null,
    "posted_date": "2026-09-25",
    "closing_date": "2026-10-25",
-   "scraped_at": "2026-10-03T10:11:11Z",
-   "last_verified_at": "2026-10-03T10:11:11Z",
+   "scraped_at": "2026-10-04T06:38:31Z",
+   "last_verified_at": "2026-10-04T06:38:31Z",
    "status": "ACTIVE",
    "source": "Al Ghurair",
    "sources": [
@@ -2331,8 +2422,8 @@
    "employment_type": null,
    "posted_date": "2026-09-14",
    "closing_date": "2026-10-16",
-   "scraped_at": "2026-10-03T10:11:11Z",
-   "last_verified_at": "2026-10-03T10:11:11Z",
+   "scraped_at": "2026-10-04T06:38:31Z",
+   "last_verified_at": "2026-10-04T06:38:31Z",
    "status": "ACTIVE",
    "source": "Apparel Group",
    "sources": [
@@ -2417,8 +2508,8 @@
    "employment_type": "Full-Time",
    "posted_date": "2026-09-03",
    "closing_date": null,
-   "scraped_at": "2026-10-03T10:11:11Z",
-   "last_verified_at": "2026-10-03T10:11:11Z",
+   "scraped_at": "2026-10-04T06:38:31Z",
+   "last_verified_at": "2026-10-04T06:38:31Z",
    "status": "AGING",
    "source": "Chalhoub Group",
    "sources": [
@@ -2488,8 +2579,8 @@
    "employment_type": "Regular",
    "posted_date": "2026-09-22",
    "closing_date": null,
-   "scraped_at": "2026-10-03T10:11:11Z",
-   "last_verified_at": "2026-10-03T10:11:11Z",
+   "scraped_at": "2026-10-04T06:38:31Z",
+   "last_verified_at": "2026-10-04T06:38:31Z",
    "status": "ACTIVE",
    "source": "Majid Al Futtaim",
    "sources": [
@@ -2572,8 +2663,8 @@
    "employment_type": "Full-Time",
    "posted_date": "2026-02-04",
    "closing_date": null,
-   "scraped_at": "2026-10-03T10:11:11Z",
-   "last_verified_at": "2026-10-03T10:11:11Z",
+   "scraped_at": "2026-10-04T06:38:31Z",
+   "last_verified_at": "2026-10-04T06:38:31Z",
    "status": "STALE",
    "source": "Michael Page",
    "sources": [
@@ -2649,8 +2740,8 @@
    "employment_type": null,
    "posted_date": "2026-09-29",
    "closing_date": "2026-10-28",
-   "scraped_at": "2026-10-03T10:11:11Z",
-   "last_verified_at": "2026-10-03T10:11:11Z",
+   "scraped_at": "2026-10-04T06:38:31Z",
+   "last_verified_at": "2026-10-04T06:38:31Z",
    "status": "NEW",
    "source": "Al Ghurair",
    "sources": [
@@ -2752,8 +2843,8 @@
    "employment_type": "Full-Time",
    "posted_date": "2026-07-20",
    "closing_date": null,
-   "scraped_at": "2026-10-03T10:11:11Z",
-   "last_verified_at": "2026-10-03T10:11:11Z",
+   "scraped_at": "2026-10-04T06:38:31Z",
+   "last_verified_at": "2026-10-04T06:38:31Z",
    "status": "STALE",
    "source": "Michael Page",
    "sources": [
@@ -2768,7 +2859,7 @@
    "salary_max": null,
    "salary_currency": null,
    "experience_min": 10,
-   "experience_max": 12,
+   "experience_max": null,
    "description": "High visibility role with direct influence on business performance\n Opportunity to drive change and build best in class finance processes\n\n About Our Client \n Our client is a growing industrial and manufacturing business operating within a wider diversified group. They focus on delivering high quality solutions within their sector and are expanding their operations in the UAE, offering a dynamic environment with strong leadership and growth ambitions. \n\n Job Description \n · Lead the monthly, quarterly, and annual financial close processes ensuring accuracy and timeliness\n\n· Prepare and review financial statements in line with IFRS standards\n\n· Oversee general ledger integrity, reconciliations, and financial reporting packs\n\n· Manage manufacturing finance activities including production accounting, inventory, and cost controls\n\n· Review inventory valuation, WIP, finished goods, and provisions including slow moving and obsolete stock\n\n· Partner with operational teams across production, procurement, and supply chain to enhance financial controls\n\n· Support product costing and profitability analysis through alignment of operational and financial data\n\n· Lead budgeting, forecasting, and long-term financial planning processes\n\n· Conduct variance analysis and monitor key financial performance drivers\n\n· Prepare executive dashboards and present insights to senior stakeholders\n\n· Oversee cash flow forecasting, working capital management, and liquidity planning\n\n· Strengthen internal controls, governance frameworks, and finance policies\n\n· Identify financial and operational risks and implement mitigation strategies\n\n· Coordinate with auditors, tax advisors, and regulatory authorities to ensure compliance\n\n· Ensure adherence to IFRS, UAE VAT, and corporate tax regulations\n\n· Drive ERP enhancements and process improvements to increase automation and efficiency\n\n· Maintain data integrity and improve reporting capabilities within finance systems\n\n· Act as a key finance business partner supporting commercial and operational decisions\n\n· Evaluate capital investments, pricing strategies, and business cases\n\n· Lead and develop the finance team, setting clear objectives and driving performance\n\n· Foster a culture of accountability, collaboration, and continuous improvement \n\n The Successful Applicant \n · Bachelor's degree in Accounting, Finance, or a related field\n\n· Professional qualification such as CPA, CMA, or ACCA preferred\n\n· Minimum 10 years of finance experience with at least 5 years in a leadership role\n\n· Mandatory experience within a manufacturing environment\n\n· Strong expertise in IFRS, FP&A, inventory accounting, and internal controls\n\n· Experience working with ERP systems, with Odoo as an advantage\n\n· Strong knowledge of UAE VAT and corporate tax regulations\n\n· Advanced Excel skills with Power BI as a plus\n\n· Candidates must be based in the UAE\n\n· Immediately available candidates are preferred \n\n What's on Offer \n · Opportunity to lead the finance function within a growing manufacturing business\n\n· Exposure to senior leadership and strategic decision making\n\n· Dynamic and fast paced working environment\n\n· Clear scope for process improvement and impact",
    "responsibilities": [
     "High visibility role with direct influence on business performance",
@@ -2816,7 +2907,7 @@
     "Sector is outside retail and real estate, so the industry half of his track record does not carry over."
    ],
    "resume_match": null,
-   "duplicate_group": "1bae5a44530159e1ab78635b5320ab549e1cd448",
+   "duplicate_group": "3c16207b3b75917c9bcc5f951b5c14eb98de5b04",
    "is_excluded": false,
    "exclusion_reason": null
   },
@@ -2833,8 +2924,8 @@
    "employment_type": "Full-Time",
    "posted_date": "2026-07-20",
    "closing_date": null,
-   "scraped_at": "2026-10-03T10:11:11Z",
-   "last_verified_at": "2026-10-03T10:11:11Z",
+   "scraped_at": "2026-10-04T06:38:31Z",
+   "last_verified_at": "2026-10-04T06:38:31Z",
    "status": "STALE",
    "source": "Michael Page",
    "sources": [
@@ -2893,7 +2984,7 @@
     "SAP is named and his ERP depth is D365, not SAP — expect to address that gap directly."
    ],
    "resume_match": null,
-   "duplicate_group": "3c16207b3b75917c9bcc5f951b5c14eb98de5b04",
+   "duplicate_group": "1bae5a44530159e1ab78635b5320ab549e1cd448",
    "is_excluded": false,
    "exclusion_reason": null
   },
@@ -2910,8 +3001,8 @@
    "employment_type": "Full-Time",
    "posted_date": "2026-09-28",
    "closing_date": null,
-   "scraped_at": "2026-10-03T10:11:11Z",
-   "last_verified_at": "2026-10-03T10:11:11Z",
+   "scraped_at": "2026-10-04T06:38:31Z",
+   "last_verified_at": "2026-10-04T06:38:31Z",
    "status": "NEW",
    "source": "Michael Page",
    "sources": [
@@ -3004,8 +3095,8 @@
    "employment_type": null,
    "posted_date": "2026-09-30",
    "closing_date": "2026-10-18",
-   "scraped_at": "2026-10-03T10:11:11Z",
-   "last_verified_at": "2026-10-03T10:11:11Z",
+   "scraped_at": "2026-10-04T06:38:31Z",
+   "last_verified_at": "2026-10-04T06:38:31Z",
    "status": "NEW",
    "source": "Al-Futtaim",
    "sources": [
@@ -3094,8 +3185,8 @@
    "employment_type": "Regular",
    "posted_date": "2026-09-01",
    "closing_date": null,
-   "scraped_at": "2026-10-03T10:11:11Z",
-   "last_verified_at": "2026-10-03T10:11:11Z",
+   "scraped_at": "2026-10-04T06:38:31Z",
+   "last_verified_at": "2026-10-04T06:38:31Z",
    "status": "AGING",
    "source": "Majid Al Futtaim",
    "sources": [
@@ -3195,8 +3286,8 @@
    "employment_type": "Full-Time",
    "posted_date": "2026-09-17",
    "closing_date": null,
-   "scraped_at": "2026-10-03T10:11:11Z",
-   "last_verified_at": "2026-10-03T10:11:11Z",
+   "scraped_at": "2026-10-04T06:38:31Z",
+   "last_verified_at": "2026-10-04T06:38:31Z",
    "status": "ACTIVE",
    "source": "Michael Page",
    "sources": [
@@ -3290,8 +3381,8 @@
    "employment_type": "Temporary",
    "posted_date": "2026-09-09",
    "closing_date": null,
-   "scraped_at": "2026-10-03T10:11:11Z",
-   "last_verified_at": "2026-10-03T10:11:11Z",
+   "scraped_at": "2026-10-04T06:38:31Z",
+   "last_verified_at": "2026-10-04T06:38:31Z",
    "status": "AGING",
    "source": "Michael Page",
    "sources": [
@@ -3379,8 +3470,8 @@
    "employment_type": "Experienced hires",
    "posted_date": "2026-04-28",
    "closing_date": null,
-   "scraped_at": "2026-10-03T10:11:11Z",
-   "last_verified_at": "2026-10-03T10:11:11Z",
+   "scraped_at": "2026-10-04T06:38:31Z",
+   "last_verified_at": "2026-10-04T06:38:31Z",
    "status": "STALE",
    "source": "Aldar",
    "sources": [
@@ -3467,8 +3558,8 @@
    "employment_type": "Full-Time",
    "posted_date": "2026-06-22",
    "closing_date": null,
-   "scraped_at": "2026-10-03T10:11:11Z",
-   "last_verified_at": "2026-10-03T10:11:11Z",
+   "scraped_at": "2026-10-04T06:38:31Z",
+   "last_verified_at": "2026-10-04T06:38:31Z",
    "status": "STALE",
    "source": "Michael Page",
    "sources": [
@@ -3537,7 +3628,7 @@
     "Sourced via Michael Page rather than the employer's own site — confirm the role exists directly with the company."
    ],
    "resume_match": null,
-   "duplicate_group": "c7ee38ca11c71c22e4e46cf2195de91078357753",
+   "duplicate_group": "8caa17e9fc0bbae4168f080cb1f8d02b69f0ede9",
    "is_excluded": false,
    "exclusion_reason": null
   },
@@ -3554,8 +3645,8 @@
    "employment_type": "Regular",
    "posted_date": "2026-09-15",
    "closing_date": null,
-   "scraped_at": "2026-10-03T10:11:11Z",
-   "last_verified_at": "2026-10-03T10:11:11Z",
+   "scraped_at": "2026-10-04T06:38:31Z",
+   "last_verified_at": "2026-10-04T06:38:31Z",
    "status": "ACTIVE",
    "source": "Majid Al Futtaim",
    "sources": [
@@ -3636,203 +3727,6 @@
    "exclusion_reason": null
   },
   {
-   "id": "1929beb996055e8ac0f82e44f241f482273ab12f",
-   "company": "Etihad Airways",
-   "company_group": "Etihad",
-   "title": "Manager Recruitment - Revenue & Commercial",
-   "normalized_title": "manager recruitment revenue & commercial",
-   "location": "Abu Dhabi",
-   "country": "UAE",
-   "region": "GCC",
-   "department": "Human Resources",
-   "employment_type": "Full-time",
-   "posted_date": "2026-09-17",
-   "closing_date": null,
-   "scraped_at": "2026-10-03T10:11:11Z",
-   "last_verified_at": "2026-10-03T10:11:11Z",
-   "status": "LINK_BROKEN",
-   "source": "Etihad Airways",
-   "sources": [
-    "Etihad Airways"
-   ],
-   "source_url": "https://jobs.smartrecruiters.com/EtihadAirways5/744000150080980-manager-recruitment-revenue-commercial",
-   "application_url": "https://jobs.smartrecruiters.com/EtihadAirways5/744000150080980-manager-recruitment-revenue-commercial?oga=true",
-   "is_direct_apply": true,
-   "application_url_verified": false,
-   "source_confidence": "high",
-   "salary_min": null,
-   "salary_max": null,
-   "salary_currency": null,
-   "experience_min": 7,
-   "experience_max": null,
-   "description": "The Opportunity \n Etihad Airways is continuing an ambitious period of international growth, expanding our network, commercial reach, and global workforce.\n We’re looking for an experienced Manager Recruitment to join our Talent Acquisition team and lead recruitment across a portfolio of revenue & commercial functions. This is a highly visible role partnering with senior leaders to identify, attract, and secure talent across multiple international markets.\n You’ll operate in a fast-moving, complex environment where hiring requirements can span countries, functions, and levels of seniority. While experience recruiting within aviation would be valuable, it isn’t essential. We’re particularly interested in recruiters who have developed their careers within large, international organizations and complex matrix structures , and who understand what it takes to recruit globally.\n The role is hands-on. You’ll own searches yourself, build international talent pipelines, advise leaders on the external market, and increasingly use AI-enabled sourcing and recruitment technology to identify talent that traditional sourcing approaches may not reach.\n For someone who enjoys challenging searches, international recruitment, senior stakeholder engagement, and experimenting with new ways of finding talent, this is an opportunity to make a meaningful impact as Etihad continues to grow.\n What you’ll do \n Lead end-to-end recruitment across a portfolio of commercial roles, from workforce planning and search strategy through assessment, offer, and onboarding.\n Partner with senior business leaders and HR Business Partners, acting as a trusted advisor on talent availability, market dynamics, sourcing strategy, and hiring decisions.\n Develop and execute international sourcing strategies , identifying talent across multiple geographic markets and industries.\n Build proactive pipelines for critical and recurring talent requirements rather than relying solely on active applicants.\n Use AI-enabled sourcing platforms, recruitment technology, talent intelligence, and traditional sourcing channels to identify and engage high-quality passive talent.\n Recruit across a range of commercial disciplines, with experience hiring sales and commercially focused talent particularly valuable.\n Navigate a complex, matrixed organization, balancing the requirements of multiple stakeholders while maintaining pace and quality.\n Bring external market intelligence to hiring conversations, helping leaders understand talent availability, competitor activity, and alternative talent pools.\n Ensure candidates are assessed consistently and objectively using Etihad’s recruitment and assessment methodologies.\n Champion an engaging, transparent candidate experience and represent Etihad effectively in international talent markets.\n\nWhat we’re looking for \n We’re looking for an experienced recruiter who combines strong recruitment fundamentals with curiosity about how technology and AI are changing talent acquisition.\n Ideally, you’ll bring:\n 7+ years of recruitment or talent acquisition experience , with significant experience gained within a large, international organization.\n Demonstrated experience operating within a complex, matrixed organizational environment , partnering with stakeholders across different functions, countries, and levels of seniority.\n Strong experience delivering international recruitment , including proactively sourcing and engaging candidates across multiple geographic markets.\n Hands-on experience using AI-enabled sourcing tools, talent intelligence platforms, or other emerging recruitment technologies to identify and engage talent.\n Proven proactive sourcing capability, including experience identifying and engaging passive candidates rather than relying primarily on applications.\n Experience recruiting commercial talent; sales recruitment experience would be particularly advantageous .\n Strong stakeholder management skills, including the credibility to advise and influence senior leaders.\n Experience managing complex or challenging searches in competitive talent markets.\n A strong understanding of contemporary talent acquisition practices, including sourcing, assessment, candidate experience, recruitment technology, and talent pipelining.\n Excellent written and spoken English.\n Experience within aviation, travel, cargo, hospitality, or another international consumer-facing organization would be advantageous, but we’re equally interested in recruiters from other complex global businesses who can demonstrate the right recruitment capability and commercial mindset.\n\nRecruitment Process \n The recruitment process for this position will involve the following steps:\n All applications will be reviewed by a human-member of our Recruitment Team\n Shortlisted applicants will be invited to completed an AI-lead video interview via our third-party platform. This interview will allow you to record your responses to a range of questions related to the position and will allow you to demonstrate your knowledge and experience in a way that just your CV alone would not be able to. It also ensures fairness for you and all candidates, as all of our shortlisted candidates are asked the same questions and assessed on their responses. Whilst AI is utilized as part of the process, all responses will be reviewed by a human member of our recruitment team \n After a review of completed video interviews, shortlisted candidates will be invited to an initial technical interview with the hiring manager. \n Finalists will be invited to a follow-up interview with additional members of the hiring team - this may involve the completion of a brief business case assignment\n All candidates will be notified as to the status of their application as soon as is possible.\n \n Etihad Airways is more than the UAE’s national airline - we’re shaping the future of global aviation. From our hub in Abu Dhabi, we connect people across continents and cultures, while driving our “Journey 2030” ambition to double our fleet, expand our network and grow our people for a new era of excellence. Join us and become part of a vision where the world is your workplace and extraordinary experiences take flight.\n To learn more visit www.etihad.com \n Recruitment Fraud Alert \n\nBeware of fraudulent job offers from individuals or organizations claiming to represent the Etihad group. We will never ask for personal information, bank details, or payment during the recruitment process. Interviews are conducted face-to-face or via video/telephone before any formal offer. If you are asked for money, please treat it as fraudulent.",
-   "responsibilities": [
-    "The Opportunity",
-    "Etihad Airways is continuing an ambitious period of international growth, expanding our network, commercial reach, and global workforce",
-    "We’re looking for an experienced Manager Recruitment to join our Talent Acquisition team and lead recruitment across a portfolio of revenue & commercial functions. This is a highly visible role partnering with senior leaders to identify, attract, and secure talent across multiple international markets",
-    "The role is hands-on. You’ll own searches yourself, build international talent pipelines, advise leaders on the external market, and increasingly use AI-enabled sourcing and recruitment technology to identify talent that traditional sourcing approaches may not reach",
-    "For someone who enjoys challenging searches, international recruitment, senior stakeholder engagement, and experimenting with new ways of finding talent, this is an opportunity to make a meaningful impact as Etihad continues to grow",
-    "Lead end-to-end recruitment across a portfolio of commercial roles, from workforce planning and search strategy through assessment, offer, and onboarding",
-    "Partner with senior business leaders and HR Business Partners, acting as a trusted advisor on talent availability, market dynamics, sourcing strategy, and hiring decisions",
-    "Develop and execute international sourcing strategies , identifying talent across multiple geographic markets and industries",
-    "Build proactive pipelines for critical and recurring talent requirements rather than relying solely on active applicants",
-    "Use AI-enabled sourcing platforms, recruitment technology, talent intelligence, and traditional sourcing channels to identify and engage high-quality passive talent",
-    "Recruit across a range of commercial disciplines, with experience hiring sales and commercially focused talent particularly valuable",
-    "Navigate a complex, matrixed organization, balancing the requirements of multiple stakeholders while maintaining pace and quality",
-    "Bring external market intelligence to hiring conversations, helping leaders understand talent availability, competitor activity, and alternative talent pools",
-    "Ensure candidates are assessed consistently and objectively using Etihad’s recruitment and assessment methodologies",
-    "Champion an engaging, transparent candidate experience and represent Etihad effectively in international talent markets"
-   ],
-   "requirements": [
-    "What we’re looking for",
-    "We’re looking for an experienced recruiter who combines strong recruitment fundamentals with curiosity about how technology and AI are changing talent acquisition",
-    "7+ years of recruitment or talent acquisition experience , with significant experience gained within a large, international organization",
-    "Demonstrated experience operating within a complex, matrixed organizational environment , partnering with stakeholders across different functions, countries, and levels of seniority",
-    "Strong experience delivering international recruitment , including proactively sourcing and engaging candidates across multiple geographic markets",
-    "Hands-on experience using AI-enabled sourcing tools, talent intelligence platforms, or other emerging recruitment technologies to identify and engage talent",
-    "Proven proactive sourcing capability, including experience identifying and engaging passive candidates rather than relying primarily on applications",
-    "Experience recruiting commercial talent; sales recruitment experience would be particularly advantageous",
-    "Strong stakeholder management skills, including the credibility to advise and influence senior leaders",
-    "Experience managing complex or challenging searches in competitive talent markets",
-    "A strong understanding of contemporary talent acquisition practices, including sourcing, assessment, candidate experience, recruitment technology, and talent pipelining",
-    "Excellent written and spoken English",
-    "Experience within aviation, travel, cargo, hospitality, or another international consumer-facing organization would be advantageous, but we’re equally interested in recruiters from other complex global businesses who can demonstrate the right recruitment capability and commercial mindset"
-   ],
-   "skills": [
-    "Excel",
-    "Business Partnering"
-   ],
-   "nationality_requirement": null,
-   "work_authorization_requirement": null,
-   "emiratisation_requirement": false,
-   "saudization_requirement": false,
-   "candidate_fit_score": 54,
-   "employer_score": 55,
-   "career_upside_score": 22,
-   "opportunity_score": 49,
-   "score_breakdown": {
-    "seniority": 18,
-    "functional": 9,
-    "industry": 13,
-    "geographic": 10,
-    "scope": 0,
-    "leadership": 2,
-    "qualification": 0,
-    "upside": 2
-   },
-   "tier": "D",
-   "application_priority": "SKIP",
-   "why_fit": [
-    "Etihad Airways is peer retail to his current employer — the 60+ store, multi-brand lifestyle retail P&L he already owns transfers without a sector learning curve.",
-    "Capital allocation fit — he builds the ROI/IRR/NPV store feasibility models that decide new-store capex.",
-    "UAE is one of his two target markets, and he is already GCC-adjacent inside a Dubai-headquartered group."
-   ],
-   "watch_out": [
-    "The application link could not be confirmed reachable — verify it before relying on it."
-   ],
-   "resume_match": null,
-   "duplicate_group": "656fa334f65cb309311799760cd953ccf4344c8b",
-   "is_excluded": false,
-   "exclusion_reason": null
-  },
-  {
-   "id": "36bb960e1f7dd1c969291ab0772f78183e91fdba",
-   "company": "Etihad Airways",
-   "company_group": "Etihad",
-   "title": "Technology Supplier & Cost Management Specialist",
-   "normalized_title": "technology supplier & cost management specialist",
-   "location": "Abu Dhabi",
-   "country": "UAE",
-   "region": "GCC",
-   "department": "Other",
-   "employment_type": "Full-time",
-   "posted_date": "2026-09-22",
-   "closing_date": null,
-   "scraped_at": "2026-10-03T10:11:11Z",
-   "last_verified_at": "2026-10-03T10:11:11Z",
-   "status": "LINK_BROKEN",
-   "source": "Etihad Airways",
-   "sources": [
-    "Etihad Airways"
-   ],
-   "source_url": "https://jobs.smartrecruiters.com/EtihadAirways5/744000150978069-technology-supplier-cost-management-specialist",
-   "application_url": "https://jobs.smartrecruiters.com/EtihadAirways5/744000150978069-technology-supplier-cost-management-specialist?oga=true",
-   "is_direct_apply": true,
-   "application_url_verified": false,
-   "source_confidence": "high",
-   "salary_min": null,
-   "salary_max": null,
-   "salary_currency": null,
-   "experience_min": 5,
-   "experience_max": null,
-   "description": "Synopsis\n The Supplier & Cost Management Specialist - Technology is responsible for driving technology spend governance, supplier performance management, commercial evaluation, and cost optimization across the Digital Technology & Innovation portfolio. Acting as a key partner to Technology, Finance, Procurement, and Business stakeholders, the role ensures cost transparency, maximizes value from technology investments, and delivers sustainable savings through effective financial control, commercial management, and strategic supplier engagement. The position requires strong financial and commercial acumen, advanced analytical capability, and proven experience managing technology vendors and complex commercial agreements.\n Accountabilities\n Drive end-to-end visibility and governance of technology expenditure across software, cloud, infrastructure, telecom, managed services, and professional services portfolios.\n Develop and maintain technology spend forecasts, financial models, dashboards, and executive reporting to support decision-making and budget management.\n Partner with Technology and Finance teams to support annual budgeting, forecasting, cost allocation models, and financial planning activities.\n Build robust business cases and commercial evaluations, including TCO, ROI, NPV, IRR, and payback analysis for technology investments and transformation programs.\n Lead commercial negotiations, contract renewals, and supplier management activities to optimize commercial value and service performance.\n Establish supplier governance frameworks and conduct regular performance reviews covering service delivery, contractual compliance, risk management, innovation opportunities, and cost optimization.\n Identify and execute technology cost optimization initiatives across software licensing, cloud services, infrastructure, managed services, and workforce expenditure.\n Maintain and track a technology savings portfolio, ensuring realization and sustainability of financial benefits.\n Leverage data analytics to identify spend anomalies, supplier risks, cost reduction opportunities, and operational efficiencies.\n Collaborate with Technology, Finance, Procurement, Legal, and Business stakeholders to support strategic sourcing initiatives and influence investment decisions through data-driven insights.\n\nEducation & Experience\n Bachelor's degree in Finance, Accounting, Business Administration, Information Technology, Engineering, or a related discipline.\n 5+ years of experience in Technology Finance, IT Commercial Management, Vendor Management, Strategic Sourcing, Technology Cost Management, or related disciplines.\n Proven track record managing significant technology spend portfolios and delivering measurable cost optimization and value realization outcomes.\n Experience within large enterprise environments with exposure to technology procurement, software licensing, cloud and infrastructure cost management, supplier negotiations, and executive-level reporting.\n Strong expertise in technology spend management, financial planning and analysis, commercial modelling, vendor management, contract negotiation, and cost optimization.\n Advanced Microsoft Excel skills, including financial modelling, forecasting, scenario analysis, Power Query, and Pivot Tables; Power BI experience is desirable.\n Demonstrated strategic thinking, commercial acumen, analytical capability, stakeholder management, influencing skills, executive communication, and results orientation.\n MBA, CIPS, CFA, CPA, or equivalent professional qualification preferred.\n\nEtihad Airways is more than the UAE’s national airline - we’re shaping the future of global aviation. From our hub in Abu Dhabi, we connect people across continents and cultures, while driving our “Journey 2030” ambition to double our fleet, expand our network and grow our people for a new era of excellence. Join us and become part of a vision where the world is your workplace and extraordinary experiences take flight.\n To learn more visit www.etihad.com \n Recruitment Fraud Alert \n\nBeware of fraudulent job offers from individuals or organizations claiming to represent the Etihad group. We will never ask for personal information, bank details, or payment during the recruitment process. Interviews are conducted face-to-face or via video/telephone before any formal offer. If you are asked for money, please treat it as fraudulent.",
-   "responsibilities": [
-    "Accountabilities",
-    "Drive end-to-end visibility and governance of technology expenditure across software, cloud, infrastructure, telecom, managed services, and professional services portfolios",
-    "Develop and maintain technology spend forecasts, financial models, dashboards, and executive reporting to support decision-making and budget management",
-    "Partner with Technology and Finance teams to support annual budgeting, forecasting, cost allocation models, and financial planning activities",
-    "Build robust business cases and commercial evaluations, including TCO, ROI, NPV, IRR, and payback analysis for technology investments and transformation programs",
-    "Lead commercial negotiations, contract renewals, and supplier management activities to optimize commercial value and service performance",
-    "Establish supplier governance frameworks and conduct regular performance reviews covering service delivery, contractual compliance, risk management, innovation opportunities, and cost optimization",
-    "Identify and execute technology cost optimization initiatives across software licensing, cloud services, infrastructure, managed services, and workforce expenditure",
-    "Maintain and track a technology savings portfolio, ensuring realization and sustainability of financial benefits",
-    "Leverage data analytics to identify spend anomalies, supplier risks, cost reduction opportunities, and operational efficiencies",
-    "Collaborate with Technology, Finance, Procurement, Legal, and Business stakeholders to support strategic sourcing initiatives and influence investment decisions through data-driven insights"
-   ],
-   "requirements": [
-    "Education & Experience",
-    "Bachelor's degree in Finance, Accounting, Business Administration, Information Technology, Engineering, or a related discipline",
-    "5+ years of experience in Technology Finance, IT Commercial Management, Vendor Management, Strategic Sourcing, Technology Cost Management, or related disciplines",
-    "Proven track record managing significant technology spend portfolios and delivering measurable cost optimization and value realization outcomes",
-    "Experience within large enterprise environments with exposure to technology procurement, software licensing, cloud and infrastructure cost management, supplier negotiations, and executive-level reporting",
-    "Strong expertise in technology spend management, financial planning and analysis, commercial modelling, vendor management, contract negotiation, and cost optimization",
-    "Advanced Microsoft Excel skills, including financial modelling, forecasting, scenario analysis, Power Query, and Pivot Tables; Power BI experience is desirable",
-    "Demonstrated strategic thinking, commercial acumen, analytical capability, stakeholder management, influencing skills, executive communication, and results orientation",
-    "MBA, CIPS, CFA, CPA, or equivalent professional qualification preferred"
-   ],
-   "skills": [
-    "FP&A",
-    "Budgeting",
-    "Forecasting",
-    "Power BI",
-    "Excel"
-   ],
-   "nationality_requirement": null,
-   "work_authorization_requirement": null,
-   "emiratisation_requirement": false,
-   "saudization_requirement": false,
-   "candidate_fit_score": 51,
-   "employer_score": 55,
-   "career_upside_score": 22,
-   "opportunity_score": 48,
-   "score_breakdown": {
-    "seniority": 11,
-    "functional": 15,
-    "industry": 6,
-    "geographic": 10,
-    "scope": 0,
-    "leadership": 2,
-    "qualification": 5,
-    "upside": 2
-   },
-   "tier": "D",
-   "application_priority": "SKIP",
-   "why_fit": [
-    "Capital allocation fit — he builds the ROI/IRR/NPV store feasibility models that decide new-store capex.",
-    "Systems fit — he led the D365 ERP implementation that cut the close cycle 40%, and builds the Power BI reporting on top of it.",
-    "Core FP&A remit — he runs budgeting, forecasting and variance analysis on an MYR 400M+ P&L as FP&A Manager at Lifestyle Retail Malaysia (Landmark Group) since May 2023.",
-    "UAE is one of his two target markets, and he is already GCC-adjacent inside a Dubai-headquartered group."
-   ],
-   "watch_out": [
-    "The application link could not be confirmed reachable — verify it before relying on it.",
-    "The posting names a qualification he does not hold; his is CA (ICAI, 2017)."
-   ],
-   "resume_match": null,
-   "duplicate_group": "4d1ab2e9e8ee1876b46a9e927ec50192d71ba45d",
-   "is_excluded": false,
-   "exclusion_reason": null
-  },
-  {
    "id": "1f937ee07aaf338d74a9fee461c56cde5b8126ed",
    "company": "Etihad Airways",
    "company_group": "Etihad",
@@ -3845,9 +3739,9 @@
    "employment_type": "Full-time",
    "posted_date": "2026-10-01",
    "closing_date": null,
-   "scraped_at": "2026-10-03T10:11:11Z",
-   "last_verified_at": "2026-10-03T10:11:11Z",
-   "status": "LINK_BROKEN",
+   "scraped_at": "2026-10-04T06:38:31Z",
+   "last_verified_at": "2026-10-04T06:38:31Z",
+   "status": "NEW",
    "source": "Etihad Airways",
    "sources": [
     "Etihad Airways"
@@ -3855,7 +3749,7 @@
    "source_url": "https://jobs.smartrecruiters.com/EtihadAirways5/744000152930525-procedures-controller-cargo",
    "application_url": "https://jobs.smartrecruiters.com/EtihadAirways5/744000152930525-procedures-controller-cargo?oga=true",
    "is_direct_apply": true,
-   "application_url_verified": false,
+   "application_url_verified": true,
    "source_confidence": "high",
    "salary_min": null,
    "salary_max": null,
@@ -3909,7 +3803,7 @@
     "UAE is one of his two target markets, and he is already GCC-adjacent inside a Dubai-headquartered group."
    ],
    "watch_out": [
-    "The application link could not be confirmed reachable — verify it before relying on it."
+    "Nothing disqualifying surfaced in the posted text, which itself means the description is thin — probe scope and reporting line."
    ],
    "resume_match": null,
    "duplicate_group": "a317d1a03a74ab7ca518177f5bcbdb44f6255a94",
@@ -3929,9 +3823,9 @@
    "employment_type": "Full-time",
    "posted_date": "2026-06-09",
    "closing_date": null,
-   "scraped_at": "2026-10-03T10:11:11Z",
-   "last_verified_at": "2026-10-03T10:11:11Z",
-   "status": "LINK_BROKEN",
+   "scraped_at": "2026-10-04T06:38:31Z",
+   "last_verified_at": "2026-10-04T06:38:31Z",
+   "status": "STALE",
    "source": "Etihad Airways",
    "sources": [
     "Etihad Airways"
@@ -3939,7 +3833,7 @@
    "source_url": "https://jobs.smartrecruiters.com/EtihadAirways5/744000131057621-manager-cargo-revenue-management",
    "application_url": "https://jobs.smartrecruiters.com/EtihadAirways5/744000131057621-manager-cargo-revenue-management?oga=true",
    "is_direct_apply": true,
-   "application_url_verified": false,
+   "application_url_verified": true,
    "source_confidence": "high",
    "salary_min": null,
    "salary_max": null,
@@ -3998,7 +3892,7 @@
     "UAE is one of his two target markets, and he is already GCC-adjacent inside a Dubai-headquartered group."
    ],
    "watch_out": [
-    "The application link could not be confirmed reachable — verify it before relying on it.",
+    "Posted 2026-06-09 — this req is stale and may already be filled.",
     "Sector is outside retail and real estate, so the industry half of his track record does not carry over."
    ],
    "resume_match": null,
@@ -4019,8 +3913,8 @@
    "employment_type": "Temporary",
    "posted_date": "2026-09-14",
    "closing_date": null,
-   "scraped_at": "2026-10-03T10:11:11Z",
-   "last_verified_at": "2026-10-03T10:11:11Z",
+   "scraped_at": "2026-10-04T06:38:31Z",
+   "last_verified_at": "2026-10-04T06:38:31Z",
    "status": "ACTIVE",
    "source": "Michael Page",
    "sources": [
@@ -4111,9 +4005,9 @@
    "employment_type": "Full-time",
    "posted_date": "2026-07-22",
    "closing_date": null,
-   "scraped_at": "2026-10-03T10:11:11Z",
-   "last_verified_at": "2026-10-03T10:11:11Z",
-   "status": "LINK_BROKEN",
+   "scraped_at": "2026-10-04T06:38:31Z",
+   "last_verified_at": "2026-10-04T06:38:31Z",
+   "status": "STALE",
    "source": "Etihad Airways",
    "sources": [
     "Etihad Airways"
@@ -4121,7 +4015,7 @@
    "source_url": "https://jobs.smartrecruiters.com/EtihadAirways5/744000139019709-finance-business-partner-officer-uae-national-only-",
    "application_url": "https://jobs.smartrecruiters.com/EtihadAirways5/744000139019709-finance-business-partner-officer-uae-national-only-?oga=true",
    "is_direct_apply": true,
-   "application_url_verified": false,
+   "application_url_verified": true,
    "source_confidence": "high",
    "salary_min": null,
    "salary_max": null,
@@ -4181,7 +4075,7 @@
     "UAE is one of his two target markets, and he is already GCC-adjacent inside a Dubai-headquartered group."
    ],
    "watch_out": [
-    "The application link could not be confirmed reachable — verify it before relying on it.",
+    "Posted 2026-07-22 — this req is stale and may already be filled.",
     "SAP is named and his ERP depth is D365, not SAP — expect to address that gap directly."
    ],
    "resume_match": null,
@@ -4202,8 +4096,8 @@
    "employment_type": "Full-Time",
    "posted_date": "2026-09-09",
    "closing_date": null,
-   "scraped_at": "2026-10-03T10:11:11Z",
-   "last_verified_at": "2026-10-03T10:11:11Z",
+   "scraped_at": "2026-10-04T06:38:31Z",
+   "last_verified_at": "2026-10-04T06:38:31Z",
    "status": "AGING",
    "source": "Michael Page",
    "sources": [
@@ -4276,9 +4170,9 @@
    "employment_type": "Full-time",
    "posted_date": "2026-09-28",
    "closing_date": null,
-   "scraped_at": "2026-10-03T10:11:11Z",
-   "last_verified_at": "2026-10-03T10:11:11Z",
-   "status": "LINK_BROKEN",
+   "scraped_at": "2026-10-04T06:38:31Z",
+   "last_verified_at": "2026-10-04T06:38:31Z",
+   "status": "NEW",
    "source": "Etihad Airways",
    "sources": [
     "Etihad Airways"
@@ -4286,7 +4180,7 @@
    "source_url": "https://jobs.smartrecruiters.com/EtihadAirways5/744000152131039-inflight-procedures-controller",
    "application_url": "https://jobs.smartrecruiters.com/EtihadAirways5/744000152131039-inflight-procedures-controller?oga=true",
    "is_direct_apply": true,
-   "application_url_verified": false,
+   "application_url_verified": true,
    "source_confidence": "high",
    "salary_min": null,
    "salary_max": null,
@@ -4344,7 +4238,7 @@
     "UAE is one of his two target markets, and he is already GCC-adjacent inside a Dubai-headquartered group."
    ],
    "watch_out": [
-    "The application link could not be confirmed reachable — verify it before relying on it."
+    "Nothing disqualifying surfaced in the posted text, which itself means the description is thin — probe scope and reporting line."
    ],
    "resume_match": null,
    "duplicate_group": "e65dab893dc4ac33187c479b6cc00ef70ee7b250",
@@ -4364,9 +4258,9 @@
    "employment_type": "Full-time",
    "posted_date": "2026-09-02",
    "closing_date": null,
-   "scraped_at": "2026-10-03T10:11:11Z",
-   "last_verified_at": "2026-10-03T10:11:11Z",
-   "status": "LINK_BROKEN",
+   "scraped_at": "2026-10-04T06:38:31Z",
+   "last_verified_at": "2026-10-04T06:38:31Z",
+   "status": "AGING",
    "source": "Etihad Airways",
    "sources": [
     "Etihad Airways"
@@ -4374,7 +4268,7 @@
    "source_url": "https://jobs.smartrecruiters.com/EtihadAirways5/744000146940809-premium-guest-recovery-controller-uae-nationals-only",
    "application_url": "https://jobs.smartrecruiters.com/EtihadAirways5/744000146940809-premium-guest-recovery-controller-uae-nationals-only?oga=true",
    "is_direct_apply": true,
-   "application_url_verified": false,
+   "application_url_verified": true,
    "source_confidence": "high",
    "salary_min": null,
    "salary_max": null,
@@ -4425,7 +4319,7 @@
     "Nothing further in the posted text matches his record. His lane is retail FP&A — MYR 400M+ P&L across 60+ Max Fashion and Babyshop stores in Malaysia and Indonesia, IFRS/MPERS consolidation, and a D365 ERP implementation. Judge the rest of this role against that."
    ],
    "watch_out": [
-    "The application link could not be confirmed reachable — verify it before relying on it.",
+    "Posted 2026-09-02 — this req is aging and may already be filled.",
     "Sector is outside retail and real estate, so the industry half of his track record does not carry over."
    ],
    "resume_match": null,
@@ -4446,9 +4340,9 @@
    "employment_type": "Full-time",
    "posted_date": "2026-07-28",
    "closing_date": null,
-   "scraped_at": "2026-10-03T10:11:11Z",
-   "last_verified_at": "2026-10-03T10:11:11Z",
-   "status": "LINK_BROKEN",
+   "scraped_at": "2026-10-04T06:38:31Z",
+   "last_verified_at": "2026-10-04T06:38:31Z",
+   "status": "STALE",
    "source": "Etihad Airways",
    "sources": [
     "Etihad Airways"
@@ -4456,7 +4350,7 @@
    "source_url": "https://jobs.smartrecruiters.com/EtihadAirways5/744000140171180-revenue-management-systems-officer",
    "application_url": "https://jobs.smartrecruiters.com/EtihadAirways5/744000140171180-revenue-management-systems-officer?oga=true",
    "is_direct_apply": true,
-   "application_url_verified": false,
+   "application_url_verified": true,
    "source_confidence": "high",
    "salary_min": null,
    "salary_max": null,
@@ -4528,7 +4422,7 @@
     "UAE is one of his two target markets, and he is already GCC-adjacent inside a Dubai-headquartered group."
    ],
    "watch_out": [
-    "The application link could not be confirmed reachable — verify it before relying on it."
+    "Posted 2026-07-28 — this req is stale and may already be filled."
    ],
    "resume_match": null,
    "duplicate_group": "b4a07d12c120c83bfe5597bd11795c90ef7abf33",
@@ -4548,8 +4442,8 @@
    "employment_type": null,
    "posted_date": "2026-09-24",
    "closing_date": "2026-10-25",
-   "scraped_at": "2026-10-03T10:11:11Z",
-   "last_verified_at": "2026-10-03T10:11:11Z",
+   "scraped_at": "2026-10-04T06:38:31Z",
+   "last_verified_at": "2026-10-04T06:38:31Z",
    "status": "ACTIVE",
    "source": "Al-Futtaim",
    "sources": [
@@ -4649,8 +4543,8 @@
    "employment_type": null,
    "posted_date": "2026-10-01",
    "closing_date": "2026-10-31",
-   "scraped_at": "2026-10-03T10:11:11Z",
-   "last_verified_at": "2026-10-03T10:11:11Z",
+   "scraped_at": "2026-10-04T06:38:31Z",
+   "last_verified_at": "2026-10-04T06:38:31Z",
    "status": "NEW",
    "source": "Al-Futtaim",
    "sources": [
@@ -4740,8 +4634,8 @@
    "employment_type": null,
    "posted_date": "2026-09-08",
    "closing_date": "2026-11-30",
-   "scraped_at": "2026-10-03T10:11:11Z",
-   "last_verified_at": "2026-10-03T10:11:11Z",
+   "scraped_at": "2026-10-04T06:38:31Z",
+   "last_verified_at": "2026-10-04T06:38:31Z",
    "status": "AGING",
    "source": "Al-Futtaim",
    "sources": [
@@ -4818,8 +4712,8 @@
    "employment_type": "Experienced hires",
    "posted_date": "2026-09-01",
    "closing_date": null,
-   "scraped_at": "2026-10-03T10:11:11Z",
-   "last_verified_at": "2026-10-03T10:11:11Z",
+   "scraped_at": "2026-10-04T06:38:31Z",
+   "last_verified_at": "2026-10-04T06:38:31Z",
    "status": "AGING",
    "source": "Aldar",
    "sources": [
@@ -4914,8 +4808,8 @@
    "employment_type": null,
    "posted_date": "2026-09-21",
    "closing_date": "2026-10-18",
-   "scraped_at": "2026-10-03T10:11:11Z",
-   "last_verified_at": "2026-10-03T10:11:11Z",
+   "scraped_at": "2026-10-04T06:38:31Z",
+   "last_verified_at": "2026-10-04T06:38:31Z",
    "status": "ACTIVE",
    "source": "Al-Futtaim",
    "sources": [
@@ -5004,8 +4898,8 @@
    "employment_type": null,
    "posted_date": "2026-09-23",
    "closing_date": null,
-   "scraped_at": "2026-10-03T10:11:11Z",
-   "last_verified_at": "2026-10-03T10:11:11Z",
+   "scraped_at": "2026-10-04T06:38:31Z",
+   "last_verified_at": "2026-10-04T06:38:31Z",
    "status": "ACTIVE",
    "source": "Apparel Group",
    "sources": [
@@ -5098,8 +4992,8 @@
    "employment_type": null,
    "posted_date": "2026-09-29",
    "closing_date": "2026-10-29",
-   "scraped_at": "2026-10-03T10:11:11Z",
-   "last_verified_at": "2026-10-03T10:11:11Z",
+   "scraped_at": "2026-10-04T06:38:31Z",
+   "last_verified_at": "2026-10-04T06:38:31Z",
    "status": "NEW",
    "source": "Al-Futtaim",
    "sources": [
@@ -5177,8 +5071,8 @@
    "employment_type": null,
    "posted_date": "2026-09-17",
    "closing_date": "2026-10-18",
-   "scraped_at": "2026-10-03T10:11:11Z",
-   "last_verified_at": "2026-10-03T10:11:11Z",
+   "scraped_at": "2026-10-04T06:38:31Z",
+   "last_verified_at": "2026-10-04T06:38:31Z",
    "status": "ACTIVE",
    "source": "Al-Futtaim",
    "sources": [
@@ -5256,8 +5150,8 @@
    "employment_type": null,
    "posted_date": "2026-09-11",
    "closing_date": "2026-10-31",
-   "scraped_at": "2026-10-03T10:11:11Z",
-   "last_verified_at": "2026-10-03T10:11:11Z",
+   "scraped_at": "2026-10-04T06:38:31Z",
+   "last_verified_at": "2026-10-04T06:38:31Z",
    "status": "AGING",
    "source": "Al-Futtaim",
    "sources": [
@@ -5347,8 +5241,8 @@
    "employment_type": null,
    "posted_date": "2026-09-10",
    "closing_date": "2026-10-22",
-   "scraped_at": "2026-10-03T10:11:11Z",
-   "last_verified_at": "2026-10-03T10:11:11Z",
+   "scraped_at": "2026-10-04T06:38:31Z",
+   "last_verified_at": "2026-10-04T06:38:31Z",
    "status": "AGING",
    "source": "Al-Futtaim",
    "sources": [
@@ -5440,8 +5334,8 @@
    "employment_type": "Regular",
    "posted_date": "2026-09-24",
    "closing_date": null,
-   "scraped_at": "2026-10-03T10:11:11Z",
-   "last_verified_at": "2026-10-03T10:11:11Z",
+   "scraped_at": "2026-10-04T06:38:31Z",
+   "last_verified_at": "2026-10-04T06:38:31Z",
    "status": "ACTIVE",
    "source": "Majid Al Futtaim",
    "sources": [
@@ -5536,8 +5430,8 @@
    "employment_type": null,
    "posted_date": "2026-09-13",
    "closing_date": "2026-10-14",
-   "scraped_at": "2026-10-03T10:11:11Z",
-   "last_verified_at": "2026-10-03T10:11:11Z",
+   "scraped_at": "2026-10-04T06:38:31Z",
+   "last_verified_at": "2026-10-04T06:38:31Z",
    "status": "ACTIVE",
    "source": "Al-Futtaim",
    "sources": [
@@ -5628,8 +5522,8 @@
    "employment_type": null,
    "posted_date": "2026-09-18",
    "closing_date": "2026-10-18",
-   "scraped_at": "2026-10-03T10:11:11Z",
-   "last_verified_at": "2026-10-03T10:11:11Z",
+   "scraped_at": "2026-10-04T06:38:31Z",
+   "last_verified_at": "2026-10-04T06:38:31Z",
    "status": "ACTIVE",
    "source": "Al-Futtaim",
    "sources": [
@@ -5720,8 +5614,8 @@
    "employment_type": null,
    "posted_date": "2026-09-25",
    "closing_date": "2026-10-26",
-   "scraped_at": "2026-10-03T10:11:11Z",
-   "last_verified_at": "2026-10-03T10:11:11Z",
+   "scraped_at": "2026-10-04T06:38:31Z",
+   "last_verified_at": "2026-10-04T06:38:31Z",
    "status": "ACTIVE",
    "source": "Al-Futtaim",
    "sources": [
@@ -5814,8 +5708,8 @@
    "employment_type": null,
    "posted_date": "2026-09-02",
    "closing_date": null,
-   "scraped_at": "2026-10-03T10:11:11Z",
-   "last_verified_at": "2026-10-03T10:11:11Z",
+   "scraped_at": "2026-10-04T06:38:31Z",
+   "last_verified_at": "2026-10-04T06:38:31Z",
    "status": "AGING",
    "source": "Landmark Group",
    "sources": [
@@ -5912,8 +5806,8 @@
    "employment_type": null,
    "posted_date": "2026-09-22",
    "closing_date": "2026-10-22",
-   "scraped_at": "2026-10-03T10:11:11Z",
-   "last_verified_at": "2026-10-03T10:11:11Z",
+   "scraped_at": "2026-10-04T06:38:31Z",
+   "last_verified_at": "2026-10-04T06:38:31Z",
    "status": "ACTIVE",
    "source": "Al-Futtaim",
    "sources": [
@@ -5991,8 +5885,8 @@
    "employment_type": "Full-Time",
    "posted_date": "2026-07-23",
    "closing_date": null,
-   "scraped_at": "2026-10-03T10:11:11Z",
-   "last_verified_at": "2026-10-03T10:11:11Z",
+   "scraped_at": "2026-10-04T06:38:31Z",
+   "last_verified_at": "2026-10-04T06:38:31Z",
    "status": "STALE",
    "source": "Michael Page",
    "sources": [
@@ -6085,8 +5979,8 @@
    "employment_type": "Full-Time",
    "posted_date": "2026-06-25",
    "closing_date": null,
-   "scraped_at": "2026-10-03T10:11:11Z",
-   "last_verified_at": "2026-10-03T10:11:11Z",
+   "scraped_at": "2026-10-04T06:38:31Z",
+   "last_verified_at": "2026-10-04T06:38:31Z",
    "status": "STALE",
    "source": "GMG",
    "sources": [
@@ -6155,8 +6049,8 @@
    "employment_type": null,
    "posted_date": "2026-09-18",
    "closing_date": "2026-10-18",
-   "scraped_at": "2026-10-03T10:11:11Z",
-   "last_verified_at": "2026-10-03T10:11:11Z",
+   "scraped_at": "2026-10-04T06:38:31Z",
+   "last_verified_at": "2026-10-04T06:38:31Z",
    "status": "ACTIVE",
    "source": "Al-Futtaim",
    "sources": [
@@ -6246,8 +6140,8 @@
    "employment_type": null,
    "posted_date": "2026-09-22",
    "closing_date": "2026-10-30",
-   "scraped_at": "2026-10-03T10:11:11Z",
-   "last_verified_at": "2026-10-03T10:11:11Z",
+   "scraped_at": "2026-10-04T06:38:31Z",
+   "last_verified_at": "2026-10-04T06:38:31Z",
    "status": "ACTIVE",
    "source": "Al-Futtaim",
    "sources": [
@@ -6338,8 +6232,8 @@
    "employment_type": null,
    "posted_date": "2026-09-11",
    "closing_date": "2026-12-31",
-   "scraped_at": "2026-10-03T10:11:11Z",
-   "last_verified_at": "2026-10-03T10:11:11Z",
+   "scraped_at": "2026-10-04T06:38:31Z",
+   "last_verified_at": "2026-10-04T06:38:31Z",
    "status": "AGING",
    "source": "Al-Futtaim",
    "sources": [
@@ -6428,8 +6322,8 @@
    "employment_type": null,
    "posted_date": "2026-09-22",
    "closing_date": "2026-10-22",
-   "scraped_at": "2026-10-03T10:11:11Z",
-   "last_verified_at": "2026-10-03T10:11:11Z",
+   "scraped_at": "2026-10-04T06:38:31Z",
+   "last_verified_at": "2026-10-04T06:38:31Z",
    "status": "ACTIVE",
    "source": "Al-Futtaim",
    "sources": [
@@ -6519,8 +6413,8 @@
    "employment_type": null,
    "posted_date": "2026-09-21",
    "closing_date": "2026-10-21",
-   "scraped_at": "2026-10-03T10:11:11Z",
-   "last_verified_at": "2026-10-03T10:11:11Z",
+   "scraped_at": "2026-10-04T06:38:31Z",
+   "last_verified_at": "2026-10-04T06:38:31Z",
    "status": "ACTIVE",
    "source": "Al-Futtaim",
    "sources": [
@@ -6607,8 +6501,8 @@
    "employment_type": null,
    "posted_date": "2026-09-16",
    "closing_date": "2026-10-31",
-   "scraped_at": "2026-10-03T10:11:11Z",
-   "last_verified_at": "2026-10-03T10:11:11Z",
+   "scraped_at": "2026-10-04T06:38:31Z",
+   "last_verified_at": "2026-10-04T06:38:31Z",
    "status": "ACTIVE",
    "source": "Al-Futtaim",
    "sources": [
@@ -6697,8 +6591,8 @@
    "employment_type": "Full-Time",
    "posted_date": "2026-07-28",
    "closing_date": null,
-   "scraped_at": "2026-10-03T10:11:11Z",
-   "last_verified_at": "2026-10-03T10:11:11Z",
+   "scraped_at": "2026-10-04T06:38:31Z",
+   "last_verified_at": "2026-10-04T06:38:31Z",
    "status": "STALE",
    "source": "Michael Page",
    "sources": [
@@ -6790,8 +6684,8 @@
    "employment_type": "Full-Time",
    "posted_date": "2026-09-10",
    "closing_date": null,
-   "scraped_at": "2026-10-03T10:11:11Z",
-   "last_verified_at": "2026-10-03T10:11:11Z",
+   "scraped_at": "2026-10-04T06:38:31Z",
+   "last_verified_at": "2026-10-04T06:38:31Z",
    "status": "AGING",
    "source": "Michael Page",
    "sources": [
@@ -6870,7 +6764,7 @@
     "Asks for 20+ years; he has 10+ total and 7+ post-qualification, so this is a stretch on paper."
    ],
    "resume_match": null,
-   "duplicate_group": "d79d80bf6d875e3dc06c54783a9495b86c9b09fa",
+   "duplicate_group": "8b277be7b1e4863166659f03226e0326080e0719",
    "is_excluded": true,
    "exclusion_reason": "requires 20+ years, beyond his 10-year track record"
   },
@@ -6887,8 +6781,8 @@
    "employment_type": null,
    "posted_date": "2026-09-24",
    "closing_date": null,
-   "scraped_at": "2026-10-03T10:11:11Z",
-   "last_verified_at": "2026-10-03T10:11:11Z",
+   "scraped_at": "2026-10-04T06:38:31Z",
+   "last_verified_at": "2026-10-04T06:38:31Z",
    "status": "ACTIVE",
    "source": "Al Tayer",
    "sources": [
@@ -6967,8 +6861,8 @@
    "employment_type": null,
    "posted_date": "2026-09-08",
    "closing_date": "2026-10-31",
-   "scraped_at": "2026-10-03T10:11:11Z",
-   "last_verified_at": "2026-10-03T10:11:11Z",
+   "scraped_at": "2026-10-04T06:38:31Z",
+   "last_verified_at": "2026-10-04T06:38:31Z",
    "status": "AGING",
    "source": "Apparel Group",
    "sources": [
@@ -7047,8 +6941,8 @@
    "employment_type": "Full-Time",
    "posted_date": "2026-09-29",
    "closing_date": null,
-   "scraped_at": "2026-10-03T10:11:11Z",
-   "last_verified_at": "2026-10-03T10:11:11Z",
+   "scraped_at": "2026-10-04T06:38:31Z",
+   "last_verified_at": "2026-10-04T06:38:31Z",
    "status": "NEW",
    "source": "Michael Page",
    "sources": [
@@ -7119,7 +7013,7 @@
     "Sector is outside retail and real estate, so the industry half of his track record does not carry over."
    ],
    "resume_match": null,
-   "duplicate_group": "8b277be7b1e4863166659f03226e0326080e0719",
+   "duplicate_group": "d79d80bf6d875e3dc06c54783a9495b86c9b09fa",
    "is_excluded": true,
    "exclusion_reason": "CFO / FD-level role beyond his current track record"
   },
@@ -7136,8 +7030,8 @@
    "employment_type": "Full-Time",
    "posted_date": "2026-08-04",
    "closing_date": null,
-   "scraped_at": "2026-10-03T10:11:11Z",
-   "last_verified_at": "2026-10-03T10:11:11Z",
+   "scraped_at": "2026-10-04T06:38:31Z",
+   "last_verified_at": "2026-10-04T06:38:31Z",
    "status": "STALE",
    "source": "Michael Page",
    "sources": [
@@ -7231,9 +7125,9 @@
    "employment_type": "Full-time",
    "posted_date": "2026-08-26",
    "closing_date": null,
-   "scraped_at": "2026-10-03T10:11:11Z",
-   "last_verified_at": "2026-10-03T10:11:11Z",
-   "status": "LINK_BROKEN",
+   "scraped_at": "2026-10-04T06:38:31Z",
+   "last_verified_at": "2026-10-04T06:38:31Z",
+   "status": "AGING",
    "source": "Etihad Airways",
    "sources": [
     "Etihad Airways"
@@ -7241,7 +7135,7 @@
    "source_url": "https://jobs.smartrecruiters.com/EtihadAirways5/744000145656714-sales-representative-corporate-accounts",
    "application_url": "https://jobs.smartrecruiters.com/EtihadAirways5/744000145656714-sales-representative-corporate-accounts?oga=true",
    "is_direct_apply": true,
-   "application_url_verified": false,
+   "application_url_verified": true,
    "source_confidence": "high",
    "salary_min": null,
    "salary_max": null,
@@ -7293,7 +7187,7 @@
     "UAE is one of his two target markets, and he is already GCC-adjacent inside a Dubai-headquartered group."
    ],
    "watch_out": [
-    "The application link could not be confirmed reachable — verify it before relying on it.",
+    "Posted 2026-08-26 — this req is aging and may already be filled.",
     "Sector is outside retail and real estate, so the industry half of his track record does not carry over."
    ],
    "resume_match": null,
