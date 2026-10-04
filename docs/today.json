@@ -1,7 +1,7 @@
 {
- "build_id": "20261004T081820",
- "date": "2026-10-04",
- "date_str": "Sunday, October 04 2026",
+ "build_id": "20261005T000503",
+ "date": "2026-10-05",
+ "date_str": "Monday, October 05 2026",
  "picks": [
   {
    "symbol": "SMCI",
@@ -411,137 +411,130 @@
  "picks_week": null,
  "open_context": {},
  "ipos": {
-  "count": 29,
+  "count": 27,
   "months": 12,
-  "built_on": "2026-09-27",
+  "built_on": "2026-10-04",
   "summary": {
-   "count": 29,
-   "up": 20,
+   "count": 27,
+   "up": 18,
    "down": 9,
-   "up_pct": 69.0,
-   "median_pct": 23.2
+   "up_pct": 66.7,
+   "median_pct": 19.3
   },
   "rows": [
    {
     "sym": "RUBICON",
-    "months_listed": 11.3,
+    "months_listed": 11.6,
     "first_close": 628.2,
-    "last_close": 1676.3,
-    "since_listing_pct": 166.8,
+    "last_close": 1630.9,
+    "since_listing_pct": 159.6,
     "high": 1860.6,
     "low": 577.25,
-    "from_high_pct": -9.9,
+    "from_high_pct": -12.3,
     "below_first_ever": true,
-    "sessions": 236,
+    "sessions": 240,
     "listed_on": "2025-10-16"
    },
    {
     "sym": "UTLSOLAR",
-    "months_listed": 10.2,
+    "months_listed": 10.4,
     "first_close": 208.44,
-    "last_close": 422.1,
-    "since_listing_pct": 102.5,
+    "last_close": 401.65,
+    "since_listing_pct": 92.7,
     "high": 483.95,
     "low": 174.83,
-    "from_high_pct": -12.8,
+    "from_high_pct": -17.0,
     "below_first_ever": true,
-    "sessions": 215,
+    "sessions": 219,
     "listed_on": "2025-11-20"
    },
    {
-    "sym": "ATLANTAELE",
-    "months_listed": 11.9,
-    "first_close": 823.35,
-    "last_close": 1625.9,
-    "since_listing_pct": 97.5,
-    "high": 2151.5,
-    "low": 726.3,
-    "from_high_pct": -24.4,
-    "below_first_ever": true,
-    "sessions": 249,
-    "listed_on": "2025-09-29"
-   },
-   {
     "sym": "PARKHOSPS",
-    "months_listed": 9.3,
+    "months_listed": 9.5,
     "first_close": 147.95,
-    "last_close": 286.35,
-    "since_listing_pct": 93.5,
+    "last_close": 270.8,
+    "since_listing_pct": 83.0,
     "high": 299.3,
     "low": 143.92,
-    "from_high_pct": -4.3,
+    "from_high_pct": -9.5,
     "below_first_ever": true,
-    "sessions": 196,
+    "sessions": 200,
     "listed_on": "2025-12-17"
    },
    {
+    "sym": "AEQUS",
+    "months_listed": 9.8,
+    "first_close": 151.29,
+    "last_close": 275.05,
+    "since_listing_pct": 81.8,
+    "high": 279.48,
+    "low": 115.11,
+    "from_high_pct": -1.6,
+    "below_first_ever": true,
+    "sessions": 205,
+    "listed_on": "2025-12-10"
+   },
+   {
     "sym": "LENSKART",
-    "months_listed": 10.5,
+    "months_listed": 10.7,
     "first_close": 403.1,
-    "last_close": 680.25,
-    "since_listing_pct": 68.8,
+    "last_close": 691.15,
+    "since_listing_pct": 71.5,
     "high": 707.2,
     "low": 400.15,
-    "from_high_pct": -3.8,
+    "from_high_pct": -2.3,
     "below_first_ever": true,
-    "sessions": 223,
+    "sessions": 227,
     "listed_on": "2025-11-10"
    }
   ],
   "worst": [
    {
+    "sym": "HEG",
+    "months_listed": 2.6,
+    "first_close": 587.35,
+    "last_close": 239.28,
+    "since_listing_pct": -59.3,
+    "high": 739.25,
+    "low": 215.05,
+    "from_high_pct": -67.6,
+    "below_first_ever": true,
+    "sessions": 55,
+    "listed_on": "2026-07-17"
+   },
+   {
     "sym": "PINELABS",
-    "months_listed": 10.4,
+    "months_listed": 10.6,
     "first_close": 250.89,
-    "last_close": 176.57,
-    "since_listing_pct": -29.6,
+    "last_close": 167.59,
+    "since_listing_pct": -33.2,
     "high": 250.89,
     "low": 137.94,
-    "from_high_pct": -29.6,
+    "from_high_pct": -33.2,
     "below_first_ever": true,
-    "sessions": 219,
+    "sessions": 223,
     "listed_on": "2025-11-14"
    },
    {
-    "sym": "WAKEFIT",
-    "months_listed": 9.4,
-    "first_close": 192.29,
-    "last_close": 141.35,
-    "since_listing_pct": -26.5,
-    "high": 215.8,
-    "low": 113.04,
-    "from_high_pct": -34.5,
-    "below_first_ever": true,
-    "sessions": 197,
-    "listed_on": "2025-12-15"
-   },
-   {
     "sym": "CRAMC",
-    "months_listed": 11.3,
+    "months_listed": 11.6,
     "first_close": 300.45,
-    "last_close": 230.45,
-    "since_listing_pct": -23.3,
+    "last_close": 216.52,
+    "since_listing_pct": -27.9,
     "high": 350.6,
-    "low": 217.25,
-    "from_high_pct": -34.3,
+    "low": 216.52,
+    "from_high_pct": -38.2,
     "below_first_ever": true,
-    "sessions": 238,
+    "sessions": 242,
     "listed_on": "2025-10-16"
    }
   ]
  },
  "data_health": {
-  "worst": "STALE",
-  "current": 11,
+  "worst": "FRESH",
+  "current": 12,
   "total": 12,
-  "degraded": [
-   {
-    "dataset": "New listings",
-    "status": "STALE",
-    "age": "7 days old",
-    "note": "older than its weekly refresh"
-   }
-  ]
+  "degraded": []
  },
  "desk": {
   "chess": {
@@ -1087,28 +1080,27 @@
    "shows": 20,
    "source": "each channel's public Atom feed",
    "built_on": "2026-10-04",
-   "age_days": 0.0,
+   "age_days": 0.7,
    "is_fallback": false
   },
   "smart_reads": [
    {
     "source": "Livemint",
     "cat": "money",
-    "title": "Are you planning your retirement correctly? Tax free, govt security\u2014research explains key reasons why Indians prefer NPS",
-    "link": "https://www.livemint.com/money/personal-finance/are-you-planning-your-retirement-correctly-tax-free-govt-security-research-explains-key-reasons-why-indians-prefer-nps-11791040307316.html",
-    "summary": "HDFC Pension Fund Management\u2019s \u2018NPS Preference Index Study 2026\u2019 revealed that preference for the National Pension Scheme among Indians has increased, driven by improved consideration, familiarity, and appeal.&amp;nbsp;",
-    "date": "Oct 03, 2026",
-    "_sort": "2026-10-03T17:02:50+00:00",
-    "smart": {
-     "what_happened": [
-      "HDFC Pension Fund Management\u2019s NPS Preference Index Study 2026 showed a rise in Indian investors favoring the National Pension Scheme.",
-      "The increase was attributed to greater consideration, familiarity and the scheme\u2019s tax\u2011free, government\u2011backed security."
-     ],
-     "why_it_matters": "The growing favorability of the National Pension Scheme indicates that more Indians are seeking tax\u2011efficient, government\u2011secured retirement options, which could shift retirement savings away from traditional bank deposits and private pension products, affecting the broader financial services market.",
-     "what_to_watch": "Monitor the quarterly NPS enrollment figures released by the Pension Fund Regulatory and Development Authority for the next reporting period.",
-     "headline": "Indians' preference for NPS rises in HDFC 2026 study",
-     "read_seconds": 20
-    }
+    "title": "IPL mega auction or a masterclass in behavioural economics? Sunk cost fallacy, winner\u2019s curse, FOMO and more | Explained",
+    "link": "https://www.livemint.com/money/ipl-mega-auction-or-a-masterclass-in-behavioural-economics-sunk-cost-fallacy-winner-s-curse-fomo-and-more-explained-11791127759975.html",
+    "summary": "The IPL mega auction highlights how emotions can cloud decision-making for franchise owners. These psychological traps mirror investors\u2019 behaviours in stock markets, where past spending often skews current judgments.",
+    "date": "Oct 04, 2026",
+    "_sort": "2026-10-04T15:49:47+00:00"
+   },
+   {
+    "source": "Livemint Opinion",
+    "cat": "money",
+    "title": "RBI MPC: beginning of a short and calibrated hike cycle",
+    "link": "https://www.livemint.com/opinion/columns/rbi-mpc-monetary-policy-committee-interest-rate-hike-cycle-11791104199543.html",
+    "summary": "One expects the monetary policy committee to deliver a rate hike in October, but a calibrated 25 basis points, along with a change in the hitherto \u2018neutral\u2019 stance and guidance for a data-dependent policy response in the coming months.",
+    "date": "Oct 04, 2026",
+    "_sort": "2026-10-04T14:15:22+00:00"
    },
    {
     "source": "Peter Attia",
@@ -1120,11 +1112,11 @@
     "_sort": "2026-10-03T11:00:00+00:00",
     "smart": {
      "what_happened": [
-      "Drugs that block myostatin preserve lean mass without boosting strength.",
-      "The result is larger muscles that are paradoxically weaker."
+      "Drugs that block myostatin lead to larger lean muscle mass.",
+      "These same drugs fail to produce corresponding gains in strength."
      ],
-     "why_it_matters": "The findings highlight a key limitation of myostatin\u2011targeting therapies, suggesting that simply increasing muscle mass may not translate into functional improvements. This challenges expectations for these drugs in treating muscle\u2011wasting conditions and could influence future research and development priorities.",
-     "what_to_watch": "Results from the next phase of clinical trials on myostatin inhibitors, especially any data on functional strength outcomes.",
+     "why_it_matters": "The disconnect between increased muscle size and unchanged strength challenges the assumption that preserving lean mass automatically translates to functional improvement, affecting how clinicians and investors evaluate the therapeutic value of myostatin inhibition for conditions like sarcopenia or muscular dystrophy.",
+     "what_to_watch": "Monitor upcoming clinical trial publications on myostatin inhibitors for data on functional strength outcomes.",
      "headline": "Myostatin inhibitors increase muscle size but not strength",
      "read_seconds": 20
     }
@@ -1139,12 +1131,12 @@
     "_sort": "2026-10-03T06:47:00+00:00",
     "smart": {
      "what_happened": [
-      "A family from Panchkula owned ancestral land in a village, and a member sold his share for Rs\u202f8\u202fcrore.",
-      "He used the proceeds to purchase two additional properties and claimed tax exemptions under Sections\u202f54B and\u202f54F, but later received a tax notice."
+      "He sold his share of ancestral land for Rs\u202f8\u202fcrore.",
+      "He purchased two additional properties, claimed exemptions under Sections\u202f54B and\u202f54F, and then received a tax notice."
      ],
-     "why_it_matters": "The case highlights how claims for capital gains exemptions under Sections\u202f54B and\u202f54F can be challenged by tax authorities, leading to notices and litigation, and underscores the importance of complying with tax provisions when restructuring property assets.",
-     "what_to_watch": "Watch for any further orders from the ITAT Chandigarh regarding this taxpayer's Section\u202f54B/54F exemption claim.",
-     "headline": "Man sells ancestral land for Rs 8 crore, buys two properties, faces tax notice",
+     "why_it_matters": "The case highlights the scrutiny of capital gains tax exemptions under Sections\u202f54B and\u202f54F when an individual sells inherited property and reinvests in new assets. A tax notice indicates the authorities are questioning the eligibility of the claimed exemptions, and the outcome at the ITAT in Chandigarh could set precedent for similar future transactions, affecting how taxpayers plan property sales and reinvestments.",
+     "what_to_watch": "Monitor whether the ITAT decision is upheld or if a further tax authority notice is issued regarding the Section\u202f54B/54F exemption claim.",
+     "headline": "Panchkula heir sells Rs\u202f8\u202fcrore land, buys two properties, faces tax notice",
      "read_seconds": 21
     }
    },
@@ -1158,23 +1150,14 @@
     "_sort": "2026-10-03T04:29:16+00:00",
     "smart": {
      "what_happened": [
-      "The piece titled \"The Dandelion and the Meaning of Life\" discusses G.K. Chesterton's ideas on how to live in wonder.",
-      "It argues that modernity has dulled our sense of astonishment about our own existence."
+      "The article discusses recovering a forgotten blaze of astonishment at our own existence.",
+      "It argues that modernity has dulled that sense of wonder."
      ],
-     "why_it_matters": "The essay highlights a philosophical concern that contemporary culture may be losing its capacity for awe, a theme that resonates beyond literature and can influence how individuals and institutions approach creativity, purpose, and engagement with the world.",
-     "what_to_watch": "Watch for coverage of the essay in literary and cultural commentary outlets over the next weeks to gauge its impact on discussions of modernist thought.",
+     "why_it_matters": "The piece highlights how a loss of awe can affect personal fulfillment and cultural attitudes, suggesting that reviving wonder could influence how individuals engage with contemporary life and its challenges.",
+     "what_to_watch": "Monitor reader responses and commentary on the essay after its publication.",
      "headline": "G.K. Chesterton essay explores wonder in modern life",
      "read_seconds": 20
     }
-   },
-   {
-    "source": "ET Opinion",
-    "cat": "money",
-    "title": "CBAM can help India build a greener, competitive export sector",
-    "link": "https://economictimes.indiatimes.com/opinion/et-commentary/cbam-can-help-india-build-a-greener-competitive-export-sector/articleshow/134645218.cms",
-    "summary": "The EU's Carbon Border Adjustment Mechanism is set to reshape global trade dynamics by prioritizing carbon intensity. Indian exporters must strategize for compliance that extends beyond the current focus on iron and steel. The Indian government is actively supporting small and medium enterprises in achieving these new ",
-    "date": "Oct 02, 2026",
-    "_sort": "2026-10-02T18:20:10+00:00"
    },
    {
     "source": "Psyche",
@@ -1231,7 +1214,7 @@
     "moves": 34,
     "termination": "Resignation",
     "speed": "Blitz",
-    "analysis": "Strengthen your opening: memorize the first 8 French Defense lines, avoid 5.Nc3\u2011e5 traps, and reduce blunders to \u22641 per game.",
+    "analysis": "Focus on early king safety: after 1.e4 e6\u202f2.d4 d5, avoid 3.Nc3\u202fBb4?; instead play 3.Nc3\u202fNf6 4.e5\u202fNfd7, then develop bishops before queen attacks\u2014prevent the decisive tactical blunder at move\u202f22.",
     "is_upset": false,
     "is_collapse": false,
     "is_long": false,
@@ -1252,6 +1235,14 @@
     "analysed": true,
     "_mode": "full",
     "_trend": [
+     {
+      "day": "10/04",
+      "wins": 8,
+      "losses": 2,
+      "draws": 0,
+      "total": 10,
+      "pct": 80
+     },
      {
       "day": "10/03",
       "wins": 0,
@@ -1299,14 +1290,6 @@
       "draws": 0,
       "total": 11,
       "pct": 55
-     },
-     {
-      "day": "09/27",
-      "wins": 2,
-      "losses": 0,
-      "draws": 0,
-      "total": 2,
-      "pct": 100
      }
     ],
     "_yest_counts": {
@@ -1340,7 +1323,7 @@
     "moves": 28,
     "termination": "Checkmate",
     "speed": "Blitz",
-    "analysis": "Study and master the Philidor\u2019s main line (3\u2026d6 4\u2026Nbd7 5\u2026c3\u202f\u2192\u202f\u2026e5), reducing unnecessary queen moves that cost 3\u20134\u202ftempo and prevent the early forced mate.",
+    "analysis": "Study Philidor endgames: after 1.e4 e5 2.Nf3 d6, avoid early queen exchanges; instead develop knights, castle, and play \u2026c6/\u2026Nd7, preventing the opponent\u2019s rapid queen infiltration that led to your checkmate at move\u202f28.",
     "is_upset": false,
     "is_collapse": false,
     "is_long": false,
@@ -1376,6 +1359,14 @@
    "icon": "\u274c",
    "score": "0/2",
    "trend": [
+    {
+     "day": "10/04",
+     "wins": 8,
+     "losses": 2,
+     "draws": 0,
+     "total": 10,
+     "pct": 80
+    },
     {
      "day": "10/03",
      "wins": 0,
@@ -1423,14 +1414,6 @@
      "draws": 0,
      "total": 11,
      "pct": 55
-    },
-    {
-     "day": "09/27",
-     "wins": 2,
-     "losses": 0,
-     "draws": 0,
-     "total": 2,
-     "pct": 100
     }
    ],
    "weak_op": "",
@@ -1438,18 +1421,18 @@
    "upsets": 0,
    "collapses": 0,
    "long_games": 0,
-   "session_summary": "AKK_010, your 2\u2011move \u201copening repertoire\u201d is a disaster\u2014both losses came from the same predictable line, proving you have no viable surprise weapon and that opponents can exploit it immediately. Stop playing that opening altogether; replace it with a solid, theory\u2011tested system (e.g., the London System as White or the Caro\u2011Kann as Black) and drill the first 10\u201312 moves until they become second nature. Then, under timed conditions, force yourself to reach a middlegame where you actually understand the plans\u2014no more relying on luck or hoping for an opponent\u2019s blunder.",
+   "session_summary": "AKK_010, your 2\u2011move opening repertoire is a disaster\u2014both losses began with the same sloppy 1.e4? response, showing you haven\u2019t mastered even the most basic principles of development and king safety. Stop chasing novelty and install a rock\u2011solid, low\u2011theory system (e.g., 1.e4\u202fc5\u202f\u2192\u202fSicilian Najdorf or 1.d4\u202fd5\u202f\u2192\u202fLondon System) and drill the first 10 moves until they\u2019re second nature. From now on, record every game, annotate every mistake, and spend at least 30 minutes daily on forced\u2011mate and endgame puzzles to rebuild your calculation muscle before you touch the board again.",
    "session_date": "2026-10-03",
    "is_yesterday": true,
    "token_missing": false
   },
   "lichess_puzzle": {
-   "pid": "cYdei",
-   "rating": 2108,
+   "pid": "ukijz",
+   "rating": 1867,
    "level": "\ud83d\udd34 stretch",
-   "themes": "Very Long \u00b7 Middlegame \u00b7 Discovered Check",
+   "themes": "Short \u00b7 Sacrifice \u00b7 Pillsburys Mate",
    "tip": "Give material for a decisive positional or mating advantage.",
-   "url": "https://lichess.org/training/cYdei"
+   "url": "https://lichess.org/training/ukijz"
   }
  }
 }
