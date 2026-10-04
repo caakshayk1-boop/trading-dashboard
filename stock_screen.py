@@ -1145,6 +1145,11 @@ def ratios(stmts: dict | None, info: dict | None) -> dict:
             r["roce_trend"] = _trend([_finite(y.get(key)) for y in ys])
             break
 
+    # The Magic Formula's raw inputs, latest fiscal year, in rupees. Carried
+    # out of here only to be consumed by magic_formula(); never published raw.
+    r["_mf"] = {"ebit": _finite(latest.get("ebit")), "debt": _finite(latest.get("total_debt")),
+                "cash": _finite(latest.get("cash")), "end": latest.get("period_end")}
+
     r["roe"] = _finite(latest.get("roe"))
     r["roe_med"] = _median([_finite(y.get("roe")) for y in ys])
     r["roe_trend"] = _trend([_finite(y.get("roe")) for y in ys])
@@ -1631,6 +1636,129 @@ def _is_financial(r: dict) -> bool:
     s = (r.get("sector") or "") + " " + (r.get("industry") or "")
     s = s.lower()
     return any(w in s for w in ("financial", "bank", "insurance", "real estate"))
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+# THE MAGIC FORMULA (Joel Greenblatt, "The Little Book That Still Beats the
+# Market")
+# ─────────────────────────────────────────────────────────────────────────────
+#
+# Two ranks across the whole screen, added together; the lowest sum ranks
+# first. A published formula with no tuned parameter, kept SEPARATE from the
+# composite and from WEIGHTS: it is a second, declared way of ordering the same
+# universe, not an input to any score here.
+#
+#   Return on capital  the screen's own ROCE (EBIT / invested capital, latest
+#                      fiscal year). Greenblatt's book uses EBIT / (net working
+#                      capital + net fixed assets); Indian screeners print ROCE,
+#                      and this pipeline has no net-fixed-assets line. Stated.
+#   Earnings yield     EBIT / enterprise value, with EV = market cap (today)
+#                      + total debt − cash (latest balance sheet).
+#
+# THE LATEST YEAR, NOT THE MEDIAN. The screen's scores read multi-year medians
+# so a one-off cannot top them; the formula is defined on current earnings, so
+# it reads the latest year and a row whose margin jumped is FLAGGED (one_off),
+# not quietly re-ranked. Excluded rows carry their reason; nothing missing is
+# zero-filled into a rank. Nothing here predicts a return.
+MF_MIN_MCAP_CR = 1000          # Greenblatt's floor was $50m; ~₹1,000 cr keeps out the noisiest microcaps
+MF_MAX_STATEMENT_AGE_DAYS = 548   # ~18 months: an older balance sheet is not "latest"
+MF_RULES = {
+    "roc": "ROCE — EBIT ÷ invested capital, latest fiscal year (the screen's own figure)",
+    "ey": "EBIT ÷ enterprise value; EV = market cap + total debt − cash",
+    "combine": "rank each separately (1 = best), add the two ranks, lowest sum first; ties go to the higher earnings yield",
+    "exclude": ("lenders, insurers and real estate (the screen's lender rule), utilities, market cap under "
+                f"₹{MF_MIN_MCAP_CR:,} cr, no statements, statements older than 18 months, EBIT or EV not positive"),
+    "source": "Joel Greenblatt, The Little Book That Still Beats the Market (2010)",
+    "deviation": ("Return on capital uses ROCE on invested capital, not Greenblatt's net working capital + net fixed "
+                  "assets; EBIT is the last fiscal year, not the trailing twelve months."),
+}
+
+
+def magic_formula(rows: list[dict], today=None) -> dict:
+    """Rank `rows` in place (each gets `mf`) and return the payload summary.
+
+    Pops the private `_mf` inputs from every row whether or not it ranks, so a
+    raw EBIT or cash figure can never reach the published payload.
+    """
+    from collections import Counter
+    from datetime import date as _date
+    today = today or _date.today()
+    why: Counter = Counter()
+    elig = []
+    for r in rows:
+        src = r.pop("_mf", None) or {}
+        mcap, roce = r.get("mcap_cr"), r.get("roce")
+        reason = None
+        if _is_financial({"sector": r.get("sector"), "industry": r.get("ind")}):
+            reason = "lender, insurer or real estate"
+        elif (r.get("sector") or "").strip().lower() == "utilities":
+            reason = "utility"
+        elif not src or src.get("ebit") is None:
+            reason = "no statements"
+        elif mcap is None:
+            reason = "no market cap"
+        elif mcap < MF_MIN_MCAP_CR:
+            reason = f"market cap under ₹{MF_MIN_MCAP_CR:,} cr"
+        elif roce is None:
+            reason = "no ROCE"
+        elif src.get("debt") is None or src.get("cash") is None:
+            reason = "no debt or cash line in the balance sheet"
+        else:
+            try:
+                age = (today - _date.fromisoformat(str(src.get("end"))[:10])).days
+            except ValueError:
+                age = None
+            ebit = src["ebit"]
+            ev = mcap * 1e7 + src["debt"] - src["cash"]
+            if age is None or age > MF_MAX_STATEMENT_AGE_DAYS:
+                reason = "statements older than 18 months"
+            elif ebit <= 0:
+                reason = "EBIT not positive"
+            elif ev <= 0:
+                reason = "EV not positive (cash exceeds market cap + debt)"
+            elif roce <= 0:
+                reason = "ROCE not positive"
+            else:
+                elig.append({"r": r, "roc": float(roce), "ey": ebit / ev * 100.0,
+                             "ev_cr": ev / 1e7, "ebit_cr": ebit / 1e7, "one_off": bool(src.get("one_off"))})
+        if reason:
+            why[reason] += 1
+            r["mf"] = {"rank": None, "why": reason}
+
+    def comp_rank(key):
+        # Competition ranking (1, 2, 2, 4): equal values share a rank, and the
+        # sum is never helped by an arbitrary order among equals.
+        order = sorted(elig, key=lambda e: -e[key])
+        out, prev, rank = {}, None, 0
+        for i, e in enumerate(order, 1):
+            v = round(e[key], 6)
+            if v != prev:
+                rank, prev = i, v
+            out[id(e)] = rank
+        return out
+
+    r_roc, r_ey = comp_rank("roc"), comp_rank("ey")
+    for e in elig:
+        e["score"] = r_roc[id(e)] + r_ey[id(e)]
+    elig.sort(key=lambda e: (e["score"], -e["ey"], -e["roc"], e["r"].get("sym") or ""))
+    n = len(elig)
+    for i, e in enumerate(elig, 1):
+        e["r"]["mf"] = {
+            "rank": i, "of": n,
+            "roc_rank": r_roc[id(e)], "ey_rank": r_ey[id(e)], "score": e["score"],
+            "roc": round(e["roc"], 1), "ey": round(e["ey"], 2),
+            "ev_cr": round(e["ev_cr"]), "ebit_cr": round(e["ebit_cr"]),
+            **({"one_off": True} if e["one_off"] else {}),
+        }
+    return {
+        "ranked": n, "universe": len(rows),
+        "excluded": dict(sorted(why.items(), key=lambda kv: -kv[1])),
+        "rules": MF_RULES,
+        "min_mcap_cr": MF_MIN_MCAP_CR,
+        "note": ("A ranking of current figures, not a prediction. The book reports a sustained edge in the US over 1988–2009; "
+                 "it has also had multi-year stretches of trailing the market. Nothing here says what any "
+                 "of these companies will do."),
+    }
 
 
 # ─────────────────────────────────────────────────────────────────────────────
@@ -2397,6 +2525,8 @@ def build(limit: int | None = None, allow_fetch: bool = True,
             "mcap_cr": _round(r.get("market_cap_cr"), 1, 0),
             "price": t.get("price"),
             "fy": r.get("fy"),
+            # Popped by magic_formula() before anything is published.
+            "_mf": dict(r["_mf"], one_off=r.get("margin_one_off") is not None) if r.get("_mf") else None,
             # Table columns — percentage points, rounded once, here.
             "roce": _pct(r.get("roce")),
             "roce_med": _pct(r.get("roce_med")),
@@ -2597,6 +2727,7 @@ def build(limit: int | None = None, allow_fetch: bool = True,
         print(f"[ahimsa] ERROR: {len(_ahimsa)} constituents and {len(out)} screened "
               f"names share NOTHING — the symbol join is broken, not the list")
 
+    mf_meta = magic_formula(out, today=datetime.now(IST).date())
     out.sort(key=lambda x: (x["comp"] is None, -(x["comp"] or 0)))
     # Deltas BEFORE compaction: _compact strips nulls, and a delta needs
     # both sides present to be computed at all.
@@ -2673,6 +2804,7 @@ def build(limit: int | None = None, allow_fetch: bool = True,
         # Real breadth across the screened universe, not a proxy. Dated, and
         # deliberately not an input to any score — see breadth().
         "breadth": breadth(out, bench),
+        "magic_formula": mf_meta,
         "price_date": bench.get("last_date") if bench else None,
         "build_secs": round(time.time() - t0, 1),
         "rows": out,
