@@ -1952,12 +1952,17 @@ def _vet_case(r: dict) -> dict:
     thresholds and not as a clean bill of health.
     """
     sw = r.get("swot") or {}
-    pro = [{"t": i["t"], "k": i.get("k", "")} for i in (sw.get("s") or [])][:VET_CASE_MAX]
+
+    def prose(x: str) -> str:
+        # The SWOT sentences carry a spaced em-dash; both sites have removed
+        # that from their prose, so the case reads with a comma instead.
+        return (x or "").replace(" \u2014 ", ", ")
+    pro = [{"t": prose(i["t"]), "k": i.get("k", "")} for i in (sw.get("s") or [])][:VET_CASE_MAX]
     flags = sorted((f for f in (r.get("risk") or {}).get("flags") or []),
                    key=lambda f: {"high": 0, "med": 1}.get(f.get("s"), 2))
     con, seen = [], set()
-    for t, k in ([(f["t"], f.get("k", "")) for f in flags]
-                 + [(i["t"], i.get("k", "")) for i in (sw.get("w") or [])]):
+    for t, k in ([(prose(f["t"]), f.get("k", "")) for f in flags]
+                 + [(prose(i["t"]), i.get("k", "")) for i in (sw.get("w") or [])]):
         key = t.lower()[:40]
         if key in seen:
             continue
