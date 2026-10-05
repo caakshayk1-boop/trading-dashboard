@@ -2137,6 +2137,10 @@ def test_the_vet_case_is_the_screens_own_measurements_and_predicts_nothing() -> 
     check("the bear case puts HIGH flags before medium ones", c["against"][0]["t"].startswith("Return on capital falling"), c["against"])
     check("the bear case drops a duplicate of a flag it already printed", len([i for i in c["against"] if i["t"].lower().startswith("return on capital falling")]) == 1, c["against"])
     check("every case line carries its own figure", all(i["k"] for i in c["for"] + c["against"]), c)
+    dashed = _vet_one(swot={"s": [{"t": "Earns 29% on capital employed \u2014 well above any plausible cost of capital", "k": "ROCE 29.1%"}], "w": []},
+                      risk={"level": "LOW", "score": 0, "flags": [{"s": "med", "t": "Margin compressing \u2014 for two years", "k": "EBIT margin 9%"}]})["c"]
+    check("the case carries no em-dash: both sites removed them from prose",
+          "\u2014" not in json.dumps(dashed, ensure_ascii=False) and dashed["for"][0]["t"] == "Earns 29% on capital employed, well above any plausible cost of capital", dashed)
     check("the case is two lists and nothing else: no per-check table (it was 190 KB for no information)",
           set(c) == {"for", "against"}, set(c))
     words = re.compile(r"\b(will|should|expect(?:ed)?|forecast|target|buy|sell|upside|likely to)\b", re.I)
