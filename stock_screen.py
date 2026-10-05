@@ -1973,6 +1973,104 @@ def _vet_case(r: dict) -> dict:
     return {"for": pro, "against": con}
 
 
+# ── LENSES AND THE EIGHT TESTS ────────────────────────────────────────────────
+#
+# Two further ways to read the SAME vetted set, from a creator's screening
+# recipe: four themes (small cap, momentum, debt-free, dividend income) and an
+# eight-rule quality filter. Both apply only to companies that cleared the
+# gate, and both are descriptions, not scores: they add no point to any number.
+#
+# THE EIGHT RULES ASK FOR MORE HISTORY THAN THIS SCREEN HOLDS, and the page
+# says so beside each one rather than quietly measuring something else under
+# the original name:
+#   10-year sales growth, 10-year average ROCE, 10-year return  ->  the screen
+#       holds four fiscal years and four years of prices, so these are the
+#       3-year compound rate, the median ROCE of the years held, and the
+#       3-year annualised return.
+#   Promoter holding  ->  not published here. Yahoo's "insiders" is a wider
+#       bucket than SEBI's promoter definition (see fundamentals.py), so it is
+#       used as a labelled proxy and never called promoter holding.
+#   "Net profit > 10%"  ->  read as net profit MARGIN.
+# A test no vetted company could be measured on is NOT APPLIED (and reported as
+# such); a company that cannot be measured on an applied test has not passed it.
+VET_EIGHT_MCAP_CR = 7000
+VET_EIGHT_SALES = 10.0     # % a year
+VET_EIGHT_ROCE = 15.0      # %
+VET_EIGHT_INSIDERS = 50.0  # %
+VET_EIGHT_RETURN = 17.0    # % a year
+VET_EIGHT_DE = 0.5
+VET_EIGHT_MARGIN = 10.0    # %
+VET_EIGHT_OCF_YEARS = 3
+VET_EIGHT = (
+    ("mcap", "Market cap", f"over \u20b9{VET_EIGHT_MCAP_CR:,} cr", ""),
+    ("sales", "Sales growth", f"3-year growth over {VET_EIGHT_SALES:g}% a year",
+     "The rule asks for 10 years. The screen holds four fiscal years of statements, so this is the 3-year compound rate."),
+    ("roce", "Return on capital", f"median ROCE over {VET_EIGHT_ROCE:g}%",
+     "The rule asks for a 10-year average. This is the median of the fiscal years held, at most four."),
+    ("insiders", "Insider holding", f"over {VET_EIGHT_INSIDERS:g}%",
+     "The rule asks for promoter holding, which this screen does not have. This is Yahoo's insiders figure, a wider bucket than SEBI's promoters, so read it as a proxy."),
+    ("ret3y", "Share return", f"3-year annualised price return over {VET_EIGHT_RETURN:g}%",
+     "The rule asks for 10 years. The screen holds four years of prices, so this is 3 years, and a recent listing has none."),
+    ("de", "Debt to equity", f"from 0 up to {VET_EIGHT_DE:g}",
+     "Negative equity is insolvency, so it does not pass. Not defined for lenders."),
+    ("margin", "Net profit", f"net profit margin over {VET_EIGHT_MARGIN:g}%",
+     "The rule reads Net profit over 10%. It is read here as net profit margin."),
+    ("ocf", "Operating cash flow", f"positive in each of the last {VET_EIGHT_OCF_YEARS} fiscal years",
+     "Not defined for lenders."),
+)
+VET_LENSES = (
+    ("small", "Small cap", "In the NSE Smallcap 250"),
+    ("mom", "Momentum", "Above its 50 and 200-day averages, ahead of the Nifty over three months, RSI 55 to 75"),
+    ("debt", "Debt-free", "Debt to equity from 0 to 0.1"),
+    ("div", "Dividend income", "Dividend yield of 2% or more"),
+)
+
+
+def _num(v):
+    return v if isinstance(v, (int, float)) and not isinstance(v, bool) and v == v else None
+
+
+def _vet_lenses(r: dict) -> list[str]:
+    """The lens codes a row belongs to. A missing input puts it in no lens."""
+    out = []
+    if r.get("tier") == "small":
+        out.append("small")
+    px, s50, s200, rs, rsi_ = (_num(r.get(k)) for k in ("price", "sma50", "sma200", "rs3m", "rsi"))
+    if None not in (px, s50, s200, rs, rsi_) and px > s50 and px > s200 and rs > 0 and 55 <= rsi_ <= 75:
+        out.append("mom")
+    de = _num(r.get("de"))
+    if de is not None and 0 <= de <= 0.1 and not _is_financial({"sector": r.get("sector"), "industry": r.get("ind")}):
+        out.append("debt")
+    dy = _num(r.get("div_yield"))
+    if dy is not None and dy >= 2.0:
+        out.append("div")
+    return out
+
+
+def _vet_eight(r: dict) -> dict[str, str]:
+    """{code: 'pass'|'fail'|'unk'} for the eight rules, on one cleared row."""
+    lender = _is_financial({"sector": r.get("sector"), "industry": r.get("ind")})
+
+    def cmp(v, ok):
+        v = _num(v)
+        return "unk" if v is None else ("pass" if ok(v) else "fail")
+    res = {
+        "mcap": cmp(r.get("mcap_cr"), lambda v: v > VET_EIGHT_MCAP_CR),
+        "sales": cmp(r.get("rev_cagr"), lambda v: v > VET_EIGHT_SALES),
+        "roce": cmp(r.get("roce_med"), lambda v: v > VET_EIGHT_ROCE),
+        "insiders": cmp(r.get("insiders"), lambda v: v > VET_EIGHT_INSIDERS),
+        "ret3y": cmp(r.get("r3y_cagr"), lambda v: v > VET_EIGHT_RETURN),
+        "de": "unk" if lender else cmp(r.get("de"), lambda v: 0 <= v < VET_EIGHT_DE),
+        "margin": cmp(r.get("net_margin"), lambda v: v > VET_EIGHT_MARGIN),
+    }
+    cfo = [_num((y or {}).get("cfo")) for y in (r.get("years") or [])[:VET_EIGHT_OCF_YEARS]]
+    if lender or len(cfo) < VET_EIGHT_OCF_YEARS or None in cfo:
+        res["ocf"] = "unk"
+    else:
+        res["ocf"] = "pass" if all(c > 0 for c in cfo) else "fail"
+    return res
+
+
 def vet(rows: list[dict], price_date=None, today=None) -> dict:
     """Attach `vet` to every row and return the payload's summary.
 
@@ -1995,6 +2093,7 @@ def vet(rows: list[dict], price_date=None, today=None) -> dict:
         price_date = _d.fromisoformat(price_date[:10])
     by_check: Counter = Counter()
     n_ok = n_held = 0
+    pending = []
     for r in rows:
         res = _vet_checks(r, price_date, today)
         failed = [c for c, st, _ in res if st == "fail"]
@@ -2017,15 +2116,46 @@ def vet(rows: list[dict], price_date=None, today=None) -> dict:
         if cleared:
             n_ok += 1
             v["c"] = _vet_case(r)
+            lens = _vet_lenses(r)
+            if lens:
+                v["l"] = lens
+            pending.append((r, v, _vet_eight(r)))
         else:
             n_held += 1
         r["vet"] = v
+    # A test is APPLIED only if at least one vetted company could be measured on
+    # it. One nobody could be measured on is reported as not applied; it does
+    # not fail everybody.
+    codes = [c for c, *_ in VET_EIGHT]
+    applied = {c for c in codes if any(res[c] != "unk" for _, _, res in pending)}
+    tally = {c: Counter(res[c] for _, _, res in pending) for c in codes}
+    passed_all = 0
+    for r, v, res in pending:
+        a = [c for c in codes if c in applied]
+        fails = [c for c in a if res[c] == "fail"]
+        unk = [c for c in a if res[c] == "unk"]
+        q = {"p": sum(1 for c in a if res[c] == "pass"), "a": bool(a) and not fails and not unk}
+        if fails:
+            q["f"] = fails
+        if unk:
+            q["u"] = unk
+        v["q"] = q
+        passed_all += q["a"]
+    lens_n = Counter(lc for _, v, _ in pending for lc in v.get("l", []))
     return {
         "cleared": n_ok,
         "held": n_held,
         "total": len(rows),
         "min_applicable": VET_MIN_APPLICABLE,
         "by_check": dict(by_check),
+        "lenses": [{"code": c, "label": lab, "rule": rule, "n": lens_n.get(c, 0)} for c, lab, rule in VET_LENSES],
+        "eight": {
+            "applied": len(applied),
+            "passed_all": passed_all,
+            "tests": [{"code": c, "label": lab, "rule": rule, "note": note, "applied": c in applied,
+                       "pass": tally[c].get("pass", 0), "fail": tally[c].get("fail", 0), "unk": tally[c].get("unk", 0)}
+                      for c, lab, rule, note in VET_EIGHT],
+        },
         "rules": [{"code": c, "label": lab, "rule": rule, "core": c in VET_CORE} for c, lab, rule in VET_CHECKS],
         "note": VET_NOTE,
     }

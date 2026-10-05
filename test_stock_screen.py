@@ -2069,7 +2069,11 @@ def _vet_row(**over) -> dict:
          "turnover_cr": 12.0, "de": 0.4, "icover": 8.0, "cfo_pat": 1.1, "comp": 50.0,
          "_mf": {"end": "2026-03-31", "ebit": 1.0, "one_off": False},
          "risk": {"level": "LOW", "score": 0, "flags": []},
-         "swot": {"s": [], "w": []}}
+         "swot": {"s": [], "w": []},
+         # inputs to the lenses and the eight tests; the healthy row passes all eight
+         "tier": "small", "price": 120.0, "sma50": 100.0, "sma200": 90.0, "rs3m": 5.0, "rsi": 60.0,
+         "div_yield": 3.0, "rev_cagr": 12.0, "roce_med": 18.0, "insiders": 60.0, "r3y_cagr": 20.0,
+         "net_margin": 12.0, "years": [{"cfo": 5.0}, {"cfo": 4.0}, {"cfo": 3.0}, {"cfo": 2.0}]}
     r.update(copy.deepcopy(over))
     return r
 
@@ -2079,6 +2083,16 @@ def _vet_one(**over) -> dict:
     r = _vet_row(**over)
     S.vet([r], price_date="2026-10-01", today=date(2026, 10, 5))
     return r["vet"]
+
+
+def _vet_pair(**over) -> dict:
+    """The vet of ONE row, beside a healthy row. A test no vetted company could be
+    measured on is not applied, so unmeasured-ness only shows up where something
+    else was measurable, as it always is in the real universe."""
+    from datetime import date
+    rows = [_vet_row(sym="HEALTHY"), _vet_row(**over)]
+    S.vet(rows, price_date="2026-10-01", today=date(2026, 10, 5))
+    return rows[1]["vet"]
 
 
 def test_the_vet_gate_holds_what_it_cannot_measure() -> None:
@@ -2192,6 +2206,82 @@ def test_a_missing_market_cap_is_none_never_zero() -> None:
     check("and keeps a real one", near(r["market_cap_cr"], 700000.0))
 
 
+
+def test_the_four_lenses_describe_the_vetted_set_and_leave_a_gap_out_of_every_lens() -> None:
+    check("a healthy row is in small cap, momentum and dividend income, not debt-free (D/E 0.4)",
+          _vet_one()["l"] == ["small", "mom", "div"], _vet_one().get("l"))
+    check("small cap is NSE Smallcap 250 membership, and a row with no tier is in no lens for it",
+          "small" not in _vet_one(tier=None).get("l", []) and "small" not in _vet_one(tier="mid").get("l", []))
+    for k, v in (("price", None), ("sma200", None), ("rs3m", None), ("rsi", None)):
+        check(f"momentum with {k} missing is not in it", "mom" not in _vet_one(**{k: v}).get("l", []))
+    check("momentum needs RSI inside 55 to 75", "mom" not in _vet_one(rsi=80.0).get("l", []) and "mom" not in _vet_one(rsi=50.0).get("l", []))
+    check("momentum needs the price over BOTH averages", "mom" not in _vet_one(price=95.0).get("l", []) and "mom" not in _vet_one(price=85.0).get("l", []))
+    check("momentum needs to be ahead of the Nifty", "mom" not in _vet_one(rs3m=-1.0).get("l", []))
+    check("debt-free is D/E from 0 to 0.1", "debt" in _vet_one(de=0.05).get("l", []) and "debt" in _vet_one(de=0.0).get("l", []))
+    check("NEGATIVE equity is not debt-free: it is insolvency (the existing chip lets 9 through)",
+          "debt" not in _vet_one(de=-0.5).get("l", []))
+    check("a lender is never debt-free: leverage is not defined for it",
+          "debt" not in _vet_one(sector="Financial Services", ind="Banks", de=0.05).get("l", []))
+    check("a missing D/E is in no debt lens", "debt" not in _vet_one(de=None).get("l", []))
+    check("dividend income is a yield of 2% or more", "div" in _vet_one(div_yield=2.0).get("l", []) and "div" not in _vet_one(div_yield=1.9).get("l", []))
+    check("a missing yield is in no dividend lens (absence is not zero)", "div" not in _vet_one(div_yield=None).get("l", []))
+    check("a held row is in no lens", "l" not in _vet_one(mcap_cr=None))
+
+
+def test_the_eight_tests_are_measured_as_said_and_the_gaps_in_history_are_named() -> None:
+    q = _vet_pair()["q"]
+    check("a healthy row passes all eight", q == {"p": 8, "a": True}, q)
+    for key, bad, code in (("mcap_cr", 6999.0, "mcap"), ("rev_cagr", 9.9, "sales"), ("roce_med", 14.9, "roce"),
+                           ("insiders", 49.0, "insiders"), ("r3y_cagr", 16.9, "ret3y"), ("de", 0.5, "de"),
+                           ("net_margin", 9.9, "margin")):
+        q = _vet_pair(**{key: bad})["q"]
+        check(f"{code}: just under the line fails it and passes the rest", q["f"] == [code] and q["p"] == 7 and not q["a"], q)
+    for key, code in (("mcap_cr", None), ("rev_cagr", "sales"), ("roce_med", "roce"), ("insiders", "insiders"),
+                      ("r3y_cagr", "ret3y"), ("net_margin", "margin"), ("de", "de")):
+        if code is None:
+            continue
+        q = _vet_pair(**{key: None})["q"]
+        check(f"{code}: UNMEASURED is not a pass", q.get("u") == [code] and not q["a"], q)
+    check("negative equity does not pass the debt test (the rule itself)", S._vet_eight(_vet_row(de=-0.2))["de"] == "fail")
+    check("and the gate holds it out before the eight tests ever run", "q" not in _vet_pair(de=-0.2) and _vet_pair(de=-0.2)["s"] == "held")
+    check("cash flow must be positive in each of the last three years",
+          _vet_pair(years=[{"cfo": 5.0}, {"cfo": -1.0}, {"cfo": 3.0}])["q"].get("f") == ["ocf"])
+    check("fewer than three years of cash flow is unmeasured, not a pass",
+          _vet_pair(years=[{"cfo": 5.0}, {"cfo": 4.0}])["q"].get("u") == ["ocf"])
+    check("a missing year in the last three is unmeasured", _vet_pair(years=[{"cfo": 5.0}, {"cfo": None}, {"cfo": 3.0}])["q"].get("u") == ["ocf"])
+    check("only the LAST three years count: an old loss does not fail it",
+          _vet_pair(years=[{"cfo": 5.0}, {"cfo": 4.0}, {"cfo": 3.0}, {"cfo": -9.0}])["q"]["a"])
+    bank = _vet_pair(sector="Financial Services", ind="Banks - Regional")["q"]
+    check("a lender cannot pass: debt and cash flow are not defined for it", bank.get("u") == ["de", "ocf"] and not bank["a"], bank)
+    notes = {t[0]: t[3] for t in S.VET_EIGHT}
+    check("the three 10-year rules say they are measured over what is held",
+          all(re.search(r"10[- ]years?", notes[c]) and ("3" in notes[c] or "four" in notes[c]) for c in ("sales", "roce", "ret3y")), notes)
+    check("insiders is labelled as a proxy and never called promoter holding in the rule's own label",
+          "proxy" in notes["insiders"] and "promoter" not in S.VET_EIGHT[3][1].lower())
+    check("net profit says it is read as a margin", "margin" in notes["margin"] and "margin" in S.VET_EIGHT[6][2])
+
+
+def test_a_test_nobody_could_be_measured_on_is_not_applied_and_the_payload_carries_it() -> None:
+    import datetime
+    rows = [_vet_row(sym="A", r3y_cagr=None), _vet_row(sym="B", r3y_cagr=None), _vet_row(sym="C", mcap_cr=None)]
+    meta = S.vet(rows, price_date="2026-10-01", today=datetime.date(2026, 10, 5))
+    e = meta["eight"]
+    ret = next(t for t in e["tests"] if t["code"] == "ret3y")
+    check("a test with no measurable vetted company is NOT APPLIED", not ret["applied"] and e["applied"] == 7, e)
+    check("and it does not fail the companies it could not measure", rows[0]["vet"]["q"]["a"] and "u" not in rows[0]["vet"]["q"], rows[0]["vet"])
+    check("the count of companies passing all applied tests is published", e["passed_all"] == 2, e["passed_all"])
+    check("each test carries its rule, its note and its pass, fail and unmeasured counts",
+          all({"rule", "note", "pass", "fail", "unk", "applied"} <= set(t) for t in e["tests"]) and len(e["tests"]) == 8)
+    check("the lenses carry a count of the vetted set", [l["code"] for l in meta["lenses"]] == ["small", "mom", "debt", "div"]
+          and meta["lenses"][0]["n"] == 2, meta["lenses"])
+    check("a held row carries no lens and no tests", "q" not in rows[2]["vet"] and "l" not in rows[2]["vet"])
+    import copy
+    lite = S.lite_payload({"rows": [copy.deepcopy(rows[0])]})["rows"][0]["vet"]
+    check("lite keeps the lenses and the eight-test result, and still drops the case", "l" in lite and "q" in lite and "c" not in lite, lite)
+    text = json.dumps([[S.VET_EIGHT], [S.VET_LENSES]], ensure_ascii=False)
+    check("none of the new copy uses an em-dash or predicts", "\u2014" not in text and not re.search(r"\b(will|should|forecast|expect(?:ed)?|upside)\b", text, re.I), text[:120])
+
+
 def main() -> int:
     print("stock screen — indicator arithmetic and honesty invariants\n")
     for fn in (test_short_history_publishes_its_real_range,
@@ -2263,7 +2353,10 @@ def main() -> int:
                test_the_vet_gate_reads_lenders_and_balance_sheets_with_the_screens_own_rules,
                test_the_vet_case_is_the_screens_own_measurements_and_predicts_nothing,
                test_vetting_feeds_nothing_and_the_projections_keep_the_status,
-               test_a_missing_market_cap_is_none_never_zero):
+               test_a_missing_market_cap_is_none_never_zero,
+               test_the_four_lenses_describe_the_vetted_set_and_leave_a_gap_out_of_every_lens,
+               test_the_eight_tests_are_measured_as_said_and_the_gaps_in_history_are_named,
+               test_a_test_nobody_could_be_measured_on_is_not_applied_and_the_payload_carries_it):
         try:
             fn()
         except Exception as e:                       # noqa: BLE001
