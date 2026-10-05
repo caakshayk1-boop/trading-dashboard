@@ -139,7 +139,7 @@ def compute(nifty_close, nifty_hi, nifty_lo, breadth: dict, vix) -> dict | None:
     if v is not None:
         parts.append({"key": "volatility", "label": "Volatility",
                       "score": vix_score(v), "weight": WEIGHTS["volatility"],
-                      "detail": f"India VIX at {v:.2f} — {vix_word(v)}"})
+                      "detail": f"India VIX at {v:.2f}, {vix_word(v)}"})
     hi52 = _n(breadth.get("at_52w_high"))
     if hi52 is not None:
         # Capped: 5% of names at a one-year high is already broad, so the
