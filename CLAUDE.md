@@ -126,6 +126,22 @@ Nifty 500 research screen sitting directly above the Signal Log.
   input (it grades 48% of the universe HIGH and reads the same fields the gate
   already tests); its flags go in the bear case. `vet.c` (the case) is dropped
   from `screen-lite.json`; Vision reads only `vet.s/f/w` there, by design.
+  **Lenses and the eight tests** (`vet.l`, `vet.q`, payload `vet.lenses` and
+  `vet.eight`) read the same vetted set from a creator's recipe: four themes
+  (small cap = NSE Smallcap 250; momentum = over the 50 and 200-day, ahead of the
+  Nifty over 3 months, RSI 55 to 75; debt-free = D/E 0 to 0.1, never negative,
+  never a lender; dividend income = yield of 2% or more) and eight rules (market
+  cap over ₹7,000 cr, sales growth over 10%, ROCE over 15%, insiders over 50%,
+  return over 17%, D/E under 0.5, net margin over 10%, operating cash flow
+  positive in each of the last 3 years). **The recipe asks for 10 years of history
+  and this screen holds four**, so those three rules are measured as the 3-year
+  compound rate, the median ROCE of the years held and the 3-year price return,
+  and each says so on the page. "Promoter holding" is Yahoo's insiders bucket and
+  is labelled a proxy, never promoter holding. "Net profit over 10%" is read as
+  margin. A test no vetted company could be measured on is NOT APPLIED (reported
+  as such) rather than failing everyone; a company unmeasured on an applied test
+  has not passed it. Lenders cannot pass all eight (D/E and cash flow are not
+  defined for them). Neither feeds any score.
   Pinned by `test_stock_screen.py`.
 
 Honesty rules the screen must keep (all pinned by tests):
