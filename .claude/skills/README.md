@@ -44,3 +44,21 @@ repo's honesty rules, and those win on every collision:
 
 A prettier page that reads more confident than its data is a regression here,
 not an improvement.
+
+## Added 2026-10-05 (owner request: "3 Claude skills that kill the AI slop look")
+
+  animate, improve-animations, review-animations
+                    From emilkowalski/skills (same MIT licence as above). The
+                    animation trio the note above said to copy in when a job
+                    called for it; the job is a motion pass over both sites.
+  impeccable        pbakaus/impeccable, Apache-2.0 (LICENSE + NOTICE.md beside
+                    it). SKILL.md and reference/ only. scripts/ and the
+                    plugin's hooks are NOT here: the launcher downloads and
+                    runs a binary, and the hooks fire on every Edit/Write and
+                    on Stop. See impeccable/VENDORED.md.
+  design-taste-frontend
+                    Leonxlnx/taste-skill, MIT. One SKILL.md. Its own scope
+                    excludes dashboards and data tables; see VENDORED.md.
+
+Playwright needs no MCP server here: Chromium and the Playwright library are
+already in the container (PLAYWRIGHT_BROWSERS_PATH=/opt/pw-browsers).
