@@ -171,7 +171,11 @@ def fetch(symbol: str) -> dict | None:
         "held_institutions": _num(info.get("heldPercentInstitutions")),
         "dividend_yield": _num(info.get("dividendYield")),
         "beta": _num(info.get("beta")),
-        "market_cap_cr": (_num(info.get("marketCap")) or 0) / 1e7,   # INR → crore
+        # A missing marketCap is None, never 0. `(x or 0) / 1e7` turned "Yahoo did
+        # not send it" into a measured ₹0 cr, and 24 of 985 rows (RELIANCE, TCS,
+        # IOC, RECLTD, MCX...) were then ranked out of the Magic Formula as
+        # "market cap under ₹1,000 cr". Absence and zero are different sentences.
+        "market_cap_cr": _market_cap_cr(info.get("marketCap")),       # INR → crore
         "pe": _num(info.get("trailingPE")),
         "forward_pe": _num(info.get("forwardPE")),
         "roe": _num(info.get("returnOnEquity")),                      # fraction
@@ -205,8 +209,19 @@ def fetch(symbol: str) -> dict | None:
 _SCHEMA_KEYS = frozenset({"business", "held_insiders", "dividend_yield"})
 
 
+def _market_cap_cr(raw) -> float | None:
+    """Rupees → crore, or None. Zero and negative are not market caps."""
+    v = _num(raw)
+    return v / 1e7 if v is not None and v > 0 else None
+
+
 def _schema_ok(entry: dict) -> bool:
-    return entry.get("_miss") or _SCHEMA_KEYS.issubset(entry.keys())
+    if entry.get("_miss"):
+        return True
+    # An entry written before the market-cap fix may carry a measured 0 that
+    # was really an absence. Treat it as stale so it is refetched on the next
+    # run instead of waiting out its 7 days.
+    return _SCHEMA_KEYS.issubset(entry.keys()) and entry.get("market_cap_cr") != 0
 
 
 def get(symbol: str, allow_fetch: bool = True) -> dict | None:

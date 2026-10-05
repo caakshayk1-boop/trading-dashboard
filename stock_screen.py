@@ -1110,7 +1110,10 @@ def ratios(stmts: dict | None, info: dict | None) -> dict:
         r["debt_to_equity"] = _finite(info.get("debt_to_equity"))
         r["pe"] = _finite(info.get("pe"))
         r["pb"] = _finite(info.get("price_to_book"))
-        r["market_cap_cr"] = _finite(info.get("market_cap_cr"))
+        # Belt and braces for entries cached before the fundamentals fix: a
+        # zero market cap is an absence, not a measurement.
+        _mc = _finite(info.get("market_cap_cr"))
+        r["market_cap_cr"] = _mc if _mc is not None and _mc > 0 else None
         r["sector"] = info.get("sector") or ""
         r["next_earnings"] = info.get("next_earnings")
         r["held_insiders"] = _finite(info.get("held_insiders"))
@@ -1778,6 +1781,250 @@ def magic_formula(rows: list[dict], today=None) -> dict:
 # reader who disagrees can check the arithmetic, and nothing here is generated
 # text dressed up as analysis. Where the data cannot support a claim, the claim
 # is absent rather than softened.
+
+# ─────────────────────────────────────────────────────────────────────────────
+# VETTED: A GATE IN FRONT OF THE SCREEN, AND THE CASE FOR AND AGAINST WHAT PASSES
+# ─────────────────────────────────────────────────────────────────────────────
+#
+# Two questions, in this order, and they are different questions.
+#
+#   1. Is this row fit to be screened at all? (the GATE)  Nine checks, each of
+#      which is pass, fail, not applicable, or UNMEASURED. A row whose price is
+#      stale, whose statements are old, whose market cap Yahoo never sent, or
+#      whose cash does not follow its profit should not be sorted alongside the
+#      rest as though it were a peer. The gate holds it out WITH the reason.
+#   2. For what clears, what does the data say for it and against it? (the CASE)
+#      Taken from the screen's own SWOT and risk flags, each line carrying the
+#      figure that raised it. Nothing here is written, estimated or predicted.
+#
+# What this is not. It is not a score, a ranking, a target or a recommendation,
+# and it is an input to nothing: it does not touch WEIGHTS, the composite or the
+# Magic Formula (it is computed BEFORE the Magic Formula and reads none of it),
+# so a name cannot be lifted or sunk by being vetted. "Cleared" means "passed
+# the checks below on the data we hold", and "held" means "see the stated reason".
+#
+# THE RISK GRADE IS NOT A GATE INPUT. It reads the same leverage, cover and cash
+# fields the gate already tests, and it grades 48% of this universe HIGH (302
+# of those for "ROCE falling"), so it separates weak businesses from unfit rows
+# badly. A weak business belongs in the BEAR CASE, which prints the risk flags
+# beside the strengths; it is not a reason to hold a row out of the comparison.
+#
+# UNMEASURED IS NOT A PASS. The first run of this gate found 24 names whose
+# market cap was a published 0 (fundamentals.py turned a missing Yahoo field
+# into a measured zero). RELIANCE and TCS were among them and read as microcaps.
+# A check that cannot be measured on a core field holds the row; on a field that
+# does not exist for the company (a lender has no interest cover) it is
+# "not applicable" and is counted as neither pass nor fail.
+VET_MIN_MCAP_CR = MF_MIN_MCAP_CR
+VET_MAX_STATEMENT_AGE_DAYS = MF_MAX_STATEMENT_AGE_DAYS
+VET_MIN_FISCAL_YEARS = 3
+VET_MAX_DE = 2.0               # the band risk_flags itself calls "high"
+VET_MIN_COVER = 3.0            # below this risk_flags calls cover "thin"
+VET_MIN_CASH_CONVERSION = 0.8  # below this risk_flags calls conversion lagging
+VET_PRICE_LAG_DAYS = 5         # a close older than this, against the screen's own price date, is stale
+VET_MIN_APPLICABLE = 5         # a lender still faces five; fewer than this clears nothing
+VET_CORE = frozenset({"stmts", "fresh", "px", "mcap", "liq"})
+VET_CHECKS = (
+    ("stmts", "Statements", "Three or more fiscal years of annual statements"),
+    ("fresh", "Fresh statements", "Latest fiscal year ended within 18 months"),
+    ("px", "Fresh price", f"Last close within {VET_PRICE_LAG_DAYS} days of the screen's price date"),
+    ("mcap", "Market cap", f"Market cap published and at least \u20b9{VET_MIN_MCAP_CR:,} cr"),
+    ("liq", "Tradable", "Passes the screen's liquidity floor"),
+    ("lev", "Leverage", f"Debt to equity at least 0 and under {VET_MAX_DE:g} (not applicable to lenders)"),
+    ("cover", "Interest cover", f"EBIT covers interest at least {VET_MIN_COVER:g} times (not applicable to lenders)"),
+    ("cash", "Cash conversion", f"Median operating cash flow at least {VET_MIN_CASH_CONVERSION:.0%} of profit (not applicable to lenders)"),
+    ("oneoff", "Run rate", f"Latest EBIT margin did not move {ONE_OFF_MARGIN_PT:.0f}+ points in a year (not applicable to lenders)"),
+)
+VET_NOTE = ("Cleared means a company passed these checks on the data held, and held means the stated reason. "
+            "It is not a score, a ranking or a recommendation, it feeds no other number on this page, and "
+            "nothing here predicts a company or its price.")
+VET_CASE_MAX = 3
+
+
+def _vet_statement_end(r: dict):
+    from datetime import date as _d
+    end = (r.get("_mf") or {}).get("end")
+    if end:
+        try:
+            return _d.fromisoformat(str(end)[:10])
+        except ValueError:
+            pass
+    m = re.match(r"FY(\d{2})$", r.get("fy") or "")
+    return _d(2000 + int(m.group(1)), 3, 31) if m else None
+
+
+def _vet_checks(r: dict, price_date, today) -> list[tuple[str, str, str]]:
+    """[(code, 'pass'|'fail'|'na'|'unk', figure)] for one published row."""
+    from datetime import date as _d
+    lender = _is_financial({"sector": r.get("sector"), "industry": r.get("ind")})
+    out = []
+
+    def put(code, status, text):
+        out.append((code, status, text))
+
+    # statements
+    n = r.get("fy_count")
+    if r.get("has_stmts") is False:
+        put("stmts", "fail", "no annual statements published")
+    elif n is None:
+        put("stmts", "unk", "number of fiscal years not published")
+    elif n < VET_MIN_FISCAL_YEARS:
+        put("stmts", "fail", f"{n} fiscal year{'s' if n != 1 else ''} of statements")
+    else:
+        put("stmts", "pass", f"{n} fiscal years")
+    end = _vet_statement_end(r)
+    if end is None:
+        put("fresh", "unk", "statement date not published")
+    elif (today - end).days > VET_MAX_STATEMENT_AGE_DAYS:
+        put("fresh", "fail", f"latest statements ended {end:%b %Y}")
+    else:
+        put("fresh", "pass", f"{r.get('fy') or 'latest'} ended {end:%b %Y}")
+    # price
+    ld = r.get("last_date")
+    try:
+        ld = _d.fromisoformat(str(ld)[:10]) if ld else None
+    except ValueError:
+        ld = None
+    if ld is None or price_date is None:
+        put("px", "unk", "last close date not published")
+    elif (price_date - ld).days > VET_PRICE_LAG_DAYS:
+        put("px", "fail", f"last close {ld:%d %b}, screen price date {price_date:%d %b}")
+    else:
+        put("px", "pass", f"last close {ld:%d %b}")
+    # market cap: absence and smallness are different findings
+    mc = r.get("mcap_cr")
+    if mc is None or mc <= 0:
+        put("mcap", "fail", "market cap not published")
+    elif mc < VET_MIN_MCAP_CR:
+        put("mcap", "fail", f"market cap \u20b9{mc:,.0f} cr, under \u20b9{VET_MIN_MCAP_CR:,} cr")
+    else:
+        put("mcap", "pass", f"\u20b9{mc:,.0f} cr")
+    lq = r.get("liquid")
+    if lq is None:
+        put("liq", "unk", "liquidity not measured")
+    elif not lq:
+        put("liq", "fail", f"20-day turnover \u20b9{(r.get('turnover_cr') or 0):.1f} cr a day")
+    else:
+        put("liq", "pass", f"turnover \u20b9{(r.get('turnover_cr') or 0):,.0f} cr a day")
+    # balance sheet and cash: not defined for lenders
+    de, ic, cp = r.get("de"), r.get("icover"), r.get("cfo_pat")
+    if lender:
+        for code in ("lev", "cover", "cash", "oneoff"):
+            put(code, "na", "lender: this measure is not defined")
+    else:
+        if de is None:
+            put("lev", "na", "debt to equity not reported")
+        elif de < 0:
+            put("lev", "fail", f"negative equity, D/E {de:.2f}")
+        elif de >= VET_MAX_DE:
+            put("lev", "fail", f"D/E {de:.2f}")
+        else:
+            put("lev", "pass", f"D/E {de:.2f}")
+        if ic is None:
+            put("cover", "na", "no interest expense reported")
+        elif ic < VET_MIN_COVER:
+            put("cover", "fail", f"EBIT covers interest {ic:.1f} times")
+        else:
+            put("cover", "pass", f"EBIT covers interest {ic:.1f} times")
+        if cp is None:
+            put("cash", "na", "cash flow not reported")
+        elif cp < VET_MIN_CASH_CONVERSION:
+            put("cash", "fail", f"CFO/PAT {cp:.2f}x median")
+        else:
+            put("cash", "pass", f"CFO/PAT {cp:.2f}x median")
+        mf = r.get("_mf")
+        if not mf:
+            put("oneoff", "na", "no margin history")
+        elif mf.get("one_off"):
+            put("oneoff", "fail", f"EBIT margin moved {ONE_OFF_MARGIN_PT:.0f}+ points in the latest year")
+        else:
+            put("oneoff", "pass", "no margin discontinuity")
+    return out
+
+
+def _vet_case(r: dict) -> dict:
+    """What the screen's own measurements say for the company and against it.
+
+    Strengths come from the SWOT, in the order it states them. The bear case is
+    the risk flags (high before medium) and then the SWOT weaknesses, de-duplicated.
+    Every line is the screen's own sentence with its own figure. If no weakness
+    cleared the screen's thresholds, that is stated as a fact about the
+    thresholds and not as a clean bill of health.
+    """
+    sw = r.get("swot") or {}
+    pro = [{"t": i["t"], "k": i.get("k", "")} for i in (sw.get("s") or [])][:VET_CASE_MAX]
+    flags = sorted((f for f in (r.get("risk") or {}).get("flags") or []),
+                   key=lambda f: {"high": 0, "med": 1}.get(f.get("s"), 2))
+    con, seen = [], set()
+    for t, k in ([(f["t"], f.get("k", "")) for f in flags]
+                 + [(i["t"], i.get("k", "")) for i in (sw.get("w") or [])]):
+        key = t.lower()[:40]
+        if key in seen:
+            continue
+        seen.add(key)
+        con.append({"t": t, "k": k})
+        if len(con) == VET_CASE_MAX:
+            break
+    return {"for": pro, "against": con}
+
+
+def vet(rows: list[dict], price_date=None, today=None) -> dict:
+    """Attach `vet` to every row and return the payload's summary.
+
+    MUST run before magic_formula(): it reads `_mf` (which that function pops)
+    for the one-off-year finding, and it must not read `mf`, so the Magic
+    Formula stays an input to nothing.
+    """
+    from collections import Counter
+    from datetime import date as _d
+    today = today or _d.today()
+    if price_date is None:
+        dates = []
+        for r in rows:
+            try:
+                dates.append(_d.fromisoformat(str(r.get("last_date"))[:10]))
+            except (TypeError, ValueError):
+                pass
+        price_date = max(dates) if dates else None
+    elif isinstance(price_date, str):
+        price_date = _d.fromisoformat(price_date[:10])
+    by_check: Counter = Counter()
+    n_ok = n_held = 0
+    for r in rows:
+        res = _vet_checks(r, price_date, today)
+        failed = [c for c, st, _ in res if st == "fail"]
+        unmeasured = [c for c, st, _ in res if st == "unk"]
+        applicable = [x for x in res if x[1] != "na"]
+        p = sum(1 for _, st, _ in res if st == "pass")
+        held_by = failed + [c for c in unmeasured if c in VET_CORE]
+        cleared = (not failed and not [c for c in unmeasured if c in VET_CORE]
+                   and len(applicable) >= VET_MIN_APPLICABLE)
+        v = {"s": "cleared" if cleared else "held", "p": p, "n": len(applicable)}
+        if held_by:
+            v["f"] = held_by
+            first = next(x for x in res if x[0] == held_by[0])
+            v["w"] = first[2] if first[1] == "fail" else f"unmeasured: {first[2]}"
+        elif not cleared:
+            v["f"] = []
+            v["w"] = f"only {len(applicable)} checks apply"
+        for c in held_by:
+            by_check[c] += 1
+        if cleared:
+            n_ok += 1
+            v["c"] = _vet_case(r)
+        else:
+            n_held += 1
+        r["vet"] = v
+    return {
+        "cleared": n_ok,
+        "held": n_held,
+        "total": len(rows),
+        "min_applicable": VET_MIN_APPLICABLE,
+        "by_check": dict(by_check),
+        "rules": [{"code": c, "label": lab, "rule": rule, "core": c in VET_CORE} for c, lab, rule in VET_CHECKS],
+        "note": VET_NOTE,
+    }
+
 
 def swot(r: dict, t: dict, val: dict) -> dict:
     S, W, O, T = [], [], [], []
@@ -2736,6 +2983,7 @@ def build(limit: int | None = None, allow_fetch: bool = True,
         print(f"[ahimsa] ERROR: {len(_ahimsa)} constituents and {len(out)} screened "
               f"names share NOTHING — the symbol join is broken, not the list")
 
+    vet_meta = vet(out, price_date=None, today=datetime.now(IST).date())
     mf_meta = magic_formula(out, today=datetime.now(IST).date())
     out.sort(key=lambda x: (x["comp"] is None, -(x["comp"] or 0)))
     # Deltas BEFORE compaction: _compact strips nulls, and a delta needs
@@ -2814,6 +3062,7 @@ def build(limit: int | None = None, allow_fetch: bool = True,
         # deliberately not an input to any score — see breadth().
         "breadth": breadth(out, bench),
         "magic_formula": mf_meta,
+        "vet": vet_meta,
         "price_date": bench.get("last_date") if bench else None,
         "build_secs": round(time.time() - t0, 1),
         "rows": out,
@@ -3049,7 +3298,7 @@ LITE_DROP_FIELDS = (
 )
 # Prose inside an otherwise-scalar object. Dropped from the sub-object rather
 # than dropping the whole field, because the card prints its summary keys.
-LITE_DROP_INNER = {"risk": ("flags",), "vd": ("f",)}
+LITE_DROP_INNER = {"risk": ("flags",), "vd": ("f",), "vet": ("c",)}
 
 
 def lite_payload(table: dict) -> dict:

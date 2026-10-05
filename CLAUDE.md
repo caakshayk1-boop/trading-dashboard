@@ -109,6 +109,25 @@ Nifty 500 research screen sitting directly above the Signal Log.
   Separate from WEIGHTS and the composite; an input to nothing. The paper book
   that buys its top names lives in the private engine (`vision_eod/magic.py`).
 
+- **Vetted (`vet()`, `vet` on every row, `vet` on the payload).** A gate in front
+  of the screen and a case for and against what clears it. Nine checks, each
+  pass / fail / not applicable / UNMEASURED: statements (3+ fiscal years), fresh
+  statements (18 months), fresh price, market cap published and ≥ ₹1,000 cr,
+  liquidity, leverage, interest cover, cash conversion, run rate. The last four
+  mean nothing for a lender and are marked not applicable (the screen's own
+  `_is_financial`). **Unmeasured on a core field HOLDS the row; it is never a
+  pass.** The first run found 24 names with a market cap of 0, and the cause was
+  `fundamentals.py` turning an absent Yahoo `marketCap` into a measured zero
+  (`or 0`), which ranked RELIANCE, TCS, IOC and RECLTD out of the Magic Formula
+  as microcaps; fixed, and old cached zeros now expire. The case is the screen's
+  own SWOT strengths and risk flags, each with its figure, capped at three a side;
+  nothing is written or predicted. It is an input to NOTHING: it runs BEFORE
+  `magic_formula()`, reads no `mf`, touches no score. The risk grade is NOT a gate
+  input (it grades 48% of the universe HIGH and reads the same fields the gate
+  already tests); its flags go in the bear case. `vet.c` (the case) is dropped
+  from `screen-lite.json`; Vision reads only `vet.s/f/w` there, by design.
+  Pinned by `test_stock_screen.py`.
+
 Honesty rules the screen must keep (all pinned by tests):
 - Missing data scores `None` and leaves its parent score's denominator; it is
   never zero-filled, and confidence drops instead of the score rising.

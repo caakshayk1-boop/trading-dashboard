@@ -2056,6 +2056,138 @@ def test_the_magic_formula_ranks_honestly():
     check("magic formula: the lite payload keeps its column", "mf" not in S.LITE_DROP_FIELDS and "mf" not in S.DETAIL_FIELDS)
 
 
+
+# ─────────────────────────────────────────────────────────────────────────────
+# VETTED: the gate in front of the screen, and the case for and against
+# ─────────────────────────────────────────────────────────────────────────────
+
+def _vet_row(**over) -> dict:
+    """A published row that clears every check, overridable per test."""
+    import copy
+    r = {"sym": "TESTCO", "sector": "Industrials", "ind": "Machinery", "fy": "FY26", "fy_count": 4,
+         "has_stmts": True, "last_date": "2026-10-01", "mcap_cr": 8000.0, "liquid": True,
+         "turnover_cr": 12.0, "de": 0.4, "icover": 8.0, "cfo_pat": 1.1, "comp": 50.0,
+         "_mf": {"end": "2026-03-31", "ebit": 1.0, "one_off": False},
+         "risk": {"level": "LOW", "score": 0, "flags": []},
+         "swot": {"s": [], "w": []}}
+    r.update(copy.deepcopy(over))
+    return r
+
+
+def _vet_one(**over) -> dict:
+    from datetime import date
+    r = _vet_row(**over)
+    S.vet([r], price_date="2026-10-01", today=date(2026, 10, 5))
+    return r["vet"]
+
+
+def test_the_vet_gate_holds_what_it_cannot_measure() -> None:
+    base = _vet_one()
+    check("a complete healthy row clears", base["s"] == "cleared" and base["p"] == base["n"] == 9, base)
+    for key, why in (("mcap_cr", "market cap not published"), ):
+        v = _vet_one(**{key: None})
+        check(f"a missing {key} is held as NOT PUBLISHED, not as small",
+              v["s"] == "held" and v["w"] == why and v["f"] == ["mcap"], v)
+    # the exact defect this gate found: fundamentals.py turned an absent
+    # marketCap into a published zero, and RELIANCE and TCS read as microcaps
+    v = _vet_one(mcap_cr=0.0)
+    check("a zero market cap is an absence, never 'under 1,000 cr'", v["w"] == "market cap not published", v)
+    v = _vet_one(mcap_cr=640.0)
+    check("a real small cap is held, and the figure is printed", v["s"] == "held" and "640" in v["w"] and "under" in v["w"], v)
+    for key in ("liquid", "last_date", "fy_count"):
+        v = _vet_one(**{key: None})
+        check(f"an UNMEASURED {key} holds the row instead of passing it",
+              v["s"] == "held" and v["w"].startswith("unmeasured"), v)
+    check("a stale close is held", _vet_one(last_date="2026-09-20")["s"] == "held")
+    check("statements older than 18 months are held", _vet_one(_mf={"end": "2024-03-31", "one_off": False}, fy="FY24")["s"] == "held")
+    check("two fiscal years is too few to take a median", _vet_one(fy_count=2)["s"] == "held")
+    check("no statements at all is held", _vet_one(has_stmts=False)["s"] == "held")
+    check("a thinly traded name is held", _vet_one(liquid=False, turnover_cr=0.4)["s"] == "held")
+
+
+def test_the_vet_gate_reads_lenders_and_balance_sheets_with_the_screens_own_rules() -> None:
+    check("negative equity holds a non-lender (it is insolvency, not a clean balance sheet)",
+          _vet_one(de=-1.5)["s"] == "held")
+    check("debt of 2x equity holds a non-lender", _vet_one(de=2.0)["s"] == "held")
+    check("thin interest cover holds a non-lender", _vet_one(icover=1.9)["s"] == "held")
+    check("profit that does not arrive as cash holds a non-lender", _vet_one(cfo_pat=0.5)["s"] == "held")
+    check("a margin discontinuity holds a non-lender", _vet_one(_mf={"end": "2026-03-31", "one_off": True})["s"] == "held")
+    check("no interest expense is not applicable, not a failure", _vet_one(icover=None)["s"] == "cleared")
+    bank = _vet_one(sector="Financial Services", ind="Banks - Regional", de=-9.0, icover=0.3, cfo_pat=-2.0,
+                    _mf={"end": "2026-03-31", "one_off": True})
+    check("a lender is not failed on leverage, cover, cash or run rate: they are not defined for it",
+          bank["s"] == "cleared" and bank["n"] == 5 and bank["p"] == 5, bank)
+    check("a lender still fails the checks that DO apply to it", _vet_one(sector="Financial Services", ind="Banks", mcap_cr=None)["s"] == "held")
+    only = S._vet_checks(_vet_row(sector="Insurance", ind="Insurance - Life"), S.date(2026, 10, 1) if hasattr(S, "date") else __import__("datetime").date(2026, 10, 1), __import__("datetime").date(2026, 10, 5))
+    check("a lender's four undefined measures are marked not applicable",
+          [c for c, st, _ in only if st == "na"] == ["lev", "cover", "cash", "oneoff"], only)
+
+
+def test_the_vet_case_is_the_screens_own_measurements_and_predicts_nothing() -> None:
+    flags = [{"s": "med", "t": "Thin interest cover", "k": "EBIT/interest 2.4x"},
+             {"s": "high", "t": "Return on capital falling across the statement history", "k": "ROCE 14.0% vs 18.0% median"}]
+    swot_ = {"s": [{"t": "Earns 22% on capital employed", "k": "ROCE 21.6%"}, {"t": "Debt-free", "k": "D/E 0.07"},
+                   {"t": "Revenue compounding at 18% a year", "k": "3Y CAGR 18%"}, {"t": "Fourth strength", "k": "x"}],
+             "w": [{"t": "Return on capital falling across the statement history, again", "k": "dup"},
+                   {"t": "Only 70% of profit arrives as cash", "k": "CFO/PAT 0.70x"}]}
+    v = _vet_one(risk={"level": "MEDIUM", "score": 5, "flags": flags}, swot=swot_)
+    c = v["c"]
+    check("strengths are capped and keep the SWOT's order", [i["t"] for i in c["for"]] ==
+          ["Earns 22% on capital employed", "Debt-free", "Revenue compounding at 18% a year"], c["for"])
+    check("the bear case puts HIGH flags before medium ones", c["against"][0]["t"].startswith("Return on capital falling"), c["against"])
+    check("the bear case drops a duplicate of a flag it already printed", len([i for i in c["against"] if i["t"].lower().startswith("return on capital falling")]) == 1, c["against"])
+    check("every case line carries its own figure", all(i["k"] for i in c["for"] + c["against"]), c)
+    check("the case is two lists and nothing else: no per-check table (it was 190 KB for no information)",
+          set(c) == {"for", "against"}, set(c))
+    words = re.compile(r"\b(will|should|expect(?:ed)?|forecast|target|buy|sell|upside|likely to)\b", re.I)
+    text = " ".join([S.VET_NOTE] + [r["rule"] for r in S.vet([_vet_row()])["rules"]] + [i["t"] for i in c["for"] + c["against"]])
+    check("nothing the engine words itself predicts, targets or advises", not words.search(text), words.findall(text))
+    empty = _vet_one()["c"]
+    check("with nothing measured, the lists are empty and NOTHING is invented", empty["for"] == [] and empty["against"] == [], empty)
+    check("a held row carries no case", "c" not in _vet_one(mcap_cr=None))
+
+
+def test_vetting_feeds_nothing_and_the_projections_keep_the_status() -> None:
+    import copy
+    rows = [_vet_row(sym="A", comp=61.2), _vet_row(sym="B", comp=33.0, mcap_cr=None)]
+    before = [r["comp"] for r in rows]
+    meta = S.vet(rows, price_date="2026-10-01", today=__import__("datetime").date(2026, 10, 5))
+    check("vetting never moves a composite", [r["comp"] for r in rows] == before)
+    check("the summary counts add up to the universe", meta["cleared"] + meta["held"] == meta["total"] == 2 and meta["cleared"] == 1, meta)
+    check("the summary says what was failed", meta["by_check"] == {"mcap": 1}, meta["by_check"])
+    check("the summary carries the rules and the not-a-recommendation note",
+          len(meta["rules"]) == 9 and "not a score" in meta["note"] and all(r["rule"] for r in meta["rules"]), meta["note"])
+    src = pathlib.Path("stock_screen.py").read_text()
+    check("vet() runs BEFORE magic_formula(), which pops the input it reads",
+          src.index("vet_meta = vet(out") < src.index("mf_meta = magic_formula(out"))
+    body = src[src.index("def vet("):src.index("def swot(")]
+    check("vet() never reads the Magic Formula: it stays an input to nothing", 'get("mf")' not in body and '["mf"]' not in body)
+    check("the payload publishes the summary", '"vet": vet_meta' in src)
+    check("the lite table drops the case and keeps the status", S.LITE_DROP_INNER.get("vet") == ("c",))
+    lite = S.lite_payload({"rows": [copy.deepcopy(rows[0])]})["rows"][0]["vet"]
+    check("lite keeps status, counts and reason", {"s", "p", "n"} <= set(lite) and "c" not in lite, lite)
+
+
+def test_a_missing_market_cap_is_none_never_zero() -> None:
+    import fundamentals as F
+    check("absent marketCap is None", F._market_cap_cr(None) is None)
+    check("a zero marketCap is None", F._market_cap_cr(0) is None)
+    check("a negative marketCap is None", F._market_cap_cr(-5e9) is None)
+    check("a string marketCap Yahoo sometimes sends is parsed", near(F._market_cap_cr("1000000000000"), 100000.0))
+    check("rupees become crore", near(F._market_cap_cr(2.5e11), 25000.0))
+    check("a cache entry holding the old measured zero is stale and refetched",
+          not F._schema_ok({"business": "", "held_insiders": 0.1, "dividend_yield": 0.01, "market_cap_cr": 0}))
+    check("an entry with a real market cap stays fresh",
+          F._schema_ok({"business": "", "held_insiders": 0.1, "dividend_yield": 0.01, "market_cap_cr": 5000.0}))
+    check("an entry that honestly has no market cap stays fresh (None is not 0)",
+          F._schema_ok({"business": "", "held_insiders": 0.1, "dividend_yield": 0.01, "market_cap_cr": None}))
+    check("a recorded miss stays valid", F._schema_ok({"_miss": True}))
+    r = S.ratios(None, {"market_cap_cr": 0, "sector": "Technology"})
+    check("the screen reader treats a cached zero as missing", r["market_cap_cr"] is None, r["market_cap_cr"])
+    r = S.ratios(None, {"market_cap_cr": 700000.0, "sector": "Technology"})
+    check("and keeps a real one", near(r["market_cap_cr"], 700000.0))
+
+
 def main() -> int:
     print("stock screen — indicator arithmetic and honesty invariants\n")
     for fn in (test_short_history_publishes_its_real_range,
@@ -2122,7 +2254,12 @@ def main() -> int:
                test_a_collapsed_price_is_an_entry_problem_too,
                test_the_universe_extension_stays_additive_and_labelled,
                test_every_renderer_reads_lenders_with_the_screens_own_rule,
-               test_the_magic_formula_ranks_honestly):
+               test_the_magic_formula_ranks_honestly,
+               test_the_vet_gate_holds_what_it_cannot_measure,
+               test_the_vet_gate_reads_lenders_and_balance_sheets_with_the_screens_own_rules,
+               test_the_vet_case_is_the_screens_own_measurements_and_predicts_nothing,
+               test_vetting_feeds_nothing_and_the_projections_keep_the_status,
+               test_a_missing_market_cap_is_none_never_zero):
         try:
             fn()
         except Exception as e:                       # noqa: BLE001
