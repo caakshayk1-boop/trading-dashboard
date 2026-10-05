@@ -108,9 +108,10 @@
     '.bf-bar .n{font-size:var(--t-5,14px);color:var(--b-mut,#555)}',
     '.bf-bar .t{height:2px;background:var(--b-hi,#eee);position:relative;overflow:hidden}',
     '.bf-bar .t i{display:block;height:100%;background:var(--b-acc,#3b6fd4);width:0;',
-    '  transition:width 1s cubic-bezier(.2,.8,.2,1)}',
+    '  animation:bfIn 280ms cubic-bezier(.23,1,.32,1) both}',
+    '@keyframes bfIn{from{clip-path:inset(0 100% 0 0)}}',
     '.bf-bar .s{font:500 var(--t-4,13px)/1 var(--mono,monospace);text-align:right;font-variant-numeric:tabular-nums}',
-    '@media(prefers-reduced-motion:reduce){.bf-bar .t i{transition:none}}',
+    '@media(prefers-reduced-motion:reduce){.bf-bar .t i{animation:none}}',
 
     /* Valuation against its own record. A dot on a track, not a gauge: the
        reader is being told a position in a range, and a range is a line. */
