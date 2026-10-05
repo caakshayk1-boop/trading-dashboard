@@ -2063,7 +2063,10 @@ def _vet_eight(r: dict) -> dict[str, str]:
         "de": "unk" if lender else cmp(r.get("de"), lambda v: 0 <= v < VET_EIGHT_DE),
         "margin": cmp(r.get("net_margin"), lambda v: v > VET_EIGHT_MARGIN),
     }
-    cfo = [_num((y or {}).get("cfo")) for y in (r.get("years") or [])[:VET_EIGHT_OCF_YEARS]]
+    # The row's own year entries carry `cfo_cr` (see the r["years"] build); `cfo`
+    # is the raw statements field and is not on the row. Reading the wrong key
+    # left this test unmeasured for every company in the first real build.
+    cfo = [_num((y or {}).get("cfo_cr")) for y in (r.get("years") or [])[:VET_EIGHT_OCF_YEARS]]
     if lender or len(cfo) < VET_EIGHT_OCF_YEARS or None in cfo:
         res["ocf"] = "unk"
     else:
