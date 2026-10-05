@@ -2073,7 +2073,7 @@ def _vet_row(**over) -> dict:
          # inputs to the lenses and the eight tests; the healthy row passes all eight
          "tier": "small", "price": 120.0, "sma50": 100.0, "sma200": 90.0, "rs3m": 5.0, "rsi": 60.0,
          "div_yield": 3.0, "rev_cagr": 12.0, "roce_med": 18.0, "insiders": 60.0, "r3y_cagr": 20.0,
-         "net_margin": 12.0, "years": [{"cfo": 5.0}, {"cfo": 4.0}, {"cfo": 3.0}, {"cfo": 2.0}]}
+         "net_margin": 12.0, "years": [{"cfo_cr": 5.0}, {"cfo_cr": 4.0}, {"cfo_cr": 3.0}, {"cfo_cr": 2.0}]}
     r.update(copy.deepcopy(over))
     return r
 
@@ -2245,12 +2245,15 @@ def test_the_eight_tests_are_measured_as_said_and_the_gaps_in_history_are_named(
     check("negative equity does not pass the debt test (the rule itself)", S._vet_eight(_vet_row(de=-0.2))["de"] == "fail")
     check("and the gate holds it out before the eight tests ever run", "q" not in _vet_pair(de=-0.2) and _vet_pair(de=-0.2)["s"] == "held")
     check("cash flow must be positive in each of the last three years",
-          _vet_pair(years=[{"cfo": 5.0}, {"cfo": -1.0}, {"cfo": 3.0}])["q"].get("f") == ["ocf"])
+          _vet_pair(years=[{"cfo_cr": 5.0}, {"cfo_cr": -1.0}, {"cfo_cr": 3.0}])["q"].get("f") == ["ocf"])
     check("fewer than three years of cash flow is unmeasured, not a pass",
-          _vet_pair(years=[{"cfo": 5.0}, {"cfo": 4.0}])["q"].get("u") == ["ocf"])
-    check("a missing year in the last three is unmeasured", _vet_pair(years=[{"cfo": 5.0}, {"cfo": None}, {"cfo": 3.0}])["q"].get("u") == ["ocf"])
+          _vet_pair(years=[{"cfo_cr": 5.0}, {"cfo_cr": 4.0}])["q"].get("u") == ["ocf"])
+    _src = pathlib.Path(__file__).with_name("stock_screen.py").read_text()
+    check("the operating-cash-flow test reads the key the row's years are built with",
+          '"cfo_cr": _round(_finite(y.get("cfo"))' in _src and '(y or {}).get("cfo_cr")' in _src)
+    check("a missing year in the last three is unmeasured", _vet_pair(years=[{"cfo_cr": 5.0}, {"cfo_cr": None}, {"cfo_cr": 3.0}])["q"].get("u") == ["ocf"])
     check("only the LAST three years count: an old loss does not fail it",
-          _vet_pair(years=[{"cfo": 5.0}, {"cfo": 4.0}, {"cfo": 3.0}, {"cfo": -9.0}])["q"]["a"])
+          _vet_pair(years=[{"cfo_cr": 5.0}, {"cfo_cr": 4.0}, {"cfo_cr": 3.0}, {"cfo_cr": -9.0}])["q"]["a"])
     bank = _vet_pair(sector="Financial Services", ind="Banks - Regional")["q"]
     check("a lender cannot pass: debt and cash flow are not defined for it", bank.get("u") == ["de", "ocf"] and not bank["a"], bank)
     notes = {t[0]: t[3] for t in S.VET_EIGHT}
