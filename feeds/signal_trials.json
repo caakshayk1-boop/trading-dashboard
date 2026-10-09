@@ -1,19 +1,28 @@
 {
   "schema": "signal-trials/1",
-  "status": "republished",
+  "status": "deferred",
   "session_date": "2026-10-09",
-  "published_at": "2026-10-09T16:28:02.418128+05:30",
-  "operational_run_at": "2026-10-09T16:28:02.418128+05:30",
+  "published_at": "2026-10-10T00:31:31.709452+05:30",
+  "operational_run_at": "2026-10-10T00:31:31.709452+05:30",
   "market_data_date": null,
   "engines": {
     "pulse": {
-      "status": "republished",
-      "status_detail": "Read-only publication of stored trial state; no discovery or management was run.",
+      "status": "deferred",
+      "status_detail": "Discovery deferred; no stale session is represented as a fresh forward result.",
       "plans": [],
       "journal": [],
       "diagnostics": [
         {
-          "code": "stored_state_republished"
+          "code": "outside_forward_publication_window"
+        },
+        {
+          "code": "verified_earnings_missing"
+        },
+        {
+          "code": "verified_restrictions_missing"
+        },
+        {
+          "code": "verified_sector_universe_missing"
         }
       ],
       "gate": {
@@ -27,13 +36,37 @@
       }
     },
     "compass": {
-      "status": "republished",
-      "status_detail": "Read-only publication of stored trial state; no discovery or management was run.",
+      "status": "deferred",
+      "status_detail": "Discovery deferred; no stale session is represented as a fresh forward result.",
       "plans": [],
       "journal": [],
       "diagnostics": [
         {
-          "code": "stored_state_republished"
+          "code": "dated_cost_assumptions_missing"
+        },
+        {
+          "code": "human_approved_theses_missing"
+        },
+        {
+          "code": "outside_forward_publication_window"
+        },
+        {
+          "code": "pit_fundamentals_missing"
+        },
+        {
+          "code": "pit_quarterly_missing"
+        },
+        {
+          "code": "pit_valuation_history_missing"
+        },
+        {
+          "code": "verified_delivery_missing"
+        },
+        {
+          "code": "verified_earnings_missing"
+        },
+        {
+          "code": "verified_restrictions_missing"
         }
       ],
       "gate": {
