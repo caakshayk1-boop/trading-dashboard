@@ -1,0 +1,50 @@
+{
+  "schema": "signal-trials/1",
+  "status": "republished",
+  "session_date": "2026-10-09",
+  "published_at": "2026-10-09T16:28:02.418128+05:30",
+  "operational_run_at": "2026-10-09T16:28:02.418128+05:30",
+  "market_data_date": null,
+  "engines": {
+    "pulse": {
+      "status": "republished",
+      "status_detail": "Read-only publication of stored trial state; no discovery or management was run.",
+      "plans": [],
+      "journal": [],
+      "diagnostics": [
+        {
+          "code": "stored_state_republished"
+        }
+      ],
+      "gate": {
+        "status": "INSUFFICIENT",
+        "closed_count": 0,
+        "live_days": 0,
+        "expectancy_r": null,
+        "max_drawdown_r": 0.0,
+        "promoted": false,
+        "preliminary": true
+      }
+    },
+    "compass": {
+      "status": "republished",
+      "status_detail": "Read-only publication of stored trial state; no discovery or management was run.",
+      "plans": [],
+      "journal": [],
+      "diagnostics": [
+        {
+          "code": "stored_state_republished"
+        }
+      ],
+      "gate": {
+        "status": "INSUFFICIENT",
+        "closed_count": 0,
+        "live_days": 0,
+        "expectancy_r": null,
+        "max_drawdown_r": 0.0,
+        "promoted": false,
+        "preliminary": true
+      }
+    }
+  }
+}
