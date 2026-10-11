@@ -350,7 +350,7 @@ NEWS_API = os.environ.get("NEWS_API_BASE", "https://news.askakshay.com/api")
 _PATHS = {
     "home": "/", "markets": "/markets/", "screen": "/screen/", "magic": "/magic/",
     "map": "/map/", "ipo": "/ipo/", "funds": "/funds/", "reads": "/reads/",
-    "news": "/news/", "wire": "/news/", "world": "/news/", "health": "/about/",
+    "news": "/news/", "wire": "/news/", "world": "/news/", "health": "/about/", "engines": "/engines/", "brief": "/brief/",
 }
 
 
@@ -469,6 +469,31 @@ def _alpha_movers(n: int = 5) -> list:
             out.append(f"  {label}: " + " · ".join(f"`{m['sym']}` {m['r1w']:+.0f}%" for m in rows))
     if out:
         out.append("_One-week move._")
+    return out
+
+
+# Engines whose own tests say they beat random stocks are the only ones whose plans are listed in the brief.
+_ENGINE_OK = {"LEANING POSITIVE", "EDGE SHOWN"}
+
+
+def _alpha_engines(max_plans: int = 5) -> list:
+    """What the four engines have selected, with each engine's honest record. [] when unavailable."""
+    j = _alpha_get("/engines.json", timeout=20)
+    if not j or not j.get("engines"):
+        return []
+    engines = sorted(j["engines"].values(), key=lambda e: e.get("id", 9))
+    live = [s for s in j.get("signals", []) if s.get("status") in ("pending", "open")]
+    out = []
+    for e in engines:
+        out.append(f"  {e['id']}. *{e['name']}* · {str(e['status']).title()} · {e.get('signal_count', 0)} selected")
+    shown = [s for s in live if next((e for e in engines if e["key"] == s["engine"]), {}).get("status") in _ENGINE_OK][:max_plans]
+    for s in shown:
+        t = s["targets"]
+        out.append(f"  `{s['sym']}` {s['engine_name']}: buy {s['entry_zone'][0]:,.0f}–{s['entry_zone'][1]:,.0f} · stop {s['sl']:,.0f} · T1 {t[0]:,.0f} · limit {s['max_hold_days']}d")
+    held = len(live) - len(shown)
+    if held > 0:
+        out.append(f"  _{held} more from engines whose tests do not beat random stocks: on the site, not here._")
+    out.append("_Research plans, not advice._")
     return out
 
 
@@ -895,9 +920,15 @@ def build_section_brief(slot: str = "midday") -> str:
         rule("📰 *06 · THE WIRE*")
         L.append(_Wire([_news_entry(n) for n in (nw.get("news") or [])]))
 
+    eng = _alpha_engines()
+    if eng:
+        rule("⚙️ *07 · ENGINES*")
+        L.extend(eng)
+        L.append(f"_Plans, records and benchmarks: {_link('engines')}_")
+
     ipo = _alpha_ipo()
     if ipo:
-        rule("🆕 *07 · IPOs*")
+        rule("🆕 *08 · IPOs*")
         L.extend(ipo)
         L.append(f"_Open and recent: {_link('ipo')}_")
 
@@ -981,7 +1012,7 @@ def _careers_block() -> list:
         [(d, j) for j in live for d in [_closes_in(j)] if d is not None and 0 <= d <= 7],
         key=lambda t: t[0])
 
-    head = ["\u2501" * 19, "\U0001F4BC *08 \u00b7 CAREERS* \u2014 new & existing roles", "\u2501" * 19]
+    head = ["\u2501" * 19, "\U0001F4BC *09 \u00b7 CAREERS* \u2014 new & existing roles", "\u2501" * 19]
     # essential = the counts, which are the answer to "what happened to new and
     # existing roles". detail = the named rows, which are the nice-to-have.
     # Split so a heavy day loses the rows and keeps the answer — see _Opt.

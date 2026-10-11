@@ -1,0 +1,60 @@
+name: Alerts — alpha engines, to Telegram
+
+# Announces new engine signals and what happened to open ones (entry, targets, stop, time limit), each exactly once.
+# Runs AFTER the alpha engines job (which refreshes engines.json at about 18:00 IST) and after its deploy, never
+# before: running first would announce yesterday's plan as today's. engine_alerts.py refuses a feed built on data
+# more than four days old.
+#
+# STATE IS COMMITTED (data/engine_alert_state.json). It is the whole idempotency mechanism: without it every run
+# on a fresh runner would announce every open signal again.
+
+on:
+  schedule:
+    - cron: '45 13 * * 1-5'      # 19:15 IST
+    - cron: '45 15 * * 1-5'      # 21:15 IST — retry if the first slot was dropped; nothing repeats
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: 'Print the messages instead of sending them'
+        type: boolean
+        default: false
+
+permissions:
+  contents: write
+
+concurrency:
+  group: engine-alerts
+  cancel-in-progress: false
+
+jobs:
+  alert:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: pip
+      - run: pip install requests
+      - run: python test_engine_alerts.py
+      - name: Send engine alerts
+        env:
+          TELEGRAM_TOKEN:   ${{ secrets.TELEGRAM_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+          ALERT_DRY_RUN:    ${{ inputs.dry_run && '1' || '' }}
+        run: python engine_alerts.py
+      - name: Commit the state
+        # no `if: always()`: a failed run may have sent half a batch, and committing its state would mark the
+        # unsent half as announced
+        run: |
+          git config user.name  "caakshayk1-boop"
+          git config user.email "caakshayk1-boop@users.noreply.github.com"
+          git add data/engine_alert_state.json
+          git diff --staged --quiet && echo "unchanged" && exit 0
+          git commit -m "data: engine alert state $(date -u +%Y-%m-%d) [skip ci]"
+          for i in 1 2 3; do
+            git push && exit 0
+            git pull --rebase --autostash && sleep 3
+          done
+          exit 1

@@ -135,7 +135,7 @@ def _():
     # A hardcoded host anywhere in the builder is a link that will rot in place.
     import inspect, re
     for fn in (D.build_section_brief, D._alpha_markets, D._alpha_barometer,
-               D._alpha_sectors, D._alpha_movers, D._alpha_ipo):
+               D._alpha_sectors, D._alpha_movers, D._alpha_ipo, D._alpha_engines):
         stray = re.findall(r"[\"']([a-z]+\.askakshay\.com)", inspect.getsource(fn))
         assert not stray, f"hardcoded hosts in {fn.__name__}: {set(stray)}"
 
@@ -155,6 +155,10 @@ FEEDS = {
         "sectors_day": [{"name": n, "median": m} for n, m in
                         (("Tech", 2.6), ("Energy", 0.5), ("Auto", -1.2), ("Banks", 0.9), ("Metals", -2.0))],
         "movers_up": [{"sym": "AAA", "r1w": 20.0}], "movers_dn": [{"sym": "ZZZ", "r1w": -15.0}]},
+    "/engines.json": {"engines": {"breakout": {"id": 3, "key": "breakout", "name": "Breakout", "status": "LEANING POSITIVE", "signal_count": 1},
+                                  "rebound": {"id": 1, "key": "rebound", "name": "Rebound", "status": "WORSE THAN RANDOM", "signal_count": 1}},
+                     "signals": [{"engine": "breakout", "engine_name": "Breakout", "sym": "TCS", "status": "pending", "entry_zone": [3100.0, 3131.0], "sl": 2950.0, "targets": [3250.0, 3400.0, 3700.0], "max_hold_days": 40},
+                                 {"engine": "rebound", "engine_name": "Rebound", "sym": "BADCO", "status": "pending", "entry_zone": [100.0, 101.0], "sl": 90.0, "targets": [110.0, 120.0, 130.0], "max_hold_days": 60}]},
     "/data/ipo.json": {"open": [{"company": "Example Ltd", "price_band": "Rs.100 to Rs.110",
                                  "close_date": "2026-10-14", "subscription_x": 1.5}],
                        "awaiting_listing": [{"symbol": "EXM"}]},
@@ -162,7 +166,7 @@ FEEDS = {
 
 # Words that belong to the retired engines and paper books. Their absence is the point.
 RETIRED = ("TRADE IDEAS", "SIGNAL LOG", "PERFORMANCE", "APEX", "expectancy", "win rate",
-           "ledger", "engine", "paper", "signal.askakshay", "vision.askakshay",
+           "ledger", "paper trad", "signal.askakshay", "vision.askakshay",
            "gems.askakshay", "terminal.askakshay", "news.askakshay")
 
 
@@ -180,7 +184,7 @@ def _build_offline(slot, feeds=FEEDS):
 def _():
     b = _build_offline("morning")
     for needle in ("ALPHA BRIEF", "01 · MARKETS", "Nifty 50", "02 · BAROMETER", "29/100",
-                   "03 · SECTORS", "04 · MOVERS", "`AAA`", "07 · IPOs", "Example Ltd",
+                   "03 · SECTORS", "04 · MOVERS", "`AAA`", "07 · ENGINES", "08 · IPOs", "Example Ltd",
                    "https://alpha.askakshay.com/markets/"):
         assert needle in b, f"missing {needle!r}:\n{b[:600]}"
 
@@ -191,6 +195,14 @@ def _():
         b = _build_offline(slot)
         for word in RETIRED:
             assert word.lower() not in b.lower(), f"{slot} brief still says {word!r}"
+
+
+@check("engine plans are listed only for engines whose own tests are positive")
+def _():
+    b = _build_offline("morning")
+    assert "`TCS`" in b and "stop 2,950" in b, b[:900]
+    assert "BADCO" not in b, "a plan from an engine that does not beat random stocks was listed"
+    assert "Worse Than Random" in b, "that engine's honest record is not stated"
 
 
 @check("a dead quote is omitted, never shown as 0%")
