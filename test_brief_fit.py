@@ -155,8 +155,8 @@ FEEDS = {
         "sectors_day": [{"name": n, "median": m} for n, m in
                         (("Tech", 2.6), ("Energy", 0.5), ("Auto", -1.2), ("Banks", 0.9), ("Metals", -2.0))],
         "movers_up": [{"sym": "AAA", "r1w": 20.0}], "movers_dn": [{"sym": "ZZZ", "r1w": -15.0}]},
-    "/engines.json": {"engines": {"breakout": {"id": 3, "key": "breakout", "name": "Breakout", "status": "LEANING POSITIVE", "signal_count": 1},
-                                  "rebound": {"id": 1, "key": "rebound", "name": "Rebound", "status": "WORSE THAN RANDOM", "signal_count": 1}},
+    "/engines.json": {"engines": {"breakout": {"id": 3, "key": "breakout", "name": "Breakout", "status": "LEANING POSITIVE", "alertable": True, "signal_count": 1},
+                                  "rebound": {"id": 1, "key": "rebound", "name": "Rebound", "status": "WORSE THAN RANDOM", "alertable": False, "signal_count": 1}},
                      "signals": [{"engine": "breakout", "engine_name": "Breakout", "sym": "TCS", "status": "pending", "entry_zone": [3100.0, 3131.0], "sl": 2950.0, "targets": [3250.0, 3400.0, 3700.0], "max_hold_days": 40},
                                  {"engine": "rebound", "engine_name": "Rebound", "sym": "BADCO", "status": "pending", "entry_zone": [100.0, 101.0], "sl": 90.0, "targets": [110.0, 120.0, 130.0], "max_hold_days": 60}]},
     "/data/ipo.json": {"open": [{"company": "Example Ltd", "price_band": "Rs.100 to Rs.110",

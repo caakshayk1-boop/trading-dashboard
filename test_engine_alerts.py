@@ -23,12 +23,12 @@ def sig(i, engine="breakout", status="pending", events=None, **kw):
             "bench_ok": True, "benchmark": {"name": "Nifty IT", "uptrend": True, "leads_nifty": True, "stock_vs_benchmark_pct": 6.2}, **kw}
 
 
-feed = {"data_through": "2026-10-09", "engines": {"breakout": {"status": "LEANING POSITIVE"}, "rebound": {"status": "WORSE THAN RANDOM"}, "swing": {"status": "NO EDGE SHOWN"}},
+feed = {"data_through": "2026-10-09", "engines": {"breakout": {"status": "LEANING POSITIVE", "alertable": True, "trades": {"holdout": {"expectancy_r": 0.17}}}, "rebound": {"status": "WORSE THAN RANDOM", "alertable": False}, "swing": {"status": "LEANING POSITIVE", "alertable": False}},
         "signals": [sig("AAA"), sig("BBB", "rebound"), sig("CCC", "swing")]}
 
 state = {}
 todo = A.plan(feed, state)
-check("only an engine with a positive record alerts", [k for _, k, _ in todo] == ["breakout:AAA:2026-10-09"], [k for _, k, _ in todo])
+check("only an engine the site marks alertable alerts (a good label alone is not enough)", [k for _, k, _ in todo] == ["breakout:AAA:2026-10-09"], [k for _, k, _ in todo])
 msg = todo[0][2]
 check("a new signal states the plan", all(x in msg for x in ("Buy zone", "Stop", "T1", "T2", "T3", "Time limit")))
 check("it names the benchmark and how it is behaving", "Nifty IT" in msg and "uptrend" in msg and "leading the Nifty" in msg)

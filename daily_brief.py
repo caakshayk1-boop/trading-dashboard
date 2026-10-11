@@ -472,12 +472,11 @@ def _alpha_movers(n: int = 5) -> list:
     return out
 
 
-# Engines whose own tests say they beat random stocks are the only ones whose plans are listed in the brief.
-_ENGINE_OK = {"LEANING POSITIVE", "EDGE SHOWN"}
+# Only engines the site marks `alertable` (positive holdout after costs) have their plans listed in the brief.
 
 
 def _alpha_engines(max_plans: int = 5) -> list:
-    """What the four engines have selected, with each engine's honest record. [] when unavailable."""
+    """What the five AI engines have selected, with each engine's honest record. [] when unavailable."""
     j = _alpha_get("/engines.json", timeout=20)
     if not j or not j.get("engines"):
         return []
@@ -486,13 +485,13 @@ def _alpha_engines(max_plans: int = 5) -> list:
     out = []
     for e in engines:
         out.append(f"  {e['id']}. *{e['name']}* · {str(e['status']).title()} · {e.get('signal_count', 0)} selected")
-    shown = [s for s in live if next((e for e in engines if e["key"] == s["engine"]), {}).get("status") in _ENGINE_OK][:max_plans]
+    shown = [s for s in live if next((e for e in engines if e["key"] == s["engine"]), {}).get("alertable")][:max_plans]
     for s in shown:
         t = s["targets"]
         out.append(f"  `{s['sym']}` {s['engine_name']}: buy {s['entry_zone'][0]:,.0f}–{s['entry_zone'][1]:,.0f} · stop {s['sl']:,.0f} · T1 {t[0]:,.0f} · limit {s['max_hold_days']}d")
     held = len(live) - len(shown)
     if held > 0:
-        out.append(f"  _{held} more from engines whose tests do not beat random stocks: on the site, not here._")
+        out.append(f"  _{held} more from engines that have not cleared the bar for alerts: on the site, not here._")
     out.append("_Research plans, not advice._")
     return out
 
@@ -1167,7 +1166,7 @@ def _fit(lines: list, ticket_blocks: list = None) -> str:
                         out.append(body)
                 gone = len(item.entries) - keep
                 if gone > 0:
-                    out.append(f"_+{gone} more — {_link("news")}_")
+                    out.append(f"_+{gone} more — {_link('news')}_")
             elif isinstance(item, _Opt):
                 out.extend(item.essential)
                 if extras:
@@ -1199,7 +1198,7 @@ def _fit(lines: list, ticket_blocks: list = None) -> str:
     # pair, and an unbalanced * makes Telegram 400 the whole message — the
     # same silent non-delivery, one step later.
     kept, total = [], 0
-    tail = f"\n_Trimmed — {_link("news")}_"
+    tail = f"\n_Trimmed — {_link('news')}_"
     for line in text.split("\n"):
         if total + len(line) + 1 > TG_LIMIT - len(tail):
             break

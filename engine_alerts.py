@@ -78,6 +78,8 @@ def new_message(s: dict, st: dict) -> str:
         if isinstance(vs, (int, float)):
             bits.append(f"stock {vs:+.1f}% vs it over 3 months")
         bench = f"\nBenchmark {md(b.get('name', '').replace(' (alpha group index)', ''))}: {md(', '.join(bits))}"
+    h = ((st.get("trades") or {}).get("holdout") or {}).get("expectancy_r")
+    holdout = f", {h:+.2f}R a trade on data it never saw" if isinstance(h, (int, float)) else ""
     also = f"\nAlso selected by {md(', '.join(s['also_names']))}" if s.get("also_names") else ""
     return (
         f"🔔 *{md(s['engine_name'])} · {md(s['sym'])}* — {md(s['setup'])} \\({md(s['horizon'])}\\)\n"
@@ -86,7 +88,7 @@ def new_message(s: dict, st: dict) -> str:
         f"T1 {md(rupees(t[0]))} \\({md(r[0])}R\\) · T2 {md(rupees(t[1]))} \\({md(r[1])}R\\) · T3 {md(rupees(t[2]))} \\({md(r[2])}R\\)\n"
         f"Time limit {md(s['max_hold_days'])} sessions"
         f"{bench}{also}\n"
-        f"Engine record: {md(st['status'].title())}, tested against random stocks\n"
+        f"Engine: {md(st['status'].title())}{md(holdout)}\n"
         f"{md(ALPHA)}/company/?s={md(s['sym'])}\n"
         f"_A plan, not advice\\. The stop is the plan; the targets are the hope\\._"
     )
@@ -132,8 +134,8 @@ def plan(feed: dict, state: dict) -> list[tuple[str, str, str]]:
     seen = state.setdefault("signals", {})
     for s in feed.get("signals", []):
         st = engines.get(s["engine"], {})
-        if st.get("status") not in ALERT_STATUSES:
-            continue
+        if not st.get("alertable") or st.get("status") not in ALERT_STATUSES:
+            continue            # the site decides which engines may buzz a phone (holdout R above its bar); this only double-checks
         rec = seen.get(s["id"])
         if rec is None:
             if s["status"] in ("pending", "open"):
