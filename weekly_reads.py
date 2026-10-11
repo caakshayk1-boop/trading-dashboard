@@ -533,7 +533,7 @@ def study_for(r: dict) -> dict | None:
 TG_TOKEN = os.environ.get("TELEGRAM_TOKEN", "")
 TG_CHAT = os.environ.get("TELEGRAM_CHAT_ID", "")
 TG_MAX = 3800          # the hard cap is 4096 and Telegram REJECTS, never truncates
-READS_URL = os.environ.get("READS_URL", "https://signal.askakshay.com/reads")
+READS_URL = os.environ.get("READS_URL", "https://alpha.askakshay.com/reads/")
 
 # Markdown is a minefield here. An underscore in a ticker turns the rest of the
 # message into italics and Telegram answers 400 for an unclosed entity — this

@@ -38,12 +38,26 @@ IST = timezone(timedelta(hours=5, minutes=30))
 # IST actually did.
 MYT = timezone(timedelta(hours=8))
 SITE = "https://news.askakshay.com"
+ALPHA = os.environ.get("ALPHA_URL", "https://alpha.askakshay.com")
 UA = {"User-Agent": "DailySignal-HealthWatch/1.0"}
 
 # Each entry: label, url, and a predicate over the parsed body. The predicates
 # are the point — a 200 that returns a degraded payload is the failure mode
 # this file exists for.
 CHECKS = [
+    # alpha.askakshay.com is the product. Pages are static, so the checks that can catch a
+    # real failure are the feeds it reads live and the quotes endpoint.
+    ("alpha /", f"{ALPHA}/", None, lambda t: "<title>" in t and "alpha" in t.lower()),
+    ("alpha screen", f"{ALPHA}/data/screen.json", "json", lambda j: len(j.get("rows", [])) > 500),
+    ("alpha pulse", f"{ALPHA}/data/pulse.json", "json", lambda j: len(j.get("sectors", [])) > 0),
+    ("alpha quotes", f"{ALPHA}/api/quotes", "json",
+     lambda j: j.get("ok") and j.get("live", 0) >= 0.7 * max(1, j.get("total", 0))),
+    ("alpha baro", f"{ALPHA}/data/barometer.json", "json",
+     lambda j: isinstance((j.get("today") or {}).get("score"), (int, float))),
+    ("alpha news", f"{ALPHA}/data/news.json", "json", lambda j: isinstance(j, list) and len(j) > 0),
+    ("alpha ipo", f"{ALPHA}/data/ipo.json", "json", lambda j: isinstance(j.get("open"), list)),
+    ("alpha funds", f"{ALPHA}/data/funds.json", "json", lambda j: len(j.get("categories", [])) > 0),
+    # The newspaper and the careers site are still live and still watched.
     # `wmCanvas` was the world map's canvas. The map was deliberately removed
     # on 2026-08-26 and this check kept asserting it, so every run since has
     # reported "200 but the payload is degraded" — a false alarm about a
@@ -75,10 +89,6 @@ CHECKS = [
      lambda j: j.get("ok") and len(j.get("segments", [])) >= 8),
     ("world", f"{SITE}/api/world", "json",
      lambda j: j.get("ok") and len(j.get("countries", [])) >= 5),
-    ("stats", f"{SITE}/api/stats", "json",
-     lambda j: j.get("ok") and (j.get("headline") or {}).get("trades", 0) > 0),
-    ("health", f"{SITE}/api/health", "json",
-     lambda j: j.get("ok") and j.get("signals", 0) > 0),
     ("og card", f"{SITE}/og.png", None, lambda t: len(t) > 5000),
     ("sitemap", f"{SITE}/sitemap.xml", None, lambda t: "<loc>" in t),
 ]
@@ -186,18 +196,32 @@ def main() -> int:
     except Exception as e:
         problems.append(f"*edition* — unreadable: `{str(e)[:60]}`")
 
+    # alpha's screen is rebuilt every evening, including weekends. Older than three days
+    # means the pipeline behind every page on it has stopped.
+    try:
+        _, pulse = fetch(f"{ALPHA}/data/pulse.json", True)
+        built = str(pulse.get("built_on", ""))
+        age = (datetime.now(IST).date() - datetime.fromisoformat(built).date()).days
+        if age > 3:
+            problems.append(f"*alpha data* — screen last built {built}, {age} days ago")
+            lines.append(f"  alpha data   STALE ({built})")
+        else:
+            lines.append(f"  alpha data   ok ({built})")
+    except Exception as e:
+        problems.append(f"*alpha data* — unreadable: `{str(e)[:60]}`")
+
     stamp = datetime.now(IST).strftime("%d %b %Y %I:%M %p IST")
     print(f"health_watch {stamp}")
     print("\n".join(lines))
 
     if problems:
-        post(f"🚨 *Daily Signal — health check failed*\n_{stamp}_\n\n"
+        post(f"🚨 *alpha — health check failed*\n_{stamp}_\n\n"
              + "\n".join(f"• {p}" for p in problems)
              + "\n\n_Nothing else will tell you. That is why this exists._")
         return 1
 
     if "--always" in sys.argv:
-        post(f"✅ *Daily Signal healthy* — {stamp}\n"
+        post(f"✅ *alpha healthy* — {stamp}\n"
              f"_{len(CHECKS)} checks, all passing._")
     print("all healthy")
     return 0

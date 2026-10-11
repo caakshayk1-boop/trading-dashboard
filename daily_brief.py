@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
 """
-daily_brief.py — 6 AM MYT personal morning brief for Akshay Kothari
-Sends to Telegram: Dubai jobs · markets · habit · productivity · learning · quote
+daily_brief.py — the alpha brief, sent to Telegram twice a day (08:00 and 20:00 MYT)
+Sends: markets · barometer · sectors · movers · world · wire · IPOs · Dubai jobs · life (evening)
+Every link points at alpha.askakshay.com. No signals, trade ideas or ledger: engines are retired.
 Stores each brief in signals.db (daily_briefs table) for history.
 Pulls Obsidian habits via GitHub API if GITHUB_TOKEN is set.
 """
@@ -326,81 +327,50 @@ LIFE_LESSONS = [
 # HELPERS
 # ────────────────────────────────────────────────────────────────────────────
 
-# ────────────────────────────────────────────────────────────────────────────
-# news.askakshay.com — the one source the brief and the site share
-# ────────────────────────────────────────────────────────────────────────────
+# ────────────────────────────────────────────────────
+# alpha.askakshay.com — where the brief reads from and where it sends the reader
+# ────────────────────────────────────────────────────
 #
-# The morning brief used to assemble its own view of the world: yfinance
-# through content_cache for markets, a Reuters RSS feed for the headline, and a
-# direct Turso query for the signal recap. The website assembled a second view
-# from /api/*. Two pipelines, one subject — so they drifted, and there was no
-# way to tell which one was wrong.
+# 2026-10-12: Signal, Vision and Gems became one site, alpha.askakshay.com, with no
+# signal engines and no paper trading. Every link in a Telegram message now points
+# there, and the market facts come from the same feeds the site renders, so a
+# number that is wrong in Telegram is wrong on the site and the other way round.
 #
-# Everything factual in this brief now reads the same live API the site renders
-# from. If a number is wrong in Telegram it is wrong on the site too, which is
-# the only arrangement that keeps either of them honest.
-#
-# Every call fails soft. A brief that arrives with one section degraded is worth
-# more at 6 AM than no brief at all, so each fetch returns None on failure and
-# the caller falls back to what it used before.
+# Every call fails soft. A brief that arrives with one section missing is worth
+# more at 6 AM than no brief at all, so each fetch returns None on failure and the
+# section is simply omitted.
 
+ALPHA_SITE = os.environ.get("ALPHA_SITE", "alpha.askakshay.com")
+ALPHA_BASE = f"https://{ALPHA_SITE}"
+# The wire and the clustered world events are still assembled by the newspaper's
+# API, which is a data source here and is never linked to.
 NEWS_API = os.environ.get("NEWS_API_BASE", "https://news.askakshay.com/api")
 
-# ── WHERE TO SEND THE READER ────────────────────────────────────────────────
-#
-# Data and links are now two different questions, and this brief used to
-# conflate them. Everything factual still reads NEWS_API, for the reason above.
-# But the LINKS all said news.askakshay.com, including the ones under Trade
-# Ideas, the Signal Log and Performance — and those three moved. They live on
-# signal.askakshay.com, which is where the ledger, the ranked board and the
-# engine floor are actually rendered. A reader following "full board" from the
-# trade-ideas section landed on the newspaper and had to find the trading site
-# by memory.
-#
-# One table, so a new section cannot invent a URL and no link can rot in a
-# string literal halfway down a 1,500-line file.
-SIGNAL_SITE = os.environ.get("SIGNAL_SITE", "signal.askakshay.com")
-NEWS_SITE   = os.environ.get("NEWS_SITE",   "news.askakshay.com")
-
-# section key → (host, path). The host is the one that OWNS that section, not
-# the one that happens to have a page about it.
-_OWNS = {
-    # Signal V2 (2026-10-01): plans and their record moved. /ideas, /signals
-    # and /engines now show a retired-version notice, so the brief links to
-    # where the content lives.
-    "ideas":       (SIGNAL_SITE, "/opportunities"),  # next-session plans
-    "signals":     (SIGNAL_SITE, "/performance"),    # the V2 forward record
-    "performance": (SIGNAL_SITE, "/performance"),
-    "engines":     (SIGNAL_SITE, "/performance"),    # strategy status lives there
-    "screen":      (SIGNAL_SITE, "/screen"),
-    "markets":     (SIGNAL_SITE, "/markets"),
-    "ipo":         (SIGNAL_SITE, "/ipo"),
-    "wire":        (NEWS_SITE,   ""),            # the paper is the paper
-    "world":       (NEWS_SITE,   ""),
-    "health":      (NEWS_SITE,   "/#datahealth"),
-    "sip":         (NEWS_SITE,   "/#sip"),
-    "portfolio":   (NEWS_SITE,   "/#tracker"),
+# section key → path on alpha. One table, so a new section cannot invent a URL.
+_PATHS = {
+    "home": "/", "markets": "/markets/", "screen": "/screen/", "magic": "/magic/",
+    "map": "/map/", "ipo": "/ipo/", "funds": "/funds/", "reads": "/reads/",
+    "news": "/news/", "wire": "/news/", "world": "/news/", "health": "/about/",
 }
 
 
 def _link(section: str) -> str:
-    """The URL for a section, or the newspaper when the section is unknown.
+    """The alpha URL for a section; the front page when the key is unknown.
 
-    Unknown returns the paper rather than raising: a brief that fails to send
+    Unknown returns the front page rather than raising: a brief that fails to send
     because a link key was mistyped is a worse outcome than a link to the
     wrong-but-real page.
     """
-    host, path = _OWNS.get(section, (NEWS_SITE, ""))
-    return f"{host}{path}"
+    return f"{ALPHA_BASE}{_PATHS.get(section, '/')}"
 
 
 def _news_get(path: str, timeout: int = 12) -> Optional[dict]:
-    """One GET against news.askakshay.com. None on any failure, never raises."""
+    """One GET against the newspaper's API. None on any failure, never raises."""
     try:
         r = requests.get(
             f"{NEWS_API}{path}",
             timeout=timeout,
-            headers={"User-Agent": "daily-brief/2.0"},
+            headers={"User-Agent": "daily-brief/3.0"},
         )
         if r.status_code != 200:
             log.warning("news api %s -> HTTP %s", path, r.status_code)
@@ -415,59 +385,105 @@ def _news_get(path: str, timeout: int = 12) -> Optional[dict]:
         return None
 
 
-def _news_markets() -> Optional[str]:
-    """The same market strip the site shows, formatted for Telegram."""
-    j = _news_get("/markets")
-    if not j:
+def _alpha_get(path: str, timeout: int = 15):
+    """One GET against alpha's data feeds or quotes. None on any failure, never raises."""
+    try:
+        r = requests.get(f"{ALPHA_BASE}{path}", timeout=timeout,
+                         headers={"User-Agent": "daily-brief/3.0"})
+        if r.status_code != 200:
+            log.warning("alpha %s -> HTTP %s", path, r.status_code)
+            return None
+        return r.json()
+    except Exception as e:
+        log.warning("alpha %s failed: %s", path, e)
         return None
-    rows = j.get("markets") or []
+
+
+# What the market strip shows, in order. Ids are alpha's own (worker/index.js).
+_STRIP = ["nifty", "sensex", "banknifty", "vix", "spx", "ndx", "gold", "crude", "usdinr", "btc"]
+
+
+def _alpha_markets() -> list:
+    """The same live board alpha shows, formatted for Telegram. [] when unavailable."""
+    j = _alpha_get("/api/quotes")
+    if not j or not j.get("quotes"):
+        return []
+    by_id = {q.get("id"): q for q in j["quotes"] if q.get("price") is not None}
     lines = []
-    for m in rows:
-        pct = m.get("change_pct")
-        if pct is None:
-            continue
+    for qid in _STRIP:
+        q = by_id.get(qid)
+        if not q or q.get("pct") is None:
+            continue          # omitted, never shown as 0%: a flat market and a dead feed must not look alike
+        pct = float(q["pct"])
         arrow = "↑" if pct > 0.05 else ("↓" if pct < -0.05 else "→")
-        name = str(m.get("name", ""))[:10]
-        price = str(m.get("price", "—"))
-        lines.append(f"`{name:<10}` {price:<12} {arrow} {pct:+.1f}%")
-    if not lines:
-        return None
+        dp = int(q.get("dp") or 0)
+        price = f"{q.get('prefix', '')}{float(q['price']):,.{dp}f}"
+        lines.append(f"`{str(q['name'])[:15]:<15}` {price:<11} {arrow} {pct:+.1f}%")
     live, total = j.get("live"), j.get("total")
-    if live is not None and total is not None and live < total:
-        lines.append(f"_{live} of {total} quotes live — the rest are last close._")
-    return "\n".join(lines)
+    if lines and live is not None and total is not None and live < total:
+        lines.append(f"_{live} of {total} quotes live._")
+    return lines
 
 
-def _news_headline() -> Optional[str]:
-    """
-    One headline, from the same wire the site reads.
+def _alpha_barometer() -> list:
+    """Barometer score, band and breadth."""
+    out = []
+    b = _alpha_get("/data/barometer.json")
+    t = (b or {}).get("today") or {}
+    if isinstance(t.get("score"), (int, float)):
+        band = (t.get("band") or {}).get("t", "")
+        out.append(f"  Barometer *{t['score']:.0f}/100* — {band}")
+        parts = sorted(t.get("parts") or [], key=lambda p: p.get("score", 0))
+        if parts:
+            lo, hi = parts[0], parts[-1]
+            out.append(f"  Weakest: {lo.get('label')} {lo.get('score'):.0f} · strongest: {hi.get('label')} {hi.get('score'):.0f}")
+    p = _alpha_get("/data/pulse.json")
+    br = (p or {}).get("breadth") or {}
+    if br.get("counted"):
+        out.append(f"  Breadth: {br['up']} up · {br['down']} down · "
+                   f"{br['above_200dma'] / br['counted'] * 100:.0f}% above the 200-day")
+    return out
 
-    This replaces feedparser against feeds.reuters.com. That host stopped
-    resolving — the lookup returns NXDOMAIN — so `_get_global_headline` had been
-    returning None on every run and the brief had silently shipped without its
-    world line for as long as the feed has been dead. A source that fails to a
-    blank section is worse than one that fails loudly.
-    """
-    j = _news_get("/news")
-    if j:
-        items = j.get("news") or []
-        if items:
-            title = str(items[0].get("title", "")).strip()
-            src = str(items[0].get("source", "")).strip()
-            if title:
-                # Plain text only. The caller wraps this whole string in _..._,
-                # so emphasising the source here nests underscores and Telegram
-                # rejects the message with a 400 rather than rendering it.
-                return f"{title} — {src}" if src else title
-    # Second choice: the top clustered world event.
-    j = _news_get("/world")
-    if j:
-        top = j.get("top") or []
-        if top:
-            title = str(top[0].get("title", "")).strip()
-            if title:
-                return title
-    return None
+
+def _alpha_sectors() -> list:
+    p = _alpha_get("/data/pulse.json")
+    secs = (p or {}).get("sectors_day") or (p or {}).get("sectors") or []
+    secs = [s for s in secs if isinstance(s.get("median"), (int, float))]
+    if len(secs) < 4:
+        return []
+    secs.sort(key=lambda s: s["median"], reverse=True)
+    best, worst = secs[:3], secs[-3:][::-1]
+    f = lambda s: f"{s['name']} {s['median']:+.1f}%"
+    return ["  ↑ " + " · ".join(f(s) for s in best), "  ↓ " + " · ".join(f(s) for s in worst),
+            "_Median stock in each sector._"]
+
+
+def _alpha_movers(n: int = 5) -> list:
+    p = _alpha_get("/data/pulse.json")
+    if not p:
+        return []
+    out = []
+    for key, label in (("movers_up", "Up"), ("movers_dn", "Down")):
+        rows = [m for m in (p.get(key) or []) if isinstance(m.get("r1w"), (int, float))][:n]
+        if rows:
+            out.append(f"  {label}: " + " · ".join(f"`{m['sym']}` {m['r1w']:+.0f}%" for m in rows))
+    if out:
+        out.append("_One-week move._")
+    return out
+
+
+def _alpha_ipo() -> list:
+    j = _alpha_get("/data/ipo.json")
+    if not j:
+        return []
+    out = []
+    for o in (j.get("open") or [])[:3]:
+        sub = f" · {o['subscription_x']:.2f}× subscribed" if isinstance(o.get("subscription_x"), (int, float)) else ""
+        out.append(f"  *Open:* {str(o.get('company', ''))[:34]} · {o.get('price_band', '')} · closes {o.get('close_date', '—')}{sub}")
+    aw = j.get("awaiting_listing") or []
+    if aw:
+        out.append(f"  {len(aw)} closed and awaiting listing: " + ", ".join(f"`{a['symbol']}`" for a in aw[:4]))
+    return out
 
 
 def _fmt_price(v, currency: str = "") -> str:
@@ -501,119 +517,6 @@ def _rotate(items: list, seed: date = None):
     return items[d.toordinal() % len(items)]
 
 
-def _build_signal_recap() -> str:
-    """
-    Yesterday and today's signals, read from news.askakshay.com.
-
-    Two things were wrong with the version this replaces.
-
-    First, it queried Turso directly while the website rendered the same trades
-    through /api/signals, so the recap and the site could disagree about a
-    trade's status and nothing would catch it.
-
-    Second, and worse, it never ran. Every price was formatted with
-    `f"{entry:.4f if entry < 100 else entry:.1f}"`, which is not a valid format
-    specifier; Python raises ValueError on the first row. The bare
-    `except Exception` around the whole function swallowed it into a warning and
-    returned "", and `send_brief` treats "" as "nothing to report". The recap
-    has been failing this way on every run that had signals to report.
-
-    Returns "" when there is genuinely nothing to say. Any failure is logged and
-    also returns "" — the brief still goes out without this block.
-    """
-    try:
-        now       = datetime.now(IST)
-        yesterday = (now - timedelta(days=1)).date().isoformat()
-        today     = now.date().isoformat()
-
-        j = _news_get("/signals?limit=400")
-        if not j:
-            log.warning("signal recap: news API unavailable")
-            return ""
-
-        rows = [
-            r for r in (j.get("signals") or [])
-            if yesterday <= str(r.get("date", ""))[:10] <= today
-            or yesterday <= str(r.get("closed_at") or "")[:10] <= today
-        ]
-        if not rows:
-            return ""
-
-        open_sigs, winners, losers, cancelled = [], [], [], []
-        for r in rows:
-            sym    = str(r.get("symbol") or "")
-            action = str(r.get("action") or "")
-            status = str(r.get("status") or "OPEN").upper()
-            cur    = str(r.get("currency") or "")
-            entry  = _fmt_price(r.get("entry"), cur)
-            # pnl_str is pre-formatted by the API, so Telegram and the site
-            # cannot round the same trade two different ways.
-            pnl    = str(r.get("pnl_str") or "—")
-            rmult  = r.get("r_multiple")
-            rtxt   = f" · {float(rmult):+.2f}R" if isinstance(rmult, (int, float)) else ""
-
-            if status == "OPEN":
-                open_sigs.append(f"• *{sym}* {action} @ `{entry}` — still open")
-            elif status.startswith("T") and "_HIT" in status:
-                # THE STATUS SAYS WHICH TARGET, AND THIS PRINTED A DIFFERENT ONE.
-                #
-                # The status is T1_HIT, T2_HIT or T3_HIT — the row names the rung
-                # it reached. This read `target2 or target1`, so a T1_HIT trade
-                # was reported at the SECOND target's price under the word
-                # "target": a level that trade never touched, quoted beside a
-                # P&L measured at the one it did. Where the second target was
-                # blank the fallback happened to be right, which is why it read
-                # correctly often enough to survive.
-                rung = status.split("_")[0]                  # T1 / T2 / T3
-                tgt = _fmt_price(r.get(f"target{rung[1:]}"), cur)
-                if tgt in ("", "—", None):
-                    # A hit on a rung the row does not carry a price for. Say the
-                    # rung and drop the price, rather than substituting another.
-                    winners.append(f"✅ *{sym}* {action} → {rung} hit ({pnl}{rtxt})")
-                else:
-                    winners.append(f"✅ *{sym}* {action} → {rung} `{tgt}` ({pnl}{rtxt})")
-            elif "SL" in status or status == "STOPPED":
-                losers.append(f"❌ *{sym}* {action} → stop `{_fmt_price(r.get('sl'), cur)}` ({pnl}{rtxt})")
-            elif status == "CANCELLED":
-                cancelled.append(f"⚪ *{sym}* {action} — cancelled")
-            else:
-                # TIME_STOP, EXPIRED — closed, but neither a target nor a stop.
-                losers.append(f"⏳ *{sym}* {action} → {status.replace('_', ' ').lower()} ({pnl}{rtxt})")
-
-        lines = [f"📊 *SIGNAL RECAP* — {yesterday} → {today}\n"]
-        if winners:
-            lines.append("*✅ Closed — target hit:*")
-            lines.extend(winners)
-        if losers:
-            lines.append("\n*❌ Closed — stopped or timed out:*")
-            lines.extend(losers)
-        if open_sigs:
-            lines.append(f"\n*🔵 Still open ({len(open_sigs)}):*")
-            lines.extend(open_sigs[:6])
-            if len(open_sigs) > 6:
-                lines.append(f"  _...and {len(open_sigs) - 6} more_")
-        if cancelled:
-            lines.append(f"\n*⚪ Cancelled: {len(cancelled)}*")
-
-        w, l = len(winners), len(losers)
-        wr   = f"{round(w / (w + l) * 100)}% WR" if (w + l) else "no closed trades"
-
-        # Lifetime edge, from the same /stats the site publishes. Quoted with
-        # its sample size, because an expectancy without an n is a mood.
-        edge = ""
-        st = _news_get("/stats")
-        if st:
-            h = st.get("headline") or {}
-            trades = h.get("trades")
-            exp    = h.get("expectancy_r")
-            if isinstance(trades, int) and isinstance(exp, (int, float)):
-                edge = f" · lifetime {exp:+.3f}R over {trades} closed"
-
-        lines.append(f"\n_{len(rows)} signals · {wr}{edge} · not SEBI advice_")
-        return "\n".join(lines)
-    except Exception as e:
-        log.warning(f"signal recap error: {e}")
-        return ""
 
 
 def _save_to_db(content: str):
@@ -855,30 +758,6 @@ class _Wire:
         self.entries = entries
 
 
-def _mandate_book() -> Optional[dict]:
-    """Today's order book under the Rs 1 crore mandate. None if unavailable."""
-    try:
-        import swing_rulebook as RB
-        import datetime as _dt
-        j = _news_get("/signals?limit=400")
-        if not j:
-            return None
-        today = _dt.date.today()
-
-        def age(d):
-            try:
-                return (today - _dt.date(*map(int, str(d)[:10].split("-")))).days
-            except Exception:
-                return 9999
-
-        fresh = [r for r in (j.get("signals") or [])
-                 if str(r.get("status")) == "OPEN"
-                 and not r.get("entry_triggered_at")
-                 and age(r.get("date")) <= 30]
-        return RB.build_book(fresh, {})
-    except Exception as e:
-        log.warning("mandate book unavailable: %s", e)
-        return None
 
 
 def _pat_expiry_line(warn_within_days: int = 14) -> Optional[str]:
@@ -946,42 +825,33 @@ def _pat_expiry_line(warn_within_days: int = 14) -> Optional[str]:
 
 def build_section_brief(slot: str = "midday") -> str:
     """
-    Both sites, in one Telegram message.
+    The alpha brief, in one Telegram message.
 
-    Every section gets a line here, in the site's own document order, so the
-    brief is a table of contents rather than a second, competing summary that
-    can drift from it. Sections that have nothing to say are omitted rather
-    than printed empty — the old brief padded its Opportunities block with two
-    LinkedIn links and no jobs, which taught the reader to skip it.
+    Every section gets a line here and links to the page on alpha.askakshay.com
+    that holds the rest, so the brief is a way into the site rather than a second,
+    competing summary. Sections with nothing to say are omitted rather than
+    printed empty.
 
-    The FACTS all come from one API (see NEWS_API). The LINKS do not: trade
-    ideas, the ledger and the engine floor now live on signal.askakshay.com and
-    are linked there, because sending a reader to the newspaper for the order
-    book is how a brief stops being a way into anything.
+    MORNING — 08:00 MYT / 05:30 IST, before the Indian open: what the world did
+              overnight and where the market stands.
+    EVENING — 20:00 MYT / 17:30 IST, after the NSE close: how the day went.
+    MIDDAY  — no longer scheduled; a manual dispatch of it still resolves.
 
-    MORNING — 08:00 MYT / 05:30 IST, before the Indian open and after the site
-              has rebuilt. What the book wants today, and what the world did
-              overnight.
-    EVENING — 20:00 MYT / 17:30 IST, two hours after the NSE close, alongside
-              the day's only scan. What happened, and what is queued.
-    MIDDAY  — no longer scheduled. Kept because a manual dispatch of it still
-              resolves, and because job_runs rows written under that name exist.
-
-    Only the title and the night extras vary by slot. The BODY is the site's
-    own document order in every slot on purpose: a brief that reorganised
-    itself per slot would be a second summary competing with the page.
+    There is no signals, trade-ideas, ledger or performance section: signal
+    engines are retired and will be rebuilt later, and nothing here is a trade.
+    Only the title and the evening extras vary by slot; the body is the same
+    document order every time.
     """
     evening = slot == "evening"
     title = {
-        "evening": "🌇 *EVENING — THE DAILY SIGNAL*",
-        "morning": "🌅 *MORNING — THE DAILY SIGNAL*",
-    }.get(slot, "🌤 *MIDDAY — THE DAILY SIGNAL*")
-    L = [f"{title}\n{istNow()} IST · {SIGNAL_SITE} · {NEWS_SITE}\n"]
-    ticket_blocks: list = []
+        "evening": "🌇 *EVENING — ALPHA BRIEF*",
+        "morning": "🌅 *MORNING — ALPHA BRIEF*",
+    }.get(slot, "🌤 *MIDDAY — ALPHA BRIEF*")
+    L = [f"{title}\n{istNow()} IST · {ALPHA_SITE}\n"]
 
     # Infrastructure warning ahead of any market content: if the token that
-    # writes this brief into the vault is about to lapse, that matters more
-    # than today's numbers, and it is silent on every healthy day.
+    # writes this brief into the vault is about to lapse, that matters more than
+    # today's numbers, and it is silent on every healthy day.
     _pat = _pat_expiry_line()
     if _pat:
         L.append(_pat)
@@ -989,226 +859,60 @@ def build_section_brief(slot: str = "midday") -> str:
     def rule(s):
         L.append(f"━━━━━━━━━━━━━━━━━━━\n{s}\n━━━━━━━━━━━━━━━━━━━")
 
-    # ── 01 Market Intel ────────────────────────────────────────────────────
-    mk = _news_markets()
+    mk = _alpha_markets()
     if mk:
-        rule("📊 *01 · MARKET INTEL*")
-        L.append(mk)
+        rule("📊 *01 · MARKETS*")
+        L.extend(mk)
+        L.append(f"_Live board: {_link('markets')}_")
 
-    # ── 02 Trade Ideas — the mandate's order book, as a TABLE ──────────────
-    #
-    # This block used to print one four-line paragraph per ticket. Eight of
-    # those is thirty-two lines of prose in which no two numbers line up, and
-    # the header said "deployed 71.7%" over a list that never showed what any
-    # single ticket consumed — so the five or eight ideas visible could not be
-    # reconciled against the crore they were supposedly filling. That is the
-    # "shows top 5 trades but shows below 1 crore utilisation" complaint, and
-    # it was a presentation bug, not a sizing one.
-    #
-    # A fenced block is the only fixed-width type Telegram has, so the columns
-    # actually align and the TOTAL row proves the book adds up. Every ticket
-    # carries what it costs and what state it is in.
-    book = _mandate_book()
-    if book and book.get("suspended"):
-        # ── SUSPENDED 2026-09-19 ─────────────────────────────────────────────
-        # The section stays and says why, rather than disappearing. A reader who
-        # got this brief every morning with a ₹1 crore book in it is owed the
-        # withdrawal explicitly — a section that silently stops appearing reads
-        # as a broken job, which is the one thing this brief must never look
-        # like. Same rule the site applies: a published claim is withdrawn out
-        # loud or not at all.
-        rule("🎯 *02 · TRADE IDEAS* — the ₹1 crore book")
-        _would = len(book.get("would_place") or [])
-        L.append(
-            f"⛔ *Suspended {book.get('suspended_on', '')}* — this book is placing nothing.\n\n"
-            + str(book.get("suspended_why") or "")
-            + (f"\n\nIt would otherwise have placed *{_would}* order"
-               f"{'' if _would == 1 else 's'} today." if _would else "")
-            + "\n\nRe-opens when one engine reaches *30 closed trades at t ≥ 2*."
-        )
-    elif book:
-        st = book["state"]
-        cap = book.get("capital") or 0
-        rule("🎯 *02 · TRADE IDEAS* — the ₹1 crore book")
+    bar = _alpha_barometer()
+    if bar:
+        rule("🧭 *02 · BAROMETER*")
+        L.extend(bar)
+        L.append(f"_How it is built: {_link('health')}_")
 
-        # The book, top down: what it holds, what is free, what a bad day costs.
-        # Heat is printed against its cap because heat alone means nothing —
-        # 5.7% is comfortable at a 6% cap and reckless at a 2% one.
-        L.append("```\n" + "\n".join([
-            f"{'BOOK':<10}{_inr(cap):>13}",
-            f"{'DEPLOYED':<10}{_inr(st['deployed']):>13}  {st['deployed_pct']:>5.1f}%",
-            f"{'CASH':<10}{_inr(st['cash']):>13}  {100 - st['deployed_pct']:>5.1f}%",
-            f"{'AT RISK':<10}{_inr(st['heat']):>13}  {st['heat_pct']:>5.1f}%  "
-            f"cap {st['deployed_cap'] and round(st['heat_cap'] / cap * 100, 1) or 0}%",
-        ]) + "\n```")
+    sec = _alpha_sectors()
+    if sec:
+        rule("🗺 *03 · SECTORS*")
+        L.extend(sec)
+        L.append(f"_Every name on one screen: {_link('map')}_")
 
-        if st.get("at_capacity"):
-            L.append("⛔ *At capacity* — nothing new can be sized until a position closes.")
+    mv = _alpha_movers()
+    if mv:
+        rule("🚀 *04 · MOVERS*")
+        L.extend(mv)
+        L.append(f"_Filter all of them: {_link('screen')}_")
 
-        # In the EVENING the market is shut, so the board is not actionable
-        # tonight; one line beats a table nobody can act on for fourteen hours.
-        if evening:
-            L.append(f"_Placed at tomorrow's open. Full board: {_link('ideas')}_")
-        elif book["admitted"]:
-            L.append(f"*TO PLACE — {len(book['admitted'])}*")
-            hdr = f"{'SYMBOL':<11}{'QTY':>6}{'ENTRY':>10}{'ALLOC':>11}{'%BK':>6}{'R:R':>6}"
-            rows, placed = [hdr, "-" * len(hdr)], 0
-            for t in book["admitted"]:
-                placed += t.get("notional") or 0
-                rows.append(
-                    f"{str(t['symbol'])[:11]:<11}{t['qty']:>6}"
-                    f"{t['entry']:>10,.2f}{_inr(t.get('notional')):>11}"
-                    f"{t.get('notional_pct', 0):>5.1f}%{t.get('reward_risk', 0):>6.1f}")
-            rows.append("-" * len(hdr))
-            rows.append(f"{'TOTAL':<11}{'':>6}{'':>10}{_inr(placed):>11}"
-                        f"{(placed / cap * 100 if cap else 0):>5.1f}%")
-            L.append("```\n" + "\n".join(rows) + "\n```")
-            # The exits, once, rather than repeated inside every ticket. They
-            # are the same ladder for every row in the tier and printing them
-            # eight times taught the reader to skip them.
-            #
-            # ── BUT IT IS NOT THE SAME LADDER FOR EVERY ROW ──────────────────
-            #
-            # This sentence was wrong twice over, and it is the one line in the
-            # brief a reader would act on.
-            #
-            #   "T1 books half"     — swing_rulebook.LADDER is 20/40/40. T1
-            #                         books a fifth, not a half.
-            #   "the rest runs to T2" — many rows have no T2. The engine files
-            #                         three targets and the ones inside 0.5R of
-            #                         the one before are not separate exits, so
-            #                         build_ladder collapses them and the site
-            #                         renders "the only target". The brief went
-            #                         on promising a second rung for a position
-            #                         that has one exit.
-            #
-            # It is now counted off the tickets actually admitted, so the
-            # sentence describes the board underneath it rather than a house
-            # rule that may not apply to any row on it.
-            _rungs = [len(t.get("legs") or []) for t in book["admitted"]]
-            _one = sum(1 for r in _rungs if r <= 1)
-            if _one == len(_rungs):
-                _ladder = ("Every name here has ONE target: the whole position "
-                           "leaves at it, and the stop trails to break-even once "
-                           "T1 prints.")
-            else:
-                _ladder = ("Ladder: 20% at T1, 40% at T2, the rest at T3; the "
-                           "stop trails to break-even after T1 and to T1 after "
-                           "T2, never lower.")
-                if _one:
-                    _ladder += (f" {_one} of {len(_rungs)} carry a single target "
-                                "— the whole position leaves there.")
-            L.append(f"_{_ladder} Levels per name: {_link('ideas')}_")
-
-        # LIVE STATUS: what the rules did with everything they saw. A board that
-        # only shows what it admitted is a board you cannot audit — the count
-        # that was refused, and why, is the part that says the caps are real.
-        remarks = []
-        if book["deferred"]:
-            why = {}
-            for d in book["deferred"]:
-                why[d.get("cap", "CAP")] = why.get(d.get("cap", "CAP"), 0) + 1
-            remarks.append("held: " + ", ".join(
-                f"{v} at the {k.lower()} cap" for k, v in sorted(why.items())))
-        if book["duplicates"]:
-            remarks.append(f"{len(book['duplicates'])} dropped as duplicate names")
-        if book.get("rejected"):
-            remarks.append(f"{len(book['rejected'])} failed the rules outright")
-        if remarks:
-            L.append("_Also seen — " + " · ".join(remarks) + "._")
-
-    # ── 03 World · 04 The Wire — DETAILED, not a list of headlines ─────────
-    #
-    # Both blocks used to print four titles truncated mid-sentence and nothing
-    # else, which is a summary of a summary: enough to know something happened
-    # and not enough to know what. Each item now carries its source, what the
-    # story actually says, and — for world events — how many independent
-    # outlets carried it, which is the only cheap signal of whether a headline
-    # is an event or one outlet's angle.
+    # World and the wire are DETAILED, not lists of headlines: each item carries
+    # its source, what the story says, and for world events how many independent
+    # outlets carried it — the only cheap signal of an event versus one outlet's angle.
     w = _news_get("/world")
     if w and (w.get("top") or []):
-        rule("🌍 *03 · WORLD* — last 24h")
+        rule("🌍 *05 · WORLD* — last 24h")
         L.append(_Wire([_world_entry(e) for e in (w.get("top") or [])]))
     nw = _news_get("/news")
     if nw and (nw.get("news") or []):
-        rule("📰 *04 · THE WIRE*")
+        rule("📰 *06 · THE WIRE*")
         L.append(_Wire([_news_entry(n) for n in (nw.get("news") or [])]))
 
-    # ── 05 Careers ─────────────────────────────────────────────────────────
-    # BOTH slots, unlike Life. A role that opens is time-critical in a way the
-    # day's reading is not, and the Dubai search is a standing priority rather
-    # than an evening indulgence.
+    ipo = _alpha_ipo()
+    if ipo:
+        rule("🆕 *07 · IPOs*")
+        L.extend(ipo)
+        L.append(f"_Open and recent: {_link('ipo')}_")
+
+    # Careers: BOTH slots. A role that opens is time-critical in a way the day's
+    # reading is not, and the Dubai search is a standing priority.
     L.extend(_careers_block())
 
-    # ── LIFE ───────────────────────────────────────────────────────────────
-    # Evening only. The morning brief is read before the open and is about the
-    # market; the evening one is read after it and is the right place for the
-    # rest of the day. Adding it to both would push the wire out of the
-    # morning send to say the same thing twice.
+    # Life: evening only. The morning brief is about the market; the evening one
+    # is the right place for the rest of the day.
     if evening:
         L.extend(_life_block())
 
-    # ── 09 SIP Buckets ─────────────────────────────────────────────────────
-    sp = _news_get("/sip")
-    if sp and sp.get("plan"):
-        pl = sp["plan"]
-        rule("🪣 *09 · SIP BUCKETS*")
-        L.append(f"  Rs {pl.get('monthly_amount', 0):,}/mo · step-up {pl.get('step_up_pct')}% · "
-                 f"year {pl.get('sip_year')}")
-
-    # ── 11 Portfolio ───────────────────────────────────────────────────────
-    tr = _news_get("/tracker")
-    if tr:
-        rule("📁 *11 · PORTFOLIO*")
-        n = tr.get("count") or 0
-        L.append(f"  {n} tracked position{'' if n == 1 else 's'}" if n else
-                 "  Nothing held. An OPEN setup is not a position.")
-
-    # ── 13 Signal Log · 14 Performance ─────────────────────────────────────
-    if evening:
-        recap = _build_signal_recap()
-        if recap:
-            rule("📋 *13 · SIGNAL LOG* — today")
-            L.append(recap)
-            L.append(f"_Every signal, open and closed: {_link('signals')}_")
-    stt = _news_get("/stats")
-    if stt and (stt.get("headline") or {}):
-        h = stt["headline"]
-        rule("📈 *14 · PERFORMANCE* — closed trades only")
-        L.append(f"  expectancy `{num(h.get('expectancy_r')) or 0:+.3f}R` over "
-                 f"{h.get('trades','—')} closed · win rate {rate(h.get('win_rate'),1)}")
-        L.append(f"  avg win `{num(h.get('avg_win_r')) or 0:+.2f}R` · "
-                 f"avg loss `{num(h.get('avg_loss_r')) or 0:+.2f}R` · "
-                 f"profit factor {num(h.get('profit_factor')) or 0:.2f}")
-        L.append(f"_Per engine, with what fires each: {_link('engines')}_")
-
-    # ── 15 APEX ────────────────────────────────────────────────────────────
-    # Night only, and INSIDE the brief. This used to be posted by send_brief as
-    # a separate message immediately after the brief, which is a second
-    # notification for one event. Placed above Data Health so a long day trims
-    # the health line — a number the site also carries — before it trims a P&L
-    # that appears nowhere else.
-    if evening:
-        apex = _build_apex_digest()
-        if apex:
-            rule("⚡ *15 · APEX BOT*")
-            L.append(apex)
-
-    # ── 16 Data Health ─────────────────────────────────────────────────────
-    hl = _news_get("/health")
-    if hl:
-        rule("🩺 *16 · DATA HEALTH*")
-        L.append(f"  {hl.get('signals','—')} signals · latest {hl.get('latest_signal_date','—')} · "
-                 f"{hl.get('open_setups','—')} open setups")
-        L.append(f"_How current every dataset is: {_link('health')}_")
-
-    # 2026-09-03: life.askakshay.com is retired and Life moved to
-    # career.askakshay.com, which is a private working surface and is not
-    # advertised here.
-    L.append(f"\n_Ledger, board and engines: {_link('signals')}_")
-    L.append(f"_The paper: {NEWS_SITE}_")
-    L.append("_Not SEBI advice._")
-    return _fit(L, ticket_blocks)
+    L.append(f"\n_Today, live: {_link('home')}_")
+    L.append("_Information only, not investment advice._")
+    return _fit(L)
 
 
 # Telegram rejects a sendMessage over 4096 characters outright. A full order
@@ -1277,7 +981,7 @@ def _careers_block() -> list:
         [(d, j) for j in live for d in [_closes_in(j)] if d is not None and 0 <= d <= 7],
         key=lambda t: t[0])
 
-    head = ["\u2501" * 19, "\U0001F4BC *05 \u00b7 CAREERS* \u2014 new & existing roles", "\u2501" * 19]
+    head = ["\u2501" * 19, "\U0001F4BC *08 \u00b7 CAREERS* \u2014 new & existing roles", "\u2501" * 19]
     # essential = the counts, which are the answer to "what happened to new and
     # existing roles". detail = the named rows, which are the nice-to-have.
     # Split so a heavy day loses the rows and keeps the answer — see _Opt.
@@ -1432,7 +1136,7 @@ def _fit(lines: list, ticket_blocks: list = None) -> str:
                         out.append(body)
                 gone = len(item.entries) - keep
                 if gone > 0:
-                    out.append(f"_+{gone} more — {NEWS_SITE}_")
+                    out.append(f"_+{gone} more — {_link("news")}_")
             elif isinstance(item, _Opt):
                 out.extend(item.essential)
                 if extras:
@@ -1464,7 +1168,7 @@ def _fit(lines: list, ticket_blocks: list = None) -> str:
     # pair, and an unbalanced * makes Telegram 400 the whole message — the
     # same silent non-delivery, one step later.
     kept, total = [], 0
-    tail = f"\n_Trimmed — {NEWS_SITE}_"
+    tail = f"\n_Trimmed — {_link("news")}_"
     for line in text.split("\n"):
         if total + len(line) + 1 > TG_LIMIT - len(tail):
             break
@@ -1473,69 +1177,10 @@ def _fit(lines: list, ticket_blocks: list = None) -> str:
     return "\n".join(kept) + tail
 
 
-class _BookMarker:
-    """Placeholder for where the order book is spliced in."""
 
 
-_BOOK = _BookMarker()
 
 
-def _build_apex_digest() -> str:
-    """
-    Fetch APEX bot P&L and build a Telegram digest.
-
-    The host moved. This pointed at apex-bot-jnuc.onrender.com, a service that
-    is gone — the connection does not establish at all, so the request raised,
-    the bare except returned "", and `send_brief` skipped the block. APEX has
-    been running behind the named Cloudflare tunnel at apex.askakshay.com; that
-    is where /health actually answers.
-    """
-    try:
-        r = requests.get(
-            os.environ.get("APEX_HEALTH_URL", "https://apex.askakshay.com/health"),
-            timeout=15,
-        )
-        if r.status_code != 200:
-            return ""
-        d = r.json()
-        bal   = d.get("balance", 0)
-        btc   = d.get("btc", 0)
-        mkts  = d.get("markets", 0)
-        paper = "📝 PAPER" if d.get("paper") else "🔴 LIVE"
-
-        # THE BASELINE WAS A CONSTANT IN THE MIDDLE OF A P&L. `bal - 2000.0`
-        # asserted that this account started at exactly $2,000, with nothing
-        # anywhere saying so — the number was typed, not measured, and every
-        # "P&L vs start" it printed inherited that. If the service reports its
-        # own starting balance, that is the baseline; failing that an env var
-        # can state one deliberately; failing both there is no P&L line, which
-        # is the honest outcome. A balance with no baseline is still worth
-        # showing — it just is not a result.
-        start = None
-        for k in ("start_balance", "starting_balance", "initial_balance"):
-            if isinstance(d.get(k), (int, float)):
-                start = float(d[k])
-                break
-        if start is None:
-            try:
-                start = float(os.environ["APEX_START_BALANCE"])
-            except (KeyError, TypeError, ValueError):
-                start = None
-
-        lines = [f"{paper} · BTC ${btc:,.0f}",
-                 f"  balance *${bal:,.2f}*"]
-        if start:
-            pnl = bal - start
-            lines.append(f"  {'🟢' if pnl >= 0 else '🔴'} "
-                         f"`{pnl:+,.2f}` vs a ${start:,.0f} start")
-        else:
-            lines.append("  _No starting balance reported — balance only, "
-                         "not a result._")
-        lines.append(f"  {mkts} markets tracked · terminal.askakshay.com/apex")
-        return "\n".join(lines)
-    except Exception as e:
-        log.warning(f"APEX digest failed: {e}")
-        return ""
 
 
 def _brief_job(slot: str) -> str:
@@ -1624,11 +1269,6 @@ def send_brief(slot: str = "midday", catch_up: bool = False):
     # said "a digest that arrives as its own notification is a third" and then
     # sent one anyway; the operator asked for two touches a day, so it is now a
     # section of the night brief rather than a fourth message after it.
-    # Send newspaper link
-    newspaper_domain = os.environ.get("RAILWAY_PUBLIC_DOMAIN", "")
-    if newspaper_domain:
-        newspaper_url = f"https://{newspaper_domain}"
-        _post(f"📰 *AKK Times is live* — {today}\n{newspaper_url}\n\n_World news · Markets · FP&A · Top 5 picks · OTT · Money hacks_")
     try:
         _push_to_gist(brief, today)
     except Exception as e:

@@ -109,142 +109,110 @@ def _():
         assert "Standing pipeline" in b, f"{slot} careers lost the live count"
 
 
-# ── Links point at the site that owns the section ────────────────────────────
-# Every link in this brief said news.askakshay.com, including the ones under
-# Trade Ideas, the Signal Log and Performance — three sections that moved to
-# signal.askakshay.com. A reader following "full board" from the order book
-# landed on the newspaper.
+# ── Every link goes to alpha ──────────────────────────────────────────────
+# 2026-10-12: Signal, Vision and Gems became alpha.askakshay.com. The brief used to
+# send readers to three different hosts depending on the section.
 
-@check("the ledger, the board and the engines link to the signal site")
+SECTIONS = ("home", "markets", "screen", "magic", "map", "ipo", "funds", "reads",
+            "news", "wire", "world", "health")
+
+
+@check("every section links to alpha")
 def _():
-    for key in ("ideas", "signals", "performance", "engines"):
-        assert D._link(key).startswith(D.SIGNAL_SITE), \
-            f"{key} -> {D._link(key)}, not the signal site"
+    for key in SECTIONS:
+        assert D._link(key).startswith("https://alpha.askakshay.com/"), \
+            f"{key} -> {D._link(key)}"
 
 
-@check("the paper's own sections still link to the paper")
-def _():
-    for key in ("wire", "world", "health"):
-        assert D._link(key).startswith(D.NEWS_SITE), \
-            f"{key} -> {D._link(key)}, not the newspaper"
-
-
-@check("an unknown section links somewhere real rather than raising")
+@check("an unknown section links to alpha's front page rather than raising")
 def _():
     # A mistyped key must not be able to stop the brief from sending.
-    assert D._link("no_such_section") == D.NEWS_SITE
+    assert D._link("no_such_section") == "https://alpha.askakshay.com/"
 
 
-@check("no section names a site the ownership table does not know")
+@check("no section names a host outside the link table")
 def _():
-    # A hardcoded host anywhere in the builder is a link that will rot in
-    # place. The table is the only permitted source.
+    # A hardcoded host anywhere in the builder is a link that will rot in place.
     import inspect, re
-    src = inspect.getsource(D.build_section_brief)
-    stray = re.findall(r"[\"']([a-z]+\.askakshay\.com)", src)
-    assert not stray, f"hardcoded hosts in build_section_brief: {set(stray)}"
+    for fn in (D.build_section_brief, D._alpha_markets, D._alpha_barometer,
+               D._alpha_sectors, D._alpha_movers, D._alpha_ipo):
+        stray = re.findall(r"[\"']([a-z]+\.askakshay\.com)", inspect.getsource(fn))
+        assert not stray, f"hardcoded hosts in {fn.__name__}: {set(stray)}"
 
 
-# ── APEX is a section, not a second notification ─────────────────────────────
+# ── Offline fixtures: the builder, fed by canned feeds ────────────────────
+
+FEEDS = {
+    "/api/quotes": {"live": 3, "total": 3, "quotes": [
+        {"id": "nifty", "name": "Nifty 50", "price": 22520.45, "pct": 1.3, "dp": 0, "prefix": ""},
+        {"id": "vix", "name": "India VIX", "price": 14.38, "pct": -5.9, "dp": 2, "prefix": ""},
+        {"id": "gold", "name": "Gold (futures)", "price": None, "pct": None, "dp": 1, "prefix": "$"},
+    ]},
+    "/data/barometer.json": {"today": {"score": 29, "band": {"t": "Weak"}, "parts": [
+        {"label": "Trend", "score": 1}, {"label": "Volatility", "score": 70}]}},
+    "/data/pulse.json": {
+        "breadth": {"counted": 100, "up": 40, "down": 60, "above_200dma": 47},
+        "sectors_day": [{"name": n, "median": m} for n, m in
+                        (("Tech", 2.6), ("Energy", 0.5), ("Auto", -1.2), ("Banks", 0.9), ("Metals", -2.0))],
+        "movers_up": [{"sym": "AAA", "r1w": 20.0}], "movers_dn": [{"sym": "ZZZ", "r1w": -15.0}]},
+    "/data/ipo.json": {"open": [{"company": "Example Ltd", "price_band": "Rs.100 to Rs.110",
+                                 "close_date": "2026-10-14", "subscription_x": 1.5}],
+                       "awaiting_listing": [{"symbol": "EXM"}]},
+}
+
+# Words that belong to the retired engines and paper books. Their absence is the point.
+RETIRED = ("TRADE IDEAS", "SIGNAL LOG", "PERFORMANCE", "APEX", "expectancy", "win rate",
+           "ledger", "engine", "paper", "signal.askakshay", "vision.askakshay",
+           "gems.askakshay", "terminal.askakshay", "news.askakshay")
+
+
+def _build_offline(slot, feeds=FEEDS):
+    real_a, real_n = D._alpha_get, D._news_get
+    D._alpha_get = lambda path, timeout=15: feeds.get(path)
+    D._news_get = lambda path, timeout=12: None
+    try:
+        return D.build_section_brief(slot)
+    finally:
+        D._alpha_get, D._news_get = real_a, real_n
+
+
+@check("the brief renders alpha's own sections from alpha's feeds")
+def _():
+    b = _build_offline("morning")
+    for needle in ("ALPHA BRIEF", "01 · MARKETS", "Nifty 50", "02 · BAROMETER", "29/100",
+                   "03 · SECTORS", "04 · MOVERS", "`AAA`", "07 · IPOs", "Example Ltd",
+                   "https://alpha.askakshay.com/markets/"):
+        assert needle in b, f"missing {needle!r}:\n{b[:600]}"
+
+
+@check("the brief carries nothing from the retired engines, books or sites")
+def _():
+    for slot in ("morning", "evening"):
+        b = _build_offline(slot)
+        for word in RETIRED:
+            assert word.lower() not in b.lower(), f"{slot} brief still says {word!r}"
+
+
+@check("a dead quote is omitted, never shown as 0%")
+def _():
+    b = _build_offline("morning")
+    assert "Gold" not in b, "a quote with no price was printed"
+
+
+@check("every alpha source down: the brief still sends, without those sections")
+def _():
+    b = _build_offline("morning", feeds={})
+    assert len(b) <= TELEGRAM_HARD_CAP
+    assert "01 · MARKETS" not in b and "ALPHA BRIEF" in b
+
 
 @check("send_brief posts the brief and nothing else alongside it")
 def _():
     import inspect
     src = inspect.getsource(D.send_brief)
-    # The newspaper-link post is gated on RAILWAY_PUBLIC_DOMAIN, which is not
-    # set in any workflow; the APEX one was not gated on anything.
-    assert "_post(apex_digest)" not in src, \
-        "the APEX digest is being sent as its own message again"
-
-
-@check("APEX rides inside the night brief")
-def _():
-    import inspect
-    src = inspect.getsource(D.build_section_brief)
-    assert "_build_apex_digest()" in src, "APEX is not rendered in the brief"
-
-
-@check("APEX prints no P&L when no starting balance is known")
-def _():
-    # The old code read `bal - 2000.0` — a baseline typed into an expression,
-    # with nothing anywhere saying the account started there.
-    import inspect
-    src = inspect.getsource(D._build_apex_digest)
-    # Comments strippped first: the docstring explains the old bug and names
-    # the constant, which is the point of writing it down.
-    code = "\n".join(l for l in src.splitlines()
-                     if not l.lstrip().startswith("#"))
-    assert "2000" not in code, "the hardcoded APEX baseline is back"
-    assert "APEX_START_BALANCE" in code, "no way to state a baseline deliberately"
-
-
-@check("the brief's exit ladder describes the board underneath it")
-def _():
-    """The one line in the brief a reader would act on, and it was wrong twice.
-
-    It read: "Ladder: T1 books half, the rest runs to T2, then the stop trails
-    to T1 and never lower."
-
-      · "T1 books half" — swing_rulebook.LADDER is 20/40/40. T1 books a fifth.
-      · "the rest runs to T2" — many rows have no T2. The engine files three
-        targets and the ones inside 0.5R of the one before are not separate
-        exits, so build_ladder collapses them. SPLPETRO renders on the ledger
-        card as "All at 938.02 · the only target" while the brief promised a
-        second rung the position does not have.
-
-    The sentence is now counted off the admitted tickets themselves, so it
-    cannot describe a ladder no row on the board is on.
-    """
-    import inspect
-    src = inspect.getsource(D.build_section_brief)
-    code = "\n".join(l for l in src.splitlines() if not l.lstrip().startswith("#"))
-    assert "T1 books half" not in code, "the half-of-the-position claim is back"
-    assert "_rungs = [len(t.get(\"legs\")" in code, \
-        "the sentence is not counted off the tickets"
-    assert "20% at T1" in code, "the ladder no longer states the real fractions"
-
-    # And the three fractions in the sentence must be the ones the sizer uses.
-    import swing_rulebook as RB
-    assert [f for _, f in RB.LADDER] == [0.20, 0.40, 0.40], \
-        f"LADDER moved to {RB.LADDER} — the brief's sentence has to move with it"
-
-
-@check("a board of one-target names is not told it has a T2")
-def _():
-    """Exercised through the real builder with the book stubbed, because the
-    branch is chosen by the tickets and nothing else on the page can reach it."""
-    one_leg = {"symbol": "SPLPETRO", "qty": 100, "entry": 771.05, "notional": 77105,
-               "notional_pct": 0.8, "reward_risk": 1.6,
-               "legs": [{"label": "T1", "price": 938.02, "qty": 100}]}
-    three_leg = dict(one_leg, symbol="KIRLOSENG",
-                     legs=[{"label": "T1"}, {"label": "T2"}, {"label": "T3"}])
-
-    def book(admitted):
-        return {"capital": 10_000_000, "admitted": admitted, "deferred": [],
-                "rejected": [], "duplicates": [],
-                "state": {"deployed": 77105, "deployed_pct": 0.8, "cash": 9_922_895,
-                          "heat": 10000, "heat_pct": 0.1, "heat_cap": 600000,
-                          "deployed_cap": 8_000_000, "at_capacity": False}}
-
-    real = D._mandate_book
-    try:
-        D._mandate_book = lambda: book([one_leg])
-        txt = D.build_section_brief("morning")
-        assert "runs to T2" not in txt, "a one-target board was promised a second rung"
-        assert "ONE target" in txt, f"the single target is not stated:\n{txt[:400]}"
-
-        D._mandate_book = lambda: book([one_leg, three_leg])
-        txt = D.build_section_brief("morning")
-        assert "20% at T1" in txt, "a mixed board loses the real ladder"
-        assert "1 of 2 carry a single target" in txt, \
-            f"the mixed board does not count its one-target names:\n{txt[:400]}"
-
-        D._mandate_book = lambda: book([three_leg, three_leg])
-        txt = D.build_section_brief("morning")
-        assert "carry a single target" not in txt, \
-            "a board with no single-target names says otherwise"
-    finally:
-        D._mandate_book = real
+    assert "AKK Times" not in src and "RAILWAY_PUBLIC_DOMAIN" not in src, \
+        "the newspaper-link post is back"
+    assert src.count("_post(") == 1, "send_brief posts more than the brief"
 
 
 def main() -> int:

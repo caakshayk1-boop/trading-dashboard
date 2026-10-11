@@ -482,7 +482,7 @@ def handle_command(text, chat_id):
                        else "significantly positive" if t >= 2
                        else "significantly negative — the losses are not bad luck")
             lines = [
-                "*THE RECORD* — signal.askakshay.com",
+                "*THE RECORD*",
                 f"_since {rec['launch']}, the 8 engines this site publishes_",
                 "",
                 f"Published   *{rec['published']}*   ({rec['open']} still open)",
