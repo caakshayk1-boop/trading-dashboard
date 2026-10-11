@@ -10634,8 +10634,7 @@ table.t tbody tr:hover{background:var(--surface2)}
     <span>Ranked once a week, <b>Sunday morning MYT</b> &mdash; the same five all week is the design, not a stalled scan</span>
     <span>Engine <b>{{ picks_engine }}</b></span>
     <span>These are ideas, not ledger signals &mdash; they carry no entry fill and
-      never touch <a href="https://signal.askakshay.com/record">signal.askakshay.com</a>'s
-      win rate or expectancy</span>
+      never touch the published win rate or expectancy</span>
   {# ── AND THIS RANKING'S OWN RECORD ───────────────────────────────────────
      The line above says these ideas never touch the SIGNAL site's expectancy.
      True — top5_pick is not a published engine there and in_book refuses it.

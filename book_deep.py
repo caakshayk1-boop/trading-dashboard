@@ -117,7 +117,6 @@ BOOK_DEEP: dict[str, dict] = {
             "McKeown attended a client meeting hours after his daughter's birth. He got neither the client's respect nor the moment back — the book's founding regret.",
         ],
         "adapt": [
-            "Five active projects maximum. TradeFlow, Codex, Meta recovery, Dubai, SIP. A sixth means one gets cut, not squeezed in.",
             "Before any new build: what does this replace? If nothing, it doesn't start.",
             "Kill features that no measurement supports. The deleted /fno and /options pages were the right call.",
             "Buffer every deadline by 50%. A model promised Friday gets built by Wednesday.",
@@ -366,7 +365,6 @@ BOOK_DEEP: dict[str, dict] = {
             "Taleb's barbell in practice: 90% in treasuries, 10% in far out-of-the-money options. Capped loss, uncapped gain.",
         ],
         "adapt": [
-            "Barbell the income: stable FP&A salary as the safe leg, Codex and trading as the small convex leg. No middle-risk bets.",
             "Multiple income paths beat one optimised one. Meta restriction proved single-channel dependence is fragile.",
             "Via negativa on the product: deleting /fno, /options, /portfolio improved TradeFlow. Removal was the upgrade.",
             "Redundancy on the bots: Railway shut down and took the command handler with it. One host is one point of failure.",
@@ -403,7 +401,6 @@ BOOK_DEEP: dict[str, dict] = {
             "Facebook started at one university with 100% of that market, then expanded campus by campus.",
         ],
         "adapt": [
-            "Codex's edge is not 'AI automation'. It is a specific workflow for a specific buyer at $47. Dominate that.",
             "The faceless FP&A page competes in a narrower niche than generic finance content. That narrowness is the asset.",
             "10x, not 10%: a signals product must be clearly better than a free Telegram channel, not slightly.",
             "Distribution for the Dubai search is the network, not the CV. Applications without referrals are 1→n.",
@@ -439,7 +436,6 @@ BOOK_DEEP: dict[str, dict] = {
             "Ries's IMVU spent months on an IM-interoperability feature nobody used. Users didn't want to add friends; they wanted new ones.",
         ],
         "adapt": [
-            "Codex at $47: test the tier with a landing page and real payment intent before building the full product.",
             "The signal edge measurement was validated learning — t=+2.87 on daily equity, noise on 1H. That result should drive the roadmap.",
             "Cohort the newspaper: are the same readers returning, or is it new traffic each morning? Totals won't tell you.",
             "Five whys on the alert flood: no time stop → because no lifecycle rule → because the backtest's horizon was never ported to live code.",
@@ -474,7 +470,6 @@ BOOK_DEEP: dict[str, dict] = {
         ],
         "adapt": [
             "A free Telegram bot is the low-end disruption of paid research. That is the position to hold, not apologise for.",
-            "Codex at $47 looks unattractive next to consulting rates. That is exactly why it has room.",
             "Don't let existing dashboard users dictate the roadmap if the measured edge points elsewhere.",
             "Keep experiments in separate ledgers — the APEX poly engine on its own books, so a small bet stays a small bet.",
         ],
@@ -509,7 +504,6 @@ BOOK_DEEP: dict[str, dict] = {
         ],
         "adapt": [
             "Document the newspaper pipeline so it survives you not touching it. GitHub Actions is already most of the way there.",
-            "Codex must run without your hands in it — that is the difference between a product and freelancing.",
             "Quantify the content engine: posts per week, score distribution, follower delta. No numbers, no view.",
             "Every manual step in the trading stack is a step that fails when you are busy interviewing in Dubai.",
         ],
@@ -545,7 +539,6 @@ BOOK_DEEP: dict[str, dict] = {
         ],
         "adapt": [
             "Hedgehog: CA precision + FP&A + building with AI. That intersection is narrower and stronger than 'finance content'.",
-            "Economic denominator for Codex: profit per customer, not downloads.",
             "Brutal fact: 1H signals have no measurable edge. Faith: the daily equity engine does. Hold both.",
             "Stop-doing list beats the roadmap. Deleting three TradeFlow pages was the flywheel push.",
         ],
@@ -721,7 +714,6 @@ BOOK_DEEP: dict[str, dict] = {
         ],
         "adapt": [
             "Q3 objective: land the Dubai offer. KRs: 40 targeted applications, 12 first-round calls, 3 finals. Numbers, not effort.",
-            "Codex KR: 20 paying customers at $47, not 'launch the product'.",
             "Trading KR: expectancy above +0.15R over 100 live signals. Grade it, then stop or continue.",
             "Grade quarterly and write the number down even when it's 40%. Especially then.",
         ],
@@ -793,7 +785,6 @@ BOOK_DEEP: dict[str, dict] = {
         "adapt": [
             "Your Why: most financial advice ignores behaviour, so it fails. That belief explains the content, the products, and the refusals.",
             "The Celery Test kills motivational finance content instantly. It doesn't fit the Why.",
-            "Sell Codex to the 2.5% who already believe automation beats hiring. Not to the majority.",
             "Lead the Dubai pitch with the belief, not the CV bullet list. The bullets are the What.",
         ],
     },
