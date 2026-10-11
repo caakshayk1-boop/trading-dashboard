@@ -1524,35 +1524,6 @@ def test_the_shared_brief_section_is_one_file_and_both_briefs_call_it() -> None:
     check("it offers a notice for the case where it did not arrive",
           "missingNotice" in src)
 
-    nxt = pathlib.Path("static/next.js").read_text(encoding="utf-8")
-    check("next.js has a business section", "'b-fund', 'Business'" in nxt)
-    check("next.js renders it through the shared file, not a local copy",
-          "window.BriefFundamentals.render(row," in nxt)
-    check("next.js says so when the file did not arrive",
-          "could not load" in nxt)
-    # Two copies of the markup is the fault this whole arrangement avoids.
-    check("next.js does not keep its own copy of the tables",
-          "ROCE, multi-year median" not in nxt)
-
-    shell = pathlib.Path("static/next.html").read_text(encoding="utf-8")
-    check("the shell loads the shared renderer",
-          'src="/brief_fundamentals.js"' in shell)
-    # Both are defer, so they execute in document order — the renderer must be
-    # defined before the route that calls it runs.
-    check("and loads it before the page renderer",
-          shell.index('src="/brief_fundamentals.js"') < shell.index('src="/next.js"'))
-    gen = pathlib.Path("generate.py").read_text(encoding="utf-8")
-    check("generate.py stamps a build id on it, like the other two assets",
-          "brief_fundamentals.js?v=" in gen)
-
-    # And the keyboard must reach every section the chips advertise.
-    secs = re.search(r"const SECTIONS = \[(.*?)\n    \];", nxt, re.S)
-    digits = re.search(r"const i = '(\d+)'\.indexOf\(ev\.key\);", nxt)
-    check("next.js declares its brief sections", secs is not None)
-    if secs and digits:
-        n = secs.group(1).count("['b-")
-        check("every section has a digit that jumps to it",
-              n == len(digits.group(1)), f"{n} sections, {len(digits.group(1))} digits")
 
 
 def test_screen_json_is_allow_listed_in_all_three_places() -> None:
@@ -1590,22 +1561,12 @@ def test_screen_json_is_allow_listed_in_all_three_places() -> None:
     # brief and by signal.askakshay.com's. It needs the same four allow-lists
     # as everything else here, and a fifth over there — pinned by the signal
     # repo's own test/guard.mjs, which checks its sync-data.yml fetches it.
-    for f in ("next.html", "next.css", "next.js", "brief_fundamentals.js",
+    for f in ("brief_fundamentals.js",
               "pulse.json", "ipo.json", "news.json", "conviction.json"):
         check(f"generate.py writes docs/{f}", f'"{f}"' in gen)
         check(f".vercelignore allow-lists docs/{f} by name", f"!docs/{f}" in ign_lines)
         check(f"build.js copies {f} into public/", f'"{f}"' in bld)
         check(f"newspaper.yml git-adds docs/{f}", f"docs/{f}" in wf)
-
-    # The shell must reference both its assets, and generate.py must stamp the
-    # build id onto them. Unversioned, a returning reader runs yesterday's
-    # renderer against today's JSON — which does not fail loudly, it renders
-    # confidently from keys that have moved.
-    nxt = pathlib.Path("static/next.html").read_text(encoding="utf-8")
-    check("next.html loads its stylesheet", 'href="/next.css"' in nxt)
-    check("next.html loads its renderer", 'src="/next.js"' in nxt)
-    check("generate.py stamps the build id on next.html assets",
-          "next.css?v=" in gen and "next.js?v=" in gen)
 
 
 
@@ -1987,7 +1948,7 @@ def test_every_renderer_reads_lenders_with_the_screens_own_rule():
           and ss._is_financial({"industry": "Banks - Regional"})
           and not ss._is_financial({"sector": "Industrials"}))
     want = "|".join(words)
-    for f in ("static/brief_fundamentals.js", "static/next.js", "static/app.js"):
+    for f in ("static/brief_fundamentals.js", "static/app.js"):
         src = pathlib.Path(f).read_text(encoding="utf-8")
         found = re.findall(r"/((?:[a-z ]+\|){3}[a-z ]+)/\.test\(", src)
         check(f"{f} carries the lender rule", bool(found))
@@ -1996,10 +1957,6 @@ def test_every_renderer_reads_lenders_with_the_screens_own_rule():
     bf = pathlib.Path("static/brief_fundamentals.js").read_text(encoding="utf-8")
     check("the shared brief does not call a lender's cash conversion a failure",
           "lender ? LN : 'Under 1.0 means" in bf)
-    nx = pathlib.Path("static/next.js").read_text(encoding="utf-8")
-    check("a level ratio is not printed as a signed, coloured change",
-          "yoy('Debt / equity'" not in nx and "yoy('Cash conversion" not in nx
-          and "yoy('ROCE'" not in nx)
 
 
 def test_the_magic_formula_ranks_honestly():

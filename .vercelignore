@@ -40,11 +40,6 @@
 # half-delivered, and the markup can never reach a page whose stylesheet did
 # not. Omit it here and both briefs render the "could not load" notice.
 !docs/brief_fundamentals.js
-# The mobile-first surface: shell, stylesheet, renderer. Three files, all
-# needed — omit one and /next.html renders unstyled or inert with no error.
-!docs/next.html
-!docs/next.css
-!docs/next.js
 # Feeds for the mobile surface. pulse.json is the 9KB digest that replaces a
 # 1.26MB screen.json download; ipo.json is the half of the radar that was never
 # published; news.json is the wire, which existed only inside index.html.
