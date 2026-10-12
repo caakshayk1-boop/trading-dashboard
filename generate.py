@@ -1273,7 +1273,7 @@ def generate() -> None:
 
     try:
         _news = [{"title": n.get("title"), "summary": n.get("summary"),
-                  "source": n.get("source"), "link": n.get("link")}
+                  "source": n.get("source"), "link": n.get("link"), "published": n.get("published_iso")}
                  for n in (news or [])][:18]
         (out_dir / "news.json").write_text(json.dumps(_news, default=str), encoding="utf-8")
         print(f"[generate] ✅ news.json ({len(json.dumps(_news)) // 1024}KB · {len(_news)} stories)")

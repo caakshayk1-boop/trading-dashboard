@@ -18,7 +18,7 @@ A.ALPHA = "https://alpha.askakshay.com"
 
 def sig(i, engine="breakout", status="pending", events=None, **kw):
     return {"id": f"{engine}:{i}:2026-10-09", "engine": engine, "engine_name": engine.title(), "sym": i, "name": f"{i} Ltd", "setup": "Darvas box",
-            "horizon": "positional", "status": status, "entry_zone": [100.0, 101.0], "sl": 95.0, "risk_pct": 5.0, "targets": [105.0, 110.0, 120.0],
+            "horizon": "positional", "status": status, "entry_zone": [100.0, 101.0], "ref_price": 100.0, "sl": 95.0, "risk_pct": 5.0, "targets": [105.0, 110.0, 120.0],
             "r_multiples": [1.0, 2.0, 4.0], "max_hold_days": 40, "events": events or [], "also_names": [], "entry": 100.0,
             "bench_ok": True, "benchmark": {"name": "Nifty IT", "uptrend": True, "leads_nifty": True, "stock_vs_benchmark_pct": 6.2}, **kw}
 
@@ -30,7 +30,7 @@ state = {}
 todo = A.plan(feed, state)
 check("only an engine the site marks alertable alerts (a good label alone is not enough)", [k for _, k, _ in todo] == ["breakout:AAA:2026-10-09"], [k for _, k, _ in todo])
 msg = todo[0][2]
-check("a new signal states the plan", all(x in msg for x in ("Buy zone", "Stop", "T1", "T2", "T3", "Time limit")))
+check("a new signal states the plan", all(x in msg for x in ("Signal close", "next open", "Stop", "T1", "T2", "T3", "Time limit")))
 check("it names the benchmark and how it is behaving", "Nifty IT" in msg and "uptrend" in msg and "leading the Nifty" in msg)
 check("it links to alpha only", "alpha\\.askakshay\\.com/company/?s=AAA" in msg and "signal\\.askakshay" not in msg)
 check("it says plan, not advice", "not advice" in msg)

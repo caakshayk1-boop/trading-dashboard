@@ -348,6 +348,10 @@ draft of this study did exactly that:
   disagree, which is the interesting part.
 
 RULES
+- A margin of X% means X paise of every revenue rupee. 40% is two-fifths, never four-fifths.
+- A PE at the Nth percentile of its own history is HIGHER than about N% of its past readings. Above 50 means dearer than its own median, not cheap.
+- Do not state anything about the company's customers, geography, contracts, regulation or accounting that is not in the dossier. If you describe the business from general knowledge, say "check the annual report" for specifics. Never allege manipulation, fraud or promoter funding; if a figure looks odd, say the data looks inconsistent and what would resolve it.
+- Mutual fund expenses are accrued daily and already reflected in the NAV. They are not billed to investors.
 - 1,100 to 1,400 words in total. This is a five to seven minute read.
 - Plain, direct sentences. Short paragraphs.
 - Never use: robust, strong, healthy, solid, well-positioned, headwinds,
@@ -455,6 +459,58 @@ def unverified_numbers(text: str, allowed: list[float]) -> list[str]:
     return bad
 
 
+# ── Claim checks: the failures a number-matcher cannot see ──────────────────
+#
+# unverified_numbers() catches INVENTED figures. It cannot catch a REAL figure
+# read the wrong way, which is what the 2026-10-10 edition shipped: a 40%
+# margin written as "four-fifths", a 65th-percentile PE described as cheap
+# against its own history, an AMC fee described as billed to the investor.
+# These checks read the interpretation, not the number. Each returns a short
+# reason string; any reason sends the study back for a rewrite.
+_FRACTIONS = {"half": 50, "one-third": 33, "two-thirds": 67, "three-quarters": 75,
+              "four-fifths": 80, "one-fifth": 20, "one-quarter": 25}
+_ALLEGATION = re.compile(
+    r"manipulat|fraud|siphon|round[- ]?trip|window[- ]?dress|cook(?:ed|ing) the books|"
+    r"embezzl|money laundering|accounting trick", re.I)
+_CHEAP = re.compile(r"\b(cheap|undervalued|discount)\b[^.]{0,40}\b(own|its)\b[^.]{0,20}\b(past|history|range)", re.I)
+_RICH = re.compile(r"\b(expensive|premium|rich)\b[^.]{0,40}\b(own|its)\b[^.]{0,20}\b(past|history|range)", re.I)
+
+
+def claim_problems(text: str) -> list[str]:
+    """Interpretation errors that matching numbers against the dossier misses."""
+    t = _normalise(text).replace("\u202f", " ").replace("\u00a0", " ")
+    out: list[str] = []
+    for m in re.finditer(r"\b(\d+)(st|nd|rd|th)\b", t):
+        n_ = int(m.group(1))
+        want = "th" if 10 <= n_ % 100 <= 20 else {1: "st", 2: "nd", 3: "rd"}.get(n_ % 10, "th")
+        if m.group(2) != want:
+            out.append(f"ordinal '{m.group(0)}' should end in '{want}'")
+    for m in re.finditer(r"(?:higher|lower|more|greater) than\s+(\d+(?:\.\d+)?)\s*%", t, re.I):
+        if float(m.group(1)) >= 100:
+            out.append(f"'{m.group(0)}' is impossible for a share of observations")
+    for sent in re.split(r"(?<=[.!?\n])\s+", t):
+        pm = re.search(r"(\d+)(?:st|nd|rd|th)\s+percentile", sent, re.I)
+        if pm:
+            p = int(pm.group(1))
+            hm = re.search(r"higher than\s+(?:about\s+|roughly\s+)?(\d+(?:\.\d+)?)\s*%", sent, re.I)
+            if hm and abs(float(hm.group(1)) - p) > 3:
+                out.append(f"percentile {p} but 'higher than {hm.group(1)}%' in the same sentence")
+            if p > 50 and _CHEAP.search(sent) and not re.search(r"\bnot\s+cheap", sent, re.I):
+                out.append(f"percentile {p} (above its own median) described as cheap against its own history")
+            if p < 50 and _RICH.search(sent) and not re.search(r"\babsolute\b", sent, re.I):
+                out.append(f"percentile {p} (below its own median) described as expensive against its own history")
+        mm = re.search(r"margin of\s+(\d+(?:\.\d+)?)\s*%", sent, re.I)
+        if mm:
+            for word, pct in _FRACTIONS.items():
+                if re.search(r"\b" + word.replace("-", "[- ‑]") + r"\b", sent, re.I) and abs(float(mm.group(1)) - pct) > 6:
+                    out.append(f"margin {mm.group(1)}% described as {word}")
+    if _ALLEGATION.search(t):
+        out.append("allegation language (" + _ALLEGATION.search(t).group(0) + ") with no source in the dossier")
+    if re.search(r"(billed|invoiced)\s+quarterly|deducted from the investor", t, re.I):
+        out.append("fund fees are accrued daily in NAV, not billed to the investor")
+    return out
+
+
 REQUIRED = ["## In one line", "## How it actually makes money", "## The economics",
             "## The moat", "## What the numbers say right now",
             "## What could go wrong", "## What to watch next", "## Say it out loud"]
@@ -496,6 +552,16 @@ def study_for(r: dict) -> dict | None:
     #
     # Whatever survives is RECORDED on the study rather than forgotten, so a
     # bad run is auditable after the fact instead of invisible.
+    problems = claim_problems(text)
+    if problems:
+        log.warning(f"{sym}: interpretation errors {problems} — rewriting once")
+        text2 = groq(PROMPT.format(name=r.get("name") or sym, sym=sym,
+                                   sector=r.get("sector"), dossier=doc))
+        if text2 and not claim_problems(text2):
+            text = text2
+        else:
+            log.warning(f"{sym}: interpretation errors survive a rewrite — rejected")
+            return None
     bad = unverified_numbers(text, nums)
     if len(bad) > MAX_UNVERIFIED:
         log.warning(f"{sym}: {len(bad)} unverifiable numbers {bad[:6]} — rewriting once")

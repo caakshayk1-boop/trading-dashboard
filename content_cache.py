@@ -469,6 +469,7 @@ def _fetch_news() -> list[dict]:
                     "link":      entry.get("link", ""),
                     "summary":   summary,
                     "published": published.strftime("%b %d %H:%M") if published else "",
+                    "published_iso": published.isoformat() if published else None,      # UTC; what the alpha site shows as a timestamp
                     "recent":    published >= cutoff if published else True,
                 })
         except Exception as e:

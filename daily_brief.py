@@ -488,7 +488,7 @@ def _alpha_engines(max_plans: int = 5) -> list:
     shown = [s for s in live if next((e for e in engines if e["key"] == s["engine"]), {}).get("alertable")][:max_plans]
     for s in shown:
         t = s["targets"]
-        out.append(f"  `{s['sym']}` {s['engine_name']}: buy {s['entry_zone'][0]:,.0f}–{s['entry_zone'][1]:,.0f} · stop {s['sl']:,.0f} · T1 {t[0]:,.0f} · limit {s['max_hold_days']}d")
+        out.append(f"  `{s['sym']}` {s['engine_name']}: signal close {s['ref_price']:,.0f} · stop {s['sl']:,.0f} · T1 {t[0]:,.0f} · limit {s['max_hold_days']}d")
     held = len(live) - len(shown)
     if held > 0:
         out.append(f"  _{held} more from engines that have not cleared the bar for alerts: on the site, not here._")
