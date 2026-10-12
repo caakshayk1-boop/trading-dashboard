@@ -52,10 +52,30 @@ def rupees(v) -> str:
     return f"₹{v:,.2f}" if isinstance(v, (int, float)) else "—"
 
 
-def fetch_feed() -> dict:
-    req = urllib.request.Request(f"{ALPHA}/engines.json", headers={"User-Agent": "engine-alerts/1.0"})
+def _get(url: str, headers: dict) -> dict:
+    req = urllib.request.Request(url, headers={"User-Agent": "engine-alerts/1.0", **headers})
     with urllib.request.urlopen(req, timeout=40) as r:
         return json.load(r)
+
+
+def fetch_feed() -> dict:
+    """The newest of two copies: the site's, and the alpha repo's (committed every night by the engines job, so it is
+    current even when the site's own deploy is blocked by a missing Cloudflare token). The repo is private, hence GH_PAT."""
+    feeds = []
+    pat = os.environ.get("ALPHA_REPO_TOKEN", "")
+    if pat:
+        try:
+            feeds.append(_get("https://api.github.com/repos/caakshayk1-boop/alpha/contents/public/engines.json",
+                              {"Authorization": f"Bearer {pat}", "Accept": "application/vnd.github.raw+json"}))
+        except Exception as e:
+            log.warning("repo copy of engines.json unreadable (%s)", e)
+    try:
+        feeds.append(_get(f"{ALPHA}/engines.json", {}))
+    except Exception as e:
+        log.warning("site copy of engines.json unreadable (%s)", e)
+    if not feeds:
+        raise RuntimeError("engines.json unreadable from both the repo and the site")
+    return max(feeds, key=lambda f: f.get("data_through", ""))
 
 
 def load_state() -> dict:

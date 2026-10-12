@@ -42,6 +42,7 @@ jobs:
         env:
           TELEGRAM_TOKEN:   ${{ secrets.TELEGRAM_TOKEN }}
           TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+          ALPHA_REPO_TOKEN: ${{ secrets.GH_PAT }}
           ALERT_DRY_RUN:    ${{ inputs.dry_run && '1' || '' }}
         run: python engine_alerts.py
       - name: Commit the state
