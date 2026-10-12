@@ -1099,7 +1099,7 @@ def ratios(stmts: dict | None, info: dict | None) -> dict:
         "current_ratio": None, "effective_tax": None,
         "rev_cagr3": None, "ebitda_cagr3": None, "eps_cagr3": None,
         "rev_growth_latest": None, "roce_basis": None,
-        "shares_changed": False, "has_statements": False, "fy_count": 0,
+        "shares_changed": False, "has_statements": False, "fy_count": 0, "stmt_fx": None,
         "margin_one_off": None,
         "cfo_pat": None, "cfo_pat_latest": None, "fcf_pat": None,
         "fcf_margin": None, "cfo": None, "fcf": None, "capex": None,
@@ -1133,6 +1133,8 @@ def ratios(stmts: dict | None, info: dict | None) -> dict:
     ys = stmts["years"]                     # newest first
     r["has_statements"] = True
     r["fy_count"] = len(ys)
+    _fx = stmts.get("inr_converted")
+    r["stmt_fx"] = f"Statements are filed in {_fx['from']} and converted to rupees at each period end's {_fx['from']}/INR close; absolute figures are approximate, ratios are unaffected." if _fx else None
     r["shares_changed"] = bool(stmts.get("shares_changed"))
     r["fy"] = ys[0]["fy"]
     latest = ys[0]
@@ -2857,7 +2859,7 @@ def build(limit: int | None = None, allow_fetch: bool = True,
         if not px or len(px["c"]) < 30:
             continue                       # too little price history to say anything
         info = F.get(sym, allow_fetch=False)
-        stmts = F.statements(sym, allow_fetch=False)
+        stmts = F.to_inr(sym, F.statements(sym, allow_fetch=False), info)
         r = ratios(stmts, info)
         r["industry"] = u["industry"]
         t = technicals(px, bench)
@@ -3065,6 +3067,7 @@ def build(limit: int | None = None, allow_fetch: bool = True,
             "updates": updates(r, t),
             "has_stmts": r.get("has_statements"),
             "fy_count": r.get("fy_count"),
+            "stmt_fx": r.get("stmt_fx"),
             "shares_changed": r.get("shares_changed"),
             "next_earnings": r.get("next_earnings"),
             "last_date": t.get("last_date"),

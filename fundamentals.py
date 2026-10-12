@@ -647,3 +647,112 @@ def prefetch_statements(symbols, pause: float = 0.4, checkpoint: int = 20) -> tu
     log.info(f"statements: done — {got}/{len(stale)} fetched, "
              f"{cached_ok}/{len(wanted)} symbols now have statements")
     return cached_ok, len(wanted)
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+# STATEMENT CURRENCY
+#
+# Yahoo files some Indian companies' statements in the reporting currency of a
+# foreign convenience translation: INFY arrives in US dollars. The screen then
+# divided dollars by 1e7 and published them as rupee crore, 90x too small, while
+# its market cap (rupees) sat beside them. Ratios (margins, ROCE, CAGR) are
+# scale-free and were fine; every absolute figure, and the Magic Formula's
+# EV = market cap + debt - cash, mixed two currencies.
+#
+# The test is a reconciliation, not a list of tickers: market cap / P/E implies
+# a profit, and the latest statement profit must be within 5x of it. A company
+# that fails is asked for its financialCurrency once (cached); only a confirmed
+# non-INR currency is converted, at that period end's own USD/INR close. A
+# company that fails the reconciliation but reports in rupees (a real one-off
+# gain, a discontinued operation) is left exactly as it was.
+# ─────────────────────────────────────────────────────────────────────────────
+CURRENCY_CACHE_PATH = "cache/statement_currency.json"
+RECON_LO, RECON_HI = 0.2, 5.0
+_ABSOLUTE_KEYS = ("revenue", "ebitda", "ebit", "net_income", "eps", "interest", "tax", "pretax", "equity", "total_assets",
+                  "current_liabilities", "current_assets", "invested_capital", "total_debt", "cash", "gross_profit",
+                  "cfo", "capex", "fcf", "dividends", "buyback")
+
+
+def reconciles(mcap_cr, pe, net_income) -> bool | None:
+    """Do the statements' profit and the market's (market cap / P/E) agree within 5x? None = cannot be checked."""
+    try:
+        if not mcap_cr or not pe or pe <= 0 or not net_income or net_income <= 0:
+            return None
+        ratio = (mcap_cr * 1e7 / pe) / net_income
+    except (TypeError, ZeroDivisionError):
+        return None
+    return RECON_LO <= ratio <= RECON_HI
+
+
+def _load_currency_cache() -> dict:
+    try:
+        with open(CURRENCY_CACHE_PATH) as fh:
+            return json.load(fh)
+    except (FileNotFoundError, json.JSONDecodeError, OSError):
+        return {}
+
+
+def statement_currency(symbol: str) -> str | None:
+    """Yahoo's financialCurrency for one symbol, cached. None when it cannot be learned (never guessed)."""
+    key = symbol.replace(".NS", "").upper()
+    cache = _load_currency_cache()
+    if key in cache:
+        return cache[key]
+    try:
+        import yfinance as yf
+        from symbols import to_yahoo
+        cur = (yf.Ticker(to_yahoo(key)).info or {}).get("financialCurrency")
+    except Exception as e:
+        log.warning(f"statement currency: {key} lookup failed — {e}")
+        return None
+    if not cur:
+        return None
+    cache[key] = str(cur).upper()
+    try:
+        os.makedirs(os.path.dirname(CURRENCY_CACHE_PATH), exist_ok=True)
+        with open(CURRENCY_CACHE_PATH, "w") as fh:
+            json.dump(cache, fh, indent=1, sort_keys=True)
+    except OSError:
+        pass
+    return cache[key]
+
+
+def fx_to_inr(currency: str, on: str) -> float | None:
+    """Close of CURRENCY/INR on or just before a date (YYYY-MM-DD), or None."""
+    try:
+        import yfinance as yf
+        d = datetime.fromisoformat(on[:10])
+        h = yf.Ticker(f"{currency}INR=X").history(start=(d - timedelta(days=7)).strftime("%Y-%m-%d"), end=(d + timedelta(days=1)).strftime("%Y-%m-%d"))
+        closes = [float(c) for c in h["Close"].dropna()]
+        return closes[-1] if closes else None
+    except Exception as e:
+        log.warning(f"fx: {currency}INR on {on} failed — {e}")
+        return None
+
+
+def to_inr(symbol: str, stmts: dict | None, info: dict | None, currency_of=None, rate_of=None) -> dict | None:
+    """Return the statements in rupees. Unchanged unless they fail the reconciliation AND are confirmed to be in another currency.
+    A copy is returned when converting; the cache entry is never mutated. `currency_of`/`rate_of` are injectable for tests."""
+    if not stmts or not stmts.get("years") or not info:
+        return stmts
+    ok = reconciles(info.get("market_cap_cr"), info.get("pe"), stmts["years"][0].get("net_income"))
+    if ok is not False:
+        return stmts
+    cur = (currency_of or statement_currency)(symbol)
+    if not cur or cur == "INR":
+        return stmts
+    out = dict(stmts)
+    years = []
+    for y in stmts["years"]:
+        rate = (rate_of or fx_to_inr)(cur, y["period_end"])
+        if not rate:
+            return stmts                      # cannot convert every year honestly: leave it, flagged by the reconciliation
+        z = dict(y)
+        for k in _ABSOLUTE_KEYS:
+            if z.get(k) is not None:
+                z[k] = z[k] * rate
+        z["fx"] = {"from": cur, "rate": round(rate, 4)}
+        years.append(z)
+    out["years"] = years
+    out["inr_converted"] = {"from": cur, "basis": f"{cur}/INR close on each period end"}
+    return out
