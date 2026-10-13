@@ -51,7 +51,7 @@ jobs:
       - name: Commit it
         run: |
           git config user.name  "Akshay Kumar Kothari"
-          git config user.email "ca.akshayk1@gmail.com"
+          git config user.email "265732525+caakshayk1-boop@users.noreply.github.com"
           git add docs/seasonality.json
           git diff --staged --quiet && echo "unchanged" && exit 0
           python - <<'PY'

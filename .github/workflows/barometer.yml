@@ -72,7 +72,7 @@ jobs:
       - name: Commit it
         run: |
           git config user.name  "Akshay Kumar Kothari"
-          git config user.email "ca.akshayk1@gmail.com"
+          git config user.email "265732525+caakshayk1-boop@users.noreply.github.com"
           git add docs/barometer.json
           git diff --staged --quiet && echo "unchanged" && exit 0
           python - <<'PY'
@@ -85,4 +85,11 @@ jobs:
               f"[skip ci]")
           PY
           git commit -F /tmp/msg
-          git push
+          # Many jobs push to main, so main can move between this job's checkout and its push, and a bare `git push` is then
+          # rejected ("fetch first"). On 2026-10-12 the engine-alert job pushed 4s after this job started and the 34/100 reading
+          # was lost. Rebase onto whatever landed and retry, as regime.yml does.
+          for i in 1 2 3; do
+            git push && exit 0
+            git pull --rebase --autostash && sleep 3
+          done
+          exit 1

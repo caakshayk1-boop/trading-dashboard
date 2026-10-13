@@ -84,7 +84,7 @@ jobs:
       - name: Commit the edition
         run: |
           git config user.name  "Akshay Kumar Kothari"
-          git config user.email "ca.akshayk1@gmail.com"
+          git config user.email "265732525+caakshayk1-boop@users.noreply.github.com"
           git add docs/weekly_reads.json
           git diff --staged --quiet && echo "nothing new" && exit 0
           python - <<'PY'
