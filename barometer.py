@@ -112,6 +112,20 @@ def complete_bars(df):
     return df[df["Close"].notna()]
 
 
+def keeps_newer_reading(existing_row: dict | None, new_nifty_date: str | None) -> bool:
+    """True when today's row is already recorded and describes a NEWER Nifty close than the one just computed.
+
+    THE READING THAT WENT BACKWARDS, 13 OCT 2026. The 17:33 IST run recorded the day's reading with the Nifty
+    as of 13 Oct. A later run (01:28 IST) found yfinance's 13 Oct bar still carrying no Close, so
+    `complete_bars` fell back to 12 Oct, and "one row per day" then REPLACED the better reading with one that
+    described an older close under the same date. A re-run may refresh a day's row; it must never move the
+    Nifty date it describes backwards."""
+    if not existing_row or not new_nifty_date:
+        return False
+    old = existing_row.get("nifty_date")
+    return bool(old) and str(old) > str(new_nifty_date)
+
+
 def compute(nifty_close, nifty_hi, nifty_lo, breadth: dict, vix) -> dict | None:
     counted = _n(breadth.get("counted"))
     if not counted:
@@ -270,6 +284,11 @@ def main() -> int:
 
     history = [h for h in (prev.get("history") or []) if h.get("date")]
     stamp = str(date.today())
+    existing = next((h for h in history if h["date"] == stamp), None)
+    if keeps_newer_reading(existing, today.get("nifty_date")):
+        log.warning(f"{stamp}: keeping the recorded reading (Nifty as of {existing['nifty_date']}); "
+                    f"this run only has the Nifty as of {today.get('nifty_date')}")
+        return 0
     history = [h for h in history if h["date"] != stamp]        # one row per day
     history.append({"date": stamp, "score": today["score"],
                     "band": today["band"]["k"], "stage": today["stage"],
