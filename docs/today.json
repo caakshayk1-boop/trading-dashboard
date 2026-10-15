@@ -1,7 +1,7 @@
 {
- "build_id": "20261014T084830",
- "date": "2026-10-14",
- "date_str": "Wednesday, October 14 2026",
+ "build_id": "20261015T081447",
+ "date": "2026-10-15",
+ "date_str": "Thursday, October 15 2026",
  "picks": [
   {
    "symbol": "ZS",
@@ -538,25 +538,25 @@
  },
  "desk": {
   "chess": {
-   "title": "Opening: Italian Game Basics",
-   "body": "1.e4 e5 2.Nf3 Nc6 3.Bc4. White targets f7, the weakest square in Black's position. Giuoco Piano (3...Bc5) leads to rich middlegame. Learn: castle early, play d3, develop bishop to e3, then push d4 for centre control. Safe, instructive, good for learning. Magnus Carlsen played this at the top level.",
-   "index": 17,
+   "title": "Thinking Process",
+   "body": "Every move: 1. What did my opponent just do? (threats?) 2. What are my candidate moves? (at least 2-3) 3. Calculate each candidate 2-3 moves deep. 4. Use LPDO check. 5. Make the move. Don't play on impulse. Even 30 seconds of structured thinking eliminates 80% of blunders. This process is the difference between 800 and 1200 Elo.",
+   "index": 18,
    "total": 20
   },
   "wisdom": {
-   "title": "Rest is Productive",
-   "body": "High performers rest. Sleep is not laziness \u2014 it's when the brain consolidates learning, the body repairs, emotional regulation resets. Cutting sleep to work more is borrowing from tomorrow's performance to pay today's anxiety. Protect 7 hours. It will make you a better analyst, better father, better human.",
-   "index": 13,
+   "title": "The Identity Question",
+   "body": "Who are you when the job title is gone, when the market is closed, when your daughter is asleep? Define yourself by what you do, not what you've achieved. 'I am someone who learns daily. I love deeply. I show up.' These don't depend on AED 30K or a Dubai visa. They're yours now.",
+   "index": 14,
    "total": 18
   },
   "book": {
    "book": "The Psychology of Money",
    "author": "Morgan Housel",
-   "chapter": "You Are Not a Spreadsheet. You Are a Person with Emotions.",
-   "lesson": "The financial advice that is mathematically optimal is often behaviourally impossible. A 100% equity portfolio maximises long-run returns \u2014 but if you panic and sell at the bottom of every crash, you'd have been better off in a balanced fund. Housel's argument: the best investment strategy is the one you can actually stick to. Reasonable > rational. A plan that accounts for human psychology beats a theoretically perfect plan that you'll abandon when the market drops 40%. Know your emotional tolerances. Build them into your plan.",
-   "key_quote": "The highest return is earned by the investor who can survive the worst years, not the one with the best spreadsheet.",
-   "action": "Ask yourself: if my portfolio dropped 40% tomorrow, what would I do? Build a strategy you'd actually execute in that scenario.",
-   "index": 7,
+   "chapter": "Tail Events Drive Everything",
+   "lesson": "In investing and in life, a small number of events account for the majority of outcomes. Venture capital funds know that 1 investment out of 50 will return the entire fund. Amazon's success is almost entirely explained by AWS \u2014 which started as an internal experiment. Housel's lesson: you can be wrong most of the time and still be enormously successful if you're right on the few things that matter most. This means long tail bets matter. Staying in the game long enough to hit the tails matters. Avoiding ruin so you can be there for the rare extraordinary outcomes matters most.",
+   "key_quote": "You only need to be right a few times in your life, as long as you don't catastrophically lose the ability to keep playing.",
+   "action": "Identify the two or three decisions in your career/portfolio that would be truly transformative. Optimise for those, not the daily noise.",
+   "index": 8,
    "total": 48,
    "crux": [
     "Doing well with money has little to do with intelligence and everything to do with behaviour.",
@@ -594,211 +594,211 @@
   },
   "way": {
    "minimalism": {
-    "title": "Space Is A Feature",
-    "body": "Empty space in a room is not wasted space, the same way white space on a page is not wasted paper. Both exist so the things that matter can be seen.",
-    "action": "Remove one item from your most crowded shelf. Add nothing back.",
-    "index": 9,
+    "title": "The Someday Pile",
+    "body": "'I'll fix it someday.' 'I'll read it someday.' Someday is not a date. The pile is not a to-do list, it is a monument to intentions you have already declined.",
+    "action": "Give every someday item a date this month, or let it go today.",
+    "index": 10,
     "total": 20,
     "label": "Minimalism"
    },
    "etiquette": {
-    "title": "Remember The Detail",
-    "body": "Their daughter's exam. Their father's surgery. Ask next time. This is the single highest-return social habit and almost nobody keeps notes.",
-    "action": "Write down one personal detail after your next conversation.",
-    "index": 15,
+    "title": "Ramadan Awareness",
+    "body": "Do not eat, drink, or smoke in public during fasting hours. Schedule meetings earlier. Expect shortened hours. Wishing colleagues Ramadan Kareem costs nothing and is noticed.",
+    "action": "Check the Islamic calendar. Know what month it is.",
+    "index": 16,
     "total": 20,
     "label": "Etiquette"
    },
    "stillness": {
-    "title": "Enough Is A Number",
-    "body": "Without a defined 'enough', more is the only direction and the target moves with every increment. AED 30K/month is a number. Undefined ambition is not a goal, it is a treadmill.",
-    "action": "Write your 'enough' figure. Date it. Revisit in a year.",
-    "index": 13,
+    "title": "Attention Is The Life",
+    "body": "What you pay attention to is, quite literally, your experience of being alive. Spend it on what you would choose to have lived through.",
+    "action": "Audit yesterday's screen time. That number is a portion of your life.",
+    "index": 14,
     "total": 20,
     "label": "Stillness"
    },
    "model": {
-    "title": "Circle Of Competence",
-    "body": "The boundary matters more than the size. Knowing precisely where your knowledge ends is worth more than extending it slightly. Most large losses happen just outside the edge.",
-    "action": "Draw your circle. Name one thing just outside it you have been treating as inside.",
-    "index": 5,
+    "title": "Margin Of Safety",
+    "body": "Build the bridge for 30 tonnes and drive 10 across it. Applies to leverage, deadlines, cash buffers, and assumptions in a model. The error is always in the direction you did not plan for.",
+    "action": "Add 50% buffer to your next estimate. Do not tell yourself it is padding.",
+    "index": 6,
     "total": 20,
     "label": "Mental Model"
    },
    "arabic": {
-    "script": "\u0645\u0627 \u0623\u0639\u0631\u0641",
-    "translit": "maa a'rif",
-    "meaning": "I don't know",
-    "use": "Say it plainly. Pretending to know is worse in every culture, and obvious in all of them.",
-    "index": 21,
+    "script": "\u0623\u062a\u0643\u0644\u0645 \u0639\u0631\u0628\u064a \u0634\u0648\u064a",
+    "translit": "atakallam 'arabi shwaya",
+    "meaning": "I speak a little Arabic",
+    "use": "Disarming and appreciated. The effort matters far more than the fluency.",
+    "index": 22,
     "total": 30,
     "label": "Arabic"
    },
    "drill": {
-    "title": "Number Sense: Orders Of Magnitude",
-    "body": "Is that number plausible? A company with 200 staff and AED 4bn revenue implies AED 20m per head \u2014 almost certainly wrong. This check catches more errors than any other.",
-    "action": "Sanity-check five figures by per-unit magnitude.",
-    "index": 17,
+    "title": "Write The Email In Three Lines",
+    "body": "Context, ask, deadline. Long emails do not get read, they get postponed. Brevity is a service to the reader and it gets you answers faster.",
+    "action": "Rewrite your longest pending email in three lines.",
+    "index": 18,
     "total": 20,
     "label": "Drill"
    },
    "health": {
-    "title": "Walking Is Underrated",
-    "body": "8,000 steps a day is associated with a large mortality reduction versus 4,000, and the curve is steepest at the low end. The gains come from moving more, not from moving harder.",
-    "action": "Add one 15-minute walk. After a meal is best for glucose.",
-    "index": 7,
+    "title": "Sitting Is Not The New Smoking, But",
+    "body": "Prolonged uninterrupted sitting impairs glucose handling regardless of whether you exercised that day. The fix is frequency of interruption, not total exercise volume.",
+    "action": "Stand or walk 2 minutes every 30. Set a timer for one work block.",
+    "index": 8,
     "total": 20,
     "label": "Health"
    }
   },
   "quote": {
    "name": "Sam Altman",
-   "quote": "The most important work you'll ever do is thinking about what to work on. Most people skip this step.",
-   "index": 32,
+   "quote": "Optimism is a competitive advantage. The world generally goes to the optimists.",
+   "index": 33,
    "total": 96
   },
   "lesson": {
-   "tradition": "Focus",
-   "lesson": "Beware the barrenness of a busy life.",
-   "source": "Socrates"
+   "tradition": "Time",
+   "lesson": "Time is the most valuable thing a man can spend.",
+   "source": "Theophrastus"
   },
   "case": {
-   "title": "Reliance Jio: Disrupting India",
-   "story": "Mukesh Ambani invested $32B to offer free calls and almost-free data in India. 400M subscribers in 2 years. Destroyed competitors who had higher cost structures.",
-   "lesson": "When you have capital advantage, price to destroy the market. Sometimes the best strategy is radical pricing, not incremental improvement."
+   "title": "Tata Nano: The lesson in positioning",
+   "story": "Tata launched Nano as 'the cheapest car' at \u20b91 lakh. It failed. Indians didn't want to buy 'the cheapest car' \u2014 it felt like admitting poverty.",
+   "lesson": "Positioning beats features every time. Never call your product 'cheap.' Call it 'accessible' or 'smart.'"
   },
   "fpna": {
-   "title": "Variance Analysis",
-   "body": "Volume variance + Price/Rate variance + Mix variance = Total variance. Always decompose before presenting.",
-   "index": 4,
+   "title": "Working Capital",
+   "body": "DSO + DIO \u2013 DPO = Cash Conversion Cycle. Cutting CCC by 5 days can free millions.",
+   "index": 5,
    "total": 20
   },
   "cfo": {
-   "title": "CFO Step 5: Culture + People",
-   "body": "The best CFOs build finance teams that the business trusts. Hire people better than you. Create a learning culture. A CFO who hoards information creates a bottleneck. One who shares insight creates leverage.",
-   "index": 10,
+   "title": "Dubai FC Reality",
+   "body": "AED 30K+ FC roles at ADNOC, Emirates, MAF, DP World: they want Big 4 background OR 8+ years in a listed company + CA/ACCA + ERP experience. Your edge: FP&A depth + IFRS knowledge + Power BI automation. Highlight cost savings you drove.",
+   "index": 11,
    "total": 15
   },
   "money_hack": {
-   "title": "Auto-Sweep FD",
-   "body": "Link savings to sweep FD. Idle cash earns FD rates automatically."
+   "title": "Direct Funds Only",
+   "body": "Regular mutual funds cost 1\u20131.5% more per year. Over 20 years = 30% of corpus gone."
   },
   "dubai": {
-   "title": "Free zone vs mainland, in one line",
-   "body": "A free-zone entity is 100% foreign-owned, tax-advantaged and restricted to trading within its zone or abroad. A mainland entity can trade anywhere in the UAE and pays the 9%. Groups run both, and the intercompany between them is where the FP&A work lives.",
-   "targets": "If you can explain this cleanly, you are ahead of most candidates.",
-   "action_label": "Say it",
-   "action": "Practise the explanation in 30 seconds. It comes up constantly.",
-   "index": 17,
+   "title": "Six weeks, not six months",
+   "body": "Government-linked groups take three to six months from application to offer. Private groups take four to eight weeks. Applying only to the first kind and then reading the silence as rejection is the most common way this search dies.",
+   "targets": "Run both pipelines at once. The fast one funds the patience for the slow one.",
+   "action_label": "Track it",
+   "action": "One sheet: company, date applied, stage, next action, date of next action.",
+   "index": 18,
    "total": 30
   },
   "daughter": {
    "months": 9,
-   "days": 293,
+   "days": 294,
    "heading": "Nine months old.",
    "band": "crawling",
    "born": "2025-12-25"
   },
-  "productivity": "Read 10 pages of non-fiction daily. 10 \u00d7 365 = 12 books/year.",
+  "productivity": "Respond to messages at set times. Real-time response is a myth.",
   "father": [
    {
-    "title": "Get down on the floor",
-    "do": "Ten minutes of tummy-adjacent floor time where you are lying at her eye level, not looming above.",
-    "why": "Physical perspective changes the interaction from supervision to companionship. It also builds the core strength that precedes crawling and sitting unsupported."
+    "title": "Introduce one new texture",
+    "do": "Let her touch something unfamiliar and safe \u2014 a cold spoon, a rough towel, wet cloth.",
+    "why": "Sensory variety builds neural discrimination. At this age the mouth is a primary sense organ, so expect it to be tasted; choose accordingly."
    },
    {
-    "title": "Name the feeling, not the behaviour",
-    "do": "When she cries, say what she is feeling: 'you are tired' or 'that frightened you.'",
-    "why": "She cannot parse it yet. You are building the habit in yourself \u2014 parents who label emotions early keep doing it at three and at thirteen, which is when it matters."
+    "title": "Sing badly and often",
+    "do": "One song, daily, the same one. Tune is irrelevant.",
+    "why": "Melody carries language patterns \u2014 rhythm, stress, phrase boundaries \u2014 more clearly than speech. She is not judging the singing."
    }
   ],
   "life_wisdom": [
    {
     "tradition": "Jainism",
-    "term": "Samyak Charitra",
-    "translation": "Right conduct",
-    "teaching": "The third jewel, and deliberately placed after right perception and right knowledge \u2014 you cannot act well on a false picture.",
-    "apply": "When a decision feels hard, check whether it is genuinely a conduct problem or actually a perception problem you have not resolved. Most are the latter."
+    "term": "Ahimsa in speech",
+    "translation": "Non-violence applied to words",
+    "teaching": "Jain tradition treats harsh speech as a form of violence, listing it alongside physical harm rather than as a lesser category.",
+    "apply": "Review one message you sent under pressure this week. Would you send it unchanged now? The gap between those two versions is the practice."
    },
    {
     "tradition": "Buddhism",
-    "term": "Right Speech",
-    "translation": "Truthful, useful, timely, kind",
-    "teaching": "The test has four parts, and speech must pass all of them. True but cruel fails. True and kind but badly timed also fails.",
-    "apply": "Before delivering hard feedback, run all four. Most feedback that lands badly is true and useful but fails on timing."
+    "term": "Beginner's Mind",
+    "translation": "Shoshin",
+    "teaching": "'In the beginner's mind there are many possibilities; in the expert's there are few.' Expertise narrows the field of what you consider.",
+    "apply": "In your area of deepest expertise, ask the question you would find embarrassing to ask. Ten years in one industry is where assumptions calcify."
    }
   ],
   "spanish": [
    {
-    "word": "dar en el clavo",
-    "meaning": "to hit the nail on the head",
-    "es": "Diste en el clavo con ese an\u00e1lisis.",
-    "en": "You hit the nail on the head with that analysis.",
+    "word": "no tener pelos en la lengua",
+    "meaning": "to speak bluntly",
+    "es": "Ella no tiene pelos en la lengua.",
+    "en": "She does not mince her words.",
     "tag": "Idiom"
    },
    {
-    "word": "la p\u00e9rdida",
-    "meaning": "the loss",
-    "es": "Registramos una p\u00e9rdida en el primer trimestre.",
-    "en": "We recorded a loss in the first quarter.",
+    "word": "el inventario",
+    "meaning": "inventory",
+    "es": "Tenemos demasiado inventario en las tiendas.",
+    "en": "We have too much inventory in the stores.",
     "tag": "Business"
    }
   ],
   "vocab": [
    {
-    "word": "Countenance",
-    "say": "KOWN-tuh-nuhns",
-    "meaning": "To tolerate or approve of.",
-    "example": "The board will not countenance another delay.",
-    "note": "Formal, strong. One use per document, maximum."
+    "word": "Spurious",
+    "say": "SPYOOR-ee-uhs",
+    "meaning": "False; not genuine, despite appearing so.",
+    "example": "That correlation is spurious \u2014 both track store openings.",
+    "note": "The exact word for a relationship in the data that is real-looking and meaningless."
    },
    {
-    "word": "Requisite",
-    "say": "REK-wi-zit",
-    "meaning": "Required for a purpose.",
-    "example": "She has the requisite experience for the controller role.",
-    "note": "Slightly more formal than 'required'. Common in job specs and board papers."
+    "word": "Untoward",
+    "say": "un-TOR-d",
+    "meaning": "Unexpected and inconvenient or inappropriate.",
+    "example": "Nothing untoward emerged from the review.",
+    "note": "Standard audit and legal register for 'we found nothing concerning'."
    }
   ],
   "speaking": {
-   "title": "Lose the apology",
-   "drill": "Speak for two minutes without 'sorry', 'just', or 'I might be wrong but'.",
-   "why": "Hedging language before a fact invites challenge to the fact. Reserve qualifiers for genuine uncertainty."
+   "title": "Record and listen back",
+   "drill": "Record 60 seconds answering 'why do you want to be a CFO?'. Listen once for content, once for delivery only.",
+   "why": "Almost nobody does this, and it is the single fastest improvement available. You will hear things no one will tell you."
   },
   "interview_tech": [
    {
-    "q": "Your CEO wants to grow revenue 20%. Finance says cash cannot fund it. How do you frame that?",
-    "a": "Not as a refusal. Compute the sustainable growth rate: ROE \u00d7 retention ratio. If the business sustainably funds 12% and the ask is 20%, the gap is 8 points that must come from somewhere \u2014 debt, equity, working capital release, or margin. Present the three routes with the cost of each and the covenant headroom. Then let the CEO choose. Finance's job is to price the options, not to be the department that says no.",
-    "who": "Unilever \u00b7 P&G \u00b7 Nestl\u00e9"
+    "q": "Gross margin fell 180bps. Walk me through the bridge.",
+    "a": "Decompose into four drivers: mix \u2014 did the sales split shift toward lower-margin categories; price \u2014 did you discount more, measured as markdown as a percent of gross sales; cost \u2014 did landed cost rise from FX, freight or supplier price; and shrink/wastage. Quantify each in basis points so they sum to 180. The bridge is the answer, not the total. In retail the most common culprit is markdown depth on aged stock, which is really an buying error surfacing one season late.",
+    "who": "Target \u00b7 Tesco \u00b7 Max Fashion"
    },
    {
-    "q": "Same-store sales are flat but the store is more profitable. Is that good?",
-    "a": "Depends entirely on the cause. If margin rose from better buying, less markdown, or labour-scheduling efficiency \u2014 excellent, that is real operating leverage. If it rose because you cut staff hours below service thresholds, deferred maintenance, or stopped local marketing, you are harvesting the store and flat sales will turn negative within three quarters. Ask for the conversion rate and units per transaction, not just the margin.",
-    "who": "Costco \u00b7 Zara \u00b7 Alshaya"
+    "q": "Auditors propose an adjustment you disagree with. What do you do?",
+    "a": "Separate judgement from fact. If it is a factual error, show the evidence and it goes away. If it is a judgement \u2014 provisioning, impairment, lease term \u2014 set out your basis in a technical memo: the standard, the specific paragraph, the assumptions and their support. Escalate to the engagement partner if needed, and involve the audit committee chair early rather than late. If they still disagree and it is material, you record it. What you never do is trade an adjustment against a different one.",
+    "who": "Any listed group"
    }
   ],
   "interview_soft": [
    {
-    "q": "Tell me about a time you had to say no to a business partner.",
-    "a": "Retail finance says no constantly \u2014 to a buy outside open-to-buy, a promotion that destroys margin, a headcount request without a business case. Pick one and show the method: you did not just refuse, you showed the number that made it a no, and you offered what would make it a yes. The best answers end with the partner coming back with a version you could approve, because that proves the relationship survived.",
-    "who": "Landmark Group \u00b7 P&G \u00b7 Mars"
+    "q": "What questions do you have for us?",
+    "a": "Never none. Ask things that reveal you are evaluating them: what does the first 12 months look like for whoever takes this; what is the finance function currently not able to answer that the board keeps asking; how is the relationship between finance and the commercial teams today; and why is the role open. The last one is the most informative and the least asked. Avoid salary and benefits at first interview.",
+    "who": "Universal"
    },
    {
-    "q": "What motivates you, besides money?",
-    "a": "Be concrete or it sounds rehearsed. Good answers name the specific texture of the work: seeing a decision you modelled play out in real numbers weeks later, building a team member into something they were not when they arrived, or the particular satisfaction of a clean close. Avoid 'challenge' and 'growth' unqualified. If money genuinely is a driver \u2014 Dubai, young family \u2014 it is fine to say it is one of several, and honest beats performed modesty.",
-    "who": "Universal"
+    "q": "Describe a situation where you had incomplete information and had to decide anyway.",
+    "a": "Forecasting and provisioning are full of these. Structure: what you knew, what you could not know in the time available, the cost of waiting, the assumption you took and why, and how you made the assumption visible rather than burying it. The mark of seniority is deciding with 70% of the information and saying explicitly what would change your mind \u2014 say that phrase.",
+    "who": "Amazon \u00b7 McKinsey \u00b7 Boards"
    }
   ],
   "cfo_field": [
    {
-    "q": "Learn the lease standard properly. In the Gulf it is not a footnote.",
-    "a": "IFRS 16 put every store lease on the balance sheet as a right-of-use asset and a lease liability. Two consequences a CFO must be able to say out loud: EBITDA is now flattered, because rent that used to sit in operating costs is split into depreciation and interest; and leverage ratios move even though nothing about the business changed. If your covenant is set on a pre-IFRS-16 basis, know it before the bank asks.",
-    "who": "Every leased-store business"
+    "q": "Know your break-even by store, not by chain.",
+    "a": "A chain at group-level profitability can be carrying a quarter of its estate below contribution. Compute store contribution \u2014 gross profit less rent, staff and directly attributable fixed cost \u2014 and rank it. Then, before closing anything: is the lease committed, what does the store contribute to online fulfilment in its catchment, and what is the exit cost. A negative-contribution store with four years left on a non-cancellable lease is usually cheaper to run than to close.",
+    "who": "The analysis that gets you noticed"
    },
    {
-    "q": "Automation without a control map is how a finance function loses its audit trail.",
-    "a": "Before automating a process, write down: who can initiate, who approves, what the system does without a human, and where the exception report goes. Automation does not remove controls; it moves them from people to configuration, and configuration drifts silently. The question 'what breaks if this runs wrong for a month before anyone notices' is the one that separates a finance automation from a finance incident.",
-    "who": "Every CFO agenda, 2024 onward"
+    "q": "VAT in the GCC is a cash-flow instrument, not just a compliance task.",
+    "a": "Registration thresholds, filing frequency and the timing of input recovery all move working capital. A group filing quarterly rather than monthly holds recoverable input VAT longer than it needs to. Know the filing calendar in every jurisdiction the group trades in, and know which entity holds the recoverable balance \u2014 a refund stuck in the wrong entity is cash you own and cannot use.",
+    "who": "UAE \u00b7 KSA \u00b7 Oman"
    }
   ],
   "review": {
@@ -809,8 +809,8 @@
    "week": 42,
    "year": 2026,
    "key": "2026-W42",
-   "weekday": 3,
-   "days_left": 4,
+   "weekday": 4,
+   "days_left": 3,
    "is_review_day": false
   },
   "podcasts": {
@@ -847,94 +847,113 @@
    "shows": 1,
    "source": "each channel's public Atom feed",
    "built_on": "2026-10-14",
-   "age_days": 0.0,
-   "is_fallback": false
+   "age_days": 1.0,
+   "is_fallback": true
   },
   "smart_reads": [
    {
-    "source": "Scott Young",
-    "cat": "habits",
-    "title": "The best way to take notes",
-    "link": "https://www.scotthyoung.com/blog/2026/10/13/best-way-take-notes/",
-    "summary": "The best way to take notes may be the method that uses the least technology. I'll explain why notes still matter and how to learn better with them.\nThe post The best way to take notes appeared first on Scott H Young.",
-    "date": "Oct 13, 2026",
-    "_sort": "2026-10-13T22:35:17+00:00",
-    "smart": {
-     "what_happened": [
-      "The article states the best way to take notes may be the method that uses the least technology.",
-      "It explains why notes still matter and how to learn better with them."
-     ],
-     "why_it_matters": "The piece highlights the continued relevance of handwritten or low\u2011tech note\u2011taking for learning effectiveness, suggesting that reducing reliance on digital tools can improve retention and comprehension, which is valuable for educators, students, and professionals seeking more efficient study habits.",
-     "what_to_watch": "Monitor any follow\u2011up articles or research from Scott H Young on note\u2011taking methods and their impact on learning outcomes.",
-     "headline": "Scott H Young argues minimal technology best for note-taking",
-     "read_seconds": 20
-    }
-   },
-   {
     "source": "ET Opinion",
     "cat": "money",
-    "title": "Go On, Show Us the Money! Rs 3 lakh cr foreign outflows spark concerns about India's investment landscape",
-    "link": "https://economictimes.indiatimes.com/opinion/et-commentary/go-on-show-us-the-money-rs-3-lakh-cr-foreign-outflows-spark-concerns-about-indias-investment-landscape/articleshow/134923885.cms",
-    "summary": "Foreign Portfolio Investors have withdrawn significant capital from Indian equities in 2026, raising concerns among officials. Despite these outflows, there is strong investment in Indian IPOs, highlighting a complex investment landscape. International investors are becoming selective, focusing on emerging sectors like",
-    "date": "Oct 13, 2026",
-    "_sort": "2026-10-13T18:50:27+00:00",
+    "title": "Early Diwali dhamaka: With the IDBI strategic sale to Fairfax, GoI has taken a giant step in the disinvestment pathway",
+    "link": "https://economictimes.indiatimes.com/opinion/et-commentary/early-diwali-dhamaka-with-the-idbi-strategic-sale-to-fairfax-goi-has-taken-a-giant-step-in-the-disinvestment-pathway/articleshow/134950018.cms",
+    "summary": "IDBI Bank's sale as part of a disinvestment strategy provides \u20b926,000 cr to the government during economic challenges. Government of India retains a 15% stake, indicating potential future market sales. The bank's strong performance is reflected in its improved financial metrics and management stability. Discussions abo",
+    "date": "Oct 14, 2026",
+    "_sort": "2026-10-14T18:48:42+00:00",
     "smart": {
      "what_happened": [
-      "Foreign Portfolio Investors have withdrawn significant capital from Indian equities in 2026, raising concerns among officials.",
-      "Despite these outflows, there is strong investment in Indian IPOs, highlighting a complex investment landscape."
+      "The Government of India sold a majority stake in IDBI Bank to Fairfax, raising \u20b926,000 crore.",
+      "The government retained a 15% shareholding, leaving open the possibility of future market sales."
      ],
-     "why_it_matters": "The large outflow of Rs 3 lakh crore signals heightened caution among foreign investors toward Indian equities, which could pressure market valuations and affect liquidity. At the same time, continued demand for Indian IPOs shows that selective investors are still seeking opportunities, suggesting a bifurcated market where capital flows are concentrated in emerging sectors rather than broad equity exposure.",
-     "what_to_watch": "The next monthly RBI report on foreign portfolio inflows and outflows for Indian equities",
-     "headline": "Foreign Portfolio Investors withdraw Rs 3 lakh crore from Indian equities in 2026",
+     "why_it_matters": "The transaction provides a substantial cash infusion to the government amid fiscal pressures and signals a decisive move along India's broader disinvestment agenda, while the retained minority stake keeps the state positioned for potential future divestments.",
+     "what_to_watch": "Monitor the next tranche of IDBI Bank shares the government may offer in the market, as indicated by its retained 15% stake.",
+     "headline": "India sells IDBI Bank stake to Fairfax for \u20b926,000 crore",
      "read_seconds": 26
     }
    },
    {
     "source": "Livemint",
     "cat": "money",
-    "title": "Stocks, mutual funds, gold and property: How LTCG tax differs across asset classes",
-    "link": "https://www.livemint.com/money/personal-finance/stocks-mutual-funds-gold-and-property-how-ltcg-tax-differs-across-asset-classes-11791904793274.html",
-    "summary": "LTCG tax rules differ across stocks, mutual funds, gold and property, with different holding periods, tax rates and exemptions. Here is what investors need to know about the tax treatment of their investments under the current framework.",
-    "date": "Oct 13, 2026",
-    "_sort": "2026-10-13T15:46:41+00:00",
+    "title": "US stocks: You receive $75 on a $100 dividend, but India may tax the full amount again; how to claim relief",
+    "link": "https://www.livemint.com/money/personal-finance/us-stocks-you-receive-75-on-a-100-dividend-but-india-may-tax-the-full-amount-again-how-to-claim-relief-11791996665585.html",
+    "summary": "Indian residents earning dividends from US stocks generally receive payouts after US withholding tax. The full dividend is again taxable in India. Here's how to claim relief.",
+    "date": "Oct 14, 2026",
+    "_sort": "2026-10-14T18:21:36+00:00",
     "smart": {
      "what_happened": [
-      "Stocks, mutual funds, gold and property have different holding periods for long\u2011term capital gains.",
-      "Tax rates and exemptions also differ among these asset classes under the current framework."
+      "Indian residents earning dividends from US stocks generally receive payouts after US withholding tax.",
+      "The full dividend is again taxable in India."
      ],
-     "why_it_matters": "Understanding the differing holding periods, rates and exemptions is crucial for investors because it directly impacts the after\u2011tax return on each type of investment, influencing portfolio allocation decisions and tax planning strategies.",
-     "what_to_watch": "Monitor official tax authority notifications for any changes to long\u2011term capital gains holding periods, rates or exemptions.",
-     "headline": "Long-term capital gains tax varies by asset class",
+     "why_it_matters": "The double taxation reduces net returns for Indian investors holding US equities, affecting portfolio performance and cash flow. Understanding the relief mechanism is essential to recover the foreign tax paid and ensure compliance with both US and Indian tax regulations.",
+     "what_to_watch": "Monitor the upcoming Indian tax filing deadline for claiming the foreign tax credit on US dividend withholding.",
+     "headline": "Indian investors face double tax on US stock dividends, relief process explained",
+     "read_seconds": 20
+    }
+   },
+   {
+    "source": "NYT Well",
+    "cat": "health",
+    "title": "Will Anyone Actually Ever Live to 200?",
+    "link": "https://www.nytimes.com/2026/10/14/well/live/humans-lifespan-limits-potential.html",
+    "summary": "Some experts are optimistic that science will eventually find ways to extend life, but many longevity claims are unrealistic.",
+    "date": "Oct 14, 2026",
+    "_sort": "2026-10-14T18:02:43+00:00",
+    "smart": {
+     "what_happened": [
+      "Some experts say science may eventually find ways to extend human lifespan.",
+      "Many longevity claims are considered unrealistic by other experts."
+     ],
+     "why_it_matters": "The debate highlights uncertainty around future breakthroughs in anti\u2011aging research, which could influence long\u2011term planning for healthcare costs, pension systems, and biotech funding as investors assess the potential impact of extended human lifespans on various sectors.",
+     "what_to_watch": "Watch for any follow\u2011up statements or new research findings from the experts mentioned in the article.",
+     "headline": "Experts debate feasibility of living to 200 years",
      "read_seconds": 20
     }
    },
    {
     "source": "Economic Times",
     "cat": "money",
-    "title": "Woman applied for 130 shares in Adani Wilmar IPO, bank entered only 65; she sought Rs 40L compensation; gets relief in consumer commission",
-    "link": "https://economictimes.indiatimes.com/wealth/legal/will/woman-applied-for-130-shares-in-adani-wilmar-ipo-bank-entered-only-65-she-sought-rs-40-63l-compensation-gets-relief-in-consumer-commission/articleshow/134911705.cms",
-    "summary": "The woman had earlier appealed in the district commission which held that she did not qualify as a consumer and that the complaint was not maintainable on the ground that investment in shares is a commercial activity. Then why did she won in the State Consumer Commission? Find out in this article.",
-    "date": "Oct 13, 2026",
-    "_sort": "2026-10-13T11:50:12+00:00",
+    "title": "NPS investment in startups: AINPSEF writes to PM Modi seeking probe and asks for dissolution of NPS Trust",
+    "link": "https://economictimes.indiatimes.com/wealth/save/nps-investment-in-startups-ainpsef-writes-to-pm-modi-seeking-probe-and-asks-for-dissolution-of-nps-trust/articleshow/134943418.cms",
+    "summary": "Manjeet Singh Patel has alleged serious financial irregularities concerning the National Pension System Trust. He has requested a high-level audit by the Comptroller and Auditor General of India. Patel asserts that many employees' NPS investments have turned negative due to poor market performance. He demands the imple",
+    "date": "Oct 14, 2026",
+    "_sort": "2026-10-14T12:59:18+00:00",
     "smart": {
      "what_happened": [
-      "She applied for 130 shares in the Adani Wilmar IPO, but the bank entered only 65 shares.",
-      "She sought Rs\u202f40\u202flakh compensation and received relief from the State Consumer Commission after a district commission had dismissed her claim."
+      "Manjeet Singh Patel alleged serious financial irregularities in the National Pension System Trust and asked for a high\u2011level audit by the Comptroller and Auditor General of India.",
+      "Patel said many employees' NPS investments have turned negative because of poor market performance and called for the dissolution of the NPS Trust."
      ],
-     "why_it_matters": "The decision expands the scope of consumer protection law to include investors, establishing that disputes over share allotments can be heard by consumer commissions. This may influence how financial institutions handle IPO allocations and could lead to more consumer\u2011commission challenges in the securities market.",
-     "what_to_watch": "Watch for any rulings or guidelines from the Securities and Exchange Board of India or state consumer commissions clarifying the status of investors as consumers in future IPO disputes.",
-     "headline": "Woman wins Rs 40\u202fL compensation after Adani Wilmar IPO share dispute",
-     "read_seconds": 24
+     "why_it_matters": "The allegations target the integrity of India's flagship pension scheme, raising concerns about governance, audit oversight, and the protection of retirees' savings. If the claims are validated, they could prompt regulatory reforms, affect investor confidence in the NPS, and trigger broader scrutiny of public\u2011sector pension fund management.",
+     "what_to_watch": "Monitor whether the Comptroller and Auditor General initiates the requested audit or if the Prime Minister's office issues an official response to the dissolution demand.",
+     "headline": "AINPSEF writes to PM Modi seeking probe of NPS Trust",
+     "read_seconds": 26
     }
    },
    {
-    "source": "NYT Well",
-    "cat": "health",
-    "title": "6 Things Longevity Experts Wish People Would Stop Saying",
-    "link": "https://www.nytimes.com/2026/10/13/well/longevity-experts-advice.html",
-    "summary": "Living longer and healthier is important. But don\u2019t believe everything you hear.",
+    "source": "Psyche",
+    "cat": "mind",
+    "title": "How to handle jealous feelings",
+    "link": "https://psyche.co/guides/how-to-handle-jealous-feelings",
+    "summary": "Jealousy can be a useful, insightful emotion \u2013 if you manage it well. Get curious about your jealousy to get a grip on it- by Carla Marie ManlyRead on Psyche",
+    "date": "Oct 14, 2026",
+    "_sort": "2026-10-14T10:00:00+00:00"
+   },
+   {
+    "source": "Scott Young",
+    "cat": "habits",
+    "title": "The Best Way to Take Notes",
+    "link": "https://www.scotthyoung.com/blog/2026/10/13/best-way-take-notes/",
+    "summary": "The best way to take notes may be the method that uses the least technology. I'll explain why notes still matter and how to learn better with them.\nThe post The Best Way to Take Notes appeared first on Scott H Young.",
     "date": "Oct 13, 2026",
-    "_sort": "2026-10-13T09:00:40+00:00"
+    "_sort": "2026-10-13T22:35:17+00:00",
+    "smart": {
+     "what_happened": [
+      "The article titled \"The Best Way to Take Notes\" argues that the method using the least technology may be optimal.",
+      "It explains why notes still matter and how they can improve learning."
+     ],
+     "why_it_matters": "The piece highlights the continued relevance of handwritten or low\u2011tech note\u2011taking in an increasingly digital world, suggesting that reducing reliance on technology could enhance comprehension and retention for learners and professionals alike.",
+     "what_to_watch": "Monitor Scott H Young's blog for any follow\u2011up articles or updates on note\u2011taking strategies.",
+     "headline": "Scott H Young discusses note-taking methods",
+     "read_seconds": 20
+    }
    },
    {
     "source": "The Marginalian",
@@ -955,15 +974,6 @@
     "_sort": "2026-10-12T04:15:00+00:00"
    },
    {
-    "source": "Psyche",
-    "cat": "mind",
-    "title": "Black men suffer racial trauma yet are seen as the threat",
-    "link": "https://psyche.co/ideas/black-men-suffer-racial-trauma-yet-are-seen-as-the-threat",
-    "summary": "The very conditions that subject Black men to chronic strain make it hard for them to receive the help they need and deserve- by Yamonte CooperRead on Psyche",
-    "date": "Oct 11, 2026",
-    "_sort": "2026-10-11T22:00:00+00:00"
-   },
-   {
     "source": "Farnam Street",
     "cat": "habits",
     "title": "Ryan Serhant: How to Get People to Say Yes",
@@ -975,42 +985,48 @@
   ],
   "lichess_games": [
    {
-    "id": "90ScWYMH",
-    "url": "https://lichess.org/90ScWYMH",
-    "result": "Loss",
-    "icon": "\u274c",
-    "cls": "loss",
-    "my_side": "Black",
-    "my_rating": 1577,
-    "opp_rating": 1569,
-    "opponent": "darkham1",
-    "me_diff": -6,
-    "opp_diff": 12,
-    "opening": "Philidor Defense",
-    "eco": "C41",
-    "moves": 21,
-    "termination": "Checkmate",
+    "id": "xY2thCr3",
+    "url": "https://lichess.org/xY2thCr3",
+    "result": "Win",
+    "icon": "\u2705",
+    "cls": "win",
+    "my_side": "White",
+    "my_rating": 1571,
+    "opp_rating": 1586,
+    "opponent": "chesspapanic",
+    "me_diff": 6,
+    "opp_diff": -6,
+    "opening": "Indian Defense",
+    "eco": "A45",
+    "moves": 33,
+    "termination": "Time Out",
     "speed": "Blitz",
-    "analysis": "Stop playing the passive Philidor; after 1.e4 e5 2.Nf3 d6, develop with ...Nf6, ...Be7 and castle early\u2014avoid queen\u2011side pawn pushes that let White force a forced mate.",
+    "analysis": "Focus on early king safety: castle by move\u202f7, avoid leaving the king in the center past move\u202f10.",
     "is_upset": false,
     "is_collapse": false,
     "is_long": false,
     "best_move": {},
     "key_facts": [
-     "Accuracy 68% vs their 81%",
-     "Average centipawn loss 111",
-     "3 inaccuracies \u00b7 1 mistake \u00b7 4 blunders",
-     "Rating gap -8 (1577 vs 1569)",
-     "21 moves \u00b7 Blitz"
+     "Rating gap +15 (1571 vs 1586)",
+     "Endgame from move 24",
+     "33 moves \u00b7 Blitz"
     ],
-    "standout": "4 blunders in one game. The result is noise; the error count is the signal.",
-    "game_strength": 1100,
-    "est_fide": 1177,
-    "accuracy": 68,
-    "acpl": 111,
-    "analysed": true,
+    "standout": "Decided on the clock, not the board \u2014 the position was still playable when time ran out.",
+    "game_strength": null,
+    "est_fide": 1171,
+    "accuracy": null,
+    "acpl": null,
+    "analysed": false,
     "_mode": "full",
     "_trend": [
+     {
+      "day": "10/14",
+      "wins": 1,
+      "losses": 0,
+      "draws": 0,
+      "total": 1,
+      "pct": 100
+     },
      {
       "day": "10/12",
       "wins": 0,
@@ -1058,98 +1074,41 @@
       "draws": 4,
       "total": 29,
       "pct": 38
-     },
-     {
-      "day": "10/05",
-      "wins": 3,
-      "losses": 7,
-      "draws": 0,
-      "total": 10,
-      "pct": 30
      }
     ],
-    "_yest_counts": {},
-    "_session_date": "2026-10-12",
-    "_is_yesterday": false
-   },
-   {
-    "id": "Mo7KkskD",
-    "url": "https://lichess.org/Mo7KkskD",
-    "result": "Loss",
-    "icon": "\u274c",
-    "cls": "loss",
-    "my_side": "Black",
-    "my_rating": 1582,
-    "opp_rating": 1602,
-    "opponent": "lord360",
-    "me_diff": -5,
-    "opp_diff": 5,
-    "opening": "Philidor Defense",
-    "eco": "C41",
-    "moves": 24,
-    "termination": "Checkmate",
-    "speed": "Blitz",
-    "analysis": "Focus on early piece activity: develop knights before moving the queen; avoid queen\u2011side pawn pushes until knights are on f6 and d7. This cuts opponent\u2019s attack and reduces forced mates.",
-    "is_upset": false,
-    "is_collapse": false,
-    "is_long": false,
-    "best_move": {},
-    "key_facts": [
-     "Rating gap +20 (1582 vs 1602)",
-     "24 moves \u00b7 Blitz"
-    ],
-    "standout": "",
-    "game_strength": null,
-    "est_fide": 1182,
-    "accuracy": null,
-    "acpl": null,
-    "analysed": false
-   },
-   {
-    "id": "8WjBUTDF",
-    "url": "https://lichess.org/8WjBUTDF",
-    "result": "Loss",
-    "icon": "\u274c",
-    "cls": "loss",
-    "my_side": "Black",
-    "my_rating": 1587,
-    "opp_rating": 1614,
-    "opponent": "the_mac2",
-    "me_diff": -5,
-    "opp_diff": 5,
-    "opening": "Philidor Defense",
-    "eco": "C41",
-    "moves": 32,
-    "termination": "Checkmate",
-    "speed": "Blitz",
-    "analysis": "Focus on early piece activity: develop knights before moving the queen; after 1\u2026e5\u202f2\u2026d6, play\u202fNf6,\u202fNbd7,\u202fc3,\u202fBd6 instead of premature queen sorties. (20 words)",
-    "is_upset": false,
-    "is_collapse": false,
-    "is_long": false,
-    "best_move": {},
-    "key_facts": [
-     "Rating gap +27 (1587 vs 1614)",
-     "Endgame from move 24",
-     "32 moves \u00b7 Blitz"
-    ],
-    "standout": "",
-    "game_strength": null,
-    "est_fide": 1187,
-    "accuracy": null,
-    "acpl": null,
-    "analysed": false
+    "_yest_counts": {
+     "blitz": {
+      "win": 1,
+      "loss": 0,
+      "draw": 0,
+      "rp": {
+       "before": 1571,
+       "after": 1577
+      }
+     }
+    },
+    "_session_date": "2026-10-14",
+    "_is_yesterday": true
    }
   ],
   "lichess_summary": {
    "mode": "full",
-   "total": 3,
-   "wins": 0,
-   "losses": 3,
+   "total": 1,
+   "wins": 1,
+   "losses": 0,
    "draws": 0,
-   "pct": 0,
-   "icon": "\u274c",
-   "score": "0/3",
+   "pct": 100,
+   "icon": "\u2705",
+   "score": "1/1",
    "trend": [
+    {
+     "day": "10/14",
+     "wins": 1,
+     "losses": 0,
+     "draws": 0,
+     "total": 1,
+     "pct": 100
+    },
     {
      "day": "10/12",
      "wins": 0,
@@ -1197,33 +1156,25 @@
      "draws": 4,
      "total": 29,
      "pct": 38
-    },
-    {
-     "day": "10/05",
-     "wins": 3,
-     "losses": 7,
-     "draws": 0,
-     "total": 10,
-     "pct": 30
     }
    ],
-   "weak_op": "C41 Philidor Defense (0/3 = 0% WR)",
-   "best_op": "C41 Philidor Defense (0/3 = 0% WR)",
+   "weak_op": "",
+   "best_op": "",
    "upsets": 0,
    "collapses": 0,
    "long_games": 0,
-   "session_summary": "Your Philidor is a disaster\u2014three straight losses show you can\u2019t even survive the opening, let alone outplay anyone later. Stop playing 1.e4\u202fc5\u202f2.Nf3\u202fd6\u202f3.d4\u202fcxd4\u202f4.Nxd4 and replace it with a solid, theory\u2011tested line like the Classical 1.e4\u202fe5\u202f2.Nf3\u202fNc6\u202f3.Bc4, then drill the main\u2011line tactics until they become second nature. Spend the next week mastering the key Philidor traps (e.g., \u2026exd4 and \u2026Nf5 ideas) and force yourself to play only positions where you have a clear plan, or ditch the opening entirely.",
-   "session_date": "2026-10-12",
-   "is_yesterday": false,
+   "session_summary": "You\u2019re crushing opponents but you never leave the opening book\u2014your \u201cweakest opening\u201d is a blank, meaning you haven\u2019t even tested alternatives, so you\u2019re vulnerable to anyone who knows the theory. Stop relying on rote memorization and spend 30\u202fminutes each day drilling the first 10 moves of at least two contrasting defenses (e.g., Sicilian Najdorf and Caro\u2011Kann) until you can play them without hesitation. Then schedule weekly blitz games where you must start each match with one of those lines; review every loss to pinpoint where the opening crumbled and adjust immediately.",
+   "session_date": "2026-10-14",
+   "is_yesterday": true,
    "token_missing": false
   },
   "lichess_puzzle": {
-   "pid": "p99h5",
-   "rating": 2048,
+   "pid": "20WMy",
+   "rating": 1902,
    "level": "\ud83d\udd34 stretch",
-   "themes": "Endgame \u00b7 Advanced Pawn \u00b7 Advantage",
+   "themes": "Endgame \u00b7 Zugzwang \u00b7 Crushing",
    "tip": "King activity and pawn structure dominate. Technique over tactics here.",
-   "url": "https://lichess.org/training/p99h5"
+   "url": "https://lichess.org/training/20WMy"
   }
  }
 }
