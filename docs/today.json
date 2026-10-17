@@ -1,7 +1,7 @@
 {
- "build_id": "20261016T080105",
- "date": "2026-10-16",
- "date_str": "Friday, October 16 2026",
+ "build_id": "20261017T080616",
+ "date": "2026-10-17",
+ "date_str": "Saturday, October 17 2026",
  "picks": [
   {
    "symbol": "ZS",
@@ -531,32 +531,39 @@
   ]
  },
  "data_health": {
-  "worst": "FRESH",
-  "current": 12,
+  "worst": "STALE",
+  "current": 11,
   "total": 12,
-  "degraded": []
+  "degraded": [
+   {
+    "dataset": "Podcasts",
+    "status": "STALE",
+    "age": "24h old",
+    "note": "older than its daily refresh"
+   }
+  ]
  },
  "desk": {
   "chess": {
-   "title": "Study Plan: 15 Min/Day",
-   "body": "15 minutes daily beats 3 hours once a week. Split: 5 min puzzles (Chess.com/Lichess tactics trainer) + 5 min play (1 game, 10+0 or 15+10) + 5 min review (analyse your game, find the turning point). After 30 days: you'll feel patterns automatically. Tactics + play + review = the triangle of improvement.",
-   "index": 19,
+   "title": "Rating Progress Reality",
+   "body": "800\u21921000: Learn not to blunder pieces for free. 1000\u21921200: Basic tactics (forks, pins). 1200\u21921500: Strategy (plans, pawn structure). 1500\u21921800: Calculation depth + endgames. 1800+: Opening theory + deep calculation. Most adults plateau at 1000-1200 because they skip tactics training. Do 10 puzzles daily \u2014 minimum. No shortcut.",
+   "index": 20,
    "total": 20
   },
   "wisdom": {
-   "title": "Letting Go of Control",
-   "body": "You can control your effort. You cannot control outcomes. The job market, the Instagram algorithm, the baby's sleep schedule \u2014 all outside your control. Epictetus: 'Seek not that the things which happen should happen as you wish; but wish the things which happen to be as they are, and you will have a tranquil flow of life.'",
-   "index": 15,
+   "title": "Joy is a Practise",
+   "body": "Joy doesn't arrive when the conditions are right. It's practiced in the conditions you have. Find one thing today that is genuinely good. Savour it for 30 seconds. This is not toxic positivity \u2014 it's neurological training. Brains that practise noticing goodness get better at finding it, even in hard seasons.",
+   "index": 16,
    "total": 18
   },
   "book": {
    "book": "Zero to One",
    "author": "Peter Thiel",
-   "chapter": "Competition Is for Losers",
-   "lesson": "Thiel's most contrarian idea: competition is not virtuous. Monopoly is. Competitive markets destroy profit margins as businesses race to the bottom on price. A monopoly earns outsized profits because it has no competition. Google has 90%+ search market share and 25%+ net margins. A restaurant in a crowded market has 5% margins. Thiel argues: don't compete. Create something so different that you have no competition. Ask not 'how do I beat my competitors?' but 'how do I build something where there are no competitors?'",
-   "key_quote": "If you are competing, you are not monopolising. If you are not monopolising, you are not building a truly great business.",
-   "action": "Ask about your current work or business: who are my direct competitors? If you have many, that's a warning sign. Find the niche where you can be the only one.",
-   "index": 9,
+   "chapter": "Secrets: What Truth Do Very Few People Agree With You On?",
+   "lesson": "Every great business is built on a secret \u2014 a truth that most people don't see or believe yet. PayPal's secret: people would use the internet for payments before the internet was trusted. Airbnb's secret: people would stay in strangers' homes. Tesla's secret: electric cars could be desirable, not just practical. Thiel's question for every entrepreneur: 'What important truth do very few people agree with you on?' This is the diagnostic for whether you're building something genuinely new or just another incremental improvement on an existing idea.",
+   "key_quote": "The best companies are built on secrets. Secrets require that you do the uncomfortable work of thinking differently from the crowd.",
+   "action": "Write down one belief you hold about your industry or career that most people in your field would disagree with. Is there a business or career opportunity hidden in that belief?",
+   "index": 10,
    "total": 48,
    "crux": [
     "Progress is either 0\u21921 (new things) or 1\u2192n (copying). Copying does not create new value.",
@@ -593,211 +600,211 @@
   },
   "way": {
    "minimalism": {
-    "title": "Sentimental \u2260 Storage",
-    "body": "You are keeping the object to keep the memory. The memory is not in the object. Photograph it, write one line about why it mattered, and release the thing.",
-    "action": "Photograph one sentimental item you have not looked at in a year.",
-    "index": 11,
+    "title": "Gifts Are Not Obligations",
+    "body": "A gift's job ended the moment it was given. Keeping something unwanted out of guilt honours nobody and costs you space every day.",
+    "action": "Release one guilt-kept item. The giver will never know.",
+    "index": 12,
     "total": 20,
     "label": "Minimalism"
    },
    "etiquette": {
-    "title": "Thank The Invisible People",
-    "body": "The security guard, the cleaner, the driver, the tea boy. How you treat people who cannot advance your career is the only honest read on your character \u2014 and senior people watch for it specifically.",
-    "action": "Learn the name of one person whose name you have never asked.",
-    "index": 17,
+    "title": "Do Not Correct Trivia In Public",
+    "body": "Being right about something small in front of an audience costs more in goodwill than the correction is worth. Let it go, or say it privately later.",
+    "action": "Let one minor inaccuracy pass uncorrected today.",
+    "index": 18,
     "total": 20,
     "label": "Etiquette"
    },
    "stillness": {
-    "title": "The Half-Smile",
-    "body": "Thich Nhat Hanh's practice: a slight smile, held, changes state faster than most reasoning about your mood. The body leads the mind more often than the reverse.",
-    "action": "Half-smile for one full minute. Notice the shift.",
-    "index": 15,
+    "title": "Impermanence Applies To The Bad Too",
+    "body": "The difficult period ends. So does the good one. This is not pessimism \u2014 it is the only reliable source of equanimity in both directions.",
+    "action": "Name the current difficulty. Say plainly: this also ends.",
+    "index": 16,
     "total": 20,
     "label": "Stillness"
    },
    "model": {
-    "title": "Incentives",
-    "body": "Show me the incentive and I will show you the outcome. Never explain by malice or stupidity what the incentive structure fully predicts. Ask who gets paid for this to happen.",
-    "action": "For one recommendation you received, map who benefits from you following it.",
-    "index": 7,
+    "title": "Compounding",
+    "body": "Small consistent gains dominate large sporadic ones, and the effect is invisible until suddenly it is not. The counterintuitive part: nearly all the value arrives at the end.",
+    "action": "Identify one habit that compounds. Protect it above anything urgent.",
+    "index": 8,
     "total": 20,
     "label": "Mental Model"
    },
    "arabic": {
-    "script": "\u0639\u0644\u0649 \u0641\u0643\u0631\u0629",
-    "translit": "'ala fikra",
-    "meaning": "By the way",
-    "use": "Introduces a point mid-conversation without hijacking it.",
-    "index": 23,
+    "script": "\u0625\u0646 \u0634\u0627\u0621 \u0627\u0644\u0644\u0647 \u062e\u064a\u0631",
+    "translit": "in shaa Allah khayr",
+    "meaning": "God willing, it will be good",
+    "use": "Said when an outcome is uncertain. Graceful and appropriate almost anywhere.",
+    "index": 24,
     "total": 30,
     "label": "Arabic"
    },
    "drill": {
-    "title": "Teach One Thing",
-    "body": "Explaining to another person exposes every gap instantly. Teaching is the highest-return study method measured, and it costs ten minutes.",
-    "action": "Teach one concept to someone today. Note where you stumbled.",
-    "index": 19,
+    "title": "Review Your Own Work Cold",
+    "body": "Leave it 24 hours, then review as if a stranger wrote it and you are looking for errors. You will find them. Reviewing immediately finds nothing.",
+    "action": "Re-open yesterday's work. Find three things to fix.",
+    "index": 20,
     "total": 20,
     "label": "Drill"
    },
    "health": {
-    "title": "Grip Strength As A Biomarker",
-    "body": "It correlates with cardiovascular mortality and cognitive decline, and it is trivially measurable. It is a proxy for total-body strength and neuromuscular health.",
-    "action": "Two sets of dead hangs or farmer's carries to failure.",
-    "index": 9,
+    "title": "Zone 5 Once A Week",
+    "body": "Short maximal intervals raise VO2max faster than steady work. Four minutes hard, four easy, four times. Unpleasant, brief, and disproportionately effective.",
+    "action": "One 4x4 interval session. Only if Zone 2 is already habitual.",
+    "index": 10,
     "total": 20,
     "label": "Health"
    }
   },
   "quote": {
    "name": "Paul Graham",
-   "quote": "Make something people want.",
-   "index": 34,
+   "quote": "The way to get startup ideas is not to try to think of startup ideas. It's to look for problems.",
+   "index": 35,
    "total": 96
   },
   "lesson": {
-   "tradition": "Time",
-   "lesson": "The two most powerful warriors are patience and time.",
-   "source": "Leo Tolstoy"
+   "tradition": "Gratitude",
+   "lesson": "Gratitude is not only the greatest of virtues, but the parent of all others.",
+   "source": "Cicero"
   },
   "case": {
-   "title": "Starbucks: Selling $6 Coffee",
-   "story": "Howard Schultz sold coffee at 5x the price of a diner. The key insight: he wasn't selling coffee, he was selling a third place \u2014 between home and work.",
-   "lesson": "You're never just selling the product. Understand what people are actually buying. Starbucks sells an experience, not coffee."
+   "title": "Nokia: The Rise and Fall",
+   "story": "Nokia had 40% global mobile market share in 2007. By 2013, market share was near zero. They failed to see that software, not hardware, was the future.",
+   "lesson": "Market leaders die by defending yesterday's success. The biggest threat is always your own arrogance."
   },
   "fpna": {
-   "title": "EBITDA Bridge",
-   "body": "Walk from prior period: Revenue \u00b1, COGS \u00b1, SG&A \u00b1, Other \u00b1. Bridges tell the story behind the number.",
-   "index": 6,
+   "title": "Scenario Planning",
+   "body": "Always model 3: Base, Bull (+20%), Bear (\u201320%). Present the range. Executives hate surprises.",
+   "index": 7,
    "total": 20
   },
   "cfo": {
-   "title": "The CA\u2192FC\u2192CFO Timeline",
-   "body": "CA qualified \u2192 2-3 years Big 4/audit \u2192 Senior FP&A \u2192 Finance Manager \u2192 Financial Controller (5-8 years post-qualification) \u2192 CFO (10-15 years). Dubai compresses this by 2-3 years if you hit the right company at the right growth stage.",
-   "index": 12,
+   "title": "FC Interview: Top 5 Questions",
+   "body": "1. Walk me through month-end close. 2. How do you handle a material variance? 3. What internal controls have you implemented? 4. Describe your IFRS 16 experience. 5. How do you present bad news to management? Prepare 2-min answers for all five.",
+   "index": 13,
    "total": 15
   },
   "money_hack": {
-   "title": "The 50-30-20 Rule",
-   "body": "50% needs \u00b7 30% wants \u00b7 20% savings. Automate the 20% on salary day."
+   "title": "SIP on Salary Day",
+   "body": "Set SIP date = salary day + 1. Invest before you spend. Pay yourself first."
   },
   "dubai": {
-   "title": "The LinkedIn setting that matters most",
-   "body": "Set location to Dubai, United Arab Emirates and turn on Open to Work for recruiters only. Gulf recruiters filter by location before they read anything, and a Mumbai location excludes you from the search entirely.",
-   "targets": "This is a two-minute change that decides whether you are visible at all.",
-   "action_label": "Now",
-   "action": "Location, headline with the target title, and the About section rewritten in numbers.",
-   "index": 19,
+   "title": "Month-end close is the first question",
+   "body": "Not 'walk me through your CV' \u2014 'walk me through your close'. They want the day count, what runs on which day, where it breaks, and what you did about it.",
+   "targets": "A close you shortened from 10 days to 6 is a better answer than any certificate.",
+   "action_label": "Prep",
+   "action": "Write your close calendar as a day-by-day list. Learn it.",
+   "index": 20,
    "total": 30
   },
   "daughter": {
    "months": 9,
-   "days": 295,
+   "days": 296,
    "heading": "Nine months old.",
    "band": "crawling",
    "born": "2025-12-25"
   },
-  "productivity": "Track energy, not just time. Hard work when energy is highest.",
+  "productivity": "Define 'done' before starting. Vague tasks never finish.",
   "father": [
    {
-    "title": "Mirror her expressions",
-    "do": "Copy her face \u2014 surprise, frown, smile \u2014 and hold it so she sees it.",
-    "why": "Facial mirroring is how infants learn that internal states have external signals. It is the earliest form of emotional literacy."
+    "title": "Let her struggle briefly",
+    "do": "When a toy is just out of reach, wait five seconds before helping.",
+    "why": "Effort tolerance is trainable. Instant rescue is comfortable for you and teaches her that difficulty is someone else's problem."
    },
    {
-    "title": "Take her outside daily",
-    "do": "Fifteen minutes outdoors, describing what you both see.",
-    "why": "Daylight anchors circadian rhythm, which is the practical route to better night sleep. The narration doubles as vocabulary exposure in a changing environment."
+    "title": "Do one thing badly",
+    "do": "Take over a task you normally leave to her mother, and accept doing it worse for a fortnight.",
+    "why": "Competence gaps between parents are self-reinforcing \u2014 the more skilled parent does more, and the gap widens. Deliberately absorbing the early incompetence is how it closes."
    }
   ],
   "life_wisdom": [
    {
     "tradition": "Jainism",
-    "term": "Anuvrata",
-    "translation": "The lesser vows",
-    "teaching": "Householders take limited versions of the great vows rather than the monastic form \u2014 the tradition explicitly designs for people with jobs and families.",
-    "apply": "Do not adopt a practice you cannot sustain alongside work and a seven-month-old. A small vow kept beats a large one abandoned."
+    "term": "Pratikramana",
+    "translation": "Ritual review and turning back",
+    "teaching": "A periodic practice of reviewing one's conduct, acknowledging where one fell short, and resolving to correct it. Structurally, an audit.",
+    "apply": "You already run a monthly close on the business. Run a fifteen-minute one on yourself: what did I get wrong, what am I changing, what is the date."
    },
    {
     "tradition": "Buddhism",
-    "term": "Middle Way",
-    "translation": "Avoiding both extremes",
-    "teaching": "The Buddha rejected both indulgence and severe asceticism after trying each. The insight came from testing both, not theorising.",
-    "apply": "Applied to risk: neither all-cash nor all-in. Applied to work: neither burnout nor coasting. The middle is a position you have to keep adjusting, not one you find once."
+    "term": "Metta",
+    "translation": "Loving-kindness, deliberately extended",
+    "teaching": "A practice of extending goodwill outward in rings \u2014 to yourself, someone loved, someone neutral, someone difficult.",
+    "apply": "The difficult person is the point of the exercise. Pick the colleague who frustrates you most and find one thing they are genuinely right about."
    }
   ],
   "spanish": [
    {
-    "word": "de golpe",
-    "meaning": "all at once / suddenly",
-    "es": "Los costos subieron de golpe.",
-    "en": "Costs rose all at once.",
+    "word": "sobre la marcha",
+    "meaning": "on the fly / as we go",
+    "es": "Lo ajustamos sobre la marcha.",
+    "en": "We adjust it as we go.",
     "tag": "Idiom"
    },
    {
-    "word": "el informe",
-    "meaning": "the report",
-    "es": "Necesito el informe antes del viernes.",
-    "en": "I need the report before Friday.",
+    "word": "la deuda",
+    "meaning": "the debt",
+    "es": "Reducimos la deuda a la mitad.",
+    "en": "We cut the debt in half.",
     "tag": "Business"
    }
   ],
   "vocab": [
    {
-    "word": "Efficacy",
-    "say": "EF-i-kuh-see",
-    "meaning": "The ability to produce the intended result.",
-    "example": "We have no evidence on the efficacy of that promotion.",
-    "note": "Not the same as efficiency. Efficacy is 'does it work', efficiency is 'at what cost'."
+    "word": "Predicated",
+    "say": "PRED-i-kay-tid",
+    "meaning": "Founded or based on.",
+    "example": "The forecast is predicated on two store openings in Q3.",
+    "note": "The precise way to surface an assumption the whole number rests on."
    },
    {
-    "word": "Incremental",
-    "say": "in-kruh-MEN-tuhl",
-    "meaning": "Additional, over and above the existing base.",
-    "example": "Only AED 3M of that is incremental revenue.",
-    "note": "The single most important word in investment appraisal. Everything hinges on the baseline."
+    "word": "Cursory",
+    "say": "KUR-suh-ree",
+    "meaning": "Hasty and not thorough.",
+    "example": "A cursory review would not have caught this.",
+    "note": "Useful for defending the depth of your own work, or flagging the shallowness of someone else's."
    }
   ],
   "speaking": {
-   "title": "The hostile question",
-   "drill": "Rehearse: 'That is a fair challenge \u2014 here is the assumption behind it.' Say it five times until it is automatic.",
-   "why": "Having a rehearsed opening for a hostile question buys three seconds of thinking without looking rattled."
+   "title": "Shorten your sentences",
+   "drill": "Take a written paragraph of your own and read it aloud, splitting every sentence longer than 15 words.",
+   "why": "Your written voice is already short. Spoken sentences drift longer under pressure \u2014 this recalibrates it."
   },
   "interview_tech": [
    {
-    "q": "What is the difference between EBITDA and free cash flow, and which do you manage to?",
-    "a": "EBITDA ignores working capital movements, capex, tax and interest. A retailer can grow EBITDA while burning cash by stuffing stores with inventory and opening capital-hungry sites. Free cash flow = EBITDA \u2212 capex \u2212 change in working capital \u2212 tax \u2212 interest. Manage the business to free cash flow; report EBITDA because that is what lenders and multiples use. Where they diverge for more than two quarters, something structural is wrong.",
-    "who": "Berkshire \u00b7 Amazon \u00b7 Al-Futtaim"
+    "q": "How do you build a rolling 13-week cash forecast?",
+    "a": "Direct method, receipts and payments, not derived from P&L. Start with confirmed opening bank. Layer in: daily sales collections by tender type with settlement lag; supplier payment runs from the AP ageing; payroll on fixed dates; rent on quarter days; tax and VAT on statutory dates; capex from approved commitments. Roll it weekly and track forecast versus actual variance by line \u2014 the discipline is in explaining last week's miss, which is what makes week 13 credible.",
+    "who": "Every treasury function"
    },
    {
-    "q": "What breaks first when a retailer scales from 60 to 200 stores?",
-    "a": "Not the finance system \u2014 the master data and the operating cadence. Specifically: SKU and price master governance, because inconsistent data makes every report wrong; the supply chain's ability to replenish without central stock-outs; and the management reporting rhythm, because a weekly review that works for 60 stores becomes noise at 200 without exception-based reporting. Finance's job is to install store-level P&L discipline and exception thresholds before the growth, not after.",
-    "who": "Landmark Group \u00b7 Americana \u00b7 Alshaya"
+    "q": "Your forecast missed by 12%. The CEO asks why in the board meeting.",
+    "a": "Answer in this order: the number, the driver, the fix, the revised view. 'We missed by AED 14M. Eleven of that is two categories where sell-through ran 20 points below plan; three is timing on a store opening that slipped a quarter. The buying calendar for those categories is now locked four weeks later so we commit on actual trend. Revised full-year is AED 462M.' Never open with context and never let the explanation exceed four sentences before the number.",
+    "who": "Every board, everywhere"
    }
   ],
   "interview_soft": [
    {
-    "q": "Tell me about a time you were wrong about a person.",
-    "a": "A quieter question than it looks \u2014 it tests self-awareness and whether you revise judgements. Both directions work: someone you underestimated who turned out strong, or someone you backed who did not work out. The second is braver and lands better if you own the hiring or promotion decision. End with what you changed about how you assess people, ideally something structural like a different interview question or a probation checkpoint.",
-    "who": "Amazon \u00b7 Unilever \u00b7 Alshaya"
+    "q": "How do you decide what to delegate?",
+    "a": "Give a rule. Something like: delegate anything where the cost of a mistake is recoverable and the learning value is high; keep anything where your specific judgement is the reason the answer is right, and anything you would have to redo. The failure mode interviewers probe is the controller who keeps the technical work because it is comfortable and delegates only the admin \u2014 which caps the team's growth and yours.",
+    "who": "GE \u00b7 Unilever \u00b7 Group CFOs"
    },
    {
-    "q": "If we hire you and in a year it has not worked, what is the most likely reason?",
-    "a": "A genuinely good question and a rare one. Answer honestly with the real risk, not a disguised strength: a mismatch on decision-making pace, an unclear boundary between your scope and someone else's, or a business where the data foundations are worse than described so the first year goes on plumbing rather than insight. Then say what you would do in month one to check for it. Naming the failure mode makes you look like someone who has thought about the job rather than the offer.",
-    "who": "Senior search processes"
+    "q": "Tell me about a time you disagreed with your CEO.",
+    "a": "They are testing whether you have spine and judgement, not whether you win. Use STAR and pick a disagreement where you were partly wrong \u2014 it reads as honest. Cover: what the disagreement was, what evidence you brought, how you escalated it appropriately, what the decision was, and crucially what you did after the decision went against you. The signal they want: you argue hard privately and commit fully publicly.",
+    "who": "Majid Al Futtaim \u00b7 Unilever \u00b7 Amazon"
    }
   ],
   "cfo_field": [
    {
-    "q": "Read the cash flow statement first. Always.",
-    "a": "P&L is an opinion, cash is a fact. Open any set of accounts at the cash flow statement, compare operating cash flow to EBITDA over three years, and look at the gap. A business converting 90%+ of EBITDA to operating cash is real. One converting 50% has its profit sitting in working capital or is capitalising something it should be expensing. That one ratio finds more problems than any variance pack.",
-    "who": "The first thing to check, every time"
+    "q": "Explain a variance in one sentence or you do not understand it yet.",
+    "a": "'Margin is down 180bps: 120 from promotional depth in electronics, 40 from freight, 20 mix.' That is a CFO answer. A table of forty lines is a controller answer. The discipline is to decompose until the drivers are additive and then name the largest two. If you cannot make the bridge add up, you have a data problem, not a communication problem.",
+    "who": "The board-meeting test"
    },
    {
-    "q": "Scenario planning beats a single budget, and costs less than it sounds.",
-    "a": "Three cases \u2014 base, downside, upside \u2014 with the two or three variables that actually move the outcome, not thirty. In retail that is usually like-for-like growth, gross margin, and rent renewals. The value is not the numbers; it is that the board has already discussed the downside before it arrives, so the conversation when it does is about the response rather than about whether it is happening.",
-    "who": "What a board actually wants"
+    "q": "Working capital is where a retail CFO is actually judged.",
+    "a": "EBITDA gets the headline; the cash conversion cycle gets the board's attention. DIO + DSO \u2212 DPO. Retail is inventory-heavy and often near-zero DSO, so the fight is DIO against DPO. Cutting DIO from 95 to 80 days on AED 400M COGS releases roughly AED 16.4M of cash \u2014 permanently, without selling a single extra unit. That is a bigger number than most cost programmes deliver, and it does not need a headcount conversation.",
+    "who": "Landmark \u00b7 Alshaya \u00b7 GMG"
    }
   ],
   "review": {
@@ -808,9 +815,9 @@
    "week": 42,
    "year": 2026,
    "key": "2026-W42",
-   "weekday": 5,
-   "days_left": 2,
-   "is_review_day": false
+   "weekday": 6,
+   "days_left": 1,
+   "is_review_day": true
   },
   "podcasts": {
    "ok": true,
@@ -1079,113 +1086,83 @@
    "shows": 20,
    "source": "each channel's public Atom feed",
    "built_on": "2026-10-16",
-   "age_days": 0.0,
-   "is_fallback": false
+   "age_days": 1.0,
+   "is_fallback": true
   },
   "smart_reads": [
    {
-    "source": "ET Opinion",
-    "cat": "money",
-    "title": "No crackers, easy on the festival lights",
-    "link": "https://economictimes.indiatimes.com/opinion/et-editorial/no-crackers-easy-on-the-festival-lights/articleshow/134973953.cms",
-    "summary": "Festival consumption in India is facing challenges due to rising input costs and cautious spending patterns. Companies are experiencing pressures on their profit margins as consumers become more selective and trade down. Credit costs are increasing, impacting overall consumption and household debt levels. Retail lendin",
-    "date": "Oct 15, 2026",
-    "_sort": "2026-10-15T17:54:04+00:00",
-    "smart": {
-     "what_happened": [
-      "Rising input costs and cautious spending are challenging festival consumption in India.",
-      "Higher credit costs are pressuring company margins as consumers trade down and household debt levels rise."
-     ],
-     "why_it_matters": "The slowdown in festival spending signals reduced demand for discretionary goods, which could weigh on revenue growth for retailers and consumer product manufacturers. Elevated credit costs may further dampen household purchasing power, extending margin pressure across sectors that rely on seasonal sales spikes.",
-     "what_to_watch": "Upcoming quarterly earnings of major Indian consumer goods and retail companies for signs of margin compression",
-     "headline": "India festival consumption slows as input costs rise",
-     "read_seconds": 26
-    }
+    "source": "NYT Well",
+    "cat": "health",
+    "title": "The Difficulty of Diagnosing Anorexia in the GLP-1 Era",
+    "link": "https://www.nytimes.com/2026/10/16/well/glp1-anorexia-eating-disorders.html",
+    "summary": "Doctors worry that the effects of weight-loss drugs may be masking serious eating disorders.",
+    "date": "Oct 16, 2026",
+    "_sort": "2026-10-16T20:09:15+00:00"
+   },
+   {
+    "source": "The Marginalian",
+    "cat": "ideas",
+    "title": "Bruce Springsteen on Surviving Depression and His Strategy for Living Through the Visitations of the Darkness",
+    "link": "https://www.themarginalian.org/2026/10/16/bruce-springsteen-depression/",
+    "summary": "\"If you can acknowledge it and you can relax with it a little bit, very often it shortens its duration.\"",
+    "date": "Oct 16, 2026",
+    "_sort": "2026-10-16T19:21:16+00:00"
    },
    {
     "source": "Livemint",
     "cat": "money",
-    "title": "Gold price forecast: Why investors expect record highs within 2 years",
-    "link": "https://www.livemint.com/money/personal-finance/gold-price-forecast-why-investors-expect-record-highs-within-2-years-11792080726706.html",
-    "summary": "For now, investors &amp;nbsp;see continued central bank buying and demand for safe-haven assets as key supports for bullion. However, predictions of fresh record highs remain forecasts rather than guarantees.",
-    "date": "Oct 15, 2026",
-    "_sort": "2026-10-15T17:32:10+00:00"
-   },
-   {
-    "source": "Economic Times",
-    "cat": "money",
-    "title": "DA hike after Dussehra? Will government announce dearness allowance increase after October 20?",
-    "link": "https://economictimes.indiatimes.com/wealth/save/da-hike-announcement-for-central-government-after-dussehra-will-government-announce-dearness-allowance-after-october-20-2026/articleshow/134968091.cms",
-    "summary": "Central government employees are anticipating a dearness allowance increase following the cabinet meeting scheduled for October 21. The government usually announces the DA hike during its regular Wednesday meetings. Recent inflation data suggests that the DA could rise significantly based on calculations from the retai",
-    "date": "Oct 15, 2026",
-    "_sort": "2026-10-15T12:34:50+00:00",
+    "title": "Voluntary Provident Fund: Should you invest beyond EPF? Interest rates, tax rules and the  \u20b92.5 lakh limit explained",
+    "link": "https://www.livemint.com/money/personal-finance/voluntary-provident-fund-should-you-invest-beyond-epf-interest-rates-tax-rules-and-the-2-5-lakh-limit-explained-11792173412067.html",
+    "summary": "VPF allows salaried employees to invest beyond mandatory EPF contributions at the prevailing 8.25% interest rate. Understand the  \u20b92.5 lakh tax-free interest limit, tax on excess contributions and withdrawal rules before investing more for retirement.",
+    "date": "Oct 16, 2026",
+    "_sort": "2026-10-16T18:14:22+00:00",
     "smart": {
      "what_happened": [
-      "A cabinet meeting is scheduled for October 21, and employees anticipate a dearness allowance increase.",
-      "The government typically announces DA hikes during its regular Wednesday meetings, and recent inflation data suggest a sizable rise."
+      "VPF allows salaried employees to invest beyond mandatory EPF contributions at the prevailing 8.25% interest rate.",
+      "Tax\u2011free interest is limited to \u20b92.5\u202flakh, with tax on excess contributions and specific withdrawal rules."
      ],
-     "why_it_matters": "An increase in dearness allowance would boost the real wages of millions of central government workers, affect government expenditure, and reflect how policymakers are responding to recent inflation trends, which can influence broader consumer price expectations and fiscal planning.",
-     "what_to_watch": "The official dearness allowance announcement expected at the next Wednesday cabinet meeting after October 21.",
-     "headline": "Central government employees expect DA hike after Oct 21 cabinet meeting",
+     "why_it_matters": "The scheme provides a higher\u2011yield, tax\u2011advantaged avenue for employees to boost retirement savings beyond the statutory EPF contribution, but the \u20b92.5\u202flakh tax\u2011free cap and withdrawal conditions mean investors must manage contribution levels to avoid taxable interest and ensure liquidity needs are met.",
+     "what_to_watch": "Any government announcement altering the VPF interest rate or the \u20b92.5\u202flakh tax\u2011free interest ceiling.",
+     "headline": "VPF offers 8.25% interest, \u20b92.5 lakh tax\u2011free limit for extra EPF",
+     "read_seconds": 20
+    }
+   },
+   {
+    "source": "ET Opinion",
+    "cat": "money",
+    "title": "Driving a wedge in the EU EV market",
+    "link": "https://economictimes.indiatimes.com/opinion/et-editorial/driving-a-wedge-in-the-eu-ev-market/articleshow/135000812.cms",
+    "summary": "Chinese automobile companies are presenting their advanced technologies at the Paris auto show to attract European buyers. European car manufacturers face challenges in transitioning to electric vehicles due to investments in battery capacity. As competition intensifies, Chinese firms view Europe as a crucial market fo",
+    "date": "Oct 16, 2026",
+    "_sort": "2026-10-16T17:43:43+00:00",
+    "smart": {
+     "what_happened": [
+      "Chinese automobile companies presented advanced technologies at the Paris auto show to attract European buyers.",
+      "European manufacturers are struggling with the transition to electric vehicles because of required battery capacity investments."
+     ],
+     "why_it_matters": "The push by Chinese firms into the European market raises competitive pressure on EU carmakers that are still investing heavily in battery capacity to meet electric\u2011vehicle mandates, potentially reshaping market share and influencing the pace of EV adoption across Europe.",
+     "what_to_watch": "Track the first-quarter European sales figures for Chinese electric\u2011vehicle brands after the Paris auto show.",
+     "headline": "Chinese automakers showcase tech at Paris auto show targeting Europe",
      "read_seconds": 26
     }
    },
    {
-    "source": "Aeon",
-    "cat": "ideas",
-    "title": "The ladder of knowledge",
-    "link": "https://aeon.co/essays/the-century-long-search-for-the-limits-to-knowledge",
-    "summary": "What we claim as \u2018true\u2019 is not a ceiling we are forever failing to reach but something that changes as we climb toward it- by Alexander V GheorghiuRead on Aeon",
-    "date": "Oct 15, 2026",
-    "_sort": "2026-10-15T10:00:00+00:00",
-    "smart": {
-     "what_happened": [
-      "Article titled \"The ladder of knowledge\" was written by Alexander V Gheorghiu and published on Aeon.",
-      "It argues that what we consider true changes as we climb toward it, rather than being a fixed ceiling."
-     ],
-     "why_it_matters": "The essay challenges the conventional view of truth as static, suggesting that our understanding evolves with intellectual progress. For readers interested in philosophy and epistemology, this perspective highlights the dynamic nature of knowledge and may influence how they assess information and adapt their beliefs over time.",
-     "what_to_watch": "Future publications by Alexander V Gheorghiu on Aeon that explore similar themes of truth and knowledge.",
-     "headline": "The ladder of knowledge",
-     "read_seconds": 20
-    }
-   },
-   {
-    "source": "NYT Well",
-    "cat": "health",
-    "title": "Will Anyone Actually Ever Live to 200?",
-    "link": "https://www.nytimes.com/2026/10/14/well/live/humans-lifespan-limits-potential.html",
-    "summary": "Some experts are optimistic that science will eventually find ways to extend life, but many longevity claims are unrealistic.",
-    "date": "Oct 14, 2026",
-    "_sort": "2026-10-14T18:02:43+00:00",
-    "smart": {
-     "what_happened": [
-      "Some experts say science may eventually find ways to extend human lifespan.",
-      "Other experts say many longevity claims are unrealistic."
-     ],
-     "why_it_matters": "The debate over the plausibility of dramatically extending human life influences investment decisions in biotechnology, healthcare, and retirement planning, as breakthroughs could reshape demand for medical services, pharmaceuticals, and long\u2011term financial products.",
-     "what_to_watch": "Monitor the publication of new scientific studies on life\u2011extension technologies for evidence of progress.",
-     "headline": "Experts debate feasibility of living to 200 years",
-     "read_seconds": 20
-    }
+    "source": "Economic Times",
+    "cat": "money",
+    "title": "Tata, HDFC, ICICI Prudential mutual funds halt fresh gold FoF investments: What it means for existing and new investors",
+    "link": "https://economictimes.indiatimes.com/wealth/invest/tata-hdfc-icici-prudential-mutual-funds-halt-fresh-gold-fof-investments-what-it-means-for-existing-and-new-investors/articleshow/134993379.cms",
+    "summary": "Leading mutual fund houses such as Tata Mutual Fund and HDFC Mutual Fund have suspended fresh investments in their gold fund-of-funds. The halt comes as a response to macroeconomic factors affecting gold imports and the value of the rupee. Existing investments in these funds remain unaffected, allowing ongoing systemat",
+    "date": "Oct 16, 2026",
+    "_sort": "2026-10-16T11:37:55+00:00"
    },
    {
     "source": "Psyche",
     "cat": "mind",
-    "title": "How to handle jealous feelings",
-    "link": "https://psyche.co/guides/how-to-handle-jealous-feelings",
-    "summary": "Jealousy can be a useful, insightful emotion \u2013 if you manage it well. Get curious about your jealousy to get a grip on it- by Carla Marie ManlyRead on Psyche",
-    "date": "Oct 14, 2026",
-    "_sort": "2026-10-14T10:00:00+00:00",
-    "smart": {
-     "what_happened": [
-      "The article explains that jealousy can be a useful emotion if managed well.",
-      "It advises readers to become curious about their jealousy to gain control over it."
-     ],
-     "why_it_matters": "Understanding jealousy as a potentially insightful emotion can help individuals recognize underlying motivations and improve personal decision\u2011making, which is relevant for maintaining sound judgment in both personal and professional contexts.",
-     "what_to_watch": "Watch for any follow\u2011up pieces by Carla Marie Manly on managing emotions.",
-     "headline": "How to handle jealous feelings article published by Carla Marie Manly",
-     "read_seconds": 20
-    }
+    "title": "The social construction of emotions",
+    "link": "https://psyche.co/videos/dont-reduce-emotions-to-biology-theyre-contingent-and-emergent",
+    "summary": "Are our emotions universal? How two landmark studies upended our view of emotions \u2013\u00a0and challenged colonial stereotypes- Video by Then & NowWatch on Psyche",
+    "date": "Oct 16, 2026",
+    "_sort": "2026-10-16T10:01:00+00:00"
    },
    {
     "source": "Scott Young",
@@ -1233,7 +1210,7 @@
     "moves": 38,
     "termination": "Time Out",
     "speed": "Blitz",
-    "analysis": "Focus on early king safety: avoid leaving your king on e1 after 10\u2026Qh4; castle by move\u202f8 to reduce time\u2011pressure threats.",
+    "analysis": "Focus on faster time management: aim to spend \u226410\u202fseconds on each opening move and \u226430\u202fseconds on critical middlegame decisions. This will prevent future time\u2011outs.",
     "is_upset": false,
     "is_collapse": false,
     "is_long": false,
@@ -1308,19 +1285,9 @@
       "pct": 36
      }
     ],
-    "_yest_counts": {
-     "blitz": {
-      "win": 0,
-      "loss": 2,
-      "draw": 0,
-      "rp": {
-       "before": 1577,
-       "after": 1566
-      }
-     }
-    },
+    "_yest_counts": {},
     "_session_date": "2026-10-15",
-    "_is_yesterday": true
+    "_is_yesterday": false
    },
    {
     "id": "K6P2X024",
@@ -1339,7 +1306,7 @@
     "moves": 30,
     "termination": "Resignation",
     "speed": "Blitz",
-    "analysis": "Focus on early piece activity: develop knights before moving the queen (e.g., avoid 5\u2026Qb6); aim to complete development within 8 moves, reducing opponent\u2019s initiative.",
+    "analysis": "Strengthen your endgame technique: study pawn\u2011majority versus isolated pawn structures, practice converting +0.5\u202fpawn advantages within 15 moves.",
     "is_upset": false,
     "is_collapse": false,
     "is_long": false,
@@ -1429,18 +1396,18 @@
    "upsets": 0,
    "collapses": 0,
    "long_games": 0,
-   "session_summary": "AKK_010, your opening repertoire is a disaster\u2014every game you\u2019ve played has ended in defeat, proving you cannot even navigate the first ten moves without blundering. Stop relying on dubious sidelines and master the fundamentals of the Italian Game (1.e4\u202fe5\u202f2.Nf3\u202fNc6\u202f3.Bc4) to develop pieces, control the centre, and castle safely before you even think about tactics. For the next 20 games, drill this line until you can execute it flawlessly, then add a solid defensive system like the Caro\u2011Kann (1.e4\u202fc6) to shore up your weak endgame and finally give yourself a chance to win.",
+   "session_summary": "AKK_010\u2019s play is catastrophically weak\u2014zero wins from two losses, a 0\u202f% success rate that signals a fundamental lack of basic opening knowledge and tactical awareness. Your \u201cweakest opening\u201d is literally every line you choose; you\u2019re blundering into positions where you lose material within the first ten moves, so ditch every untested repertoire and adopt a solid, theory\u2011backed system like the London System (white) or the Caro\u2011Kann (black) and study the first 15\u201320 moves until they\u2019re memorized. Stop playing on instinct; spend the next 48\u202fhours reviewing master games in that opening, annotate every move, and then practice exclusively against engines set to a low level until you can execute the first 12 moves flawlessly without losing a piece.",
    "session_date": "2026-10-15",
-   "is_yesterday": true,
+   "is_yesterday": false,
    "token_missing": false
   },
   "lichess_puzzle": {
-   "pid": "bDo83",
-   "rating": 1718,
-   "level": "\ud83d\udfe1 at level",
-   "themes": "Endgame \u00b7 Crushing \u00b7 Skewer",
-   "tip": "King activity and pawn structure dominate. Technique over tactics here.",
-   "url": "https://lichess.org/training/bDo83"
+   "pid": "ql5b2",
+   "rating": 2037,
+   "level": "\ud83d\udd34 stretch",
+   "themes": "Middlegame \u00b7 Short \u00b7 Trapped Piece",
+   "tip": "Calculate 3 moves deep before touching a piece.",
+   "url": "https://lichess.org/training/ql5b2"
   }
  }
 }
