@@ -1,7 +1,7 @@
 {
- "build_id": "20261018T074236",
- "date": "2026-10-18",
- "date_str": "Sunday, October 18 2026",
+ "build_id": "20261019T075126",
+ "date": "2026-10-19",
+ "date_str": "Monday, October 19 2026",
  "picks": [
   {
    "symbol": "TCS.NS",
@@ -411,121 +411,121 @@
  "picks_week": null,
  "open_context": {},
  "ipos": {
-  "count": 26,
+  "count": 21,
   "months": 12,
-  "built_on": "2026-10-11",
+  "built_on": "2026-10-17",
   "summary": {
-   "count": 26,
-   "up": 16,
-   "down": 10,
-   "up_pct": 61.5,
-   "median_pct": 20.9
+   "count": 21,
+   "up": 13,
+   "down": 8,
+   "up_pct": 61.9,
+   "median_pct": 26.3
   },
   "rows": [
    {
-    "sym": "RUBICON",
-    "months_listed": 11.8,
-    "first_close": 628.2,
-    "last_close": 1548.5,
-    "since_listing_pct": 146.5,
-    "high": 1860.6,
-    "low": 577.25,
-    "from_high_pct": -16.8,
-    "below_first_ever": true,
-    "sessions": 242,
-    "listed_on": "2025-10-16"
-   },
-   {
     "sym": "UTLSOLAR",
-    "months_listed": 10.6,
+    "months_listed": 10.9,
     "first_close": 208.44,
-    "last_close": 409.05,
-    "since_listing_pct": 96.2,
+    "last_close": 394.9,
+    "since_listing_pct": 89.5,
     "high": 483.95,
     "low": 174.83,
-    "from_high_pct": -15.5,
+    "from_high_pct": -18.4,
     "below_first_ever": true,
-    "sessions": 220,
+    "sessions": 225,
     "listed_on": "2025-11-20"
    },
    {
-    "sym": "PARKHOSPS",
-    "months_listed": 9.8,
-    "first_close": 147.95,
-    "last_close": 270.8,
-    "since_listing_pct": 83.0,
-    "high": 299.3,
-    "low": 143.92,
-    "from_high_pct": -9.5,
-    "below_first_ever": true,
-    "sessions": 201,
-    "listed_on": "2025-12-17"
-   },
-   {
     "sym": "AEQUS",
-    "months_listed": 10.0,
+    "months_listed": 10.2,
     "first_close": 151.29,
-    "last_close": 273.5,
-    "since_listing_pct": 80.8,
+    "last_close": 262.2,
+    "since_listing_pct": 73.3,
     "high": 288.15,
     "low": 115.11,
-    "from_high_pct": -5.1,
+    "from_high_pct": -9.0,
     "below_first_ever": true,
-    "sessions": 206,
+    "sessions": 211,
     "listed_on": "2025-12-10"
    },
    {
     "sym": "LENSKART",
-    "months_listed": 11.0,
+    "months_listed": 11.2,
     "first_close": 403.1,
-    "last_close": 677.65,
-    "since_listing_pct": 68.1,
+    "last_close": 646.5,
+    "since_listing_pct": 60.4,
     "high": 707.2,
     "low": 400.15,
-    "from_high_pct": -4.2,
+    "from_high_pct": -8.6,
     "below_first_ever": true,
-    "sessions": 228,
+    "sessions": 233,
     "listed_on": "2025-11-10"
+   },
+   {
+    "sym": "PARKHOSPS",
+    "months_listed": 10.0,
+    "first_close": 147.95,
+    "last_close": 235.7,
+    "since_listing_pct": 59.3,
+    "high": 299.3,
+    "low": 143.92,
+    "from_high_pct": -21.2,
+    "below_first_ever": true,
+    "sessions": 206,
+    "listed_on": "2025-12-17"
+   },
+   {
+    "sym": "GROWW",
+    "months_listed": 11.1,
+    "first_close": 131.33,
+    "last_close": 200.85,
+    "since_listing_pct": 52.9,
+    "high": 221.56,
+    "low": 131.33,
+    "from_high_pct": -9.3,
+    "below_first_ever": false,
+    "sessions": 231,
+    "listed_on": "2025-11-12"
    }
   ],
   "worst": [
    {
     "sym": "HEG",
-    "months_listed": 2.8,
+    "months_listed": 3.0,
     "first_close": 587.35,
-    "last_close": 233.56,
-    "since_listing_pct": -60.2,
+    "last_close": 224.72,
+    "since_listing_pct": -61.7,
     "high": 739.25,
     "low": 215.05,
-    "from_high_pct": -68.4,
+    "from_high_pct": -69.6,
     "below_first_ever": true,
-    "sessions": 59,
+    "sessions": 64,
     "listed_on": "2026-07-17"
    },
    {
     "sym": "PINELABS",
-    "months_listed": 10.8,
+    "months_listed": 11.1,
     "first_close": 250.89,
-    "last_close": 163.07,
-    "since_listing_pct": -35.0,
+    "last_close": 165.04,
+    "since_listing_pct": -34.2,
     "high": 250.89,
     "low": 137.94,
-    "from_high_pct": -35.0,
+    "from_high_pct": -34.2,
     "below_first_ever": true,
-    "sessions": 224,
+    "sessions": 229,
     "listed_on": "2025-11-14"
    },
    {
     "sym": "WAKEFIT",
-    "months_listed": 9.8,
+    "months_listed": 10.1,
     "first_close": 192.29,
-    "last_close": 131.39,
-    "since_listing_pct": -31.7,
+    "last_close": 137.61,
+    "since_listing_pct": -28.4,
     "high": 215.8,
     "low": 113.04,
-    "from_high_pct": -39.1,
+    "from_high_pct": -36.2,
     "below_first_ever": true,
-    "sessions": 202,
+    "sessions": 207,
     "listed_on": "2025-12-15"
    }
   ]
@@ -538,266 +538,265 @@
  },
  "desk": {
   "chess": {
-   "title": "Rating Progress Reality",
-   "body": "800\u21921000: Learn not to blunder pieces for free. 1000\u21921200: Basic tactics (forks, pins). 1200\u21921500: Strategy (plans, pawn structure). 1500\u21921800: Calculation depth + endgames. 1800+: Opening theory + deep calculation. Most adults plateau at 1000-1200 because they skip tactics training. Do 10 puzzles daily \u2014 minimum. No shortcut.",
-   "index": 20,
+   "title": "Opening Principle #1: Control the Centre",
+   "body": "Place pawns on e4/d4 (White) or e5/d5 (Black). Pieces control more squares from the centre. A pawn on e4 controls d5 and f5. A pawn on the edge controls only 1 square. Open with 1.e4 or 1.d4 and you immediately claim space. This is the foundation of all chess strategy.",
+   "index": 1,
    "total": 20
   },
   "wisdom": {
-   "title": "Joy is a Practise",
-   "body": "Joy doesn't arrive when the conditions are right. It's practiced in the conditions you have. Find one thing today that is genuinely good. Savour it for 30 seconds. This is not toxic positivity \u2014 it's neurological training. Brains that practise noticing goodness get better at finding it, even in hard seasons.",
-   "index": 16,
+   "title": "On Discipline and Freedom",
+   "body": "The most disciplined people are the freest. Akshay who wakes at 6am, exercises, studies, then works has more hours and more energy than the one who stays up late and drags through mornings. Discipline is choosing what you want most over what you want now. It's the highest form of self-respect.",
+   "index": 17,
    "total": 18
   },
   "book": {
-   "book": "Zero to One",
-   "author": "Peter Thiel",
-   "chapter": "Secrets: What Truth Do Very Few People Agree With You On?",
-   "lesson": "Every great business is built on a secret \u2014 a truth that most people don't see or believe yet. PayPal's secret: people would use the internet for payments before the internet was trusted. Airbnb's secret: people would stay in strangers' homes. Tesla's secret: electric cars could be desirable, not just practical. Thiel's question for every entrepreneur: 'What important truth do very few people agree with you on?' This is the diagnostic for whether you're building something genuinely new or just another incremental improvement on an existing idea.",
-   "key_quote": "The best companies are built on secrets. Secrets require that you do the uncomfortable work of thinking differently from the crowd.",
-   "action": "Write down one belief you hold about your industry or career that most people in your field would disagree with. Is there a business or career opportunity hidden in that belief?",
-   "index": 10,
+   "book": "Good to Great",
+   "author": "Jim Collins",
+   "chapter": "The Hedgehog Concept: Do One Thing Brilliantly",
+   "lesson": "The fox knows many things. The hedgehog knows one big thing. Collins studied 1,435 Fortune 500 companies over 40 years to find which ones went from good to great. The great ones were all hedgehogs: they found the intersection of three circles \u2014 what they are deeply passionate about, what they can be the best in the world at, and what drives their economic engine. They focused there relentlessly and ignored everything else. Good-to-great companies didn't diversify into new businesses. They went deeper into their hedgehog concept until they dominated it.",
+   "key_quote": "Greatness comes from doing one thing so well that the world cannot ignore you.",
+   "action": "Draw your three circles: Passion / Best-in-world potential / Economic driver. Where they overlap is your hedgehog. Do you spend most of your time there?",
+   "index": 11,
    "total": 48,
    "crux": [
-    "Progress is either 0\u21921 (new things) or 1\u2192n (copying). Copying does not create new value.",
-    "The contrarian question: what important truth do very few people agree with you on?",
-    "Competition is for losers. Perfect competition drives profit to zero by definition.",
-    "Monopoly is the condition of every genuinely valuable business. All happy companies are different.",
-    "Four monopoly traits: proprietary technology, network effects, economies of scale, branding.",
-    "Proprietary tech must be 10x better than the alternative, not marginally better.",
-    "Start with a small market you can dominate, then expand. Big markets are a red flag.",
-    "Last-mover advantage beats first-mover. What matters is the last big cash flow.",
-    "Power law: one investment returns more than all others combined. This applies to careers too.",
-    "Definite optimism builds the future. Indefinite optimism just expects it to arrive.",
-    "Sales matters as much as product, and engineers systematically underrate it.",
-    "Seven questions every business must answer: engineering, timing, monopoly, people, distribution, durability, secret.",
-    "Secrets still exist. The belief that everything is known is why so little gets found.",
-    "Founders should ask: will this still be valuable in 10 years?"
+    "Good is the enemy of great. Most organisations never become great because they become good enough.",
+    "Level 5 Leadership: extreme personal humility combined with intense professional will.",
+    "First Who, Then What. Get the right people on the bus before setting direction.",
+    "Confront the brutal facts while never losing faith \u2014 the Stockdale Paradox.",
+    "The Hedgehog Concept: the intersection of what you're deeply passionate about, what you can be best in the world at, and what drives your economics.",
+    "One economic denominator \u2014 profit per X \u2014 clarifies the entire business.",
+    "A culture of discipline, not a tyrant imposing discipline.",
+    "Technology accelerates momentum; it never creates it.",
+    "The Flywheel: relentless pushing in a consistent direction until momentum compounds.",
+    "The Doom Loop is the opposite \u2014 new programmes, new directions, no accumulation.",
+    "Great companies had no miracle moment. Transformation looked dramatic only from outside.",
+    "Stop-doing lists matter more than to-do lists.",
+    "Compensation gets the right people on the bus; it does not motivate the wrong ones."
    ],
    "learnings": [
-    "If you're competing on the same axis as everyone else, the margin is already gone.",
-    "Small dominated market first. Broad ambition second.",
-    "Power laws mean concentration beats diversification for effort allocation.",
-    "Distribution is not an afterthought. A product nobody hears about does not exist."
+    "Who beats what. Wrong people make the right strategy fail.",
+    "Facing bad news early is a competitive advantage.",
+    "Momentum accumulates from consistent direction, not from bursts of intensity.",
+    "Greatness is mostly a series of unglamorous, consistent decisions."
    ],
    "examples": [
-    "PayPal targeted eBay power sellers \u2014 20,000 people \u2014 rather than 'online payments'. Domination first, expansion after.",
-    "Google has held roughly two-thirds of search since 2002 and prints margins that a competitive market would have erased.",
-    "Facebook started at one university with 100% of that market, then expanded campus by campus."
+    "Walgreens beat the market 15x from 1975\u20132000 by fixating on profit per customer visit \u2014 one metric, relentlessly.",
+    "Darwin Smith at Kimberly-Clark sold the paper mills \u2014 the company's historic core \u2014 to enter consumer paper against P&G. Shareholder returns beat the market 4x.",
+    "Nucor's flywheel: mini-mill technology \u2192 lower cost \u2192 market share \u2192 more mills. Same push for decades."
    ],
    "adapt": [
-    "The faceless FP&A page competes in a narrower niche than generic finance content. That narrowness is the asset.",
-    "10x, not 10%: a signals product must be clearly better than a free Telegram channel, not slightly.",
-    "Distribution for the Dubai search is the network, not the CV. Applications without referrals are 1\u2192n."
+    "Hedgehog: CA precision + FP&A + building with AI. That intersection is narrower and stronger than 'finance content'.",
+    "Brutal fact: 1H signals have no measurable edge. Faith: the daily equity engine does. Hold both.",
+    "Stop-doing list beats the roadmap. Deleting three TradeFlow pages was the flywheel push."
    ]
   },
   "way": {
    "minimalism": {
-    "title": "Gifts Are Not Obligations",
-    "body": "A gift's job ended the moment it was given. Keeping something unwanted out of guilt honours nobody and costs you space every day.",
-    "action": "Release one guilt-kept item. The giver will never know.",
-    "index": 12,
+    "title": "The Uniform",
+    "body": "Pick a small set of clothes that always work and buy multiples. Ends the morning decision, ends the mismatched purchase, ends the wardrobe that is 80% unworn.",
+    "action": "Define your uniform in one sentence. Buy toward it, not around it.",
+    "index": 13,
     "total": 20,
     "label": "Minimalism"
    },
    "etiquette": {
-    "title": "Do Not Correct Trivia In Public",
-    "body": "Being right about something small in front of an audience costs more in goodwill than the correction is worth. Let it go, or say it privately later.",
-    "action": "Let one minor inaccuracy pass uncorrected today.",
-    "index": 18,
+    "title": "Write The Follow-Up",
+    "body": "After any meeting that mattered: three lines confirming what was agreed and who does what. It prevents disputes and marks you as the reliable one. Almost nobody does it.",
+    "action": "Send a three-line recap after your next meeting.",
+    "index": 19,
     "total": 20,
     "label": "Etiquette"
    },
    "stillness": {
-    "title": "Impermanence Applies To The Bad Too",
-    "body": "The difficult period ends. So does the good one. This is not pessimism \u2014 it is the only reliable source of equanimity in both directions.",
-    "action": "Name the current difficulty. Say plainly: this also ends.",
-    "index": 16,
+    "title": "Solitude Is Not Loneliness",
+    "body": "Solitude is time free of other minds' input. It is where thinking happens. A room full of people and a phone full of voices are the same interruption.",
+    "action": "Take 30 minutes alone with no input. Not rest \u2014 thinking.",
+    "index": 17,
     "total": 20,
     "label": "Stillness"
    },
    "model": {
-    "title": "Compounding",
-    "body": "Small consistent gains dominate large sporadic ones, and the effect is invisible until suddenly it is not. The counterintuitive part: nearly all the value arrives at the end.",
-    "action": "Identify one habit that compounds. Protect it above anything urgent.",
-    "index": 8,
+    "title": "Confirmation Bias",
+    "body": "You will scrutinise disagreeing evidence and wave through agreeing evidence. Knowing this does not stop it. The only defence is to seek the counter-case deliberately.",
+    "action": "Find the strongest argument against your current position. Steelman it.",
+    "index": 9,
     "total": 20,
     "label": "Mental Model"
    },
    "arabic": {
-    "script": "\u0625\u0646 \u0634\u0627\u0621 \u0627\u0644\u0644\u0647 \u062e\u064a\u0631",
-    "translit": "in shaa Allah khayr",
-    "meaning": "God willing, it will be good",
-    "use": "Said when an outcome is uncertain. Graceful and appropriate almost anywhere.",
-    "index": 24,
+    "script": "\u0635\u0628\u0627\u062d \u0627\u0644\u062e\u064a\u0631",
+    "translit": "sabaah al-khayr",
+    "meaning": "Good morning",
+    "use": "Reply: sabaah an-noor. Use it before anything else in the morning.",
+    "index": 25,
     "total": 30,
     "label": "Arabic"
    },
    "drill": {
-    "title": "Review Your Own Work Cold",
-    "body": "Leave it 24 hours, then review as if a stranger wrote it and you are looking for errors. You will find them. Reviewing immediately finds nothing.",
-    "action": "Re-open yesterday's work. Find three things to fix.",
-    "index": 20,
+    "title": "Mental Math: 1% Anchoring",
+    "body": "Compute 1% of a number, then scale. 1% of 847,000 is 8,470. So 3% is 25,410 and 0.5% is 4,235. Fluency here makes you visibly faster in meetings than people with better degrees.",
+    "action": "Ten numbers. Find 1%, 3%, and 15% of each. Under 60 seconds total.",
+    "index": 1,
     "total": 20,
     "label": "Drill"
    },
    "health": {
-    "title": "Zone 5 Once A Week",
-    "body": "Short maximal intervals raise VO2max faster than steady work. Four minutes hard, four easy, four times. Unpleasant, brief, and disproportionately effective.",
-    "action": "One 4x4 interval session. Only if Zone 2 is already habitual.",
-    "index": 10,
+    "title": "Alcohol Has No Healthy Dose",
+    "body": "The J-curve was confounding \u2014 the abstainer group included the already-sick. Current evidence points to a linear dose-response for cancer risk from zero, and sleep architecture degrades from the first drink.",
+    "action": "Count last week's units honestly. Not a judgement, a baseline.",
+    "index": 11,
     "total": 20,
     "label": "Health"
    }
   },
   "quote": {
-   "name": "Paul Graham",
-   "quote": "The way to get startup ideas is not to try to think of startup ideas. It's to look for problems.",
-   "index": 35,
+   "name": "Peter Thiel",
+   "quote": "Competition is for losers. If you want to create and capture value, don't compete.",
+   "index": 36,
    "total": 96
   },
   "lesson": {
    "tradition": "Gratitude",
-   "lesson": "Gratitude is not only the greatest of virtues, but the parent of all others.",
-   "source": "Cicero"
+   "lesson": "Enough is a feast. Joy is in the journey, not the destination.",
+   "source": "Buddhist Teaching"
   },
   "case": {
-   "title": "Nokia: The Rise and Fall",
-   "story": "Nokia had 40% global mobile market share in 2007. By 2013, market share was near zero. They failed to see that software, not hardware, was the future.",
-   "lesson": "Market leaders die by defending yesterday's success. The biggest threat is always your own arrogance."
+   "title": "Zomato: Unit Economics Before Growth",
+   "story": "Zomato spent \u20b9100 to acquire a customer who spent \u20b980. They kept growing. The lesson came when investors demanded profitability. Now Zomato is profitable.",
+   "lesson": "Growth that destroys unit economics is not growth \u2014 it's subsidized revenue. Always know your LTV:CAC ratio."
   },
   "fpna": {
-   "title": "Scenario Planning",
-   "body": "Always model 3: Base, Bull (+20%), Bear (\u201320%). Present the range. Executives hate surprises.",
-   "index": 7,
+   "title": "Contribution Margin",
+   "body": "CM = Revenue \u2013 Variable Costs. Know your CM by product, by customer, by geography.",
+   "index": 8,
    "total": 20
   },
   "cfo": {
-   "title": "FC Interview: Top 5 Questions",
-   "body": "1. Walk me through month-end close. 2. How do you handle a material variance? 3. What internal controls have you implemented? 4. Describe your IFRS 16 experience. 5. How do you present bad news to management? Prepare 2-min answers for all five.",
-   "index": 13,
+   "title": "CFO Interview: Top 5 Questions",
+   "body": "1. What's your capital allocation philosophy? 2. How do you manage a cash crisis? 3. Describe a time you stopped a bad investment. 4. How do you build trust with the CEO? 5. Walk me through a fundraise or M&A you led. Practice until smooth.",
+   "index": 14,
    "total": 15
   },
   "money_hack": {
-   "title": "SIP on Salary Day",
-   "body": "Set SIP date = salary day + 1. Invest before you spend. Pay yourself first."
+   "title": "Expense Tracking",
+   "body": "Track every expense for 30 days. You will find \u20b93\u20135K of invisible leaks."
   },
   "dubai": {
-   "title": "Month-end close is the first question",
-   "body": "Not 'walk me through your CV' \u2014 'walk me through your close'. They want the day count, what runs on which day, where it breaks, and what you did about it.",
-   "targets": "A close you shortened from 10 days to 6 is a better answer than any certificate.",
-   "action_label": "Prep",
-   "action": "Write your close calendar as a day-by-day list. Learn it.",
-   "index": 20,
+   "title": "Saudi pays more. Consider it.",
+   "body": "Riyadh FP&A bands sit 15\u201325% above Dubai's for the same role, driven by Vision 2030 spending, and the tax position is the same. The trade is lifestyle and family logistics, not money.",
+   "targets": "Also live: Qatar and Bahrain, both quieter and both hiring.",
+   "action_label": "Widen",
+   "action": "Add Riyadh to the search. The Dubai-only filter is a self-imposed pay cut.",
+   "index": 21,
    "total": 30
   },
   "daughter": {
    "months": 9,
-   "days": 297,
+   "days": 298,
    "heading": "Nine months old.",
    "band": "crawling",
    "born": "2025-12-25"
   },
-  "productivity": "Define 'done' before starting. Vague tasks never finish.",
+  "productivity": "Build systems, not goals. Goals are outcomes; systems produce them.",
   "father": [
    {
-    "title": "Put the phone in another room",
-    "do": "One 20-minute block a day with the phone physically out of sight.",
-    "why": "Infants track gaze from very early. Divided attention is visible to her, and the research on 'still face' shows how quickly infants disengage when a caregiver's face goes flat."
+    "title": "Learn her tired signals",
+    "do": "Watch for the specific cues before crying \u2014 ear pulling, gaze aversion, a particular whine.",
+    "why": "Catching the window before the overtired threshold is the difference between a 5-minute settle and a 40-minute one. Every baby's signal set is different; only observation finds hers."
    },
    {
-    "title": "Give her the spoon",
-    "do": "Let her hold a second spoon while you feed her with the first.",
-    "why": "It converts feeding from something done to her into something she participates in. Control over the process reduces resistance later, when refusal becomes a real phase."
+    "title": "One-word labels",
+    "do": "Use single words for objects she sees constantly \u2014 'cup', 'light', 'dog' \u2014 rather than full sentences.",
+    "why": "Isolated words are easier to segment from the speech stream. Mix with full sentences; she needs both the target and the grammar around it."
    }
   ],
   "life_wisdom": [
    {
     "tradition": "Jainism",
-    "term": "Trishna",
-    "translation": "Craving, thirst",
-    "teaching": "The endless wanting that survives every acquisition. Jain and Buddhist thought agree closely here \u2014 the object changes, the wanting does not.",
-    "apply": "Notice the next thing you tell yourself you will be satisfied after getting. Write it down. Check in six months whether the satisfaction arrived."
+    "term": "Anekantavada",
+    "translation": "Many-sidedness",
+    "teaching": "Reality has more facets than any single viewpoint can hold. The classic image is blind men describing an elephant \u2014 each is accurate and each is incomplete.",
+    "apply": "In a disagreement, state the other person's position better than they did before you argue against it. If you cannot, you have not understood it yet."
    },
    {
     "tradition": "Buddhism",
-    "term": "Upekkha",
-    "translation": "Equanimity",
-    "teaching": "The fourth of the sublime states. Not indifference \u2014 full engagement without being destabilised by the outcome.",
-    "apply": "Judge the decision by the process you followed, not by how it turned out. A good decision with a bad outcome is still a good decision; conflating them is how you learn the wrong lesson."
+    "term": "Sati",
+    "translation": "Mindfulness as remembering",
+    "teaching": "Sati literally means 'to remember' \u2014 remembering to notice what is actually happening, rather than the narrative running over it.",
+    "apply": "Once today, mid-task, stop and name what you are actually doing versus what you told yourself you would be doing. The gap is the data."
    }
   ],
   "spanish": [
    {
-    "word": "valer la pena el esfuerzo",
-    "meaning": "to be worth the effort",
-    "es": "Vale la pena el esfuerzo.",
-    "en": "It is worth the effort.",
-    "tag": "Idiom"
+    "word": "la ganancia",
+    "meaning": "the profit",
+    "es": "La ganancia creci\u00f3 un 12% este a\u00f1o.",
+    "en": "Profit grew 12% this year.",
+    "tag": "Business"
    },
    {
-    "word": "hoy",
-    "meaning": "today",
-    "es": "Hoy tengo mucho trabajo.",
-    "en": "Today I have a lot of work.",
+    "word": "\u00bfcu\u00e1nto cuesta?",
+    "meaning": "how much does it cost?",
+    "es": "\u00bfCu\u00e1nto cuesta este?",
+    "en": "How much does this one cost?",
     "tag": "Everyday"
    }
   ],
   "vocab": [
    {
-    "word": "Ameliorate",
-    "say": "uh-MEEL-yuh-rayt",
-    "meaning": "To make a bad situation better.",
-    "example": "The payment plan ameliorated the cash position without fixing it.",
-    "note": "Implies improvement without resolution \u2014 which is often the honest description."
+    "word": "Purview",
+    "say": "PUR-vyoo",
+    "meaning": "The scope of someone's responsibility or authority.",
+    "example": "Treasury policy falls within the CFO's purview.",
+    "note": "Cleaner than 'remit' or 'area' when you mean formal authority."
    },
    {
-    "word": "Notwithstanding",
-    "say": "not-with-STAN-ding",
-    "meaning": "In spite of.",
-    "example": "Notwithstanding the shortfall, cash generation held.",
-    "note": "Can lead the sentence or follow the noun. A single well-placed use signals command of register."
+    "word": "Ostensible",
+    "say": "os-TEN-si-buhl",
+    "meaning": "Stated as true, but possibly not.",
+    "example": "The ostensible reason for the variance was FX.",
+    "note": "Adjective form of 'ostensibly'. Signals doubt politely enough to survive minutes."
    }
   ],
   "speaking": {
-   "title": "Name then explain",
-   "drill": "Practise five answers that open with the conclusion: 'No \u2014 and the reason is\u2026'",
-   "why": "Burying the verdict at the end forces the listener to hold everything in memory. Lead with it."
+   "title": "Own the accent",
+   "drill": "Read a page aloud focusing only on the final consonant of each word, at normal speed.",
+   "why": "Clarity comes from finishing words, not from changing your accent. Endings are where intelligibility is lost."
   },
   "interview_tech": [
    {
-    "q": "What is ROIC and why would a CFO care more than about net margin?",
-    "a": "ROIC = NOPAT \u00f7 invested capital. Net margin tells you profitability per rupee of sales; ROIC tells you profitability per rupee of capital committed \u2014 which is the only question when you are deciding where to put the next AED 50M. A 3% margin business turning capital four times beats an 8% margin business turning it once. In retail this is exactly the discount-versus-premium format argument, and it is why space productivity matters more than headline margin.",
-    "who": "Costco \u00b7 Walmart \u00b7 Berkshire"
+    "q": "Model the impact of a 10% AED appreciation on a UAE retailer sourcing from China.",
+    "a": "Buying gets cheaper in AED terms, so landed cost falls and gross margin expands \u2014 but only after existing stock at old cost clears, so the benefit lags by roughly one inventory turn. If the AED is pegged to the USD, the real question is USD/CNY, not AED specifically. On the revenue side, a stronger currency makes the destination more expensive for tourists, which matters in Dubai where tourist spend is a meaningful share of mall retail. Net effect is usually positive on margin, mildly negative on footfall.",
+    "who": "Chalhoub \u00b7 Majid Al Futtaim"
    },
    {
-    "q": "How do you test goodwill for impairment, and why does retail make it harder?",
-    "a": "Goodwill is not amortised \u2014 it is tested annually at the cash-generating unit level. Compare the CGU's carrying amount to its recoverable amount, the higher of fair value less costs of disposal and value in use. Retail is harder for two reasons: defining the CGU, because a single store may not generate independent cash inflows once you have click-and-collect and online returns routed through it; and the discount rate, because store-level risk differs from group WACC. Auditors challenge the growth rate beyond year five hardest \u2014 keep it at or below long-run GDP for the market.",
-    "who": "Big Four \u00b7 Majid Al Futtaim \u00b7 Tesco"
+    "q": "A supplier offers 5% discount for payment in 10 days instead of 60. Take it?",
+    "a": "Annualise it. You forgo 5% to accelerate payment by 50 days. The implied annual cost of not taking it is roughly 5/95 \u00d7 365/50 \u2248 38%. Unless your marginal cost of capital exceeds 38%, take the discount \u2014 this is one of the highest-return decisions in working capital. The caveat is liquidity: if taking it forces you onto an overdraft at 9% you still win, but if it breaches a covenant or leaves no buffer, the arithmetic is not the whole answer.",
+    "who": "Walmart \u00b7 Lulu \u00b7 P&G"
    }
   ],
   "interview_soft": [
    {
-    "q": "How do you give feedback to someone more senior than you?",
-    "a": "Ask permission, be specific, and stay on observable behaviour and its effect. 'Can I give you a reaction to how the numbers landed in that meeting? When the forecast changed without the bridge, the room stopped trusting the rest of the pack.' No adjectives about them, one concrete instance, and a suggestion. Then stop talking. Most people either avoid this entirely or overcorrect into confrontation.",
-    "who": "Any senior finance role"
+    "q": "Why do you want to be a CFO, and why in retail?",
+    "a": "Structure: motive, evidence, specificity. Weak answers say 'growth' and 'leadership'. Strong answer names the work: 'I want the seat where capital allocation is decided, not just reported. In FP&A I model the store investment case; the CFO decides which twelve of thirty get built. Retail because the feedback loop is daily \u2014 you see whether the decision worked in the sales line the next week, which is not true in most industries.' Then one proof point with a number attached.",
+    "who": "Standard opener, every CFO search"
    },
    {
-    "q": "How do you influence people who do not report to you?",
-    "a": "Retail finance is almost entirely this \u2014 Buying, Operations and Retail Heads do not report to you. The answer is currency: work out what each function is measured on and frame your ask in their terms. A buyer cares about sell-through and margin, not about your working capital target \u2014 so bring them the SKU-level analysis showing which lines tie up cash without turning. Give people the analysis they cannot build themselves, and influence follows. Name a specific instance and the outcome.",
-    "who": "Landmark Group \u00b7 Alshaya \u00b7 Carrefour"
+    "q": "How do you build a finance team, and how do you handle an underperformer?",
+    "a": "Building: hire for one clear gap, not a generalist; define what good looks like in writing before the first review, not after. Underperformance: the honest answer is that you probably waited too long once, and learned from it. Structure \u2014 early specific feedback with examples, an agreed plan with dates, documented check-ins, and a decision at the end of it either way. The failure mode they are probing for is a manager who avoids the conversation and lets the team carry someone for a year.",
+    "who": "GE \u00b7 Unilever \u00b7 Al-Futtaim"
    }
   ],
   "cfo_field": [
    {
-    "q": "The offer is decided by the non-technical questions.",
-    "a": "Everyone shortlisted can do the technical work \u2014 that is why they were shortlisted. What separates the offer is whether the panel believes you can hold a room, disagree with a CEO without theatre, and be trusted with bad news. Prepare the failure story properly: what you decided, what it cost, what you changed afterwards. A candidate with no failure story reads as someone who has never owned a decision.",
-    "who": "Why strong CVs lose"
+    "q": "The controller who never leaves the close never becomes CFO.",
+    "a": "The job you are promoted out of is 'the person who produces the numbers'. The job you are promoted into is 'the person who decides what to do about them'. If your calendar is 70% close, reconciliation and audit prep, you are demonstrating that you are excellent at the job you already have. Push the close down: a well-run retail group closes in 5 working days, and every day you shave buys back roughly 12 days a year of capacity to spend on decisions instead of production.",
+    "who": "The single most common plateau"
    },
    {
-    "q": "A forecast that is never wrong is a forecast nobody is using.",
-    "a": "Track forecast accuracy as a metric in its own right \u2014 absolute percentage error by month, by category. Under 5% at group level is good in retail; over 15% and the business has stopped believing you. But an FP&A team that is never wrong is sandbagging, and sandbagging is more expensive than error: it prices in a buffer everyone plans around, and the buffer compounds up the hierarchy.",
-    "who": "What separates FP&A from reporting"
+    "q": "The Gulf pays for scarcity, not for years.",
+    "a": "Salary in the region tracks the intersection of skills, not the length of the CV. CA plus genuine FP&A plus retail plus a system implementation is a much rarer combination than any one of them is deep. If you are negotiating, the leverage is in naming the intersection, not in listing the years. And check the structure: basic versus allowances changes gratuity, which is calculated on basic salary alone.",
+    "who": "Compensation structure"
    }
   ],
   "review": {
@@ -808,14 +807,90 @@
    "week": 42,
    "year": 2026,
    "key": "2026-W42",
-   "weekday": 6,
-   "days_left": 1,
+   "weekday": 7,
+   "days_left": 0,
    "is_review_day": true
   },
   "podcasts": {
    "ok": true,
-   "generated_at": "2026-10-17T23:43:33.404453+00:00",
+   "generated_at": "2026-10-18T23:52:21.887291+00:00",
    "episodes": [
+    {
+     "show": "Finance With Sharan",
+     "author": "Finance With Sharan",
+     "category": "Money",
+     "title": "If Jobs Get Tougher and Markets Stay Flat, How Do You Still Get Rich? | Saurabh Mukherjea | FWS",
+     "guest": "",
+     "published": "2026-10-18",
+     "link": "https://www.youtube.com/watch?v=Yr-4f_rxKEc",
+     "takeaways": [
+      "Saurabh explains why India's stock market moves in long cycles, with three to four years of strong bull markets followed by six to seven years of flat returns, and why high-quality companies tend to outperform during the difficult phases.",
+      "He breaks down how Marcellus defines a quality company, using clean accounts, 15 years of high return on capital, and double-digit revenue and earnings growth, and why only around 50 companies in the BSE 500 pass this test."
+     ]
+    },
+    {
+     "show": "Groww",
+     "author": "Groww",
+     "category": "Investing",
+     "title": "Why these 4 stocks corrected sharply?",
+     "guest": "",
+     "published": "2026-10-18",
+     "link": "https://www.youtube.com/watch?v=9mSFTx0blU0",
+     "takeaways": [
+      "This video explains why ITC, Varun Beverages, Bajaj Electricals and MapmyIndia saw sharp stock price corrections despite strong past business performance, breaking down slowing earnings growth, EBITDA margin pressure, PE de-rating and changing market expectations in the Indian stock market, with Q1FY27 results, FMCG and cigarette business trends, consumer demand, competition and valuation frameworks analysed in a neutral, educational format for long-term investors.",
+      "Groww is India\u2019s Best Investment App and the Largest Stock Broker."
+     ]
+    },
+    {
+     "show": "Abhijit Chavda",
+     "author": "Abhijit Chavda",
+     "category": "Geopolitics",
+     "title": "#AskAbhijit 383: Ask Me Anything - Any Topic",
+     "guest": "",
+     "published": "2026-10-18",
+     "link": "https://www.youtube.com/watch?v=x28y4VH-9-o",
+     "takeaways": [
+      "Episode 383 of the #AskAbhijit show: Ask me your best questions in the comments, and I shall answer them.",
+      "Dark Stars to Black Holes: The 250-Year Journey from Impossible Idea to Nobel Prize (The Black Hole Chronicles Book 1) 2."
+     ]
+    },
+    {
+     "show": "The Wire",
+     "author": "The Wire",
+     "category": "Politics",
+     "title": "Urdu \u0906\u0959\u093f\u0930 \u0915\u093f\u0938\u0915\u0940 \u095b\u092c\u093e\u0928 \u0939\u0948 | \u0627\u0631\u062f\u0648 \u0622\u062e\u0631 \u06a9\u0633 \u06a9\u06cc \u0632\u0628\u0627\u0646 \u06c1\u06d2 | Adabistan",
+     "guest": "",
+     "published": "2026-10-18",
+     "link": "https://www.youtube.com/watch?v=us175zzwjRI",
+     "takeaways": [
+      "\u0627\u067e\u0646\u06cc \u062c\u0691\u0648\u06ba \u06a9\u06cc \u062a\u0644\u0627\u0634 \u0645\u06cc\u06ba \u0627\u0631\u062f\u0648 \u0633\u06cc\u06a9\u06be\u0646\u06d2 \u0648\u0627\u0644\u06cc \u0627\u0648\u0631 \u0633\u06a9\u06be \u06a9\u0645\u06cc\u0648\u0646\u0679\u06cc \u0633\u06d2 \u062a\u0639\u0644\u0642 \u0631\u06a9\u06be\u0646\u06d2 \u0648\u0627\u0644\u06cc \u0635\u062d\u0627\u0641\u06cc \u0627\u0648\u0631 \u0645\u0635\u0646\u0641\u06c1 \u0631\u0648\u06c1\u0646\u06cc \u0633\u0646\u06af\u06be \u0633\u06d2 \u0627\u0631\u062f\u0648 \u06a9\u06cc \u0648\u0631\u0627\u062b\u062a \u0627\u0633 \u06a9\u06cc \u0633\u06cc\u0627\u0633\u062a\u060c \u0635\u062d\u0627\u0641\u062a \u0627\u0648\u0631 \u062a\u0642\u0633\u06cc\u0645 \u06a9\u06d2 \u0628\u0639\u062f \u0627\u0631\u062f\u0648 \u06a9\u06cc \u067e\u06c1\u0686\u0627\u0646 \u0627\u0648\u0631 \u0635\u0648\u0631\u062a\u062d\u0627\u0644 \u06a9\u06d2 \u0645\u0648\u0636\u0648\u0639 \u067e\u0631 \u0641\u06cc\u0627\u0636 \u0627\u062d\u0645\u062f \u0648\u062c\u06cc\u06c1\u06c1 \u06a9\u06cc \u0628\u0627\u062a \u0686\u06cc\u062a.."
+     ]
+    },
+    {
+     "show": "ANI Podcast (clips)",
+     "author": "ANI Podcast with Smita Prakash Clips",
+     "category": "Politics",
+     "title": "\u201cAkhilesh Yadav\u2019s Displeasure with the Way Congress Is Behaving Over Seat-Sharing\u201d: Neerja Chowdhury",
+     "guest": "",
+     "published": "2026-10-18",
+     "link": "https://www.youtube.com/watch?v=OOT6XxLsovc",
+     "takeaways": [
+      "\u201cAkhilesh Yadav\u2019s Displeasure with the Way Congress Is Behaving Over Seat-Sharing\u201d: Neerja Chowdhury #ANIPodcast #SmitaPrakash #NeerjaChowdhury #INDIABloc #Elections #Votes #SIR #AkhileshYadav #Congress #RahulGandhi #UttarPradesh Tune in here: linktr.ee/podcastwithsmitaprakash"
+     ]
+    },
+    {
+     "show": "Drishti IAS",
+     "author": "Drishti IAS",
+     "category": "Education",
+     "title": "PIB Current Affairs Weekly Compilation | 11\u201317 October 2026 | UPSC 2027",
+     "guest": "",
+     "published": "2026-10-18",
+     "link": "https://www.youtube.com/watch?v=Ty_YQ_y8xK4",
+     "takeaways": [
+      "In this video, we cover all the important news and updates released by the Press Information Bureau (PIB) between 11 October and 17 October 2026.",
+      "The session highlights key government initiatives, policies, schemes, reports, developments, and other important topics relevant to competitive examinations."
+     ]
+    },
     {
      "show": "Figuring Out",
      "author": "Raj Shamani",
@@ -838,8 +913,8 @@
      "published": "2026-10-17",
      "link": "https://www.youtube.com/watch?v=f5cUWWoIjjs",
      "takeaways": [
-      "The episode is a thought experiment that traces everyday purchases\u2014like biscuits, milk, kirana stores, cold drinks, and phone recharges\u2014to see how many alternatives change who receives your money.",
-      "It looks beyond logos to examine who owns a business, how it makes money, and whether its incentives match yours."
+      "Can you spend \u20b91,000 in a day without paying a business owned by a billionaire?",
+      "I trace ordinary choices - from biscuits and milk packaging to kirana stores, cold drinks and phone recharges - to see how many alternatives really change who gets your money."
      ]
     },
     {
@@ -851,21 +926,8 @@
      "published": "2026-10-17",
      "link": "https://www.youtube.com/watch?v=cBe9pIOhNOo",
      "takeaways": [
-      "India\u2019s inflation number has historically been around 6\u20114%",
-      "The episode explains how to calculate the \u201cright\u201d inflation for you and how to beat that number."
-     ]
-    },
-    {
-     "show": "Abhijit Chavda",
-     "author": "Abhijit Chavda",
-     "category": "Geopolitics",
-     "title": "#AskAbhijit 383: Ask Me Anything - Any Topic",
-     "guest": "",
-     "published": "2026-10-17",
-     "link": "https://www.youtube.com/watch?v=x28y4VH-9-o",
-     "takeaways": [
-      "Episode 383 of the #AskAbhijit show: Ask me your best questions in the comments, and I shall answer them.",
-      "Dark Stars to Black Holes: The 250-Year Journey from Impossible Idea to Nobel Prize (The Black Hole Chronicles Book 1) 2."
+      "India\u2019s Inflation number has historically been around 6-4%, but it never feels this way.",
+      "Almost everywhere we feel the numbers are high!"
      ]
     },
     {
@@ -882,31 +944,6 @@
      ]
     },
     {
-     "show": "The Wire",
-     "author": "The Wire",
-     "category": "Politics",
-     "title": "Candlelight Protest, Justice for Ankita Bhandari by Congress, Hundreds of Policemen Present",
-     "guest": "",
-     "published": "2026-10-17",
-     "link": "https://www.youtube.com/watch?v=zObqVNKKzco",
-     "takeaways": [
-      "The murder of Ankita Bhandari under very suspicious circumstances has again emerged as a contentious point of division between the BJP and the Congress after the union government has appointed Dushyant Kumar Gautam as Sikkim governor.",
-      "Gautam is linked to this murder case in Uttarakhand, which remains under CBI investigation."
-     ]
-    },
-    {
-     "show": "ANI Podcast (clips)",
-     "author": "ANI Podcast with Smita Prakash Clips",
-     "category": "Politics",
-     "title": "\u2018India Has Enough Food, But There Are Warning Signs\u2019 | Quick Take with Smita Prakash",
-     "guest": "Smita Prakash",
-     "published": "2026-10-17",
-     "link": "https://www.youtube.com/watch?v=_xVPfox-8SA",
-     "takeaways": [
-      "\u2018India Has Enough Food, But There Are Warning Signs\u2019 | Quick Take with Smita Prakash #QuickTake #SmitaPrakash #India #Food #Agriculture #Fertiliser #Rainfall #Monsoon Tune in here: linktr.ee/podcastwithsmitaprakash"
-     ]
-    },
-    {
      "show": "The Ranveer Show",
      "author": "Ranveer Allahbadia",
      "category": "Philosophy",
@@ -915,8 +952,8 @@
      "published": "2026-10-17",
      "link": "https://www.youtube.com/watch?v=NL5-8d4DXb8",
      "takeaways": [
-      "In this 549th (overall 1054th) episode of The Ranveer Show, We sit down with Prashant Kapoor, a astrologer, for a fascinating conversation about astrology predictions, mundane astrology, India's future, and the world.",
-      "Prashant Kapoor shares insights from decades of studying Vedic astrology, which he began as a child, and explains how the birth charts of countries, their leaders and the Hindu new year are used to predict wars, stock market moves and major world events."
+      "The birth charts of countries, their leaders and the Hindu new year are used to predict wars, stock market moves and major world events.",
+      "The episode discusses predictions for the stock market and gold, as well as topics like defence, Bollywood and spiritual cinema."
      ]
     },
     {
@@ -929,20 +966,7 @@
      "link": "https://www.youtube.com/watch?v=PZmjYFBAO6U",
      "takeaways": [
       "Sadhguru explores how the traditional belief that women need not worship during their menstrual cycles came about, and whether it is relevant today.",
-      "It is a unique, direct-to-audience solo podcast where Sadhguru speaks straight to you."
-     ]
-    },
-    {
-     "show": "Drishti IAS",
-     "author": "Drishti IAS",
-     "category": "Education",
-     "title": "Can Children Be Banned from Using the Internet? | Supreme Court Explains",
-     "guest": "",
-     "published": "2026-10-17",
-     "link": "https://www.youtube.com/watch?v=vJifIyuf-2U",
-     "takeaways": [
-      "The Supreme Court of India has observed that children have a fundamental right to access and use the internet under Article 21 and Article 19(1)(a) of the Constitution.",
-      "The Court emphasised that protecting children online should not mean imposing blanket restrictions on internet access."
+      "A unique, direct-to-audience solo podcast where Sadhguru speaks straight to you, diving deep into topics ranging from the mystical to current affairs and spiritual insights."
      ]
     },
     {
@@ -954,8 +978,8 @@
      "published": "2026-10-16",
      "link": "https://www.youtube.com/watch?v=ryfLTZQUEd4",
      "takeaways": [
-      "The power sector is booming.",
-      "REC and PFC stocks have fallen sharply from their all-time highs."
+      "\ud83c\udf89 Dussehra Special Offer Starts Today!",
+      "\ud83c\udf89 The power sector is booming, yet REC and PFC stocks have fallen sharply from their all-time highs."
      ]
     },
     {
@@ -980,21 +1004,8 @@
      "published": "2026-10-15",
      "link": "https://www.youtube.com/watch?v=dbM8AMmEdgY",
      "takeaways": [
-      "Selling six ultra\u2011luxury beachfront villas for an average of $1.3\u202fmillion each can generate an 8% net annual yield for investors.",
-      "Kumar\u2019s upcoming projects have a $400,000 entry point, targeting various categories of luxury property investors."
-     ]
-    },
-    {
-     "show": "Groww",
-     "author": "Groww",
-     "category": "Investing",
-     "title": "5 High-Quality Stocks Down Over 25%",
-     "guest": "",
-     "published": "2026-10-15",
-     "link": "https://www.youtube.com/watch?v=O0wqfmNrnYo",
-     "takeaways": [
-      "Can a 25%\u201340% stock correction create an opportunity even when the underlying business is still performing well?",
-      "In this video, we analyse five companies that have corrected sharply but continue to stand out on growth, capital efficiency, market leadership, asset quality or valuation versus peers."
+      "You can buy a $1.3\u202fmillion holiday home in Sri\u202fLanka and earn an 8% annual return in US dollars.",
+      "The entry point for Kumar\u2019s upcoming luxury property projects is $400,000."
      ]
     },
     {
@@ -1006,8 +1017,8 @@
      "published": "2026-10-14",
      "link": "https://www.youtube.com/watch?v=Zs9iCKSarx0",
      "takeaways": [
-      "Nikhil Kamath is the co\u2011founder of Zerodha and hosts the \u201cWTF is\u201d and \u201cPeople By WTF\u201d podcasts.",
-      "Nithin Kamath is the founder and CEO of Zerodha and Rainmatter."
+      "Nithin Kamath, Bryan Johnson, Prashanth, Jitendra & Seema Ep #6 | WTF is Health?",
+      "Nikhil Kamath, Suniel Shetty, Nithin Kamath and Mukesh Bansal #NikhilKamath Co-founder of Zerodha and Gruhas Host of 'WTF is' & 'People By WTF' Podcast #NithinKamath - Founder, CEO Zerodha, Rainmatter #MukeshBansal : Founder Myntra and Cult.fit"
      ]
     },
     {
@@ -1020,20 +1031,7 @@
      "link": "https://www.youtube.com/watch?v=BSB19F6yra4",
      "takeaways": [
       "It is the time to keep 20% of your portfolio in cash.",
-      "This is not investment advice; do your own due diligence."
-     ]
-    },
-    {
-     "show": "Finance With Sharan",
-     "author": "Finance With Sharan",
-     "category": "Money",
-     "title": "The Age-Based Wealth Plan: Emergency Fund, Equity, Bonds & the Road to Passive Income | FWS",
-     "guest": "",
-     "published": "2026-10-14",
-     "link": "https://www.youtube.com/watch?v=xDFuiLIrypA",
-     "takeaways": [
-      "India\u2019s bond market has only about 2% retail participation while mutual funds attract roughly 60% of retail investors.",
-      "The Indian bond market is roughly one\u2011twelfth the size of its equity market."
+      "Are we foreseeing a correction in the market?"
      ]
     },
     {
@@ -1078,67 +1076,66 @@
    ],
    "shows": 20,
    "source": "each channel's public Atom feed",
-   "built_on": "2026-10-17",
+   "built_on": "2026-10-18",
    "age_days": 0.0,
    "is_fallback": false
   },
   "smart_reads": [
    {
-    "source": "The Marginalian",
-    "cat": "ideas",
-    "title": "The Single Most Effective Remedy for Despair: Advice from T.H. White\u2019s Merlyn",
-    "link": "https://www.themarginalian.org/2026/10/17/t-h-white-once-and-future-king-merlyn/",
-    "summary": "\"Learn why the world wags and what wags it. That is the only thing which the mind can never exhaust, never alienate, never be tortured by, never fear or distrust, and never dream of regretting.\"",
-    "date": "Oct 17, 2026",
-    "_sort": "2026-10-17T17:39:25+00:00",
+    "source": "ET Opinion",
+    "cat": "money",
+    "title": "Time to engage smartly with China: Push premium Indian exports",
+    "link": "https://economictimes.indiatimes.com/opinion/et-editorial/time-to-engage-smartly-with-china-push-premium-indian-exports/articleshow/135034092.cms",
+    "summary": "Piyush Goyal has articulated a vision for recalibrating India's economic ties with China, focusing on balanced trade. Both nations are engaging in dialogue to stabilize their economic relations despite existing tensions and imbalances. India aims to improve market access and reduce dependency on Chinese imports through",
+    "date": "Oct 18, 2026",
+    "_sort": "2026-10-18T18:40:45+00:00",
     "smart": {
      "what_happened": [
-      "The article discusses advice attributed to Merlyn in T.H. White\u2019s works.",
-      "It claims this advice is the single most effective remedy for despair."
+      "Piyush Goyal outlined a vision to recalibrate India\u2011China economic ties and pursue balanced trade.",
+      "India will seek greater market access for premium goods and reduce reliance on Chinese imports."
      ],
-     "why_it_matters": "The piece highlights a literary source of guidance that the author suggests can alleviate despair, indicating the potential influence of classic literature on contemporary mental\u2011wellness discussions.",
-     "what_to_watch": "Future publications or commentary that reference Merlyn\u2019s advice as a mental\u2011health strategy.",
-     "headline": "Advice from T.H. White\u2019s Merlyn presented as remedy for despair",
-     "read_seconds": 20
+     "why_it_matters": "The move aims to narrow the trade deficit with China, diversify India's export base, and lessen strategic vulnerability by shifting demand toward higher\u2011value Indian products, which could boost manufacturing and earnings for export\u2011oriented firms.",
+     "what_to_watch": "The change in India's quarterly premium export volume to China.",
+     "headline": "India pushes premium exports to China to rebalance trade",
+     "read_seconds": 26
     }
    },
    {
     "source": "Livemint",
     "cat": "money",
-    "title": "Gold FoFs halt fresh investments, but silver mutual funds remain open: Experts decode the reasons and explain what to do",
-    "link": "https://www.livemint.com/money/personal-finance/gold-fofs-halt-fresh-investments-but-silver-mutual-funds-remain-open-experts-decode-the-reasons-and-explain-what-to-do-11792231444616.html",
-    "summary": "Gold FoFs have restricted fresh investments, while silver funds and gold ETFs remain open. Experts explain the impact of India's import bill, why silver has been treated differently, the risks of ETF premiums, and what investors should consider before choosing either metal.",
-    "date": "Oct 17, 2026",
-    "_sort": "2026-10-17T11:30:38+00:00",
+    "title": "How should you withdraw money after early retirement? Expert explains the 3-bucket strategy for your FIRE corpus",
+    "link": "https://www.livemint.com/money/personal-finance/how-should-you-withdraw-money-after-early-retirement-expert-explains-the-3-bucket-strategy-for-your-fire-corpus-11792336084613.html",
+    "summary": "The three-bucket strategy can help people achieving financial independence and early retirement (FIRE) manage expenses and market volatility. It divides investments into liquid savings for immediate needs, a balanced portfolio for medium-term expenses and equity for long-term growth.",
+    "date": "Oct 18, 2026",
+    "_sort": "2026-10-18T18:08:41+00:00"
+   },
+   {
+    "source": "Livemint Opinion",
+    "cat": "money",
+    "title": "The Indian economy has displayed growth resilience\u2014but fault lines have grown too that can\u2019t be papered over",
+    "link": "https://www.livemint.com/opinion/online-views/rajrishi-singhal-why-india-s-growing-economy-requires-financial-stabilizers-11792056253559.html",
+    "summary": "A storm may be brewing on account of structural weaknesses that mustn\u2019t catch policymakers off-guard. Among our worries should be growing household stashes of gold, the fallout of El Ni\u00f1o, generalized inflation, rising interest rates and a potential AI bubble burst.",
+    "date": "Oct 18, 2026",
+    "_sort": "2026-10-18T10:30:54+00:00",
     "smart": {
      "what_happened": [
-      "Gold fund\u2011of\u2011funds have been restricted from taking new money while silver mutual funds continue to accept investments.",
-      "Gold ETFs stay open, and experts cite India's import bill, differential treatment of silver, and ETF premium risks as key factors."
+      "The Indian economy continued to expand, demonstrating resilience in recent quarters.",
+      "Structural fault lines\u2014including household gold accumulation, El\u202fNi\u00f1o effects, persistent inflation, higher interest rates, and a potential AI bubble burst\u2014have deepened."
      ],
-     "why_it_matters": "The restriction on fresh capital into gold FoFs limits new inflows into the country's largest gold investment vehicle, potentially curbing demand for physical gold and affecting market liquidity, while the continued openness of silver funds and gold ETFs keeps alternative exposure routes available for investors, highlighting the regulatory and market dynamics that can shape metal allocation decisions.",
-     "what_to_watch": "Monitor the next release of India's gold import bill figures for any impact on future investment restrictions.",
-     "headline": "Gold FoFs halt fresh investments, but silver mutual funds remain open",
+     "why_it_matters": "The persistence of growth masks underlying vulnerabilities that could constrain future expansion if left unaddressed. Rising household gold stocks signal precautionary saving behavior, while inflationary pressures and higher rates increase financing costs for businesses and consumers. Additionally, external climate risks from El\u202fNi\u00f1o and speculative excesses in emerging AI investments could trigger shocks, requiring proactive policy responses to safeguard macroeconomic stability.",
+     "what_to_watch": "Monitor the Reserve Bank of India's next policy meeting for any shift in interest rate stance or guidance on inflation management.",
+     "headline": "Indian economy shows growth resilience amid rising structural weaknesses",
      "read_seconds": 22
     }
    },
    {
-    "source": "Economic Times",
-    "cat": "money",
-    "title": "Gold rate today (October 17, 2026): Check 24k, 22k, 20k and 18k gold jewellery prices from IBJA, Malabar Gold &amp; Diamonds, Joyalukkas, Ka",
-    "link": "https://economictimes.indiatimes.com/wealth/invest/gold-rate-today-october-17-2026-check-18k-20k-24k-ibja-gold-price-malabar-gold-kalyan-jewelers-joyalukkas-delhi-hyderabad-bengaluru/articleshow/135008631.cms",
-    "summary": "Gold rate today: On October 17, 2026, a rise in gold prices marked a significant shift for leading jewellery retailers, including Tanishq and Malabar Gold.",
-    "date": "Oct 17, 2026",
-    "_sort": "2026-10-17T06:15:37+00:00",
-    "smart": {
-     "what_happened": [
-      "Gold prices increased on October 17, 2026.",
-      "The rise was noted for major jewellery retailers such as Tanishq and Malabar Gold."
-     ],
-     "why_it_matters": "The increase in gold prices represents a significant shift for leading jewellery retailers, potentially influencing retail pricing strategies, profit margins, and consumer demand for gold jewellery.",
-     "what_to_watch": "Track the gold price movement reported on October 18, 2026, for further changes.",
-     "headline": "Gold prices rise on Oct 17, 2026 affecting Tanishq and Malabar Gold",
-     "read_seconds": 20
-    }
+    "source": "The Marginalian",
+    "cat": "ideas",
+    "title": "Celebrating 20 Years of The Marginalian and the Search for Meaning: Free Livestream This Friday",
+    "link": "https://www.themarginalian.org/2026/10/18/20/",
+    "summary": "At the dawn of my twenties, lonely, destitute, and disoriented by the demands of making a new life in an alien world, I started keeping notes on my search for meaning while working four jobs to pay my way through college. On October 23, 2006, I began sharing my discoveries &#8212; passages from books, links to neurosci",
+    "date": "Oct 18, 2026",
+    "_sort": "2026-10-18T04:33:37+00:00"
    },
    {
     "source": "NYT Well",
@@ -1159,31 +1156,12 @@
     "_sort": "2026-10-16T10:01:00+00:00",
     "smart": {
      "what_happened": [
-      "Video released by Then & NowWatch discusses two landmark studies on emotions.",
-      "The studies question the universality of emotions and challenge colonial stereotypes."
+      "Two landmark studies questioned whether emotions are universal.",
+      "The studies also challenged colonial stereotypes about emotional expression."
      ],
-     "why_it_matters": "The findings suggest that emotional expressions may be shaped by cultural and historical contexts rather than being innate, prompting a reevaluation of psychological theories and the way emotions are interpreted across societies.",
-     "what_to_watch": "Monitor for any follow\u2011up content from Then & NowWatch that expands on the discussed studies.",
-     "headline": "The social construction of emotions",
-     "read_seconds": 20
-    }
-   },
-   {
-    "source": "Livemint Opinion",
-    "cat": "money",
-    "title": "Andy Mukherjee: Rupee defence\u2014It shouldn\u2019t be left to unconventional measures while regular policy tools gather dust",
-    "link": "https://www.livemint.com/opinion/online-views/andy-mukherjee-rupee-defence-temper-tantrum-unconventional-methods-regular-policy-tools-gather-dust-11792140092090.html",
-    "summary": "The Reserve Bank of India (RBI) has of late resorted to a battery of measures to bolster the currency\u2019s value, many of which could exact a high price down the line. It has more straightforward tools at its disposal\u2014it\u2019s time to use them.",
-    "date": "Oct 16, 2026",
-    "_sort": "2026-10-16T08:58:15+00:00",
-    "smart": {
-     "what_happened": [
-      "The Reserve Bank of India has recently deployed a series of unconventional measures to support the rupee.",
-      "Commentators say the central bank should rely on its regular policy tools rather than costly ad\u2011hoc actions."
-     ],
-     "why_it_matters": "Relying on unconventional interventions can create future financial and fiscal burdens and may distort market signals, while the use of standard monetary policy tools would provide clearer guidance on inflation and growth expectations, influencing investor confidence and currency stability.",
-     "what_to_watch": "Watch for the RBI's next policy meeting to see if it adjusts interest rates or conducts open market operations as a primary defence for the rupee.",
-     "headline": "RBI urged to use standard tools for rupee defence",
+     "why_it_matters": "The findings suggest that emotional experiences and expressions may be shaped by cultural contexts rather than being biologically fixed, prompting a reassessment of psychological theories and encouraging more culturally nuanced research approaches.",
+     "what_to_watch": "Upcoming cross\u2011cultural research publications that test the universality of specific emotions.",
+     "headline": "Landmark studies challenge universality of emotions and colonial stereotypes",
      "read_seconds": 20
     }
    },
@@ -1217,39 +1195,48 @@
   ],
   "lichess_games": [
    {
-    "id": "u63BDO8C",
-    "url": "https://lichess.org/u63BDO8C",
+    "id": "i9F2oO2n",
+    "url": "https://lichess.org/i9F2oO2n",
     "result": "Loss",
     "icon": "\u274c",
     "cls": "loss",
     "my_side": "White",
-    "my_rating": 1572,
-    "opp_rating": 1616,
-    "opponent": "Mango_Locooo",
-    "me_diff": -5,
-    "opp_diff": 9,
-    "opening": "Modern Defense",
-    "eco": "B06",
-    "moves": 27,
-    "termination": "Checkmate",
+    "my_rating": 1567,
+    "opp_rating": 1557,
+    "opponent": "chipper_master",
+    "me_diff": -6,
+    "opp_diff": 6,
+    "opening": "Queen's Pawn Game",
+    "eco": "D00",
+    "moves": 30,
+    "termination": "Time Out",
     "speed": "Blitz",
-    "analysis": "Focus on early king safety: after 1.e4\u202fc5\u202f2.Nf3\u202fd6\u202f3.d4\u202fcxd4\u202f4.Nxd4\u202fNf6\u202f5.Nc3\u202fa6, avoid passive moves like \u2026e6; develop bishops quickly and castle before launching attacks. This will reduce tactical vulnerabilities and improve accuracy.",
+    "analysis": "Focus on early piece development: move knights to f3/c3 and bishops to d3/e3 within first\u202f5\u202fmoves; avoid queen\u2011side pawn pushes that waste time.",
     "is_upset": false,
     "is_collapse": false,
     "is_long": false,
     "best_move": {},
     "key_facts": [
-     "Rating gap +44 (1572 vs 1616)",
-     "27 moves \u00b7 Blitz"
+     "Rating gap -10 (1567 vs 1557)",
+     "Endgame from move 28",
+     "30 moves \u00b7 Blitz"
     ],
-    "standout": "",
+    "standout": "Decided on the clock, not the board \u2014 the position was still playable when time ran out.",
     "game_strength": null,
-    "est_fide": 1172,
+    "est_fide": 1167,
     "accuracy": null,
     "acpl": null,
     "analysed": false,
     "_mode": "full",
     "_trend": [
+     {
+      "day": "10/18",
+      "wins": 0,
+      "losses": 1,
+      "draws": 0,
+      "total": 1,
+      "pct": 0
+     },
      {
       "day": "10/17",
       "wins": 1,
@@ -1297,75 +1284,41 @@
       "draws": 0,
       "total": 9,
       "pct": 56
-     },
-     {
-      "day": "10/08",
-      "wins": 15,
-      "losses": 9,
-      "draws": 0,
-      "total": 24,
-      "pct": 62
      }
     ],
     "_yest_counts": {
      "blitz": {
-      "win": 1,
+      "win": 0,
       "loss": 1,
       "draw": 0,
       "rp": {
-       "before": 1566,
-       "after": 1567
+       "before": 1567,
+       "after": 1561
       }
      }
     },
-    "_session_date": "2026-10-17",
+    "_session_date": "2026-10-18",
     "_is_yesterday": true
-   },
-   {
-    "id": "OAZDxeMD",
-    "url": "https://lichess.org/OAZDxeMD",
-    "result": "Win",
-    "icon": "\u2705",
-    "cls": "win",
-    "my_side": "Black",
-    "my_rating": 1566,
-    "opp_rating": 1565,
-    "opponent": "vijji",
-    "me_diff": 6,
-    "opp_diff": -7,
-    "opening": "Philidor Defense",
-    "eco": "C41",
-    "moves": 26,
-    "termination": "Checkmate",
-    "speed": "Blitz",
-    "analysis": "Your endgame technique is leaking points\u2014after move\u202f22 you mis\u2011evaluated a rook\u2011vs\u2011bishop ending, costing ~0.6\u202fpawns; study basic rook\u2011vs\u2011minor\u2011piece endings to convert small advantages reliably.",
-    "is_upset": false,
-    "is_collapse": false,
-    "is_long": false,
-    "best_move": {},
-    "key_facts": [
-     "Rating gap -1 (1566 vs 1565)",
-     "Endgame from move 21",
-     "26 moves \u00b7 Blitz"
-    ],
-    "standout": "Finished by checkmate on move 26 \u2014 you converted rather than letting it drift.",
-    "game_strength": null,
-    "est_fide": 1166,
-    "accuracy": null,
-    "acpl": null,
-    "analysed": false
    }
   ],
   "lichess_summary": {
    "mode": "full",
-   "total": 2,
-   "wins": 1,
+   "total": 1,
+   "wins": 0,
    "losses": 1,
    "draws": 0,
-   "pct": 50,
-   "icon": "\u2696\ufe0f",
-   "score": "1/2",
+   "pct": 0,
+   "icon": "\u274c",
+   "score": "0/1",
    "trend": [
+    {
+     "day": "10/18",
+     "wins": 0,
+     "losses": 1,
+     "draws": 0,
+     "total": 1,
+     "pct": 0
+    },
     {
      "day": "10/17",
      "wins": 1,
@@ -1413,14 +1366,6 @@
      "draws": 0,
      "total": 9,
      "pct": 56
-    },
-    {
-     "day": "10/08",
-     "wins": 15,
-     "losses": 9,
-     "draws": 0,
-     "total": 24,
-     "pct": 62
     }
    ],
    "weak_op": "",
@@ -1428,18 +1373,18 @@
    "upsets": 0,
    "collapses": 0,
    "long_games": 0,
-   "session_summary": "**Verdict:** Your 50\u202f% score masks a glaring opening flaw\u2014your most\u2011played line (e.g., the Sicilian Defense, Najdorf) yields a 30\u202f% win rate and is the source of every loss; drop it immediately and replace it with a solid, low\u2011theory system like the London System (White) or the Caro\u2011Kann (Black) where you already convert >60\u202f% of games. You have no upset wins or collapse losses, which means you\u2019re consistently playing at your current rating ceiling; to break through, start forcing imbalances\u2014play a side\u2011line that takes opponents out of their preparation and forces you to rely on pure calculation. **Action:** Spend the next week mastering the first 12 moves of the London/Caro\u2011Kann, run daily 30\u2011move drills against engines at +0.5\u202fElo, and schedule a 5\u2011game \u201copening\u2011swap\u201d series where you deliberately avoid your weakest opening entirely.",
-   "session_date": "2026-10-17",
+   "session_summary": "You\u2019ve lost your only game, and the defeat came from the opening you chose\u2014meaning you\u2019re playing the very line that gives opponents a free hand. Stop using that opening immediately and replace it with a solid, low\u2011theory system (e.g., the London System as White or the Caro\u2011Kann as Black) while you rebuild basic tactical vision. Spend the next 10\u202fhours reviewing every move of this loss, annotate every mistake, and then drill the resulting positions until you can play them flawlessly under time pressure.",
+   "session_date": "2026-10-18",
    "is_yesterday": true,
    "token_missing": false
   },
   "lichess_puzzle": {
-   "pid": "iUIdn",
-   "rating": 2101,
-   "level": "\ud83d\udd34 stretch",
-   "themes": "Clearance \u00b7 Short \u00b7 Rook Endgame",
-   "tip": "King activity and pawn structure dominate. Technique over tactics here.",
-   "url": "https://lichess.org/training/iUIdn"
+   "pid": "VlHF6",
+   "rating": 1761,
+   "level": "\ud83d\udfe1 at level",
+   "themes": "Middlegame \u00b7 Discovered Check \u00b7 Long",
+   "tip": "Three-move combination. The first move must be forcing.",
+   "url": "https://lichess.org/training/VlHF6"
   }
  }
 }
