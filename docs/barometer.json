@@ -1,6 +1,6 @@
 {
   "ok": true,
-  "generated_at": "2026-10-16T17:42:30+00:00",
+  "generated_at": "2026-10-19T19:30:06+00:00",
   "weights": {
     "trend": 30,
     "breadth": 30,
@@ -26,30 +26,30 @@
       {
         "key": "breadth",
         "label": "Names above their 200-day",
-        "score": 48.1,
+        "score": 48.0,
         "weight": 30,
-        "detail": "474 of 986 hold their 200-day average"
+        "detail": "473 of 985 hold their 200-day average"
       },
       {
         "key": "participation",
         "label": "Advancing today",
-        "score": 60.9,
+        "score": 58.4,
         "weight": 15,
-        "detail": "600 of 986 advanced"
+        "detail": "575 of 985 advanced"
       },
       {
         "key": "volatility",
         "label": "Volatility",
         "score": 70,
         "weight": 15,
-        "detail": "India VIX at 14.02, normal"
+        "detail": "India VIX at 14.06, normal"
       },
       {
         "key": "highs",
         "label": "Names at a 52-week high",
         "score": 0.0,
         "weight": 10,
-        "detail": "0 of 986 at a 52-week high"
+        "detail": "0 of 985 at a 52-week high"
       }
     ],
     "coverage": {
@@ -65,11 +65,11 @@
       "t": "Slightly cheaper",
       "c": ""
     },
-    "counted": 986,
+    "counted": 985,
     "nifty": 23146.150390625,
     "drawdown_pct": 12.24,
-    "above_200dma_pct": 48.1,
-    "vix": 14.024999618530273,
+    "above_200dma_pct": 48.0,
+    "vix": 14.0600004196167,
     "nifty_date": "2026-10-16",
     "vix_date": "2026-10-16"
   },
@@ -367,6 +367,21 @@
       "drawdown_pct": 12.24,
       "above_200dma_pct": 48.1,
       "vix": 14.024999618530273
+    },
+    {
+      "date": "2026-10-19",
+      "score": 41,
+      "band": "mixed",
+      "stage": {
+        "k": "early",
+        "t": "Slightly cheaper",
+        "c": ""
+      },
+      "nifty": 23146.150390625,
+      "nifty_date": "2026-10-16",
+      "drawdown_pct": 12.24,
+      "above_200dma_pct": 48.0,
+      "vix": 14.0600004196167
     }
   ],
   "outcomes": {
