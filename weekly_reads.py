@@ -40,6 +40,7 @@ import os
 import pathlib
 import random
 import re
+import sys
 import time
 from datetime import date, datetime, timedelta, timezone
 
@@ -469,6 +470,18 @@ def unverified_numbers(text: str, allowed: list[float]) -> list[str]:
 # reason string; any reason sends the study back for a rewrite.
 _FRACTIONS = {"half": 50, "one-third": 33, "two-thirds": 67, "three-quarters": 75,
               "four-fifths": 80, "one-fifth": 20, "one-quarter": 25}
+_WORDS = {"one": 1, "two": 2, "three": 3, "four": 4, "five": 5, "six": 6, "seven": 7, "eight": 8, "nine": 9, "ten": 10,
+          "eleven": 11, "twelve": 12, "fifteen": 15, "twenty": 20, "thirty": 30, "forty": 40, "fifty": 50, "sixty": 60,
+          "seventy": 70, "eighty": 80, "ninety": 90}
+
+
+def _num(x: str):
+    try:
+        return float(x)
+    except ValueError:
+        return _WORDS.get(x.lower())
+
+
 _ALLEGATION = re.compile(
     r"manipulat|fraud|siphon|round[- ]?trip|window[- ]?dress|cook(?:ed|ing) the books|"
     r"embezzl|money laundering|accounting trick", re.I)
@@ -485,7 +498,7 @@ def claim_problems(text: str) -> list[str]:
         want = "th" if 10 <= n_ % 100 <= 20 else {1: "st", 2: "nd", 3: "rd"}.get(n_ % 10, "th")
         if m.group(2) != want:
             out.append(f"ordinal '{m.group(0)}' should end in '{want}'")
-    for m in re.finditer(r"(?:higher|lower|more|greater) than\s+(\d+(?:\.\d+)?)\s*%", t, re.I):
+    for m in re.finditer(r"(?:higher|lower|more|greater) than\s+(\d+(?:\.\d+)?)\s*%\s+of\b", t, re.I):     # a share OF something
         if float(m.group(1)) >= 100:
             out.append(f"'{m.group(0)}' is impossible for a share of observations")
     for sent in re.split(r"(?<=[.!?\n])\s+", t):
@@ -501,19 +514,99 @@ def claim_problems(text: str) -> list[str]:
                 out.append(f"percentile {p} (below its own median) described as expensive against its own history")
         mm = re.search(r"margin of\s+(\d+(?:\.\d+)?)\s*%", sent, re.I)
         if mm:
+            margins = [float(x) for x in re.findall(r"margin (?:of\s+)?(\d+(?:\.\d+)?)\s*%", sent, re.I)] or [float(mm.group(1))]
             for word, pct in _FRACTIONS.items():
-                if re.search(r"\b" + word.replace("-", "[- ‑]") + r"\b", sent, re.I) and abs(float(mm.group(1)) - pct) > 6:
-                    out.append(f"margin {mm.group(1)}% described as {word}")
+                f_ = re.search(r"(more than|over|at least|less than|under|nearly|almost)?\s*\b" + word.replace("-", "[- ‑]") + r"\b", sent, re.I)
+                if not f_:
+                    continue
+                q = (f_.group(1) or "").lower()
+                fits = any((q in ("more than", "over", "at least") and v > pct) or (q in ("less than", "under") and v < pct)
+                           or (q in ("nearly", "almost") and pct - 6 <= v <= pct) or abs(v - pct) <= 6 for v in margins)
+                if not fits:
+                    out.append(f"margin {mm.group(1)}% described as {(q + ' ' if q else '')}{word}")
+        # A02 (alpha audit, 21 Oct 2026): "69.9% net margin ... roughly seven paise" shipped. A rupee figure in paise must
+        # be the percentage it restates: X% of a rupee is X paise, never X/10.
+        pz = [m for m in re.finditer(r"\b(\d+(?:\.\d+)?|" + "|".join(_WORDS) + r")\s+paise\b", sent, re.I)]
+        pcts = [float(x) for x in re.findall(r"(\d+(?:\.\d+)?)\s*%", sent)]
+        if pz and pcts:
+            for m in pz:
+                v = _num(m.group(1))
+                if v is not None and not any(abs(v - p_) <= max(1.5, p_ * 0.05) for p_ in pcts):
+                    out.append(f"'{m.group(0)}' does not restate any percentage in the sentence ({', '.join(f'{x:g}%' for x in pcts)})")
+        # A percentile is a RANK. Below 50 is below the median and says nothing about the average.
+        pm2 = re.search(r"(\d+)\s*(?:st|nd|rd|th|%)?\s*percentile", sent, re.I)
+        if pm2:
+            p2 = int(pm2.group(1))
+            if re.search(r"\b(average|mean)\b", sent, re.I) and not re.search(r"not (the )?(same as )?(an? )?(average|mean)", sent, re.I):
+                out.append(f"percentile {p2} described against an average; a percentile is a rank, not an average")
+            if p2 < 50 and re.search(r"\babove (its |the )?(own )?(historical )?(median|middle)", sent, re.I):
+                out.append(f"percentile {p2} described as above the median")
+            if p2 > 50 and re.search(r"\bbelow (its |the )?(own )?(historical )?(median|middle)", sent, re.I):
+                out.append(f"percentile {p2} described as below the median")
+        # A change in a margin is in percentage points, and a negative figure cannot "grow".
+        if re.search(r"\bmargins?\b[^.]{0,30}\b(rose|fell|expanded|contracted|improved|widened|narrowed)\s+(by\s+)?\d+(\.\d+)?\s*%", sent, re.I):
+            out.append("a change in a margin given in % (it is percentage points)")
+        if re.search(r"\b(grew|rose|increased|gained|up)\s+(by\s+)?[-\u2212]\d", sent, re.I) or re.search(r"\b(fell|declined|dropped|down)\s+(by\s+)?[-\u2212]\d", sent, re.I):
+            out.append("a signed figure after a direction word (double negative or reversed sign)")
     if _ALLEGATION.search(t):
         out.append("allegation language (" + _ALLEGATION.search(t).group(0) + ") with no source in the dossier")
-    if re.search(r"(billed|invoiced)\s+quarterly|deducted from the investor", t, re.I):
-        out.append("fund fees are accrued daily in NAV, not billed to the investor")
+    for sent in re.split(r"(?<=[.!?\n])\s+", t):
+        if re.search(r"(billed|invoiced)\s+quarterly|deducted from the investor", sent, re.I) and re.search(r"\b(fund|NAV|AMC|scheme|expense ratio|AUM|investors?'?s?)\b", sent, re.I):
+            out.append("fund fees are accrued daily in NAV, not billed to the investor")
+            break
     return out
 
 
 REQUIRED = ["## In one line", "## How it actually makes money", "## The economics",
             "## The moat", "## What the numbers say right now",
             "## What could go wrong", "## What to watch next", "## Say it out loud"]
+
+
+# Industries whose business model the generic dossier describes badly. An asset manager's revenue is fees on assets it
+# manages; its "cash conversion" and "capital employed" are not working-capital stories, and fund portfolio cash flows are
+# not the company's. Studies of these need a primary-filing review before they can be called checked (A02).
+_REVIEW_INDUSTRIES = re.compile(r"asset management|funds management|capital markets|insurance|exchange|depositor|broker", re.I)
+_MODEL_CLAIMS = re.compile(r"working capital|capital employed|cash conversion|portfolio cash|fund flows? (into|of) the company", re.I)
+
+
+def review_problems(study: dict) -> list[str]:
+    """Everything that keeps a study from being called machine-checked: interpretation errors, plus business-model
+    statements in an industry that needs a primary-filing review."""
+    out = list(dict.fromkeys(claim_problems(study.get("study") or "")))
+    # the screen labels most of these only "Financial Services", so the company's own name and the study's description
+    # of the business decide too
+    ind = f"{study.get('industry') or ''} {study.get('sector') or ''} {study.get('name') or ''}"
+    asset_like = _REVIEW_INDUSTRIES.search(ind) or re.search(r"assets under management|\bAUM\b|\bAMC\b|mutual fund", study.get("study") or "", re.I)
+    if asset_like and re.search(r"financ", ind, re.I) and _MODEL_CLAIMS.search(study.get("study") or ""):
+        out.append(f"business-model statement ({_MODEL_CLAIMS.search(study['study']).group(0)}) for a {study.get('industry') or 'financial'} company needs a primary-filing review")
+    return out
+
+
+def review_published(path: Path = None) -> int:
+    """Re-check every published study with the current checks. A study that fails is marked under review, with its
+    reasons, and logged once in the edition file's corrections list. Nothing is deleted and no prose is rewritten here:
+    a correction is a new, versioned study, never an edit in place."""
+    path = path or OUT
+    d = json.loads(path.read_text())
+    today = date.today().isoformat()
+    corr = d.setdefault("corrections", [])
+    logged = {(c.get("week"), c.get("sym")) for c in corr}
+    marked = 0
+    for e in d.get("editions") or []:
+        for s_ in e.get("studies") or []:
+            probs = review_problems(s_)
+            prev = (s_.get("review") or {}).get("status")
+            s_["review"] = {"status": "under_review" if probs else "machine_checked", "problems": probs,
+                            "checked_at": today if probs or prev != "machine_checked" else (s_.get("review") or {}).get("checked_at", today),
+                            "reviewed_by_person": False}
+            if probs:
+                marked += 1
+                if (e.get("week"), s_.get("sym")) not in logged:
+                    corr.insert(0, {"date": today, "week": e.get("week"), "sym": s_.get("sym"), "status": "under_review",
+                                    "issue": "; ".join(probs), "action": "Marked under review. A corrected study will be published as a new version; this text is kept unchanged."})
+    path.write_text(json.dumps(d, indent=2), encoding="utf-8")
+    log.info(f"review: {marked} published studies under review")
+    return 0
 
 
 def study_for(r: dict) -> dict | None:
@@ -562,6 +655,9 @@ def study_for(r: dict) -> dict | None:
         else:
             log.warning(f"{sym}: interpretation errors survive a rewrite — rejected")
             return None
+    if review_problems({"study": text, "industry": r.get("ind"), "sector": r.get("sector"), "name": r.get("name")})[len(claim_problems(text)):]:
+        log.warning(f"{sym}: business-model statements for a {r.get('ind')} company need a primary-filing review — rejected")
+        return None
     bad = unverified_numbers(text, nums)
     if len(bad) > MAX_UNVERIFIED:
         log.warning(f"{sym}: {len(bad)} unverifiable numbers {bad[:6]} — rewriting once")
@@ -590,6 +686,7 @@ def study_for(r: dict) -> dict | None:
         "study": text,
         "model": GROQ_MODEL,
         "approximate_figures": bad,
+        "review": {"status": "machine_checked", "problems": [], "checked_at": date.today().isoformat(), "reviewed_by_person": False},
     }
 
 
@@ -756,4 +853,6 @@ def main() -> int:
 
 
 if __name__ == "__main__":
+    if "--review-published" in sys.argv:
+        raise SystemExit(review_published())
     raise SystemExit(main())
