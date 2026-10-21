@@ -101,15 +101,19 @@ def new_message(s: dict, st: dict) -> str:
     h = ((st.get("trades") or {}).get("holdout") or {}).get("expectancy_r")
     holdout = f"; holdout trades {h:+.2f}R each after costs, on data it never saw" if isinstance(h, (int, float)) else ""
     also = f"\nAlso selected by {md(', '.join(s['also_names']))}" if s.get("also_names") else ""
+    if len(t) >= 3:
+        levels = f"T1 {md(rupees(t[0]))} \\({md(r[0])}R\\) · T2 {md(rupees(t[1]))} \\({md(r[1])}R\\) · T3 {md(rupees(t[2]))} \\({md(r[2])}R\\)\n"
+    else:   # Swing v2 (alpha, 21 Oct 2026): half at T1, the rest at T2, with a profit lock and a trail in between
+        levels = f"T1 {md(rupees(t[0]))} \\({md(r[0])}R, sell half\\) · T2 {md(rupees(t[1]))} \\({md(r[1])}R, the rest\\)\n"
     return (
         f"🔔 *{md(s['engine_name'])} · {md(s['sym'])}* — {md(s['setup'])} \\({md(s['horizon'])}\\)\n"
         f"{md(s['name'])}\n"
         f"Signal close {md(rupees(s['ref_price']))} \\(research plan enters at the next open\\) · Stop {md(rupees(s['sl']))} \\(−{md(s['risk_pct'])}%\\)\n"
-        f"T1 {md(rupees(t[0]))} \\({md(r[0])}R\\) · T2 {md(rupees(t[1]))} \\({md(r[1])}R\\) · T3 {md(rupees(t[2]))} \\({md(r[2])}R\\)\n"
+        f"{levels}"
         f"Time limit {md(s['max_hold_days'])} sessions"
         f"{bench}{also}\n"
-        f"Engine: ranking {md(str(st.get('ranking_status', st.get('status', ''))).lower())}{md(holdout)}\n"
-        f"{md(ALPHA)}/company/?s={md(s['sym'])}\n"
+        f"Engine: {md(str(st.get('ranking_status', st.get('status', ''))).lower())}{md(holdout)}\n"
+        f"{md(ALPHA)}/company/{md(s['sym'])}/\n"
         f"_A plan, not advice\\. The stop is the plan; the targets are the hope\\._"
     )
 
@@ -119,6 +123,14 @@ def event_message(s: dict, ev: dict) -> str | None:
     link = f"\n{md(ALPHA)}/engines/"
     if k == "entry":
         return f"▶️ *{sym}* entered at {md(rupees(p))} \\({md(s['engine_name'])}\\)\\. Stop {md(rupees(s['sl']))}{link}"
+    if k in ("lock", "trail"):            # Swing v2: the remaining half stopped after T1, at the profit lock or the trailing stop
+        return f"🔒 *{sym}* stopped at {md(rupees(p))} after T1 — {'the profit lock' if k == 'lock' else 'the trailing stop'}; the trade closes in profit{link}"
+    if k == "t2" and len(s.get("targets") or []) == 2:
+        return f"✅ *{sym}* reached T2 at {md(rupees(p))} — the remaining half is sold; the trade ends{link}"
+    if k == "t1" and len(s.get("targets") or []) == 2:
+        lock = s.get("stop_now")
+        to = md(rupees(lock)) if lock else "entry \\+ 0\\.5R"      # no backslash inside an f-string expression: Python 3.11
+        return f"✅ *{sym}* reached T1 at {md(rupees(p))} — half sold; the stop on the rest moves to {to}, a locked profit{link}"
     if k in ("t1", "t2", "t3"):
         n = k[1]
         move = {"1": f"stop on the rest moves to entry {md(rupees(s.get('entry')))}", "2": f"stop on the rest moves to T1 {md(rupees(s['targets'][0]))}", "3": "all three targets reached"}[n]
@@ -154,7 +166,10 @@ def plan(feed: dict, state: dict) -> list[tuple[str, str, str]]:
     seen = state.setdefault("signals", {})
     for s in feed.get("signals", []):
         st = engines.get(s["engine"], {})
-        if not st.get("alertable") or st.get("status") not in ALERT_STATUSES:
+        # Swing v2 (schema alpha-signals/2*) carries one verdict, `alertable` (holdout month-clustered t >= 2); the old
+        # five-engine feed also needed a ranking status from ALERT_STATUSES
+        v2 = str(feed.get("schema", "")).startswith("alpha-signals/2")
+        if not st.get("alertable") or (not v2 and st.get("status") not in ALERT_STATUSES):
             continue            # the site decides which engines may buzz a phone (holdout R above its bar); this only double-checks
         rec = seen.get(s["id"])
         if rec is None:

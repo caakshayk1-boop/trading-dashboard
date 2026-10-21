@@ -310,3 +310,33 @@
 2026-09-04 12:27:11,859 INFO Scheduler: daily refresh at 06:00 MYT (22:00 UTC)
 2026-09-04 12:27:11,860 INFO THE DAILY SIGNAL — news.askakshay.com — started
 2026-09-04 12:27:11,998 WARNING stock screen: hiding it — newest build is 22.6d old
+2026-10-21 04:03:56,728 WARNING expectancy: ledger query failed (no such table: all_signals) — using defaults
+2026-10-21 04:03:56,740 INFO screen: narrative — 1 written, 0 rejected by the guard, 0 no answer from the model
+2026-10-21 04:03:56,740 INFO screen: narrative — 1 written, 0 rejected by the guard, 0 no answer from the model
+2026-10-21 04:03:56,740 INFO screen: narrative for TCS rejected — numbers not in the facts: ['31']
+2026-10-21 04:03:56,740 INFO screen: narrative — 0 written, 1 rejected by the guard, 0 no answer from the model
+2026-10-21 04:03:56,740 INFO screen: narrative for TCS rejected — advice language
+2026-10-21 04:03:56,740 INFO screen: narrative — 0 written, 1 rejected by the guard, 0 no answer from the model
+2026-10-21 04:03:56,740 INFO screen: no AI callable — narrative skipped, SWOT unaffected
+2026-10-21 04:03:56,740 INFO screen: narrative — 0 written, 0 rejected by the guard, 0 no answer from the model
+2026-10-21 04:03:56,851 WARNING /screen: cache read failed — No module named 'feedparser'
+2026-10-21 04:04:00,369 WARNING expectancy: ledger query failed (no such table: all_signals) — using defaults
+2026-10-21 04:04:00,381 INFO screen: narrative — 1 written, 0 rejected by the guard, 0 no answer from the model
+2026-10-21 04:04:00,381 INFO screen: narrative — 1 written, 0 rejected by the guard, 0 no answer from the model
+2026-10-21 04:04:00,381 INFO screen: narrative for TCS rejected — numbers not in the facts: ['31']
+2026-10-21 04:04:00,381 INFO screen: narrative — 0 written, 1 rejected by the guard, 0 no answer from the model
+2026-10-21 04:04:00,381 INFO screen: narrative for TCS rejected — advice language
+2026-10-21 04:04:00,381 INFO screen: narrative — 0 written, 1 rejected by the guard, 0 no answer from the model
+2026-10-21 04:04:00,381 INFO screen: no AI callable — narrative skipped, SWOT unaffected
+2026-10-21 04:04:00,381 INFO screen: narrative — 0 written, 0 rejected by the guard, 0 no answer from the model
+2026-10-21 04:04:00,400 WARNING /screen: cache read failed — No module named 'feedparser'
+2026-10-21 04:04:23,955 WARNING expectancy: ledger query failed (no such table: all_signals) — using defaults
+2026-10-21 04:04:23,965 INFO screen: narrative — 1 written, 0 rejected by the guard, 0 no answer from the model
+2026-10-21 04:04:23,965 INFO screen: narrative — 1 written, 0 rejected by the guard, 0 no answer from the model
+2026-10-21 04:04:23,965 INFO screen: narrative for TCS rejected — numbers not in the facts: ['31']
+2026-10-21 04:04:23,965 INFO screen: narrative — 0 written, 1 rejected by the guard, 0 no answer from the model
+2026-10-21 04:04:23,965 INFO screen: narrative for TCS rejected — advice language
+2026-10-21 04:04:23,965 INFO screen: narrative — 0 written, 1 rejected by the guard, 0 no answer from the model
+2026-10-21 04:04:23,965 INFO screen: no AI callable — narrative skipped, SWOT unaffected
+2026-10-21 04:04:23,965 INFO screen: narrative — 0 written, 0 rejected by the guard, 0 no answer from the model
+2026-10-21 04:04:23,982 WARNING /screen: cache read failed — No module named 'feedparser'
