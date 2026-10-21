@@ -103,7 +103,7 @@ def new_message(s: dict, st: dict) -> str:
     also = f"\nAlso selected by {md(', '.join(s['also_names']))}" if s.get("also_names") else ""
     if len(t) >= 3:
         levels = f"T1 {md(rupees(t[0]))} \\({md(r[0])}R\\) · T2 {md(rupees(t[1]))} \\({md(r[1])}R\\) · T3 {md(rupees(t[2]))} \\({md(r[2])}R\\)\n"
-    else:   # Swing v2 (alpha, 21 Oct 2026): half at T1, the rest at T2, with a profit lock and a trail in between
+    else:   # Swing v2 (alpha, 21 Oct 2026): half at T1, the rest at T2, with the stop raised above entry and a trail in between
         levels = f"T1 {md(rupees(t[0]))} \\({md(r[0])}R, sell half\\) · T2 {md(rupees(t[1]))} \\({md(r[1])}R, the rest\\)\n"
     return (
         f"🔔 *{md(s['engine_name'])} · {md(s['sym'])}* — {md(s['setup'])} \\({md(s['horizon'])}\\)\n"
@@ -123,14 +123,23 @@ def event_message(s: dict, ev: dict) -> str | None:
     link = f"\n{md(ALPHA)}/engines/"
     if k == "entry":
         return f"▶️ *{sym}* entered at {md(rupees(p))} \\({md(s['engine_name'])}\\)\\. Stop {md(rupees(s['sl']))}{link}"
-    if k in ("lock", "trail"):            # Swing v2: the remaining half stopped after T1, at the profit lock or the trailing stop
-        return f"🔒 *{sym}* stopped at {md(rupees(p))} after T1 — {'the profit lock' if k == 'lock' else 'the trailing stop'}; the trade closes in profit{link}"
+    if k in ("lock", "trail"):            # Swing v2: the remaining half stopped after T1, at the raised stop or the trailing stop
+        # The overall result is worked out from the fills, never assumed: a gap through the raised stop fills at the open,
+        # below it, and can take the whole trade to a loss (alpha audit A14).
+        entry, sl = s.get("entry"), s.get("sl")
+        fills = [e for e in (s.get("events") or []) if e.get("kind") != "entry" and isinstance(e.get("price"), (int, float))]
+        res = ""
+        if isinstance(entry, (int, float)) and isinstance(sl, (int, float)) and entry > sl and fills:
+            r = sum((e["price"] - entry) * (e.get("fraction") or 0) for e in fills) / (entry - sl)
+            res = f"; overall {md(f'{r:+.2f}R')} before costs" if abs(r) >= 0.005 else "; overall flat before costs"
+        what = "the raised stop" if k == "lock" else "the trailing stop"
+        return f"🔒 *{sym}* stopped at {md(rupees(p))} after T1 — {what}{res}{link}"
     if k == "t2" and len(s.get("targets") or []) == 2:
         return f"✅ *{sym}* reached T2 at {md(rupees(p))} — the remaining half is sold; the trade ends{link}"
     if k == "t1" and len(s.get("targets") or []) == 2:
         lock = s.get("stop_now")
         to = md(rupees(lock)) if lock else "entry \\+ 0\\.5R"      # no backslash inside an f-string expression: Python 3.11
-        return f"✅ *{sym}* reached T1 at {md(rupees(p))} — half sold; the stop on the rest moves to {to}, a locked profit{link}"
+        return f"✅ *{sym}* reached T1 at {md(rupees(p))} — half sold; the stop on the rest is raised to {to}, above entry \\(a gap through it can still fill lower\\){link}"
     if k in ("t1", "t2", "t3"):
         n = k[1]
         move = {"1": f"stop on the rest moves to entry {md(rupees(s.get('entry')))}", "2": f"stop on the rest moves to T1 {md(rupees(s['targets'][0]))}", "3": "all three targets reached"}[n]

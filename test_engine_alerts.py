@@ -64,7 +64,7 @@ weird = sig("M&M", name="Mahindra_&_Mahindra (1)*", sl=95.0)
 m = A.new_message(weird, {"status": "LEANING POSITIVE"})
 check("awkward names are escaped", "Mahindra\\_&\\_Mahindra \\(1\\)\\*" in m, m[:200])
 
-# Swing v2 (alpha, 21 Oct 2026): one engine, alertable is the whole verdict, two targets, profit lock and trail
+# Swing v2 (alpha, 21 Oct 2026): one engine, alertable is the whole verdict, two targets, a raised stop and a trail
 v2 = {"schema": "alpha-signals/2-compat", "data_through": "2026-10-21", "engines": {"swing": {"key": "swing", "status": "GATE OFF", "alertable": False}},
       "signals": [{**sig("SWG", engine="swing", status="pending"), "targets": [110.0, 120.0], "r_multiples": [2.0, 4.0], "engine_name": "Swing", "setup": "Pullback"}]}
 check("v2 feed: alerts off means nothing is announced", A.plan(v2, {}) == [])
@@ -73,6 +73,11 @@ t2 = A.plan(v2on, {})
 check("v2 feed: alertable alone lets a new plan through", len(t2) == 1 and "sell half" in t2[0][2], t2)
 lock = {**v2on["signals"][0], "status": "closed", "stop_now": 102.5, "events": [{"kind": "entry", "date": "2026-10-22", "price": 100.0, "fraction": 1.0}, {"kind": "t1", "date": "2026-10-23", "price": 110.0, "fraction": 0.5}, {"kind": "lock", "date": "2026-10-24", "price": 102.5, "fraction": 0.5}]}
 msgs = [A.event_message(lock, e) for e in lock["events"]]
-check("v2 events: T1 says half sold and a locked profit; the lock exit says it closes in profit", "half sold" in msgs[1] and "locked profit" in msgs[1] and "profit lock" in msgs[2], msgs)
+check("v2 events: T1 says half sold and the stop is raised, without promising a profit", "half sold" in msgs[1] and "raised" in msgs[1] and "profit" not in msgs[1], msgs)
+check("v2 events: the raised-stop exit states the overall result from the fills", "raised stop" in msgs[2] and "+1\\.25R" in msgs[2], msgs[2])
+gap = {**lock, "events": lock["events"][:2] + [{"kind": "lock", "date": "2026-10-24", "price": 88.0, "fraction": 0.5}]}
+gm = A.event_message(gap, gap["events"][2])
+check("A14: a gap below the raised stop is reported as the loss it is, never 'closes in profit'", "−" in gm or "\\-" in gm or "-0" in gm, gm)
+check("no alert says 'profit lock' or 'locked profit'", not any(w in m for m in msgs + [gm] for w in ("profit lock", "locked profit", "closes in profit")))
 print(f"\n{ok} passed · {fail} failed")
 sys.exit(1 if fail else 0)
