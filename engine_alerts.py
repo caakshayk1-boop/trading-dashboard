@@ -129,7 +129,8 @@ def event_message(s: dict, ev: dict) -> str | None:
         return f"✅ *{sym}* reached T2 at {md(rupees(p))} — the remaining half is sold; the trade ends{link}"
     if k == "t1" and len(s.get("targets") or []) == 2:
         lock = s.get("stop_now")
-        return f"✅ *{sym}* reached T1 at {md(rupees(p))} — half sold; the stop on the rest moves to {md(rupees(lock)) if lock else 'entry \\+ 0\\.5R'}, a locked profit{link}"
+        to = md(rupees(lock)) if lock else "entry \\+ 0\\.5R"      # no backslash inside an f-string expression: Python 3.11
+        return f"✅ *{sym}* reached T1 at {md(rupees(p))} — half sold; the stop on the rest moves to {to}, a locked profit{link}"
     if k in ("t1", "t2", "t3"):
         n = k[1]
         move = {"1": f"stop on the rest moves to entry {md(rupees(s.get('entry')))}", "2": f"stop on the rest moves to T1 {md(rupees(s['targets'][0]))}", "3": "all three targets reached"}[n]
