@@ -179,6 +179,25 @@ def _():
     S.FETCH_REPORT.clear()
 
 
+@check("price and levels are TRADED prices; returns stay dividend-adjusted (MRPL, 19 Oct 2026)")
+def _():
+    n = 260
+    idx = pd.date_range("2025-10-01", periods=n, freq="B")
+    close = pd.Series([150.0 + i * 0.09 for i in range(n - 1)] + [173.72], index=idx)
+    adj = close * (170.72 / 173.72)                       # a Rs 3 dividend ahead: every bar scaled
+    raw = {"Open": close, "High": close + 1, "Low": close - 1, "Close": close, "Adj Close": adj, "Volume": close * 0 + 1e6}
+    series = S._adjusted(raw)
+    px = {"c": series["Close"].tolist(), "cr": series["CloseRaw"].tolist(), "h": series["High"].tolist(), "l": series["Low"].tolist(),
+          "hr": series["HighRaw"].tolist(), "lr": series["LowRaw"].tolist(), "v": series["Volume"].tolist(), "last_date": "2026-10-19"}
+    t = S.technicals(px, None)
+    assert t["price"] == 173.72, t["price"]
+    assert abs(t["sma20"] - sum(close.iloc[-20:]) / 20) < 1e-6, t["sma20"]
+    assert abs(t["high52"] - float(close.iloc[-250:].max() + 1)) < 1e-6
+    assert abs(t["r1d"] - (close.iloc[-1] / close.iloc[-2] - 1)) < 1e-9, "a constant factor leaves a return unchanged"
+    old = S.technicals({k: v for k, v in px.items() if k != "cr"}, None)
+    assert abs(old["price"] - 170.72) < 1e-6, "without the traded series it falls back to the adjusted close"
+
+
 def main() -> int:
     passed = failed = 0
     for name, fn in CHECKS:
