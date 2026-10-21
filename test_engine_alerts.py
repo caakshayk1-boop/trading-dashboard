@@ -32,7 +32,7 @@ check("only an engine the site marks alertable alerts (a good label alone is not
 msg = todo[0][2]
 check("a new signal states the plan", all(x in msg for x in ("Signal close", "next open", "Stop", "T1", "T2", "T3", "Time limit")))
 check("it names the benchmark and how it is behaving", "Nifty IT" in msg and "uptrend" in msg and "leading the Nifty" in msg)
-check("it links to alpha only", "alpha\\.askakshay\\.com/company/?s=AAA" in msg and "signal\\.askakshay" not in msg)
+check("it links to alpha only, at the canonical company address", "alpha\\.askakshay\\.com/company/AAA/" in msg and "signal\\.askakshay" not in msg)
 check("it says plan, not advice", "not advice" in msg)
 
 weak = {**feed, "signals": [sig("DDD", bench_ok=False)]}
@@ -63,5 +63,16 @@ check("a trade that closed unseen stays silent", A.plan(feed4, st4) == [] and "b
 weird = sig("M&M", name="Mahindra_&_Mahindra (1)*", sl=95.0)
 m = A.new_message(weird, {"status": "LEANING POSITIVE"})
 check("awkward names are escaped", "Mahindra\\_&\\_Mahindra \\(1\\)\\*" in m, m[:200])
+
+# Swing v2 (alpha, 21 Oct 2026): one engine, alertable is the whole verdict, two targets, profit lock and trail
+v2 = {"schema": "alpha-signals/2-compat", "data_through": "2026-10-21", "engines": {"swing": {"key": "swing", "status": "GATE OFF", "alertable": False}},
+      "signals": [{**sig("SWG", engine="swing", status="pending"), "targets": [110.0, 120.0], "r_multiples": [2.0, 4.0], "engine_name": "Swing", "setup": "Pullback"}]}
+check("v2 feed: alerts off means nothing is announced", A.plan(v2, {}) == [])
+v2on = {**v2, "engines": {"swing": {"key": "swing", "status": "GATE OFF", "alertable": True}}}
+t2 = A.plan(v2on, {})
+check("v2 feed: alertable alone lets a new plan through", len(t2) == 1 and "sell half" in t2[0][2], t2)
+lock = {**v2on["signals"][0], "status": "closed", "stop_now": 102.5, "events": [{"kind": "entry", "date": "2026-10-22", "price": 100.0, "fraction": 1.0}, {"kind": "t1", "date": "2026-10-23", "price": 110.0, "fraction": 0.5}, {"kind": "lock", "date": "2026-10-24", "price": 102.5, "fraction": 0.5}]}
+msgs = [A.event_message(lock, e) for e in lock["events"]]
+check("v2 events: T1 says half sold and a locked profit; the lock exit says it closes in profit", "half sold" in msgs[1] and "locked profit" in msgs[1] and "profit lock" in msgs[2], msgs)
 print(f"\n{ok} passed · {fail} failed")
 sys.exit(1 if fail else 0)
