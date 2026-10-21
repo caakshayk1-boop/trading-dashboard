@@ -385,7 +385,7 @@ def extend_universe(core: list[dict], target: int = UNIVERSE_TARGET) -> list[dic
     ranked = []
     for c in cand:
         b = px.get(c["symbol"]) or {}
-        closes, vols = b.get("c") or [], b.get("v") or []
+        closes, vols = b.get("cr") or b.get("c") or [], b.get("v") or []
         n = min(len(closes), len(vols))
         if n < 20:                     # too little history to judge liquidity
             continue
@@ -663,6 +663,9 @@ def fetch_prices(symbols: list[str], period: str = "4y") -> dict[str, dict]:
 
                 rec = {
                     "c": [float(x) for x in series["Close"].tolist()],
+                    # The closes that TRADED, for every price LEVEL (price, averages, breakouts, the
+                    # ladder): MRPL on 19 Oct 2026 published 170.72 adjusted against 173.72 traded.
+                    "cr": [float(x) for x in series.get("CloseRaw", series["Close"]).reindex(idx).ffill().tolist()],
                     "h": [float(x) for x in series.get("High", series["Close"]).reindex(idx).ffill().tolist()],
                     "l": [float(x) for x in series.get("Low", series["Close"]).reindex(idx).ffill().tolist()],
                     # The prices that TRADED, for the 52-week range — see _adjusted.
@@ -716,7 +719,7 @@ def _adjusted(raw: dict) -> dict:
         return {}
     adj = raw.get("Adj Close")
     f = (adj / close) if adj is not None else close * 0 + 1.0
-    out = {"Close": (adj if adj is not None else close).dropna()}
+    out = {"Close": (adj if adj is not None else close).dropna(), "CloseRaw": close.dropna()}
     for k in ("Open", "High", "Low"):
         if k in raw:
             out[k] = (raw[k] * f).dropna()
@@ -802,7 +805,9 @@ def _rebuild_closes(yf, pending: dict, out: dict) -> int:
             if close is None or not (lo - 1e-6 <= close <= hi + 1e-6):
                 continue
             # The newest bar carries no dividend adjustment: adjusted == raw.
-            for k, x in (("c", close), ("h", hi), ("l", lo), ("hr", hi), ("lr", lo), ("v", vol)):
+            for k, x in (("c", close), ("cr", close), ("h", hi), ("l", lo), ("hr", hi), ("lr", lo), ("v", vol)):
+                if k not in rec:
+                    continue
                 rec[k].append(x)
             rec["dates"].append(str(d))
             rec["last_date"] = str(d)
@@ -818,15 +823,25 @@ def technicals(px: dict, bench: dict | None) -> dict:
     """Chart state for one symbol. Every field is None when unsupported."""
     c, h, l, v = px["c"], px["h"], px["l"], px["v"]
     n = len(c)
-    last = c[-1]
+    # ── TWO CLOSES, TWO JOBS ────────────────────────────────────────────────
+    #
+    # `c` is dividend-adjusted, which a RETURN needs (r1d..r3y, RSI, MACD, sd1y,
+    # relative strength). A LEVEL is a price somebody paid: the published price,
+    # the moving averages, breakouts, the distance from the 52-week high and the
+    # ladder read the traded closes `cr`, which is what NSE, a broker and
+    # TradingView show. Reading the adjusted close as the price published MRPL at
+    # 170.72 on 19 Oct 2026 while it traded at 173.72 (a Rs 3 dividend ahead).
+    cr = px.get("cr") if px.get("cr") and len(px["cr"]) == n else c
+    last = cr[-1]          # the traded price
+    last_adj = c[-1]       # the same day on the adjusted series, for returns
 
     t = {
         "price": round(last, 2),
         "bars": n,
         "last_date": px.get("last_date"),
-        "sma20": sma(c, 20) if n >= MIN_BARS["sma20"] else None,
-        "sma50": sma(c, 50) if n >= MIN_BARS["sma50"] else None,
-        "sma200": sma(c, 200) if n >= MIN_BARS["sma200"] else None,
+        "sma20": sma(cr, 20) if n >= MIN_BARS["sma20"] else None,
+        "sma50": sma(cr, 50) if n >= MIN_BARS["sma50"] else None,
+        "sma200": sma(cr, 200) if n >= MIN_BARS["sma200"] else None,
         "rsi14": rsi(c, 14) if n >= MIN_BARS["rsi"] else None,
         # Sampled every 21 trading days from the most recent bar backwards, so
         # the newest monthly close is always the latest price rather than
@@ -837,7 +852,7 @@ def technicals(px: dict, bench: dict | None) -> dict:
     t.update(macd(c) if n >= MIN_BARS["macd"] else
              {"macd": None, "signal": None, "hist": None, "hist_prev": None})
 
-    t["atr_pct"] = (t["atr14"] / last) if t["atr14"] and last else None
+    t["atr_pct"] = (t["atr14"] / last_adj) if t["atr14"] and last_adj else None
 
     # ── ONE-YEAR STANDARD DEVIATION OF DAILY RETURNS, ANNUALISED ────────────
     #
@@ -869,7 +884,7 @@ def technicals(px: dict, bench: dict | None) -> dict:
                       ("r6m", 126), ("r1y", 250), ("r3y", 750)):
         need = MIN_BARS.get(key, bars)
         t[key] = pct_change(c, bars) if n >= need else None
-    t["r3y_cagr"] = cagr(c[-751] if n > 750 else None, last, 3.0) if n > 750 else None
+    t["r3y_cagr"] = cagr(c[-751] if n > 750 else None, last_adj, 3.0) if n > 750 else None
 
     # ── 52-WEEK STRUCTURE, FROM HIGHS AND LOWS ──────────────────────────────
     #
@@ -890,8 +905,8 @@ def technicals(px: dict, bench: dict | None) -> dict:
     # published low is above the real one.
     hr, lr = px.get("hr") or h, px.get("lr") or l      # traded, not dividend-adjusted
     if n >= MIN_BARS["high52"]:
-        wh = hr[-250:] if len(hr) >= len(c[-250:]) else c[-250:]
-        wl = lr[-250:] if len(lr) >= len(c[-250:]) else c[-250:]
+        wh = hr[-250:] if len(hr) >= len(c[-250:]) else cr[-250:]
+        wl = lr[-250:] if len(lr) >= len(c[-250:]) else cr[-250:]
         hi, lo = max(wh), min(wl)
         t["high52"], t["low52"] = hi, lo
         t["from_high52"] = (last / hi - 1.0) if hi else None
@@ -921,8 +936,8 @@ def technicals(px: dict, bench: dict | None) -> dict:
         # sessions it covers, and every consumer must label it from that rather
         # than calling four months a year. The 52-week keys stay None.
         if n >= MIN_BARS["r1m"]:
-            rwh = hr[-n:] if len(hr) >= n else c[-n:]
-            rwl = lr[-n:] if len(lr) >= n else c[-n:]
+            rwh = hr[-n:] if len(hr) >= n else cr[-n:]
+            rwl = lr[-n:] if len(lr) >= n else cr[-n:]
             rhi, rlo = max(rwh), min(rwl)
             t["rng_hi"], t["rng_lo"] = rhi, rlo
             t["rng_from_hi"] = (last / rhi - 1.0) if rhi else None
@@ -944,7 +959,7 @@ def technicals(px: dict, bench: dict | None) -> dict:
     def broke(bars):
         if n < bars + 2:
             return None
-        return last > max(c[-bars - 1:-1])
+        return last > max(cr[-bars - 1:-1])
     t["brk20"], t["brk50"] = broke(20), broke(50)
     t["brk52w"] = (last >= t["high52"] * 0.999) if t["high52"] else None
 
@@ -1534,7 +1549,8 @@ def valuation_history(ys: list[dict], px: dict, pe_now: float | None) -> dict:
     """
     if not ys or not px or not px.get("c"):
         return {}
-    closes, dates = px["c"], px.get("dates") or []
+    # the price that traded on each fiscal year end: EPS is not dividend-adjusted, so neither is its price
+    closes, dates = (px.get("cr") or px["c"]), px.get("dates") or []
     if len(dates) != len(closes):
         return {}
     hist = []
@@ -2418,7 +2434,7 @@ def _ladder_for(t: dict, r: dict, px: dict) -> dict | None:
     why = (f"ROCE {roce:.0%}, revenue CAGR {cagr:.0%}"
            if strong and roce and cagr else "quality gate passed")
 
-    return _targets.build_ladder(price, stop, atr, px.get("h"), extra=extra,
+    return _targets.build_ladder(price, stop, atr, px.get("hr") or px.get("h"), extra=extra,
                                  quality={"strong": strong, "why": why})
 
 
