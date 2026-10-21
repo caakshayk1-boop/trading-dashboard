@@ -1,6 +1,6 @@
 {
   "ok": true,
-  "generated_at": "2026-10-20T18:07:35+00:00",
+  "generated_at": "2026-10-21T18:16:20+00:00",
   "weights": {
     "trend": 30,
     "breadth": 30,
@@ -9,7 +9,7 @@
     "highs": 10
   },
   "today": {
-    "score": 35,
+    "score": 34,
     "band": {
       "k": "weak",
       "t": "Weak",
@@ -19,16 +19,16 @@
       {
         "key": "trend",
         "label": "Where the index sits",
-        "score": 16.9,
+        "score": 15.1,
         "weight": 30,
-        "detail": "Nifty is 17% up its own 52-week range, 13.2% below the high"
+        "detail": "Nifty is 15% up its own 52-week range, 13.5% below the high"
       },
       {
         "key": "breadth",
         "label": "Names above their 200-day",
-        "score": 45.6,
+        "score": 45.5,
         "weight": 30,
-        "detail": "451 of 988 hold their 200-day average"
+        "detail": "450 of 988 hold their 200-day average"
       },
       {
         "key": "participation",
@@ -42,7 +42,7 @@
         "label": "Volatility",
         "score": 70,
         "weight": 15,
-        "detail": "India VIX at 14.77, normal"
+        "detail": "India VIX at 15.68, normal"
       },
       {
         "key": "highs",
@@ -66,12 +66,12 @@
       "c": ""
     },
     "counted": 988,
-    "nifty": 22888.94921875,
-    "drawdown_pct": 13.21,
-    "above_200dma_pct": 45.6,
-    "vix": 14.770000457763672,
-    "nifty_date": "2026-10-19",
-    "vix_date": "2026-10-19"
+    "nifty": 22811.349609375,
+    "drawdown_pct": 13.51,
+    "above_200dma_pct": 45.5,
+    "vix": 15.675000190734863,
+    "nifty_date": "2026-10-21",
+    "vix_date": "2026-10-21"
   },
   "history": [
     {
@@ -397,12 +397,27 @@
       "drawdown_pct": 13.21,
       "above_200dma_pct": 45.6,
       "vix": 14.770000457763672
+    },
+    {
+      "date": "2026-10-21",
+      "score": 34,
+      "band": "weak",
+      "stage": {
+        "k": "early",
+        "t": "Slightly cheaper",
+        "c": ""
+      },
+      "nifty": 22811.349609375,
+      "nifty_date": "2026-10-21",
+      "drawdown_pct": 13.51,
+      "above_200dma_pct": 45.5,
+      "vix": 15.675000190734863
     }
   ],
   "outcomes": {
     "early": {
       "label": "Slightly cheaper",
-      "readings": 18,
+      "readings": 19,
       "m3": null,
       "m6": null,
       "m12": null
