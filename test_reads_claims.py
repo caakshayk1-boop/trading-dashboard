@@ -74,6 +74,26 @@ check("an asset manager's 'capital employed' story needs primary review",
 check("the same words for a manufacturer do not",
       not review_problems({"study": "Capital employed rose with the new plant.", "sector": "Industrials", "name": "Acme Engineering Ltd."}))
 
+# A normal weekly write keeps the corrections log (review finding on #55): run main() against a copy with the model
+# stubbed out and the week already written, then a forced rewrite with no studies, and check the log is still there.
+import shutil, tempfile, pathlib  # noqa: E401,E402
+import weekly_reads as W  # noqa: E402
+tmp = pathlib.Path(tempfile.mkdtemp())
+src = pathlib.Path(os.path.dirname(__file__)) / "docs" / "weekly_reads.json"
+shutil.copy(src, tmp / "weekly_reads.json")
+before = json.load(open(src)).get("corrections", [])
+W.OUT = tmp / "weekly_reads.json"
+W.SCREEN = tmp / "screen.json"
+(tmp / "screen.json").write_text(json.dumps({"rows": [{"sym": "ZZZ", "name": "Z Ltd", "sector": "Industrials", "mcap_cr": 9000}]}))
+W.study_for = lambda r: {"sym": r["sym"], "name": r["name"], "sector": r["sector"], "industry": None, "mcap_cr": 9000, "price": 10, "words": 1, "read_minutes": 1, "facts": [], "study": "x", "model": "stub", "approximate_figures": [], "review": {"status": "machine_checked", "problems": [], "checked_at": "2026-10-24", "reviewed_by_person": False}}
+W.pick = lambda rows, recent, seed: rows
+W.send_to_telegram = lambda e: None
+W.time.sleep = lambda s: None
+W.saturday_of = lambda d: __import__("datetime").date(2099, 1, 3)
+W.main()
+after = json.load(open(W.OUT)).get("corrections", [])
+check("a new weekly edition keeps every corrections entry", after == before and len(after) > 0)
+
 # Every published study either passes today's checks or is marked under review with its reasons, and logged as a
 # correction. A study is never silently corrected in place.
 d = json.load(open(os.path.join(os.path.dirname(__file__), "docs", "weekly_reads.json")))

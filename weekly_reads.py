@@ -837,11 +837,15 @@ def main() -> int:
         "studies": studies,
     })
     OUT.parent.mkdir(parents=True, exist_ok=True)
+    kept = editions[:80]                 # roughly eighteen months of weekends
+    weeks = {e.get("week") for e in kept}
     OUT.write_text(json.dumps({
         "ok": True,
         "generated_at": datetime.now(timezone.utc).isoformat(timespec="seconds"),
         "cooldown_weeks": COOLDOWN_WEEKS,
-        "editions": editions[:80],       # roughly eighteen months of weekends
+        "editions": kept,
+        # the corrections log survives every normal write; only entries for editions still published are kept
+        "corrections": [c for c in (archive.get("corrections") or []) if c.get("week") in weeks],
     }, indent=2), encoding="utf-8")
     log.info(f"wrote {len(studies)} studies for {wk} to {OUT}")
 
