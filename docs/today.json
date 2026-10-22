@@ -1,7 +1,7 @@
 {
- "build_id": "20261021T081907",
- "date": "2026-10-21",
- "date_str": "Wednesday, October 21 2026",
+ "build_id": "20261022T082217",
+ "date": "2026-10-22",
+ "date_str": "Thursday, October 22 2026",
  "picks": [
   {
    "symbol": "TCS.NS",
@@ -538,25 +538,25 @@
  },
  "desk": {
   "chess": {
-   "title": "Tactics: The Pin",
-   "body": "A pin prevents a piece from moving because moving it would expose a more valuable piece behind it. Absolute pin = pinned to the king (piece cannot move legally). Relative pin = pinned to queen/rook (can move but it's a blunder). Identify pins in every position. Then exploit them.",
-   "index": 4,
+   "title": "Tactics: The Fork",
+   "body": "A fork attacks two pieces simultaneously with one piece. Knight forks are the deadliest \u2014 they move in an L-shape and cannot be blocked. Look for squares your knight can reach that simultaneously attack king + queen, or rook + rook. Practice: set up NxC5+ forking king and rook. Classic beginner trap.",
+   "index": 5,
    "total": 20
   },
   "wisdom": {
-   "title": "The Compound Effect of Small Moments",
-   "body": "You don't build a relationship in big moments. You build it in 10,000 small ones. Morning hugs. Saying her name with warmth. Listening when she babbles even though you don't understand. These stack. In 15 years, she'll feel either deeply loved or quietly neglected. Both are built today.",
-   "index": 2,
+   "title": "Regulate Yourself First",
+   "body": "You cannot be a calm parent if you're running on stress, sleep debt, and financial anxiety. Your regulation is their regulation \u2014 babies co-regulate with caregivers. Deep breath before you pick her up. Shoulders down. Slow exhale. Your nervous system sets the tone for the room.",
+   "index": 3,
    "total": 18
   },
   "book": {
    "book": "Thinking, Fast and Slow",
    "author": "Daniel Kahneman",
-   "chapter": "System 1 vs System 2: Two Ways Your Brain Decides",
-   "lesson": "Kahneman's central framework: System 1 is fast, automatic, emotional, unconscious \u2014 it drives 95% of decisions. System 2 is slow, deliberate, logical, effortful \u2014 it's what we think we use but rarely do. The problem: System 1 is riddled with biases and heuristics that made sense in evolutionary environments but lead to poor decisions in modern ones. Loss aversion (losses feel 2\u00d7 more painful than equivalent gains feel good), anchoring (first number heard influences all subsequent judgements), availability bias (things that come to mind easily feel more probable) \u2014 all System 1 errors. Recognition is the first step to override.",
-   "key_quote": "You are not as rational as you think. Your brain is a pattern-matching machine, not a logic processor.",
-   "action": "Before your next important decision, write down your reasoning explicitly. Externalising it activates System 2 and reveals System 1 shortcuts.",
-   "index": 14,
+   "chapter": "The Planning Fallacy: Why Every Project Takes Longer",
+   "lesson": "Kahneman and Tversky proved that humans systematically underestimate how long tasks take and overestimate how much they'll accomplish. Why? We build plans based on the best-case scenario and ignore what happened on similar projects in the past (outside view). The fix: reference class forecasting. Before estimating a project's timeline, ask 'how long did similar projects actually take?' The answer from historical data is almost always longer than your optimistic internal estimate. The cure for the planning fallacy is disciplined use of the outside view.",
+   "key_quote": "Your intuitive project estimate is probably optimistic by 50-200%. Add a buffer based on historical data, not hope.",
+   "action": "For your next project, find 3 similar past projects. Average their actual completion time. Use that as your baseline estimate.",
+   "index": 15,
    "total": 48,
    "crux": [
     "Two systems: System 1 is fast, automatic, emotional. System 2 is slow, effortful, logical.",
@@ -594,211 +594,211 @@
   },
   "way": {
    "minimalism": {
-    "title": "The Cost Of A Bigger House",
-    "body": "More space does not reduce clutter; it raises the threshold at which clutter becomes visible. People fill whatever they have. Then they pay to heat, clean, and furnish it.",
-    "action": "Before upgrading space, try emptying the space you have.",
-    "index": 16,
+    "title": "Travel Light As Practice",
+    "body": "Pack for a week in a carry-on. It teaches, in three days, exactly how little you require \u2014 a lesson that transfers directly home.",
+    "action": "Next trip: carry-on only. Note what you never opened.",
+    "index": 17,
     "total": 20,
     "label": "Minimalism"
    },
    "etiquette": {
-    "title": "Reply Within 24 Hours, Even If Only To Acknowledge",
-    "body": "A three-word acknowledgement beats a perfect reply a week late. Silence is read as disregard, never as busyness. 'Got this \u2014 proper answer Thursday' costs eight seconds.",
-    "action": "Clear every message older than 24 hours with an acknowledgement.",
-    "index": 2,
+    "title": "The Right Hand Rule",
+    "body": "In the Gulf and much of Asia, give and receive with the right hand \u2014 cards, food, documents, money. The left hand carries a specific connotation. This is not a preference; it is the baseline.",
+    "action": "Hand over your next document or card with the right hand, deliberately.",
+    "index": 3,
     "total": 20,
     "label": "Etiquette"
    },
    "stillness": {
-    "title": "High Thinking Requires Simple Living",
-    "body": "The phrase is one instruction, not two. Complexity of life consumes exactly the capacity that deep thought requires. Cut the first to afford the second.",
-    "action": "Name the most complicated part of your week. Remove one layer.",
-    "index": 20,
+    "title": "The First Hour Is Yours",
+    "body": "Whoever touches your attention first sets the agenda for the day. If that is a notification, you have outsourced the day to a stranger's priorities before you were fully awake.",
+    "action": "No screen for the first 30 minutes tomorrow. Nothing else changes.",
+    "index": 1,
     "total": 20,
     "label": "Stillness"
    },
    "model": {
-    "title": "Hanlon's Razor",
-    "body": "Never attribute to malice what incompetence, tiredness, or a missed email explains. The uncharitable read is usually wrong and always expensive.",
-    "action": "Reinterpret one recent slight as a mistake rather than an intent.",
-    "index": 12,
+    "title": "Availability Heuristic",
+    "body": "You judge probability by how easily an example comes to mind. Plane crashes feel likelier than car crashes because they are memorable, not because they are common.",
+    "action": "Check one belief against actual frequency data rather than recall.",
+    "index": 13,
     "total": 20,
     "label": "Mental Model"
    },
    "arabic": {
-    "script": "\u0625\u0646 \u0634\u0627\u0621 \u0627\u0644\u0644\u0647 \u0646\u0644\u062a\u0642\u064a",
-    "translit": "in shaa Allah naltaqi",
-    "meaning": "God willing, we will meet",
-    "use": "Closing a first meeting warmly without committing to a date.",
-    "index": 28,
+    "script": "\u0628\u0627\u0644\u062a\u0648\u0641\u064a\u0642",
+    "translit": "bit-tawfeeq",
+    "meaning": "Good luck / wishing you success",
+    "use": "Before an exam, an interview, a launch. Sincere and common.",
+    "index": 29,
     "total": 30,
     "label": "Arabic"
    },
    "drill": {
-    "title": "The 3-Statement Link",
-    "body": "Net income flows to retained earnings and to the top of cash flow. Closing cash lands on the balance sheet. If you cannot recite this cold, every model you build is fragile.",
-    "action": "Draw all three statements and every link from memory. No reference.",
-    "index": 4,
+    "title": "Explain It To A Ten-Year-Old",
+    "body": "Take the most technical thing you know and explain it with no jargon. If you cannot, you have memorised it rather than understood it. This is the Feynman technique and it is brutal.",
+    "action": "Pick one concept. Explain it in writing with no technical terms.",
+    "index": 5,
     "total": 20,
     "label": "Drill"
    },
    "health": {
-    "title": "Train Balance Before You Need It",
-    "body": "Falls are a leading cause of injury death in older adults, and balance declines silently from midlife. It is trainable at any age and takes 60 seconds a day.",
-    "action": "Stand on one leg, 30 seconds each side. Eyes closed to progress.",
-    "index": 14,
+    "title": "Heat And Cold Are Adjuncts, Not Basics",
+    "body": "Sauna shows dose-dependent cardiovascular association in Finnish cohorts. Cold has weaker evidence and may blunt hypertrophy if taken right after lifting. Neither substitutes for training and sleep.",
+    "action": "Only add these once training, sleep, and protein are consistent.",
+    "index": 15,
     "total": 20,
     "label": "Health"
    }
   },
   "quote": {
-   "name": "Naval Ravikant",
-   "quote": "Play long-term games with long-term people.",
-   "index": 39,
+   "name": "Dhirubhai Ambani",
+   "quote": "If you don't build your dream, someone else will hire you to help them build theirs.",
+   "index": 40,
    "total": 96
   },
   "lesson": {
-   "tradition": "Character",
-   "lesson": "Character is how you treat those who can do nothing for you.",
-   "source": "Unknown"
+   "tradition": "Simplicity",
+   "lesson": "Simplicity is the ultimate sophistication.",
+   "source": "Leonardo da Vinci"
   },
   "case": {
-   "title": "Zoho: The Anti-VC Playbook",
-   "story": "Zoho has never taken VC money. Sridhar Vembu built a $1B+ business on profitability, not funding. Employees in rural India, $0 in advertising spend.",
-   "lesson": "You don't need venture capital to build a great company. Profitable growth beats loss-funded growth in the long run."
+   "title": "Facebook's Instagram Acquisition (2012)",
+   "story": "Facebook bought Instagram for $1B when it had 13 employees and $0 revenue. Zuckerberg saw mobile first. Instagram is now worth $100B+.",
+   "lesson": "Buy what threatens you before it kills you. The best M&A is strategic, not defensive."
   },
   "fpna": {
-   "title": "SaaS Metrics",
-   "body": "ARR, MRR, Churn, NRR, CAC, LTV. In tech FP&A, know these cold.",
-   "index": 11,
+   "title": "Three-Statement Model",
+   "body": "P&L \u2192 Balance Sheet \u2192 Cash Flow \u2014 they must tie. If they don't, you have a bug.",
+   "index": 12,
    "total": 20
   },
   "cfo": {
-   "title": "FC Step 2: IFRS Mastery",
-   "body": "IFRS 16 (leases), IFRS 9 (financial instruments), IFRS 15 (revenue recognition) \u2014 these are the FC's bread and butter in Dubai/GCC. Know them technically AND practically. Interviewers will test this. Study one standard per week.",
-   "index": 2,
+   "title": "FC Step 3: Internal Controls",
+   "body": "A Controller without strong controls is a liability. Know COSO framework. Segregation of duties. Maker-checker in AP/AR. SOX lite for listed companies. Document your controls. Auditors love documented processes.",
+   "index": 3,
    "total": 15
   },
   "money_hack": {
-   "title": "No Lifestyle Inflation",
-   "body": "Got a raise? Don't upgrade lifestyle. Invest the increment for 3 years."
+   "title": "Emergency Fund",
+   "body": "6 months of expenses in a liquid FD. Job loss + medical can overlap."
   },
   "dubai": {
-   "title": "Notice period is a negotiation, not a fact",
-   "body": "Gulf employers plan around a 30-day joiner. A 90-day Indian notice period kills live mandates. Buy-out clauses exist in most Indian contracts and employers routinely fund them.",
-   "targets": "Say the real number early. Discovering it in week six loses the offer.",
-   "action_label": "Ask",
-   "action": "Find out your buy-out amount now. It is a line in the contract.",
-   "index": 24,
+   "title": "What a Financial Controller title actually needs",
+   "body": "The jump from FP&A Manager to Controller in the Gulf is statutory reporting plus audit ownership plus a team. If the CV has no signed statutory set on it, that is the gap \u2014 not the years.",
+   "targets": "Controller bands start around AED 40K. It is the next rung, and it is close.",
+   "action_label": "Gap",
+   "action": "Get a statutory reporting line on the CV in the next six months. Any entity, any size.",
+   "index": 25,
    "total": 30
   },
   "daughter": {
    "months": 9,
-   "days": 300,
+   "days": 301,
    "heading": "Nine months old.",
    "band": "crawling",
    "born": "2025-12-25"
   },
-  "productivity": "Clear inbox to zero before 9 AM. Empty inbox = no mental overhead.",
+  "productivity": "Use Parkinson's Law: shorter deadlines. Work expands to fill time given.",
   "father": [
    {
-    "title": "Wait out the frustration noise",
-    "do": "When she grumbles at a task, wait. Only step in if it escalates to genuine distress.",
-    "why": "There is a difference between frustration and distress, and learning to tell them apart is a skill you build now. Frustration tolerated becomes persistence; frustration always rescued becomes helplessness."
+    "title": "Vary who holds her",
+    "do": "Hand her to grandparents, friends, and colleagues while you stay visible in the room.",
+    "why": "Stranger wariness peaks around now. Practising handovers while you remain in sight teaches that unfamiliar people are safe, without forcing separation at the same time."
    },
    {
-    "title": "Check the floor at her eye level",
-    "do": "Lie on the floor and look across the room from her height. Remove what you find.",
-    "why": "Mobility arrives suddenly. Anything reachable at that height will be in her mouth within days of her crawling, and you will not get advance notice."
+    "title": "Sit her up and step back",
+    "do": "Sit her unsupported on a soft surface within arm's reach, and let her balance.",
+    "why": "Independent sitting typically consolidates around 7\u20138 months. Constant propping delays the postural adjustments she needs to make herself."
    }
   ],
   "life_wisdom": [
    {
     "tradition": "Jainism",
-    "term": "Ahimsa",
-    "translation": "Non-violence in thought, word and act",
-    "teaching": "The most demanding version is not physical \u2014 it is refusing to injure with speech or intent, including toward yourself.",
-    "apply": "Notice the sentence you would not say to a colleague, then check whether you say it to yourself about your own work. The standard should be the same."
+    "term": "Syadvada",
+    "translation": "Conditioned assertion \u2014 'in some respect'",
+    "teaching": "Every claim is true only under stated conditions. Jain logic prefixes assertions with 'in some respect' to keep the conditions visible.",
+    "apply": "Attach the assumption to the forecast, out loud: 'growth is 12% \u2014 in the respect that the two new stores open in Q3.' Half of forecasting disputes are actually undeclared conditions."
    },
    {
     "tradition": "Buddhism",
-    "term": "Anatta",
-    "translation": "Non-self",
-    "teaching": "The doctrine that there is no fixed, unchanging self \u2014 what feels like a permanent 'I' is a process, continually reconstructed.",
-    "apply": "When you catch yourself saying 'I am not a numbers-under-pressure person', notice that is a description of a habit, not a fact about you."
+    "term": "Right Livelihood",
+    "translation": "Work that does not require harm",
+    "teaching": "One of the eightfold path's least discussed elements: how you earn matters as much as how you behave outside earning.",
+    "apply": "Ask whether any part of your work depends on someone else not understanding something. That is the test, and it applies to finance more than most fields."
    }
   ],
   "spanish": [
    {
-    "word": "la reuni\u00f3n",
-    "meaning": "the meeting",
-    "es": "La reuni\u00f3n empieza a las nueve.",
-    "en": "The meeting starts at nine.",
+    "word": "el plazo",
+    "meaning": "the deadline",
+    "es": "No podemos cumplir ese plazo.",
+    "en": "We cannot meet that deadline.",
     "tag": "Business"
    },
    {
-    "word": "gracias por todo",
-    "meaning": "thanks for everything",
-    "es": "Gracias por todo tu apoyo.",
-    "en": "Thanks for all your support.",
-    "tag": "Everyday"
+    "word": "estoy de acuerdo",
+    "meaning": "I agree",
+    "es": "Estoy de acuerdo con tu an\u00e1lisis.",
+    "en": "I agree with your analysis.",
+    "tag": "Business"
    }
   ],
   "vocab": [
    {
-    "word": "Exigency",
-    "say": "EK-si-juhn-see",
-    "meaning": "An urgent need or demand.",
-    "example": "Cash exigencies drove the decision, not strategy.",
-    "note": "Explains a decision made under pressure without excusing it."
+    "word": "Perfunctory",
+    "say": "puhr-FUNGK-tuh-ree",
+    "meaning": "Done as a duty, without care.",
+    "example": "The reconciliation had become perfunctory.",
+    "note": "Describes a control that exists on paper and has stopped working."
    },
    {
-    "word": "Salience",
-    "say": "SAY-lee-uhns",
-    "meaning": "The quality of being most noticeable or important.",
-    "example": "The salience of the cash line rose sharply after the covenant test.",
-    "note": "Noun form of salient. Useful when describing shifting board attention."
+    "word": "Salient",
+    "say": "SAY-lee-uhnt",
+    "meaning": "Most noticeable or important.",
+    "example": "The salient point is that margin fell before volume did.",
+    "note": "Use instead of 'main' when you want to signal you have filtered the noise."
    }
   ],
   "speaking": {
-   "title": "Breathe before the hard part",
-   "drill": "Identify the toughest sentence in an answer and take a full breath immediately before it.",
-   "why": "Nerves shorten breath, which raises pitch and speeds delivery precisely when you most need authority."
+   "title": "Cut the throat-clear",
+   "drill": "Notice and eliminate the meaningless opener: 'So\u2026', 'Yeah, so\u2026', 'I guess\u2026'.",
+   "why": "It signals you started talking before you started thinking, even when you did not."
   },
   "interview_tech": [
    {
-    "q": "You acquire 80% of a subsidiary. Walk me through the consolidation mechanics.",
-    "a": "Recognise 100% of the subsidiary's assets and liabilities at fair value, not 80% \u2014 control, not ownership, drives consolidation. The 20% you do not own becomes non-controlling interest, shown within equity. Goodwill is consideration transferred plus NCI measured either at fair value (full goodwill) or at its share of net assets (partial goodwill) \u2014 an accounting policy choice that changes the goodwill number materially. Eliminate all intragroup balances, transactions and unrealised profit in stock. Post-acquisition profit splits between parent and NCI by ownership.",
-    "who": "Al-Futtaim \u00b7 Landmark Group \u00b7 Unilever"
+    "q": "What is the difference between an associate and a subsidiary in your accounts?",
+    "a": "Control versus significant influence. A subsidiary is controlled \u2014 you consolidate line by line and recognise NCI. An associate is significant influence, presumed at 20\u201350%, accounted for using the equity method: one line on the balance sheet at cost plus your share of post-acquisition reserves, and one line in P&L for your share of profit. Nothing of the associate's revenue or EBITDA enters your group numbers \u2014 a point that catches people out when a joint-venture-heavy group reports headline growth.",
+    "who": "Emaar \u00b7 Chalhoub \u00b7 Nestl\u00e9"
    },
    {
-    "q": "What is shrinkage, what causes it, and what is an acceptable level?",
-    "a": "Shrinkage is the gap between book inventory and counted inventory \u2014 theft (external and internal), administrative error, damage and supplier short-delivery. Fashion retail typically runs 1\u20132% of sales; grocery higher. The important split is internal versus external, because the remedies differ entirely: internal is a controls and rostering problem, external is layout, tagging and security. Any store more than 100bps above the estate average is a process failure, not bad luck \u2014 investigate the receiving dock first.",
-    "who": "Landmark Group \u00b7 Target \u00b7 Alshaya"
+    "q": "Compare owned retail, franchise, and concession from a finance perspective.",
+    "a": "Owned: full revenue, full margin, full capex, full lease and staffing risk. Franchise: you book a royalty and wholesale margin \u2014 far lower revenue, far lower risk, and no control over the customer experience. Concession: you occupy space inside a host retailer, pay a percentage of sales rather than fixed rent, so occupancy cost flexes with trading and downside is capped. In the Gulf, franchise is the dominant international-brand model, which is why groups like Alshaya and Al-Futtaim report differently from the brands they carry.",
+    "who": "Alshaya \u00b7 Al-Futtaim \u00b7 Chalhoub"
    }
   ],
   "interview_soft": [
    {
-    "q": "Why Dubai? Why now?",
-    "a": "They are screening for whether you have thought about it or are just leaving somewhere. Be concrete: the Gulf retail market's scale and the concentration of regional HQs; UAE corporate tax making the finance function genuinely more technical than it was; and the specific fit between your multi-country consolidation experience and a group operating across GCC markets. Do not lead with tax-free income or lifestyle \u2014 every candidate says it and none of it is about the job.",
-    "who": "Every Gulf search firm"
+    "q": "The board pushes back hard on your numbers in front of everyone. What do you do?",
+    "a": "Do not defend and do not fold. Separate the challenge into fact and judgement. If they have spotted a factual error, concede immediately and precisely \u2014 'you are right, that is the restated base, I will recirculate by Thursday.' Credibility survives errors; it does not survive defensiveness. If it is a judgement call, state your assumption, the sensitivity, and offer the alternative case. Never argue methodology in the room; take it offline with the one director who raised it.",
+    "who": "Any listed board"
    },
    {
-    "q": "How do you prioritise when everything is urgent?",
-    "a": "Give a working rule, not a philosophy. Something like: anything with a statutory deadline is non-negotiable; then anything that changes a decision being made this week; then anything that compounds \u2014 process fixes that stop the same fire recurring; then everything else. The part interviewers actually want: what you stopped doing and who you told. Prioritisation without explicit de-prioritisation is just a longer list.",
-    "who": "Universal"
+    "q": "An employee asks you to approve an expense that is within policy but clearly wrong. What now?",
+    "a": "They are testing whether you hide behind rules. Policy is a floor, not a ceiling. Approve or reject on the substance, explain the reasoning to the person directly, and then fix the policy so the next person is not in the same position. If it involves a senior person, the answer does not change \u2014 that is precisely when it counts. Say plainly that you would escalate to the audit committee if pressured to approve something you believe is wrong.",
+    "who": "Any group with a code of conduct"
    }
   ],
   "cfo_field": [
    {
-    "q": "Know your break-even by store, not by chain.",
-    "a": "A chain at group-level profitability can be carrying a quarter of its estate below contribution. Compute store contribution \u2014 gross profit less rent, staff and directly attributable fixed cost \u2014 and rank it. Then, before closing anything: is the lease committed, what does the store contribute to online fulfilment in its catchment, and what is the exit cost. A negative-contribution store with four years left on a non-cancellable lease is usually cheaper to run than to close.",
-    "who": "The analysis that gets you noticed"
+    "q": "Read the cash flow statement first. Always.",
+    "a": "P&L is an opinion, cash is a fact. Open any set of accounts at the cash flow statement, compare operating cash flow to EBITDA over three years, and look at the gap. A business converting 90%+ of EBITDA to operating cash is real. One converting 50% has its profit sitting in working capital or is capitalising something it should be expensing. That one ratio finds more problems than any variance pack.",
+    "who": "The first thing to check, every time"
    },
    {
-    "q": "VAT in the GCC is a cash-flow instrument, not just a compliance task.",
-    "a": "Registration thresholds, filing frequency and the timing of input recovery all move working capital. A group filing quarterly rather than monthly holds recoverable input VAT longer than it needs to. Know the filing calendar in every jurisdiction the group trades in, and know which entity holds the recoverable balance \u2014 a refund stuck in the wrong entity is cash you own and cannot use.",
-    "who": "UAE \u00b7 KSA \u00b7 Oman"
+    "q": "Scenario planning beats a single budget, and costs less than it sounds.",
+    "a": "Three cases \u2014 base, downside, upside \u2014 with the two or three variables that actually move the outcome, not thirty. In retail that is usually like-for-like growth, gross margin, and rent renewals. The value is not the numbers; it is that the board has already discussed the downside before it arrives, so the conversation when it does is about the response rather than about whether it is happening.",
+    "who": "What a board actually wants"
    }
   ],
   "review": {
@@ -809,129 +809,25 @@
    "week": 43,
    "year": 2026,
    "key": "2026-W43",
-   "weekday": 3,
-   "days_left": 4,
+   "weekday": 4,
+   "days_left": 3,
    "is_review_day": false
   },
   "podcasts": {
    "ok": true,
-   "generated_at": "2026-10-21T00:20:10.686347+00:00",
+   "generated_at": "2026-10-22T00:22:52.849014+00:00",
    "episodes": [
     {
-     "show": "Figuring Out",
-     "author": "Raj Shamani",
-     "category": "Business",
-     "title": "Social Scientist: Why Everyone Wants To Look Rich & Successful | Rob Henderson | FO577 Raj Shamani",
-     "guest": "",
-     "published": "2026-10-20",
-     "link": "https://www.youtube.com/watch?v=ABoy_36zNUM",
-     "takeaways": [
-      "young people lie the most, and poor people pretend to be rich while rich people pretend to be poor",
-      "the rich crave status more than anyone."
-     ]
-    },
-    {
-     "show": "Labour Law Advisor",
-     "author": "Labour Law Advisor",
-     "category": "Money",
-     "title": "The Biggest Financial Bubble Is Happening Right Now! @naandisclosure",
-     "guest": "",
-     "published": "2026-10-20",
-     "link": "https://www.youtube.com/watch?v=JrPhalmUQos",
-     "takeaways": [
-      "This video explains whether the AI boom is turning into a massive financial bubble.",
-      "AI stocks like Nvidia, Microsoft, Google and Meta have delivered extraordinary returns, but behind this growth are trillions of dollars in data centre investments, rising debt, hidden financial commitments, questionable profitability and increasing dependence on just a few AI companies."
-     ]
-    },
-    {
-     "show": "The Wire",
-     "author": "The Wire",
-     "category": "Politics",
-     "title": "Farmers Protest Against Highway Land Acquisition at 18-Year-Old Rates",
-     "guest": "",
-     "published": "2026-10-20",
-     "link": "https://www.youtube.com/watch?v=O0aEmyUx0gE",
-     "takeaways": [
-      "The government is asking farmers to give up their land for highway construction at rates fixed 18 years ago.",
-      "Farmers are protesting and demanding compensation at current market rates."
-     ]
-    },
-    {
-     "show": "ANI Podcast (clips)",
-     "author": "ANI Podcast with Smita Prakash Clips",
-     "category": "Politics",
-     "title": "\u201cThe Sights and Smells of Chickpet\u2019s Lanes in Bangalore Never Leave You\u201d: M. Farook Sait",
-     "guest": "",
-     "published": "2026-10-20",
-     "link": "https://www.youtube.com/watch?v=p-BW-fW7ENQ",
-     "takeaways": [
-      "\u201cThe Sights and Smells of Chickpet\u2019s Lanes in Bangalore Never Leave You\u201d: M.",
-      "Farook Sait #ANIPodcast #SmitaPrakash #FarookSait #Indian #Chickpet #ColesRoad #Bangalore #India #Muslim Tune in here: linktr.ee/podcastwithsmitaprakash"
-     ]
-    },
-    {
-     "show": "Drishti IAS",
-     "author": "Drishti IAS",
-     "category": "Education",
-     "title": "Atmosphere Explained | World Geography | UPSC Prelims 2027 | Drishti IAS",
-     "guest": "",
-     "published": "2026-10-20",
-     "link": "https://www.youtube.com/watch?v=Cubr4p6HZRw",
-     "takeaways": [
-      "In this video, we explore the Atmosphere (\u0935\u093e\u092f\u0941\u092e\u0902\u0921\u0932) and understand its composition, structure and significance for UPSC and other competitive examinations.",
-      "Learn about the different layers of the atmosphere, the gases present in it, and how the atmosphere influences weather, climate and life on Earth."
-     ]
-    },
-    {
-     "show": "CA Rachana Ranade",
-     "author": "CA Rachana Phadke Ranade",
+     "show": "Groww",
+     "author": "Groww",
      "category": "Investing",
-     "title": "Why Lenskart rose 70% when the market fell? | CA Rachana Ranade",
+     "title": "5 stocks showing strength in a weak market",
      "guest": "",
-     "published": "2026-10-19",
-     "link": "https://www.youtube.com/watch?v=cWRr22t8k7o",
+     "published": "2026-10-21",
+     "link": "https://www.youtube.com/watch?v=pLuJ45-4p2A",
      "takeaways": [
-      "Lenskart rose about 70% while the Nifty 500 fell roughly 7% between November\u202f2025 and September\u202f2026.",
-      "It acquires new customers via eye tests, manufactures most of its glasses in\u2011house, and retains them with a Gold membership."
-     ]
-    },
-    {
-     "show": "The Deshbhakt",
-     "author": "The Deshbhakt",
-     "category": "Society",
-     "title": "Accident Or Disaster Waiting To Happen? | Should BJP Take Responsibility For The Kolkata Tragedy?",
-     "guest": "",
-     "published": "2026-10-19",
-     "link": "https://www.youtube.com/watch?v=vvnCHkWpaVo",
-     "takeaways": [
-      "- Become a Deshbhakt Member & Get Exclusive Access!!",
-      "When it comes to playing politics over the dead - there is no party that comes close to the BJP."
-     ]
-    },
-    {
-     "show": "Sid Warrier",
-     "author": "Dr Sid Warrier",
-     "category": "Health",
-     "title": "Why You Quit by Thursday | Dr Sid Warrier",
-     "guest": "",
-     "published": "2026-10-19",
-     "link": "https://www.youtube.com/watch?v=G0tTK2ErC7I",
-     "takeaways": [
-      "Why do you start strong on Monday and quit by Thursday?",
-      "Sid Warrier, a neurologist, and I explain how dopamine (the \u201cwanting\u201d chemical that starts habits) and serotonin (the steady one that sustains them) shape your motivation."
-     ]
-    },
-    {
-     "show": "Finance With Sharan",
-     "author": "Finance With Sharan",
-     "category": "Money",
-     "title": "If Jobs Get Tougher and Markets Stay Flat, How Do You Still Get Rich? | Saurabh Mukherjea | FWS",
-     "guest": "",
-     "published": "2026-10-18",
-     "link": "https://www.youtube.com/watch?v=Yr-4f_rxKEc",
-     "takeaways": [
-      "Saurabh explains why India's stock market moves in long cycles, with three to four years of strong bull markets followed by six to seven years of flat returns, and why high-quality companies tend to outperform during the difficult phases.",
-      "He breaks down how Marcellus defines a quality company, using clean accounts, 15 years of high return on capital, and double-digit revenue and earnings growth, and why only around 50 companies in the BSE 500 pass this test."
+      "E2E Networks is riding AI data centre and GPU rental demand with 5\u00d7 sales growth over four years.",
+      "Black Box reports digital infrastructure growth with 34% ROE, 27% ROCE and a 1.5\u00d7 order backlog."
      ]
     },
     {
@@ -943,212 +839,111 @@
      "published": "2026-10-18",
      "link": "https://www.youtube.com/watch?v=9mSFTx0blU0",
      "takeaways": [
-      "The sharp corrections in ITC, Varun Beverages, Bajaj Electricals and MapmyIndia were driven by slowing earnings growth, EBITDA margin pressure, PE de\u2011rating and changing market expectations.",
-      "The video breaks down Q1FY27 results and trends in FMCG, cigarette business, consumer demand, competition and valuation frameworks."
-     ]
-    },
-    {
-     "show": "Abhijit Chavda",
-     "author": "Abhijit Chavda",
-     "category": "Geopolitics",
-     "title": "#AskAbhijit 383: Ask Me Anything - Any Topic",
-     "guest": "",
-     "published": "2026-10-18",
-     "link": "https://www.youtube.com/watch?v=x28y4VH-9-o",
-     "takeaways": [
-      "Episode 383 of the #AskAbhijit show: Ask me your best questions in the comments, and I shall answer them.",
-      "Dark Stars to Black Holes: The 250-Year Journey from Impossible Idea to Nobel Prize (The Black Hole Chronicles Book 1) 2."
-     ]
-    },
-    {
-     "show": "Ankur Warikoo",
-     "author": "warikoo",
-     "category": "Career",
-     "title": "Can You Spend \u20b91,000 Without Paying a Billionaire?",
-     "guest": "",
-     "published": "2026-10-17",
-     "link": "https://www.youtube.com/watch?v=f5cUWWoIjjs",
-     "takeaways": [
-      "The episode examines everyday purchases to see whether the money ends up with businesses owned by billionaires.",
-      "It is presented as a thought experiment rather than an actual filmed shopping challenge."
-     ]
-    },
-    {
-     "show": "Zero1 by Zerodha",
-     "author": "Zero1 by Zerodha",
-     "category": "Money",
-     "title": "Why a normal life now feels like a Luxury?",
-     "guest": "",
-     "published": "2026-10-17",
-     "link": "https://www.youtube.com/watch?v=cBe9pIOhNOo",
-     "takeaways": [
-      "India\u2019s inflation has historically been around 6\u20114%, but many people feel it is higher now.",
-      "The episode explains how to calculate the \u201cright\u201d inflation for you and how to beat that number."
-     ]
-    },
-    {
-     "show": "Sadhguru",
-     "author": "Sadhguru",
-     "category": "Philosophy",
-     "title": "Navratri & Periods: Can Women Visit Temples? | Sadhguru",
-     "guest": "",
-     "published": "2026-10-17",
-     "link": "https://www.youtube.com/watch?v=PZmjYFBAO6U",
-     "takeaways": [
-      "Sadhguru explores how the traditional belief that women need not worship during their menstrual cycles originated and questions its relevance today.",
-      "The episode is a unique, direct\u2011to\u2011audience solo podcast where Sadhguru speaks straight to listeners."
-     ]
-    },
-    {
-     "show": "Zerodha Varsity",
-     "author": "Zerodha Varsity",
-     "category": "Investing",
-     "title": "Should You Create an HUF? Everything You Need to Know?",
-     "guest": "",
-     "published": "2026-10-16",
-     "link": "https://www.youtube.com/watch?v=ykrxgCfcMt4",
-     "takeaways": [
-      "Can an HUF really help you save taxes, or is it only useful for a handful of families?",
-      "In this video, Aastha Khurana explains how an HUF works, who can create one, and the situations where it can actually make a difference to your tax planning."
-     ]
-    },
-    {
-     "show": "Think School",
-     "author": "Think School",
-     "category": "Business",
-     "title": "Sri Lanka\u2019s Real Estate Goldmine? | Kumar Sangakkara Reveals the Next Big Investment Opportunity",
-     "guest": "",
-     "published": "2026-10-15",
-     "link": "https://www.youtube.com/watch?v=dbM8AMmEdgY",
-     "takeaways": [
-      "You can buy a $1.3\u202fmillion holiday home in Sri\u202fLanka and earn an 8% annual return in US dollars.",
-      "The upcoming projects have a $400,000 entry point for investors."
-     ]
-    },
-    {
-     "show": "WTF is (clips)",
-     "author": "Nikhil Kamath Clips",
-     "category": "Business",
-     "title": "Why Smart People Are Quitting Alcohol",
-     "guest": "",
-     "published": "2026-10-14",
-     "link": "https://www.youtube.com/watch?v=Zs9iCKSarx0",
-     "takeaways": [
-      "Smart people are quitting alcohol."
-     ]
-    },
-    {
-     "show": "Akshat Shrivastava",
-     "author": "Akshat Shrivastava",
-     "category": "Investing",
-     "title": "Prepare for the Worst. And start saving cash now... (Here's why)",
-     "guest": "",
-     "published": "2026-10-14",
-     "link": "https://www.youtube.com/watch?v=BSB19F6yra4",
-     "takeaways": [
-      "Keep 20% of your portfolio in cash.",
-      "The host suggests they may be foreseeing a market correction."
-     ]
-    },
-    {
-     "show": "Dhruv Rathee",
-     "author": "Dhruv Rathee",
-     "category": "Society",
-     "title": "My First Press Conference | Open Challenge to Modi | Dhruv Rathee",
-     "guest": "",
-     "published": "2026-10-12",
-     "link": "https://www.youtube.com/watch?v=9t5NOKVUTZo",
-     "takeaways": [
-      "In my first press conference, I answer journalists\u2019 questions about my detention, what happened to my family, and why I came to join the protests.",
-      "I also respond to claims about my citizenship, allegations of foreign funding, and questions about whether I intend to enter politics."
-     ]
-    },
-    {
-     "show": "Pranjal Kamra",
-     "author": "Pranjal Kamra",
-     "category": "Investing",
-     "title": "What happened to the Indian Stock Market?",
-     "guest": "",
-     "published": "2026-10-02",
-     "link": "https://www.youtube.com/watch?v=xEk2do30B1I",
-     "takeaways": [
-      "We walk through smart, practical ways to react during market volatility.",
-      "The episode aims to help you avoid panic selling, protect your portfolio, and spot long\u2011term opportunities in the dip."
+      "The sharp corrections in ITC, Varun Beverages, Bajaj Electricals and MapmyIndia are attributed to slowing earnings growth, EBITDA margin pressure, PE de\u2011rating and shifting market expectations.",
+      "The analysis breaks down Q1FY27 results, FMCG and cigarette business trends, consumer demand, competition and valuation frameworks for long\u2011term investors."
      ]
     }
    ],
-   "shows": 20,
+   "shows": 1,
    "source": "each channel's public Atom feed",
-   "built_on": "2026-10-21",
+   "built_on": "2026-10-22",
    "age_days": 0.0,
    "is_fallback": false
   },
   "smart_reads": [
    {
-    "source": "ET Opinion",
-    "cat": "money",
-    "title": "Philanthropy\u2019s biggest failure is its fear of failure",
-    "link": "https://economictimes.indiatimes.com/opinion/et-commentary/philanthropys-biggest-failure-is-its-fear-of-failure/articleshow/135075837.cms",
-    "summary": "Philanthropy holds unique advantages, yet many funders fall into common pitfalls that hinder their potential. Founders can take risks and provide unrestricted capital, which is crucial for innovative solutions. However, they should avoid micromanaging and demanding excessive evidence before funding initiatives. It is a",
-    "date": "Oct 20, 2026",
-    "_sort": "2026-10-20T19:04:47+00:00",
+    "source": "Scott Young",
+    "cat": "habits",
+    "title": "The Key to Creating Learning Projects You\u2019ll Finish",
+    "link": "https://www.scotthyoung.com/blog/2026/10/21/the-key-to-creating-learning-projects-youll-finish/",
+    "summary": "My three-step process for self-directed learning projects you'll actually complete.\nThe post The Key to Creating Learning Projects You\u2019ll Finish appeared first on Scott H Young.",
+    "date": "Oct 21, 2026",
+    "_sort": "2026-10-21T20:25:47+00:00",
     "smart": {
      "what_happened": [
-      "Funders often avoid risk and micromanage initiatives, demanding excessive evidence before providing capital.",
-      "The article urges donors to take risks and offer unrestricted capital to support innovative solutions."
+      "The article presents a three-step process for self\u2011directed learning projects you\u2019ll actually complete.",
+      "It was published on Scott H Young\u2019s website."
      ],
-     "why_it_matters": "For investors and financial professionals, the effectiveness of philanthropic capital influences the pipeline of innovative ventures and social impact outcomes. When donors restrict funding or impose heavy evidence requirements, promising solutions may stall, limiting the sector's ability to generate scalable, high\u2011impact results that could eventually intersect with private\u2011sector opportunities.",
-     "what_to_watch": "Track the share of unrestricted versus restricted grants disclosed in major foundations' annual reports over the next 12 months.",
-     "headline": "Philanthropy's biggest failure is fear of failure",
+     "why_it_matters": "For individuals seeking to improve personal development outcomes, a clear, repeatable framework can increase the likelihood of finishing self\u2011directed learning initiatives, helping them acquire new skills more efficiently.",
+     "what_to_watch": "Check Scott H Young\u2019s site for the detailed description of the three-step process.",
+     "headline": "Scott H Young outlines three-step process for completing learning projects",
+     "read_seconds": 20
+    }
+   },
+   {
+    "source": "NYT Well",
+    "cat": "health",
+    "title": "Christina Applegate Says Her MS Was Misdiagnosed",
+    "link": "https://www.nytimes.com/2026/10/20/well/christina-applegate-misdiagnosis-ms.html",
+    "summary": "The actress, who was given a diagnosis of multiple sclerosis in 2021, was told by a doctor that she doesn\u2019t have it after all.",
+    "date": "Oct 21, 2026",
+    "_sort": "2026-10-21T20:13:15+00:00",
+    "smart": {
+     "what_happened": [
+      "She was diagnosed with multiple sclerosis in 2021.",
+      "A doctor later told her she does not have multiple sclerosis."
+     ],
+     "why_it_matters": "The reversal highlights the potential for misdiagnosis in complex neurological conditions, underscoring the importance of thorough testing and second opinions. For investors and analysts, it serves as a reminder that health disclosures can affect public perception and personal branding, which may influence endorsement deals and related revenue streams.",
+     "what_to_watch": "Monitor any follow\u2011up statements from Christina Applegate or her representatives in upcoming interviews or press releases for clarification on her health status.",
+     "headline": "Christina Applegate\u2019s multiple sclerosis diagnosis reversed",
+     "read_seconds": 20
+    }
+   },
+   {
+    "source": "ET Opinion",
+    "cat": "money",
+    "title": "Rising corporate borrowings, hello!",
+    "link": "https://economictimes.indiatimes.com/opinion/et-editorial/rising-corporate-borrowings-hello/articleshow/135100251.cms",
+    "summary": "Public Sector Banks in India are experiencing an increase in corporate borrowing, reflecting a strengthening of private sector capital expenditure. Key sectors driving this trend include wholesale trading, commercial real estate, and chemicals. Factors such as robust economic growth and low bond yields are contributing",
+    "date": "Oct 21, 2026",
+    "_sort": "2026-10-21T19:53:39+00:00",
+    "smart": {
+     "what_happened": [
+      "Public sector banks in India are experiencing an increase in corporate borrowing.",
+      "The growth is driven by wholesale trading, commercial real estate and chemicals, supported by robust economic growth and low bond yields."
+     ],
+     "why_it_matters": "The uptick in corporate borrowing signals stronger private\u2011sector capital expenditure, which can boost economic activity and improve banks' loan\u2011to\u2011deposit ratios, potentially enhancing profitability for the public sector banking system.",
+     "what_to_watch": "The Reserve Bank of India's next quarterly report on corporate loan growth.",
+     "headline": "Indian public sector banks see rise in corporate borrowing",
      "read_seconds": 26
     }
    },
    {
     "source": "Livemint",
     "cat": "money",
-    "title": "Small-cap mutual funds: Should you pick funds with high index overlap? What one-year returns show",
-    "link": "https://www.livemint.com/money/personal-finance/smallcap-mutual-funds-should-you-pick-funds-with-high-index-overlap-what-one-year-returns-show-11792518662358.html",
-    "summary": "Small-cap mutual funds with higher benchmark overlap did not necessarily deliver better returns. Value Research data shows one-year returns ranging from -0.1% to 29.1% across 10 schemes, highlighting why investors should look beyond portfolio overlap when choosing funds.",
-    "date": "Oct 20, 2026",
-    "_sort": "2026-10-20T18:13:32+00:00",
+    "title": "Which transactions can trigger notice from Income Tax Department? Know rules for large cash deposits and UPI transfers",
+    "link": "https://www.livemint.com/money/personal-finance/which-transactions-can-trigger-notice-from-income-tax-department-know-rules-for-large-cash-deposits-and-upi-transfers-11792602941785.html",
+    "summary": "Large UPI transfers do not automatically trigger income tax notices, but unexplained bank credits can attract scrutiny. From freelancers to individuals receiving money for others, here's when digital transactions may raise red flags and what records to keep.",
+    "date": "Oct 21, 2026",
+    "_sort": "2026-10-21T17:51:08+00:00",
     "smart": {
      "what_happened": [
-      "Higher benchmark overlap did not consistently produce better returns among small-cap mutual funds.",
-      "One-year returns across ten schemes ranged from -0.1% to 29.1%."
+      "Large UPI transfers do not automatically trigger income\u2011tax notices.",
+      "Unexplained bank credits, including large cash deposits, can attract tax department scrutiny."
      ],
-     "why_it_matters": "The data shows that relying solely on index overlap as a selection criterion may mislead investors, as funds with greater similarity to their benchmarks did not outperform those with lower overlap. This underscores the need for a broader analysis of fund characteristics, such as manager skill and portfolio composition, when evaluating small-cap mutual funds.",
-     "what_to_watch": "Track the next quarter's performance figures for the same ten small-cap schemes to see if the return pattern persists.",
-     "headline": "Small-cap mutual funds' one-year returns vary despite benchmark overlap",
-     "read_seconds": 22
+     "why_it_matters": "Tax authorities may issue notices when they detect sizable cash deposits or digital credits that lack a clear source, which can lead to audits, penalties, or legal action for individuals and freelancers who do not maintain proper documentation of their income.",
+     "what_to_watch": "Monitor any bank credit that is not supported by verifiable records, as such transactions are likely to be flagged for review.",
+     "headline": "Income Tax notices can be triggered by large cash deposits and unexplained UPI transfers",
+     "read_seconds": 21
     }
    },
    {
-    "source": "NYT Well",
-    "cat": "health",
-    "title": "How Bad Is Another Case of Covid?",
-    "link": "https://www.nytimes.com/2026/10/19/well/covid-reinfection-risks.html",
-    "summary": "Repeated infections are \u201ca fact of life\u201d at this point, experts say. But they warn there is no such thing as a risk-free case.",
-    "date": "Oct 20, 2026",
-    "_sort": "2026-10-20T13:22:26+00:00"
+    "source": "The Marginalian",
+    "cat": "ideas",
+    "title": "Corrective for a Broken Heart",
+    "link": "https://www.themarginalian.org/2026/10/21/corrective-for-a-broken-heart/",
+    "summary": "&#8220;Life will break you,&#8221; Louise Erdrich wrote in her passionate insistence that &#8220;you are here to risk your heart.&#8221; It can happen with a shattering, or with a thousand small fissures, but the great paradox &#8212; the great salvation &#8212; is that every time it happens, you live to see you are un",
+    "date": "Oct 21, 2026",
+    "_sort": "2026-10-21T12:49:24+00:00"
    },
    {
-    "source": "Livemint Opinion",
+    "source": "Economic Times",
     "cat": "money",
-    "title": "Delhi smog: Why satellites and machinery are unlikely to solve the problem\u2014and what actually might",
-    "link": "https://www.livemint.com/opinion/online-views/satellites-won-t-fix-delhi-s-bad-air-but-growing-less-paddy-may-11792397081723.html",
-    "summary": "For years, the government has been trying to curb the burning of rice straw on farms around India\u2019s capital. First by offering seeders, then by using satellites to tip off local officials on illegal fire hotspots. But policymakers can't use technocratic solutions to fix a political economy problem.",
-    "date": "Oct 20, 2026",
-    "_sort": "2026-10-20T10:00:28+00:00",
-    "smart": {
-     "what_happened": [
-      "The government has tried to curb rice\u2011straw burning around Delhi by first offering seeders to farmers.",
-      "It then added satellite alerts to inform local officials of illegal fire hotspots, but technocratic fixes have stalled."
-     ],
-     "why_it_matters": "Burning rice straw creates severe smog in Delhi, worsening air quality, public health risks, and economic disruption. The failure of technology\u2011driven interventions highlights the need for political and economic solutions to address the underlying incentives driving farmers to burn crop residue.",
-     "what_to_watch": "The next release of satellite fire\u2011hotspot data for the Delhi region to see if hotspot alerts increase or decrease.",
-     "headline": "India struggles to curb Delhi rice\u2011straw burning despite satellite monitoring",
-     "read_seconds": 24
-    }
+    "title": "Gold rate today (October 21, 2026): Check 24k, 22k, 20k and 18k gold jewellery prices from IBJA, Malabar Gold &amp; Diamonds, Joyalukkas, Ka",
+    "link": "https://economictimes.indiatimes.com/wealth/invest/gold-rate-today-check-18k-20k-24k-ibja-gold-price-malabar-gold-kalyan-jewelers-joyalukkas-delhi-hyderabad-bengaluru/articleshow/135086002.cms",
+    "summary": "Gold rate today: Gold jewellery prices from leading brands such as Joyalukkas and Malabar Gold &amp; Diamonds decreased significantly today. The IBJA's indicative rates for various gold purities also experienced a decline today compared to previous rate. Silver prices fell significantly, marking a notable change in the",
+    "date": "Oct 21, 2026",
+    "_sort": "2026-10-21T07:57:47+00:00"
    },
    {
     "source": "Psyche",
@@ -1157,36 +952,7 @@
     "link": "https://psyche.co/guides/how-to-overcome-task-paralysis",
     "summary": "If you have ADHD or you\u2019re stressed, tired and stuck, goal management training can help you get started and keep going- by Joe WilnerRead on Psyche",
     "date": "Oct 20, 2026",
-    "_sort": "2026-10-20T10:00:00+00:00",
-    "smart": {
-     "what_happened": [
-      "The article describes how people with ADHD, stress, fatigue, or feeling stuck experience task paralysis.",
-      "It reports that goal management training can help these individuals start tasks and keep going."
-     ],
-     "why_it_matters": "Understanding that a structured approach like goal management training can mitigate task paralysis provides a practical tool for individuals struggling with focus and motivation, which can improve personal productivity and mental well\u2011being.",
-     "what_to_watch": "Future research results on the effectiveness of goal management training for ADHD and stress\u2011related task paralysis.",
-     "headline": "Goal management training helps overcome task paralysis",
-     "read_seconds": 20
-    }
-   },
-   {
-    "source": "Aeon",
-    "cat": "ideas",
-    "title": "How intuitions work",
-    "link": "https://aeon.co/essays/sometimes-you-just-know-somethings-off-but-how",
-    "summary": "Just as seeing a tree gives you reason to believe it\u2019s there, sensing that a stranger is creepy gives you reason to walk away- by Marc A MoffettRead on Aeon",
-    "date": "Oct 20, 2026",
-    "_sort": "2026-10-20T10:00:00+00:00",
-    "smart": {
-     "what_happened": [
-      "The article likens seeing a tree to having reason to believe the tree exists.",
-      "It compares that to sensing a stranger is creepy, giving reason to walk away."
-     ],
-     "why_it_matters": "The piece highlights that intuitive judgments, like visual perception or social cues, can serve as rapid evidence that influences everyday decisions, underscoring the role of non\u2011deliberative processes in human behavior.",
-     "what_to_watch": "Future Aeon publications on the science of intuition and decision\u2011making.",
-     "headline": "Marc A Moffett explains how intuitions guide behavior",
-     "read_seconds": 20
-    }
+    "_sort": "2026-10-20T10:00:00+00:00"
    },
    {
     "source": "Peter Attia",
@@ -1196,15 +962,6 @@
     "summary": "\u201cThe idea that cancer metabolically is different from normal cells, is a potential way to treat cancers. We know that there are second line and third line therapies in certain cancers that will truly expand your lifespan.\u201d\u2012 Sid Mukherjee\nThe post #412 \u2012 The evolving science of cancer: emerging approaches to prevention ",
     "date": "Oct 19, 2026",
     "_sort": "2026-10-19T04:15:00+00:00"
-   },
-   {
-    "source": "Scott Young",
-    "cat": "habits",
-    "title": "The Best Way to Take Notes",
-    "link": "https://www.scotthyoung.com/blog/2026/10/13/best-way-take-notes/",
-    "summary": "The best way to take notes may be the method that uses the least technology. I'll explain why notes still matter and how to learn better with them.\nThe post The Best Way to Take Notes appeared first on Scott H Young.",
-    "date": "Oct 13, 2026",
-    "_sort": "2026-10-13T22:35:17+00:00"
    },
    {
     "source": "Farnam Street",
@@ -1234,7 +991,7 @@
     "moves": 25,
     "termination": "Checkmate",
     "speed": "Blitz",
-    "analysis": "Focus on early piece development: avoid moving the same minor piece twice before castling; aim to complete development within 8\u202fmoves, reducing opponent\u2019s initiative.",
+    "analysis": "Focus on early piece development: stop moving the same pawn twice; aim to bring both knights out by move\u202f4, saving\u202f\u224830\u202fseconds per turn.",
     "is_upset": false,
     "is_collapse": false,
     "is_long": false,
@@ -1329,7 +1086,7 @@
     "moves": 19,
     "termination": "Time Out",
     "speed": "Blitz",
-    "analysis": "Focus on early king safety: avoid moving the g\u2011pawn and queen side\u2011castle after 1\u2026a3; develop knights and bishops before pawn pushes.",
+    "analysis": "Focus on time management: allocate ~30\u202fseconds per move early; practice quick, solid opening moves (e.g., 1\u2026e5) to avoid 19\u2011move timeout.",
     "is_upset": false,
     "is_collapse": false,
     "is_long": false,
@@ -1418,18 +1175,18 @@
    "upsets": 0,
    "collapses": 0,
    "long_games": 0,
-   "session_summary": "AKK_010\u2019s 0\u20112 record shows a complete collapse against even modest opposition\u2014your opening repertoire is so weak it never gets you past the first 10 moves, and you haven\u2019t managed a single upset or collapse to balance the stats. Stop relying on dubious lines; switch to solid, theory\u2011tested openings (e.g., 1.e4\u202fC20\u2011C99 or 1.d4\u202fD00\u2011D99) and drill the resulting middle\u2011game plans until they become automatic. Spend the next 20\u202fhours analyzing each loss move\u2011by\u2011move, identify every tactical oversight, and practice those exact motifs on a tactics trainer before you play another rated game.",
+   "session_summary": "You\u2019re playing a textbook \u201cno\u2011risk\u201d game that never threatens anyone\u2014zero wins, two losses, and no draws proves you\u2019re either over\u2011cautious or clueless about the critical moments. Your opening repertoire is a complete disaster; you\u2019re either dumping into the worst lines or refusing to fight for the center, so every opponent is already a step ahead before move\u202f2. Stop avoiding complications, study the main\u2011line King\u2019s Indian Defense (or the Sicilian Najdorf if you prefer sharp play), and force yourself into tactical positions where you can actually convert a mistake into a win.",
    "session_date": "2026-10-19",
    "is_yesterday": false,
    "token_missing": false
   },
   "lichess_puzzle": {
-   "pid": "kRapK",
-   "rating": 1917,
+   "pid": "W4lEb",
+   "rating": 1807,
    "level": "\ud83d\udd34 stretch",
-   "themes": "Middlegame \u00b7 Advantage \u00b7 Short",
-   "tip": "Calculate 3 moves deep before touching a piece.",
-   "url": "https://lichess.org/training/kRapK"
+   "themes": "Very Long \u00b7 Mate In5 \u00b7 Middlegame",
+   "tip": "Lure the king or a key piece onto a bad square with a sacrifice.",
+   "url": "https://lichess.org/training/W4lEb"
   }
  }
 }
