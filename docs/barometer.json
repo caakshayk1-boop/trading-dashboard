@@ -1,6 +1,6 @@
 {
   "ok": true,
-  "generated_at": "2026-10-22T18:10:44+00:00",
+  "generated_at": "2026-10-23T17:58:19+00:00",
   "weights": {
     "trend": 30,
     "breadth": 30,
@@ -9,47 +9,47 @@
     "highs": 10
   },
   "today": {
-    "score": 29,
+    "score": 24,
     "band": {
-      "k": "weak",
-      "t": "Weak",
+      "k": "poor",
+      "t": "Poor",
       "c": "dn"
     },
     "parts": [
       {
         "key": "trend",
         "label": "Where the index sits",
-        "score": 12.1,
+        "score": 10.0,
         "weight": 30,
-        "detail": "Nifty is 12% up its own 52-week range, 14.0% below the high"
+        "detail": "Nifty is 10% up its own 52-week range, 14.3% below the high"
       },
       {
         "key": "breadth",
         "label": "Names above their 200-day",
-        "score": 39.9,
+        "score": 38.4,
         "weight": 30,
-        "detail": "394 of 988 hold their 200-day average"
+        "detail": "380 of 989 hold their 200-day average"
       },
       {
         "key": "participation",
         "label": "Advancing today",
-        "score": 17.4,
+        "score": 12.0,
         "weight": 15,
-        "detail": "172 of 988 advanced"
+        "detail": "119 of 989 advanced"
       },
       {
         "key": "volatility",
         "label": "Volatility",
-        "score": 70,
+        "score": 50,
         "weight": 15,
-        "detail": "India VIX at 15.76, normal"
+        "detail": "India VIX at 16.86, unsettled"
       },
       {
         "key": "highs",
         "label": "Names at a 52-week high",
         "score": 0.0,
         "weight": 10,
-        "detail": "0 of 988 at a 52-week high"
+        "detail": "0 of 989 at a 52-week high"
       }
     ],
     "coverage": {
@@ -65,13 +65,13 @@
       "t": "Slightly cheaper",
       "c": ""
     },
-    "counted": 988,
-    "nifty": 22687.650390625,
-    "drawdown_pct": 13.97,
-    "above_200dma_pct": 39.9,
-    "vix": 15.762499809265137,
-    "nifty_date": "2026-10-22",
-    "vix_date": "2026-10-22"
+    "counted": 989,
+    "nifty": 22600.0,
+    "drawdown_pct": 14.31,
+    "above_200dma_pct": 38.4,
+    "vix": 16.860000610351562,
+    "nifty_date": "2026-10-23",
+    "vix_date": "2026-10-23"
   },
   "history": [
     {
@@ -427,12 +427,27 @@
       "drawdown_pct": 13.97,
       "above_200dma_pct": 39.9,
       "vix": 15.762499809265137
+    },
+    {
+      "date": "2026-10-23",
+      "score": 24,
+      "band": "poor",
+      "stage": {
+        "k": "early",
+        "t": "Slightly cheaper",
+        "c": ""
+      },
+      "nifty": 22600.0,
+      "nifty_date": "2026-10-23",
+      "drawdown_pct": 14.31,
+      "above_200dma_pct": 38.4,
+      "vix": 16.860000610351562
     }
   ],
   "outcomes": {
     "early": {
       "label": "Slightly cheaper",
-      "readings": 20,
+      "readings": 21,
       "m3": null,
       "m6": null,
       "m12": null
