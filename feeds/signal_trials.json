@@ -1,20 +1,17 @@
 {
   "schema": "signal-trials/1",
-  "status": "deferred",
-  "session_date": "2026-10-22",
-  "published_at": "2026-10-23T02:13:45.765802+05:30",
-  "operational_run_at": "2026-10-23T02:13:45.765802+05:30",
+  "status": "blocked",
+  "session_date": "2026-10-23",
+  "published_at": "2026-10-23T23:30:19.396774+05:30",
+  "operational_run_at": "2026-10-23T23:30:19.396774+05:30",
   "market_data_date": null,
   "engines": {
     "pulse": {
-      "status": "deferred",
-      "status_detail": "Discovery deferred; no stale session is represented as a fresh forward result.",
+      "status": "blocked",
+      "status_detail": "Discovery blocked by required inputs; existing paper positions are managed where inputs permit.",
       "plans": [],
       "journal": [],
       "diagnostics": [
-        {
-          "code": "outside_forward_publication_window"
-        },
         {
           "code": "verified_earnings_missing"
         },
@@ -36,8 +33,8 @@
       }
     },
     "compass": {
-      "status": "deferred",
-      "status_detail": "Discovery deferred; no stale session is represented as a fresh forward result.",
+      "status": "blocked",
+      "status_detail": "Discovery blocked by required inputs; existing paper positions are managed where inputs permit.",
       "plans": [],
       "journal": [],
       "diagnostics": [
@@ -46,9 +43,6 @@
         },
         {
           "code": "human_approved_theses_missing"
-        },
-        {
-          "code": "outside_forward_publication_window"
         },
         {
           "code": "pit_fundamentals_missing"
