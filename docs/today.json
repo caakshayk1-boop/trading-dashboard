@@ -1,7 +1,7 @@
 {
- "build_id": "20261022T082217",
- "date": "2026-10-22",
- "date_str": "Thursday, October 22 2026",
+ "build_id": "20261023T081952",
+ "date": "2026-10-23",
+ "date_str": "Friday, October 23 2026",
  "picks": [
   {
    "symbol": "TCS.NS",
@@ -538,267 +538,267 @@
  },
  "desk": {
   "chess": {
-   "title": "Tactics: The Fork",
-   "body": "A fork attacks two pieces simultaneously with one piece. Knight forks are the deadliest \u2014 they move in an L-shape and cannot be blocked. Look for squares your knight can reach that simultaneously attack king + queen, or rook + rook. Practice: set up NxC5+ forking king and rook. Classic beginner trap.",
-   "index": 5,
+   "title": "Tactics: The Skewer",
+   "body": "A skewer is a reverse pin. A valuable piece is attacked, it moves, and the piece behind it is captured. Skewers happen on open files and diagonals. Rooks and bishops execute skewers. Pattern: Rook checks king \u2192 king moves \u2192 rook captures queen. Spot this on every open file.",
+   "index": 6,
    "total": 20
   },
   "wisdom": {
-   "title": "Regulate Yourself First",
-   "body": "You cannot be a calm parent if you're running on stress, sleep debt, and financial anxiety. Your regulation is their regulation \u2014 babies co-regulate with caregivers. Deep breath before you pick her up. Shoulders down. Slow exhale. Your nervous system sets the tone for the room.",
-   "index": 3,
+   "title": "Stoic Parenting",
+   "body": "Marcus Aurelius raised children while running an empire. His journal shows he constantly asked: am I reacting or responding? Reacting is automatic. Responding is chosen. The next time your baby cries at 2am, ask yourself: how do I want to respond to this? You always have a choice in the gap between stimulus and response.",
+   "index": 4,
    "total": 18
   },
   "book": {
-   "book": "Thinking, Fast and Slow",
-   "author": "Daniel Kahneman",
-   "chapter": "The Planning Fallacy: Why Every Project Takes Longer",
-   "lesson": "Kahneman and Tversky proved that humans systematically underestimate how long tasks take and overestimate how much they'll accomplish. Why? We build plans based on the best-case scenario and ignore what happened on similar projects in the past (outside view). The fix: reference class forecasting. Before estimating a project's timeline, ask 'how long did similar projects actually take?' The answer from historical data is almost always longer than your optimistic internal estimate. The cure for the planning fallacy is disciplined use of the outside view.",
-   "key_quote": "Your intuitive project estimate is probably optimistic by 50-200%. Add a buffer based on historical data, not hope.",
-   "action": "For your next project, find 3 similar past projects. Average their actual completion time. Use that as your baseline estimate.",
-   "index": 15,
+   "book": "Principles",
+   "author": "Ray Dalio",
+   "chapter": "Radical Transparency and Believability-Weighted Decision Making",
+   "lesson": "Dalio built Bridgewater into the world's largest hedge fund on two principles: radical transparency (everyone says what they really think, no politics, no hidden agendas) and believability-weighted decisions (not all opinions are equal \u2014 weight each person's input by their track record and expertise in that specific area). The combination creates a meritocracy of ideas where the best idea wins regardless of who had it. Most organisations do the opposite: hide information, weight opinions by seniority, and let politics determine outcomes. The result is poor decisions made confidently.",
+   "key_quote": "An organisation where people say what they think and decisions are made on merit will outperform one run on hierarchy and politics.",
+   "action": "In your next team discussion, explicitly state your confidence level and reasoning. Encourage others to challenge your view if they disagree.",
+   "index": 16,
    "total": 48,
    "crux": [
-    "Two systems: System 1 is fast, automatic, emotional. System 2 is slow, effortful, logical.",
-    "System 2 is lazy and endorses System 1's answers with minimal checking.",
-    "What you see is all there is (WYSIATI). The mind builds confident stories from whatever is available.",
-    "Anchoring: an irrelevant number moves your estimate. Knowing this does not stop it.",
-    "Availability: vivid and recent events feel probable. Frequency gets confused with memorability.",
-    "Representativeness beats base rates. People pick the plausible story over the likelier category.",
-    "Loss aversion: losses hurt roughly 2x as much as equivalent gains please.",
-    "Prospect theory: you evaluate from a reference point, not in absolutes. Framing changes the answer.",
-    "Overconfidence is the most consequential bias, and expertise increases it.",
-    "The illusion of validity: confidence tracks story coherence, not predictive accuracy.",
-    "Regression to the mean explains most 'turnarounds' and most 'losses of form'.",
-    "The planning fallacy: forecasts default to best-case. Use the outside view and comparable past cases.",
-    "The remembering self and the experiencing self disagree. Memory is dominated by peaks and endings.",
-    "Formulas beat expert intuition in noisy, low-validity environments. Checklists and algorithms win."
+    "Pain + reflection = progress. Pain alone teaches nothing.",
+    "Radical truth and radical transparency, applied consistently, beat politeness.",
+    "Embrace reality and deal with it. Wishing it were different is the expensive option.",
+    "Use the 5-step process: goals \u2192 problems \u2192 diagnosis \u2192 design \u2192 execution.",
+    "Ego and blind spots are the two barriers. Both feel like conviction from inside.",
+    "Be radically open-minded. Fear of looking wrong is more costly than being wrong.",
+    "Thoughtful disagreement: stress-test with believable people rather than argue to win.",
+    "Believability-weighted decision making \u2014 not all opinions carry equal weight.",
+    "Distinguish the machine from yourself. Look at your organisation from above as a designer.",
+    "Problems are fuel. Do not tolerate them, but do not hide them either.",
+    "Diagnose root causes before designing. Most people jump straight to solutions.",
+    "People are wired very differently. Match the person to the role's actual requirements.",
+    "Write your principles down. Undocumented principles are moods.",
+    "Everything is a machine producing outcomes. Fix the machine, not the instance."
    ],
    "learnings": [
-    "You cannot debias yourself by intention. You can build procedures that catch the bias.",
-    "Fluency masquerades as truth. Anything easy to process feels more likely.",
-    "Expert intuition is real only where feedback is fast and regular. Markets do not qualify.",
-    "Write the forecast down before the outcome, or hindsight will rewrite it."
+    "Reflection is the step that converts a bad experience into an asset.",
+    "Weight opinions by track record, not seniority or volume.",
+    "Diagnosis before design is the discipline almost everyone skips.",
+    "Writing principles down is what makes them testable."
    ],
    "examples": [
-    "Israeli parole judges granted parole ~65% of the time right after a meal break and near 0% just before one. Same evidence, different glucose.",
-    "The Linda problem: most people rate 'bank teller and feminist' as likelier than 'bank teller', which is logically impossible.",
-    "Kahneman's flight-instructor insight: praise after a good flight seemed to hurt and criticism after a bad one seemed to help. It was regression to the mean, not feedback working."
+    "Dalio's 1982 debt-crisis call was catastrophically wrong, cost him the firm, and became the origin of his entire radical-transparency method.",
+    "Bridgewater records nearly every meeting so decisions can be audited by anyone. Discomfort is the design goal.",
+    "The Dot Collector rates people live in meetings, making believability visible instead of political."
    ],
    "adapt": [
-    "Write the trade thesis before entry. Post-hoc explanation is System 1 inventing a story.",
-    "Use base rates on the Dubai search: what fraction of applications convert? Plan on that, not on the best case.",
-    "The planning fallacy is why estimates slip. Take the outside view \u2014 how long did the last comparable build actually take?",
-    "Backtest numbers over gut feel. -0.029R on 1H means the 1H feeling is wrong, however strong it is."
+    "Write the trading principles down. 'Regime filter, structure stop, 48h horizon' beats remembering.",
+    "The alert flood is a machine problem, not a bad day. Diagnose the lifecycle rule, don't just clear the backlog.",
+    "Believability weighting on market opinions: the backtest outranks anyone's conviction, including yours.",
+    "Pain + reflection: the Meta restriction is only useful if the caption scoring process changes because of it."
    ]
   },
   "way": {
    "minimalism": {
-    "title": "Travel Light As Practice",
-    "body": "Pack for a week in a carry-on. It teaches, in three days, exactly how little you require \u2014 a lesson that transfers directly home.",
-    "action": "Next trip: carry-on only. Note what you never opened.",
-    "index": 17,
+    "title": "Say No To Free",
+    "body": "Free samples, conference tote bags, hotel toiletries. Free acquisitions carry the same ongoing cost as bought ones. The price tag was never the expensive part.",
+    "action": "Decline the next free item you are offered.",
+    "index": 18,
     "total": 20,
     "label": "Minimalism"
    },
    "etiquette": {
-    "title": "The Right Hand Rule",
-    "body": "In the Gulf and much of Asia, give and receive with the right hand \u2014 cards, food, documents, money. The left hand carries a specific connotation. This is not a preference; it is the baseline.",
-    "action": "Hand over your next document or card with the right hand, deliberately.",
-    "index": 3,
+    "title": "Accept The Coffee",
+    "body": "In Gulf business culture, refusing offered coffee or dates can read as refusing the relationship. Take it, hold it, sip it. The transaction is not the point of the meeting.",
+    "action": "Accept the next hospitality offered, even if you do not want it.",
+    "index": 4,
     "total": 20,
     "label": "Etiquette"
    },
    "stillness": {
-    "title": "The First Hour Is Yours",
-    "body": "Whoever touches your attention first sets the agenda for the day. If that is a notification, you have outsourced the day to a stranger's priorities before you were fully awake.",
-    "action": "No screen for the first 30 minutes tomorrow. Nothing else changes.",
-    "index": 1,
+    "title": "Sit For Ten Minutes",
+    "body": "Not to achieve anything. Sit, breathe, and let thoughts pass without following them. The mind wandering is not failure \u2014 noticing it wandered is the entire rep.",
+    "action": "Ten minutes. Timer on. No app required.",
+    "index": 2,
     "total": 20,
     "label": "Stillness"
    },
    "model": {
-    "title": "Availability Heuristic",
-    "body": "You judge probability by how easily an example comes to mind. Plane crashes feel likelier than car crashes because they are memorable, not because they are common.",
-    "action": "Check one belief against actual frequency data rather than recall.",
-    "index": 13,
+    "title": "Loss Aversion",
+    "body": "Losses hurt roughly twice as much as equivalent gains please. This makes you hold losing positions and sell winners \u2014 precisely backwards, and reliably so.",
+    "action": "Review one holding you are keeping only because selling would confirm the loss.",
+    "index": 14,
     "total": 20,
     "label": "Mental Model"
    },
    "arabic": {
-    "script": "\u0628\u0627\u0644\u062a\u0648\u0641\u064a\u0642",
-    "translit": "bit-tawfeeq",
-    "meaning": "Good luck / wishing you success",
-    "use": "Before an exam, an interview, a launch. Sincere and common.",
-    "index": 29,
+    "script": "\u0648\u0627\u0644\u0644\u0647",
+    "translit": "wallah",
+    "meaning": "By God / seriously",
+    "use": "Emphasis. 'Wallah?' means 'seriously?'. Extremely common; use lightly.",
+    "index": 30,
     "total": 30,
     "label": "Arabic"
    },
    "drill": {
-    "title": "Explain It To A Ten-Year-Old",
-    "body": "Take the most technical thing you know and explain it with no jargon. If you cannot, you have memorised it rather than understood it. This is the Feynman technique and it is brutal.",
-    "action": "Pick one concept. Explain it in writing with no technical terms.",
-    "index": 5,
+    "title": "Estimate Before Calculating",
+    "body": "Guess the answer before opening the spreadsheet. Then compare. This builds the instinct that catches a model error before the client does.",
+    "action": "Estimate three figures before computing. Track how close you were.",
+    "index": 6,
     "total": 20,
     "label": "Drill"
    },
    "health": {
-    "title": "Heat And Cold Are Adjuncts, Not Basics",
-    "body": "Sauna shows dose-dependent cardiovascular association in Finnish cohorts. Cold has weaker evidence and may blunt hypertrophy if taken right after lifting. Neither substitutes for training and sleep.",
-    "action": "Only add these once training, sleep, and protein are consistent.",
-    "index": 15,
+    "title": "Blood Panel Annually, Minimum",
+    "body": "ApoB, HbA1c, fasting insulin, hs-CRP, lipid panel, vitamin D. ApoB predicts cardiovascular risk better than LDL-C and is rarely ordered unless you ask specifically.",
+    "action": "Book the panel. Ask for ApoB by name.",
+    "index": 16,
     "total": 20,
     "label": "Health"
    }
   },
   "quote": {
    "name": "Dhirubhai Ambani",
-   "quote": "If you don't build your dream, someone else will hire you to help them build theirs.",
-   "index": 40,
+   "quote": "Think big, think fast, think ahead. Ideas are no one's monopoly.",
+   "index": 41,
    "total": 96
   },
   "lesson": {
-   "tradition": "Simplicity",
-   "lesson": "Simplicity is the ultimate sophistication.",
-   "source": "Leonardo da Vinci"
+   "tradition": "Action",
+   "lesson": "A year from now, you will wish you had started today.",
+   "source": "Karen Lamb"
   },
   "case": {
-   "title": "Facebook's Instagram Acquisition (2012)",
-   "story": "Facebook bought Instagram for $1B when it had 13 employees and $0 revenue. Zuckerberg saw mobile first. Instagram is now worth $100B+.",
-   "lesson": "Buy what threatens you before it kills you. The best M&A is strategic, not defensive."
+   "title": "Xiaomi: Selling Phones Like Software",
+   "story": "Xiaomi released phones at cost, made money on software and services. 5% net margin on hardware, 40%+ on MIUI ecosystem. $35B valuation in 5 years.",
+   "lesson": "The product can be the distribution channel. Give away the razor, sell the blades."
   },
   "fpna": {
-   "title": "Three-Statement Model",
-   "body": "P&L \u2192 Balance Sheet \u2192 Cash Flow \u2014 they must tie. If they don't, you have a bug.",
-   "index": 12,
+   "title": "Sensitivity Tables",
+   "body": "Use Excel's Data Table (What-If Analysis) to show EBITDA across assumptions. One table > 5 slides.",
+   "index": 13,
    "total": 20
   },
   "cfo": {
-   "title": "FC Step 3: Internal Controls",
-   "body": "A Controller without strong controls is a liability. Know COSO framework. Segregation of duties. Maker-checker in AP/AR. SOX lite for listed companies. Document your controls. Auditors love documented processes.",
-   "index": 3,
+   "title": "FC Step 4: ERP Ownership",
+   "body": "SAP S/4HANA or Oracle Fusion \u2014 the FC owns the finance module. Know chart of accounts design, cost centre structure, intercompany eliminations, period-end close in the system. This separates candidates. SAP certification: \u20b915K online.",
+   "index": 4,
    "total": 15
   },
   "money_hack": {
-   "title": "Emergency Fund",
-   "body": "6 months of expenses in a liquid FD. Job loss + medical can overlap."
+   "title": "Credit Card Strategy",
+   "body": "Use card for all spends, pay in full before due. Earn 1\u20132% cashback. Never pay interest."
   },
   "dubai": {
-   "title": "What a Financial Controller title actually needs",
-   "body": "The jump from FP&A Manager to Controller in the Gulf is statutory reporting plus audit ownership plus a team. If the CV has no signed statutory set on it, that is the gap \u2014 not the years.",
-   "targets": "Controller bands start around AED 40K. It is the next rung, and it is close.",
-   "action_label": "Gap",
-   "action": "Get a statutory reporting line on the CV in the next six months. Any entity, any size.",
-   "index": 25,
+   "title": "Consolidation is the differentiator",
+   "body": "Multi-entity, multi-currency consolidation with intercompany elimination is what a Gulf group does every month and what most candidates have never touched. Naming the tool \u2014 HFM, OneStream, Tagetik, SAP BPC \u2014 moves you up a band on its own.",
+   "targets": "IFRS 10, IFRS 3 and IAS 21 are the standards behind it. Know which does what.",
+   "action_label": "Learn",
+   "action": "Take one 20-entity consolidation end to end, even as an exercise. Then say so.",
+   "index": 26,
    "total": 30
   },
   "daughter": {
    "months": 9,
-   "days": 301,
+   "days": 302,
    "heading": "Nine months old.",
    "band": "crawling",
    "born": "2025-12-25"
   },
-  "productivity": "Use Parkinson's Law: shorter deadlines. Work expands to fill time given.",
+  "productivity": "Shutdown ritual: write tomorrow's top 3, close all tabs. Stop working.",
   "father": [
    {
-    "title": "Vary who holds her",
-    "do": "Hand her to grandparents, friends, and colleagues while you stay visible in the room.",
-    "why": "Stranger wariness peaks around now. Practising handovers while you remain in sight teaches that unfamiliar people are safe, without forcing separation at the same time."
+    "title": "Build then let her destroy",
+    "do": "Stack three blocks, let her knock them down, rebuild. Repeat until she loses interest.",
+    "why": "Cause and effect is the entire lesson. Knocking down precedes building by months \u2014 do not rush to the constructive half."
    },
    {
-    "title": "Sit her up and step back",
-    "do": "Sit her unsupported on a soft surface within arm's reach, and let her balance.",
-    "why": "Independent sitting typically consolidates around 7\u20138 months. Constant propping delays the postural adjustments she needs to make herself."
+    "title": "Do bedtime alone once this week",
+    "do": "Handle the entire routine solo \u2014 no handover, no rescue.",
+    "why": "Solo caregiving builds a distinct relationship rather than an assisted one. It also gives her mother an uninterrupted evening, which is not a small thing at seven months."
    }
   ],
   "life_wisdom": [
    {
     "tradition": "Jainism",
-    "term": "Syadvada",
-    "translation": "Conditioned assertion \u2014 'in some respect'",
-    "teaching": "Every claim is true only under stated conditions. Jain logic prefixes assertions with 'in some respect' to keep the conditions visible.",
-    "apply": "Attach the assumption to the forecast, out loud: 'growth is 12% \u2014 in the respect that the two new stores open in Q3.' Half of forecasting disputes are actually undeclared conditions."
+    "term": "Kshama",
+    "translation": "Forgiveness, asked and given",
+    "teaching": "Once a year, at Michchhami Dukkadam, Jains ask forgiveness of everyone they may have harmed \u2014 regardless of whether they feel at fault.",
+    "apply": "The ritual removes the negotiation over who was more wrong. Do not wait for the annual version: close a grudge this week without settling the scoreboard first."
    },
    {
     "tradition": "Buddhism",
-    "term": "Right Livelihood",
-    "translation": "Work that does not require harm",
-    "teaching": "One of the eightfold path's least discussed elements: how you earn matters as much as how you behave outside earning.",
-    "apply": "Ask whether any part of your work depends on someone else not understanding something. That is the test, and it applies to finance more than most fields."
+    "term": "Right Effort",
+    "translation": "Applied in the correct direction",
+    "teaching": "Effort is one of the eight, but so is rightness of effort. Energy in the wrong direction is not neutral; it entrenches the error.",
+    "apply": "Before adding hours to a problem, spend ten minutes asking whether the problem is the right one. Most overwork is misdirection, not insufficiency."
    }
   ],
   "spanish": [
    {
-    "word": "el plazo",
-    "meaning": "the deadline",
-    "es": "No podemos cumplir ese plazo.",
-    "en": "We cannot meet that deadline.",
+    "word": "crecer",
+    "meaning": "to grow",
+    "es": "La empresa creci\u00f3 m\u00e1s r\u00e1pido de lo esperado.",
+    "en": "The company grew faster than expected.",
     "tag": "Business"
    },
    {
-    "word": "estoy de acuerdo",
-    "meaning": "I agree",
-    "es": "Estoy de acuerdo con tu an\u00e1lisis.",
-    "en": "I agree with your analysis.",
-    "tag": "Business"
+    "word": "\u00bfme puedes ayudar?",
+    "meaning": "can you help me?",
+    "es": "\u00bfMe puedes ayudar con esto?",
+    "en": "Can you help me with this?",
+    "tag": "Everyday"
    }
   ],
   "vocab": [
    {
-    "word": "Perfunctory",
-    "say": "puhr-FUNGK-tuh-ree",
-    "meaning": "Done as a duty, without care.",
-    "example": "The reconciliation had become perfunctory.",
-    "note": "Describes a control that exists on paper and has stopped working."
+    "word": "Obviate",
+    "say": "OB-vee-ayt",
+    "meaning": "To remove the need for.",
+    "example": "Automating the match obviates the manual review.",
+    "note": "Stronger and more precise than 'reduces'. It means the need disappears entirely."
    },
    {
-    "word": "Salient",
-    "say": "SAY-lee-uhnt",
-    "meaning": "Most noticeable or important.",
-    "example": "The salient point is that margin fell before volume did.",
-    "note": "Use instead of 'main' when you want to signal you have filtered the noise."
+    "word": "Prudent",
+    "say": "PROO-duhnt",
+    "meaning": "Sensibly cautious about risk.",
+    "example": "A prudent provision here protects the full-year number.",
+    "note": "Standard in audit and board language \u2014 signals judgement, not fear."
    }
   ],
   "speaking": {
-   "title": "Cut the throat-clear",
-   "drill": "Notice and eliminate the meaningless opener: 'So\u2026', 'Yeah, so\u2026', 'I guess\u2026'.",
-   "why": "It signals you started talking before you started thinking, even when you did not."
+   "title": "Read a wire story aloud",
+   "drill": "Take one headline from the World section and read the first paragraph aloud, twice.",
+   "why": "Journalistic prose is tightly written. Reading it aloud daily rewires sentence rhythm faster than conversation does."
   },
   "interview_tech": [
    {
-    "q": "What is the difference between an associate and a subsidiary in your accounts?",
-    "a": "Control versus significant influence. A subsidiary is controlled \u2014 you consolidate line by line and recognise NCI. An associate is significant influence, presumed at 20\u201350%, accounted for using the equity method: one line on the balance sheet at cost plus your share of post-acquisition reserves, and one line in P&L for your share of profit. Nothing of the associate's revenue or EBITDA enters your group numbers \u2014 a point that catches people out when a joint-venture-heavy group reports headline growth.",
-    "who": "Emaar \u00b7 Chalhoub \u00b7 Nestl\u00e9"
+    "q": "Explain deferred tax to a board member in 60 seconds.",
+    "a": "Accounting profit and taxable profit are computed under different rules, so tax paid this year rarely matches tax on this year's reported profit. Deferred tax records the future consequence of that gap. The classic retail example is accelerated capital allowances on fit-out: you get the tax relief early, so you owe more tax later \u2014 that future obligation sits as a deferred tax liability. It is not cash and it is not a provision for a dispute; it is timing. Say that last sentence, because it is what they are actually worried about.",
+    "who": "Any audit committee"
    },
    {
-    "q": "Compare owned retail, franchise, and concession from a finance perspective.",
-    "a": "Owned: full revenue, full margin, full capex, full lease and staffing risk. Franchise: you book a royalty and wholesale margin \u2014 far lower revenue, far lower risk, and no control over the customer experience. Concession: you occupy space inside a host retailer, pay a percentage of sales rather than fixed rent, so occupancy cost flexes with trading and downside is capped. In the Gulf, franchise is the dominant international-brand model, which is why groups like Alshaya and Al-Futtaim report differently from the brands they carry.",
-    "who": "Alshaya \u00b7 Al-Futtaim \u00b7 Chalhoub"
+    "q": "How do you measure promotional effectiveness properly?",
+    "a": "Incremental margin, not uplift. Take the sales during the promotion, subtract what the baseline would have been without it, subtract the margin given away on units that would have sold at full price anyway, and subtract any cannibalisation of adjacent full-price lines. The result is often negative for deep discounts on already-popular SKUs. Use a control group of comparable stores where operationally possible \u2014 without a counterfactual, every promotion looks successful because sales always rise.",
+    "who": "Tesco \u00b7 Carrefour \u00b7 Americana"
    }
   ],
   "interview_soft": [
    {
-    "q": "The board pushes back hard on your numbers in front of everyone. What do you do?",
-    "a": "Do not defend and do not fold. Separate the challenge into fact and judgement. If they have spotted a factual error, concede immediately and precisely \u2014 'you are right, that is the restated base, I will recirculate by Thursday.' Credibility survives errors; it does not survive defensiveness. If it is a judgement call, state your assumption, the sensitivity, and offer the alternative case. Never argue methodology in the room; take it offline with the one director who raised it.",
-    "who": "Any listed board"
+    "q": "Describe a time you had to deliver bad news to senior stakeholders.",
+    "a": "Lead with the structure you used, because that is the skill. Bad news goes: the number, the cause, the impact, the plan, the ask. No preamble. Deliver it early even when incomplete \u2014 'here is what I know now and what I will know Friday' beats a complete answer a week late. Give a specific example with the actual figure and what you did next. The tell they look for: did you surface it or did someone else find it.",
+    "who": "Amazon \u00b7 Emaar \u00b7 Nestl\u00e9"
    },
    {
-    "q": "An employee asks you to approve an expense that is within policy but clearly wrong. What now?",
-    "a": "They are testing whether you hide behind rules. Policy is a floor, not a ceiling. Approve or reject on the substance, explain the reasoning to the person directly, and then fix the policy so the next person is not in the same position. If it involves a senior person, the answer does not change \u2014 that is precisely when it counts. Say plainly that you would escalate to the audit committee if pressured to approve something you believe is wrong.",
-    "who": "Any group with a code of conduct"
+    "q": "Why should we hire you over a candidate with Big Four and listed-company experience?",
+    "a": "Do not disparage the alternative. Frame the trade: audit teaches you to verify what happened; operating finance teaches you to change what happens next. Then be specific about what you own that they do not \u2014 a live multi-country P&L, an ERP implementation you led rather than advised on, and store-level decisions you made and were held to. End with the honest gap and how you would close it. Confidence with a named weakness beats confidence alone.",
+    "who": "Every shortlist"
    }
   ],
   "cfo_field": [
    {
-    "q": "Read the cash flow statement first. Always.",
-    "a": "P&L is an opinion, cash is a fact. Open any set of accounts at the cash flow statement, compare operating cash flow to EBITDA over three years, and look at the gap. A business converting 90%+ of EBITDA to operating cash is real. One converting 50% has its profit sitting in working capital or is capitalising something it should be expensing. That one ratio finds more problems than any variance pack.",
-    "who": "The first thing to check, every time"
+    "q": "Explain a variance in one sentence or you do not understand it yet.",
+    "a": "'Margin is down 180bps: 120 from promotional depth in electronics, 40 from freight, 20 mix.' That is a CFO answer. A table of forty lines is a controller answer. The discipline is to decompose until the drivers are additive and then name the largest two. If you cannot make the bridge add up, you have a data problem, not a communication problem.",
+    "who": "The board-meeting test"
    },
    {
-    "q": "Scenario planning beats a single budget, and costs less than it sounds.",
-    "a": "Three cases \u2014 base, downside, upside \u2014 with the two or three variables that actually move the outcome, not thirty. In retail that is usually like-for-like growth, gross margin, and rent renewals. The value is not the numbers; it is that the board has already discussed the downside before it arrives, so the conversation when it does is about the response rather than about whether it is happening.",
-    "who": "What a board actually wants"
+    "q": "Working capital is where a retail CFO is actually judged.",
+    "a": "EBITDA gets the headline; the cash conversion cycle gets the board's attention. DIO + DSO \u2212 DPO. Retail is inventory-heavy and often near-zero DSO, so the fight is DIO against DPO. Cutting DIO from 95 to 80 days on AED 400M COGS releases roughly AED 16.4M of cash \u2014 permanently, without selling a single extra unit. That is a bigger number than most cost programmes deliver, and it does not need a headcount conversation.",
+    "who": "Landmark \u00b7 Alshaya \u00b7 GMG"
    }
   ],
   "review": {
@@ -809,8 +809,8 @@
    "week": 43,
    "year": 2026,
    "key": "2026-W43",
-   "weekday": 4,
-   "days_left": 3,
+   "weekday": 5,
+   "days_left": 2,
    "is_review_day": false
   },
   "podcasts": {
@@ -847,10 +847,85 @@
    "shows": 1,
    "source": "each channel's public Atom feed",
    "built_on": "2026-10-22",
-   "age_days": 0.0,
-   "is_fallback": false
+   "age_days": 1.0,
+   "is_fallback": true
   },
   "smart_reads": [
+   {
+    "source": "ET Opinion",
+    "cat": "money",
+    "title": "Corporates, politics, not just hand in Gov",
+    "link": "https://economictimes.indiatimes.com/opinion/et-editorial/corporates-politics-not-just-hand-in-gov/articleshow/135126902.cms",
+    "summary": "Marco Rubio visited Jamnagar, showcasing the new dynamics of government-corporate relationships in a changing global landscape. Companies like Reliance benefit from interactions that blend trade, technology, and statecraft in today's world. The shift in globalisation signifies a need for cooperation between nations and",
+    "date": "Oct 22, 2026",
+    "_sort": "2026-10-22T19:34:02+00:00",
+    "smart": {
+     "what_happened": [
+      "Marco Rubio visited Jamnagar to discuss new dynamics of government-corporate relationships.",
+      "Companies such as Reliance benefit from interactions that blend trade, technology, and statecraft."
+     ],
+     "why_it_matters": "The visit underscores a broader shift in globalisation toward greater cooperation between nations and corporations, suggesting that state and business actors are increasingly interdependent in shaping trade and technology policies.",
+     "what_to_watch": "Monitor any official statements or policy announcements from the Indian government regarding corporate partnerships following Rubio's visit.",
+     "headline": "Marco Rubio visits Jamnagar highlighting government-corporate ties",
+     "read_seconds": 26
+    }
+   },
+   {
+    "source": "The Marginalian",
+    "cat": "ideas",
+    "title": "Ursula K. Le Guin on the Meaning of Life",
+    "link": "https://www.themarginalian.org/2026/10/22/le-guin-life/",
+    "summary": "We are the survivors of immense and minute events &#8212; violent cosmic collisions and subtle genetic mutations, the deaths of innumerable suns and the births of innumerable cells, the splitting of continents and the splitting of atoms. Out of it all, we emerged as creatures muzzled by a consciousness that demands we ",
+    "date": "Oct 22, 2026",
+    "_sort": "2026-10-22T19:21:50+00:00"
+   },
+   {
+    "source": "Livemint",
+    "cat": "money",
+    "title": "Mutual Fund SIP returns: Can you still lose money after investing for 10 yrs? How small-cap, mid, large-cap SIPs fared",
+    "link": "https://www.livemint.com/money/personal-finance/mutual-fund-sip-returns-can-you-still-lose-money-after-investing-for-10-yrs-how-small-cap-mid-large-cap-sips-fared-11792580943931.html",
+    "summary": "Even a 10-year SIP could deliver losses, with small-cap indices recording a worst-case return of -0.13%. Edelweiss Mutual Fund data shows mid-cap SIPs delivered the highest average returns over five and ten years, outperforming large- and small-caps.",
+    "date": "Oct 22, 2026",
+    "_sort": "2026-10-22T18:02:00+00:00",
+    "smart": {
+     "what_happened": [
+      "A 10-year systematic investment plan in small-cap indices returned -0.13% in the worst case.",
+      "Mid-cap SIPs posted the highest average returns over five- and ten-year periods, beating large- and small-cap funds."
+     ],
+     "why_it_matters": "The results highlight that even long-term systematic investments can underperform or lose value in certain market segments, emphasizing the importance of asset\u2011class selection and diversification for investors seeking stable returns over a decade.",
+     "what_to_watch": "Track the upcoming quarterly performance of small-cap SIPs to see if the negative return persists relative to its 10-year benchmark.",
+     "headline": "Small-cap SIPs showed slight loss over 10 years, mid-cap led returns",
+     "read_seconds": 20
+    }
+   },
+   {
+    "source": "Economic Times",
+    "cat": "money",
+    "title": "Actor Sonu Sood to earn Rs 3.52 crore rental income from Versova commercial property leased to Bokka Coffee",
+    "link": "https://economictimes.indiatimes.com/wealth/real-estate/actor-sonu-sood-to-earn-rs-3-52-crore-rental-income-from-versova-commercial-property-leased-to-bokka-coffee/articleshow/135116892.cms",
+    "summary": "This rental deal marks the second such deal by actor Sonu Sood. Earlier this year, the actor had given a commercial unit in Trade Centre BKC, Bandra East, Mumbai on rent to leading private lender HDFC Bank. Sood had bought the 2,700 sq. ft. property for Rs 24.25 crore with the purchase registered in October 2012.",
+    "date": "Oct 22, 2026",
+    "_sort": "2026-10-22T12:12:18+00:00",
+    "smart": {
+     "what_happened": [
+      "Sonu Sood will receive Rs 3.52 crore in rental income from his Versova commercial property leased to Bokka Coffee.",
+      "This is his second commercial lease after renting a 2,700\u202fsq\u202fft unit in Trade Centre BKC, Bandra East to HDFC Bank, which he bought for Rs 24.25\u202fcrore in October 2012."
+     ],
+     "why_it_matters": "The deals illustrate how high\u2011profile individuals are leveraging real\u2011estate assets for steady cash flow, highlighting the attractiveness of commercial leases in Mumbai\u2019s premium locations and potentially influencing other celebrities to pursue similar income diversification strategies.",
+     "what_to_watch": "Monitor the upcoming rental payment from Bokka Coffee and any public filing confirming the lease terms or renewal.",
+     "headline": "Actor Sonu Sood to earn Rs 3.52 crore from Versova property lease",
+     "read_seconds": 26
+    }
+   },
+   {
+    "source": "Psyche",
+    "cat": "mind",
+    "title": "Why romantic relationships matter more to men than to women",
+    "link": "https://psyche.co/ideas/why-romantic-relationships-matter-more-to-men-than-to-women",
+    "summary": "For too long, men were told to be self-sufficient. The research shows they\u2019re more likely to thrive in a loving couple- by Iris WahringRead on Psyche",
+    "date": "Oct 22, 2026",
+    "_sort": "2026-10-22T10:00:00+00:00"
+   },
    {
     "source": "Scott Young",
     "cat": "habits",
@@ -862,11 +937,11 @@
     "smart": {
      "what_happened": [
       "The article presents a three-step process for self\u2011directed learning projects you\u2019ll actually complete.",
-      "It was published on Scott H Young\u2019s website."
+      "It was published on Scott H. Young\u2019s blog under the title \u201cThe Key to Creating Learning Projects You\u2019ll Finish.\u201d"
      ],
-     "why_it_matters": "For individuals seeking to improve personal development outcomes, a clear, repeatable framework can increase the likelihood of finishing self\u2011directed learning initiatives, helping them acquire new skills more efficiently.",
-     "what_to_watch": "Check Scott H Young\u2019s site for the detailed description of the three-step process.",
-     "headline": "Scott H Young outlines three-step process for completing learning projects",
+     "why_it_matters": "The piece offers a structured approach that can help individuals overcome common obstacles to finishing self\u2011directed learning initiatives, potentially improving personal skill development and productivity.",
+     "what_to_watch": "Check the Scott H. Young blog for any follow\u2011up posts that expand on or refine the three-step process.",
+     "headline": "Scott H. Young outlines three-step process for completing learning projects",
      "read_seconds": 20
     }
    },
@@ -877,82 +952,7 @@
     "link": "https://www.nytimes.com/2026/10/20/well/christina-applegate-misdiagnosis-ms.html",
     "summary": "The actress, who was given a diagnosis of multiple sclerosis in 2021, was told by a doctor that she doesn\u2019t have it after all.",
     "date": "Oct 21, 2026",
-    "_sort": "2026-10-21T20:13:15+00:00",
-    "smart": {
-     "what_happened": [
-      "She was diagnosed with multiple sclerosis in 2021.",
-      "A doctor later told her she does not have multiple sclerosis."
-     ],
-     "why_it_matters": "The reversal highlights the potential for misdiagnosis in complex neurological conditions, underscoring the importance of thorough testing and second opinions. For investors and analysts, it serves as a reminder that health disclosures can affect public perception and personal branding, which may influence endorsement deals and related revenue streams.",
-     "what_to_watch": "Monitor any follow\u2011up statements from Christina Applegate or her representatives in upcoming interviews or press releases for clarification on her health status.",
-     "headline": "Christina Applegate\u2019s multiple sclerosis diagnosis reversed",
-     "read_seconds": 20
-    }
-   },
-   {
-    "source": "ET Opinion",
-    "cat": "money",
-    "title": "Rising corporate borrowings, hello!",
-    "link": "https://economictimes.indiatimes.com/opinion/et-editorial/rising-corporate-borrowings-hello/articleshow/135100251.cms",
-    "summary": "Public Sector Banks in India are experiencing an increase in corporate borrowing, reflecting a strengthening of private sector capital expenditure. Key sectors driving this trend include wholesale trading, commercial real estate, and chemicals. Factors such as robust economic growth and low bond yields are contributing",
-    "date": "Oct 21, 2026",
-    "_sort": "2026-10-21T19:53:39+00:00",
-    "smart": {
-     "what_happened": [
-      "Public sector banks in India are experiencing an increase in corporate borrowing.",
-      "The growth is driven by wholesale trading, commercial real estate and chemicals, supported by robust economic growth and low bond yields."
-     ],
-     "why_it_matters": "The uptick in corporate borrowing signals stronger private\u2011sector capital expenditure, which can boost economic activity and improve banks' loan\u2011to\u2011deposit ratios, potentially enhancing profitability for the public sector banking system.",
-     "what_to_watch": "The Reserve Bank of India's next quarterly report on corporate loan growth.",
-     "headline": "Indian public sector banks see rise in corporate borrowing",
-     "read_seconds": 26
-    }
-   },
-   {
-    "source": "Livemint",
-    "cat": "money",
-    "title": "Which transactions can trigger notice from Income Tax Department? Know rules for large cash deposits and UPI transfers",
-    "link": "https://www.livemint.com/money/personal-finance/which-transactions-can-trigger-notice-from-income-tax-department-know-rules-for-large-cash-deposits-and-upi-transfers-11792602941785.html",
-    "summary": "Large UPI transfers do not automatically trigger income tax notices, but unexplained bank credits can attract scrutiny. From freelancers to individuals receiving money for others, here's when digital transactions may raise red flags and what records to keep.",
-    "date": "Oct 21, 2026",
-    "_sort": "2026-10-21T17:51:08+00:00",
-    "smart": {
-     "what_happened": [
-      "Large UPI transfers do not automatically trigger income\u2011tax notices.",
-      "Unexplained bank credits, including large cash deposits, can attract tax department scrutiny."
-     ],
-     "why_it_matters": "Tax authorities may issue notices when they detect sizable cash deposits or digital credits that lack a clear source, which can lead to audits, penalties, or legal action for individuals and freelancers who do not maintain proper documentation of their income.",
-     "what_to_watch": "Monitor any bank credit that is not supported by verifiable records, as such transactions are likely to be flagged for review.",
-     "headline": "Income Tax notices can be triggered by large cash deposits and unexplained UPI transfers",
-     "read_seconds": 21
-    }
-   },
-   {
-    "source": "The Marginalian",
-    "cat": "ideas",
-    "title": "Corrective for a Broken Heart",
-    "link": "https://www.themarginalian.org/2026/10/21/corrective-for-a-broken-heart/",
-    "summary": "&#8220;Life will break you,&#8221; Louise Erdrich wrote in her passionate insistence that &#8220;you are here to risk your heart.&#8221; It can happen with a shattering, or with a thousand small fissures, but the great paradox &#8212; the great salvation &#8212; is that every time it happens, you live to see you are un",
-    "date": "Oct 21, 2026",
-    "_sort": "2026-10-21T12:49:24+00:00"
-   },
-   {
-    "source": "Economic Times",
-    "cat": "money",
-    "title": "Gold rate today (October 21, 2026): Check 24k, 22k, 20k and 18k gold jewellery prices from IBJA, Malabar Gold &amp; Diamonds, Joyalukkas, Ka",
-    "link": "https://economictimes.indiatimes.com/wealth/invest/gold-rate-today-check-18k-20k-24k-ibja-gold-price-malabar-gold-kalyan-jewelers-joyalukkas-delhi-hyderabad-bengaluru/articleshow/135086002.cms",
-    "summary": "Gold rate today: Gold jewellery prices from leading brands such as Joyalukkas and Malabar Gold &amp; Diamonds decreased significantly today. The IBJA's indicative rates for various gold purities also experienced a decline today compared to previous rate. Silver prices fell significantly, marking a notable change in the",
-    "date": "Oct 21, 2026",
-    "_sort": "2026-10-21T07:57:47+00:00"
-   },
-   {
-    "source": "Psyche",
-    "cat": "mind",
-    "title": "How to overcome task paralysis",
-    "link": "https://psyche.co/guides/how-to-overcome-task-paralysis",
-    "summary": "If you have ADHD or you\u2019re stressed, tired and stuck, goal management training can help you get started and keep going- by Joe WilnerRead on Psyche",
-    "date": "Oct 20, 2026",
-    "_sort": "2026-10-20T10:00:00+00:00"
+    "_sort": "2026-10-21T20:13:15+00:00"
    },
    {
     "source": "Peter Attia",
@@ -975,39 +975,51 @@
   ],
   "lichess_games": [
    {
-    "id": "gD53ut2C",
-    "url": "https://lichess.org/gD53ut2C",
+    "id": "BAwwn3mA",
+    "url": "https://lichess.org/BAwwn3mA",
     "result": "Loss",
     "icon": "\u274c",
     "cls": "loss",
     "my_side": "White",
-    "my_rating": 1556,
-    "opp_rating": 1525,
-    "opponent": "der_Spielmacher",
-    "me_diff": -7,
-    "opp_diff": 12,
+    "my_rating": 1555,
+    "opp_rating": 1508,
+    "opponent": "Attae",
+    "me_diff": -6,
+    "opp_diff": 13,
     "opening": "Queen's Pawn Game",
     "eco": "D00",
-    "moves": 25,
-    "termination": "Checkmate",
+    "moves": 58,
+    "termination": "Resignation",
     "speed": "Blitz",
-    "analysis": "Focus on early piece development: stop moving the same pawn twice; aim to bring both knights out by move\u202f4, saving\u202f\u224830\u202fseconds per turn.",
+    "analysis": "Focus on early king safety: avoid moving the g\u2011pawn before castling; in this game it cost ~3\u202f\u00bd\u202fpoints (\u224830\u202fcentipawn loss).Focus on early king safety: avoid moving the g\u2011pawn before castling; in this game it cost ~3\u202f\u00bd\u202fpoints (\u224830\u202fcentipawn loss) overall.",
     "is_upset": false,
     "is_collapse": false,
-    "is_long": false,
+    "is_long": true,
     "best_move": {},
     "key_facts": [
-     "Rating gap -31 (1556 vs 1525)",
-     "25 moves \u00b7 Blitz"
+     "Accuracy 80% vs their 84%",
+     "Average centipawn loss 62",
+     "6 inaccuracies \u00b7 1 mistake \u00b7 4 blunders",
+     "Rating gap -47 (1555 vs 1508)",
+     "Endgame from move 34",
+     "58 moves \u00b7 Blitz"
     ],
-    "standout": "",
-    "game_strength": null,
-    "est_fide": 1156,
-    "accuracy": null,
-    "acpl": null,
-    "analysed": false,
+    "standout": "4 blunders in one game. The result is noise; the error count is the signal.",
+    "game_strength": 1400,
+    "est_fide": 1155,
+    "accuracy": 80,
+    "acpl": 62,
+    "analysed": true,
     "_mode": "full",
     "_trend": [
+     {
+      "day": "10/22",
+      "wins": 1,
+      "losses": 1,
+      "draws": 0,
+      "total": 2,
+      "pct": 50
+     },
      {
       "day": "10/19",
       "wins": 0,
@@ -1055,49 +1067,52 @@
       "draws": 0,
       "total": 2,
       "pct": 0
-     },
-     {
-      "day": "10/11",
-      "wins": 2,
-      "losses": 6,
-      "draws": 0,
-      "total": 8,
-      "pct": 25
      }
     ],
-    "_yest_counts": {},
-    "_session_date": "2026-10-19",
-    "_is_yesterday": false
+    "_yest_counts": {
+     "blitz": {
+      "win": 1,
+      "loss": 1,
+      "draw": 0,
+      "rp": {
+       "before": 1549,
+       "after": 1549
+      }
+     }
+    },
+    "_session_date": "2026-10-22",
+    "_is_yesterday": true
    },
    {
-    "id": "3ErIL3Qy",
-    "url": "https://lichess.org/3ErIL3Qy",
-    "result": "Loss",
-    "icon": "\u274c",
-    "cls": "loss",
+    "id": "ER64ZLm8",
+    "url": "https://lichess.org/ER64ZLm8",
+    "result": "Win",
+    "icon": "\u2705",
+    "cls": "win",
     "my_side": "Black",
-    "my_rating": 1561,
-    "opp_rating": 1581,
-    "opponent": "abo_haitham",
-    "me_diff": -5,
-    "opp_diff": 5,
-    "opening": "Van't Kruijs Opening",
-    "eco": "A00",
-    "moves": 19,
-    "termination": "Time Out",
+    "my_rating": 1549,
+    "opp_rating": 1551,
+    "opponent": "Nord1995",
+    "me_diff": 6,
+    "opp_diff": -6,
+    "opening": "Queen's Pawn Game",
+    "eco": "D02",
+    "moves": 64,
+    "termination": "Resignation",
     "speed": "Blitz",
-    "analysis": "Focus on time management: allocate ~30\u202fseconds per move early; practice quick, solid opening moves (e.g., 1\u2026e5) to avoid 19\u2011move timeout.",
+    "analysis": "Focus on early piece coordination: develop knights before moving the queen (e.g.,\u202fNf6, Nc6) and avoid queen\u2011side pawn pushes until all minor pieces are active. This reduces unnecessary queen exposure and improves positional stability.",
     "is_upset": false,
     "is_collapse": false,
-    "is_long": false,
+    "is_long": true,
     "best_move": {},
     "key_facts": [
-     "Rating gap +20 (1561 vs 1581)",
-     "19 moves \u00b7 Blitz"
+     "Rating gap +2 (1549 vs 1551)",
+     "Endgame from move 36",
+     "64 moves \u00b7 Blitz"
     ],
-    "standout": "Decided on the clock, not the board \u2014 the position was still playable when time ran out.",
+    "standout": "64 moves of grinding. Endgame stamina, not opening prep, settled this one.",
     "game_strength": null,
-    "est_fide": 1161,
+    "est_fide": 1149,
     "accuracy": null,
     "acpl": null,
     "analysed": false
@@ -1106,13 +1121,21 @@
   "lichess_summary": {
    "mode": "full",
    "total": 2,
-   "wins": 0,
-   "losses": 2,
+   "wins": 1,
+   "losses": 1,
    "draws": 0,
-   "pct": 0,
-   "icon": "\u274c",
-   "score": "0/2",
+   "pct": 50,
+   "icon": "\u2696\ufe0f",
+   "score": "1/2",
    "trend": [
+    {
+     "day": "10/22",
+     "wins": 1,
+     "losses": 1,
+     "draws": 0,
+     "total": 2,
+     "pct": 50
+    },
     {
      "day": "10/19",
      "wins": 0,
@@ -1160,33 +1183,25 @@
      "draws": 0,
      "total": 2,
      "pct": 0
-    },
-    {
-     "day": "10/11",
-     "wins": 2,
-     "losses": 6,
-     "draws": 0,
-     "total": 8,
-     "pct": 25
     }
    ],
-   "weak_op": "",
-   "best_op": "",
+   "weak_op": "D00 Queen's Pawn Game (1/2 = 50% WR)",
+   "best_op": "D00 Queen's Pawn Game (1/2 = 50% WR)",
    "upsets": 0,
    "collapses": 0,
-   "long_games": 0,
-   "session_summary": "You\u2019re playing a textbook \u201cno\u2011risk\u201d game that never threatens anyone\u2014zero wins, two losses, and no draws proves you\u2019re either over\u2011cautious or clueless about the critical moments. Your opening repertoire is a complete disaster; you\u2019re either dumping into the worst lines or refusing to fight for the center, so every opponent is already a step ahead before move\u202f2. Stop avoiding complications, study the main\u2011line King\u2019s Indian Defense (or the Sicilian Najdorf if you prefer sharp play), and force yourself into tactical positions where you can actually convert a mistake into a win.",
-   "session_date": "2026-10-19",
-   "is_yesterday": false,
+   "long_games": 2,
+   "session_summary": "Your 50\u202f% win rate tells us you\u2019re barely scraping by \u2013 you either win or lose, never improving. The fact that your \u201cbest\u201d and \u201cworst\u201d opening are the same D00 Queen\u2019s Pawn Game shows you never vary your repertoire, making you predictable and easy to exploit. Drop the Queen\u2019s Pawn entirely, adopt a solid, theory\u2011tested line (e.g., the London System or a Classical Sicilian), and study the first 10\u201112 moves to force your opponents into unfamiliar territory.",
+   "session_date": "2026-10-22",
+   "is_yesterday": true,
    "token_missing": false
   },
   "lichess_puzzle": {
-   "pid": "W4lEb",
-   "rating": 1807,
+   "pid": "VQD5s",
+   "rating": 1983,
    "level": "\ud83d\udd34 stretch",
-   "themes": "Very Long \u00b7 Mate In5 \u00b7 Middlegame",
-   "tip": "Lure the king or a key piece onto a bad square with a sacrifice.",
-   "url": "https://lichess.org/training/W4lEb"
+   "themes": "Exposed King \u00b7 Very Long \u00b7 Crushing",
+   "tip": "Give material for a decisive positional or mating advantage.",
+   "url": "https://lichess.org/training/VQD5s"
   }
  }
 }
