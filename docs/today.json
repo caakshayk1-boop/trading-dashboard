@@ -1,25 +1,137 @@
 {
- "build_id": "20261024T081149",
- "date": "2026-10-24",
- "date_str": "Saturday, October 24 2026",
+ "build_id": "20261025T075537",
+ "date": "2026-10-25",
+ "date_str": "Sunday, October 25 2026",
  "picks": [
+  {
+   "symbol": "ZS",
+   "name": "ZS",
+   "ext20": 16.73,
+   "vol_ratio": 0.98,
+   "price": 255.15,
+   "change_1d": 7.31,
+   "mom_1m": 18.9,
+   "mom_3m": 68.3,
+   "score": 91,
+   "target": 336.99,
+   "stop_loss": 218.59,
+   "target_basis": "the 52-week high",
+   "stop_basis": "the 20-day average",
+   "horizon_basis": "32% to go at its recent 22.8%/month",
+   "rr": 2.24,
+   "atr": 12.53,
+   "high_52w": 336.99,
+   "timeframe": "about a month",
+   "currency": "$",
+   "factors": [
+    {
+     "k": "Above 20-day avg",
+     "w": 25,
+     "e": 25.0
+    },
+    {
+     "k": "Above 50-day avg",
+     "w": 20,
+     "e": 20.0
+    },
+    {
+     "k": "Averages stacked",
+     "w": 15,
+     "e": 15.0
+    },
+    {
+     "k": "1-month thrust",
+     "w": 20,
+     "e": 20.0
+    },
+    {
+     "k": "3-month trend",
+     "w": 10,
+     "e": 10.0
+    },
+    {
+     "k": "Volume confirming",
+     "w": 10,
+     "e": 0.9
+    }
+   ],
+   "ema20": 218.59,
+   "tv": "ZS",
+   "thesis": "68.3% three\u2011month gain, 18.9% one\u2011month rise, price 16.7% above its 20\u2011day average, volume at 0.98\u00d7 norm, composite 91/100."
+  },
+  {
+   "symbol": "SAP",
+   "name": "SAP",
+   "ext20": 7.01,
+   "vol_ratio": 1.32,
+   "price": 238.14,
+   "change_1d": -1.02,
+   "mom_1m": 13.9,
+   "mom_3m": 32.9,
+   "score": 83,
+   "target": 271.81,
+   "stop_loss": 222.54,
+   "target_basis": "the 52-week high",
+   "stop_basis": "the 20-day average",
+   "horizon_basis": "14% to go at its recent 11.0%/month",
+   "rr": 2.16,
+   "atr": 5.47,
+   "high_52w": 271.81,
+   "timeframe": "about a month",
+   "currency": "$",
+   "factors": [
+    {
+     "k": "Above 20-day avg",
+     "w": 25,
+     "e": 22.5
+    },
+    {
+     "k": "Above 50-day avg",
+     "w": 20,
+     "e": 16.5
+    },
+    {
+     "k": "Averages stacked",
+     "w": 15,
+     "e": 11.8
+    },
+    {
+     "k": "1-month thrust",
+     "w": 20,
+     "e": 18.5
+    },
+    {
+     "k": "3-month trend",
+     "w": 10,
+     "e": 9.4
+    },
+    {
+     "k": "Volume confirming",
+     "w": 10,
+     "e": 4.7
+    }
+   ],
+   "ema20": 222.54,
+   "tv": "SAP",
+   "thesis": "32.9% three\u2011month surge, price 7% above 20\u2011day average on 1.32\u00d7 volume, composite 83 points."
+  },
   {
    "symbol": "TCS.NS",
    "name": "TCS",
-   "ext20": 12.25,
-   "vol_ratio": 1.79,
-   "price": 2465.0,
-   "change_1d": 4.89,
-   "mom_1m": 13.2,
-   "mom_3m": 10.1,
-   "score": 72,
+   "ext20": 10.04,
+   "vol_ratio": 1.28,
+   "price": 2530.0,
+   "change_1d": 0.92,
+   "mom_1m": 20.8,
+   "mom_3m": 12.8,
+   "score": 75,
    "target": 3269.78,
-   "stop_loss": 2195.95,
+   "stop_loss": 2299.21,
    "target_basis": "the 52-week high",
    "stop_basis": "the 20-day average",
-   "horizon_basis": "33% to go at its recent 3.4%/month",
-   "rr": 2.99,
-   "atr": 76.9,
+   "horizon_basis": "29% to go at its recent 4.3%/month",
+   "rr": 3.21,
+   "atr": 83.43,
    "high_52w": 3269.78,
    "timeframe": "6-12 months",
    "currency": "\u20b9",
@@ -32,106 +144,50 @@
     {
      "k": "Above 50-day avg",
      "w": 20,
-     "e": 16.2
+     "e": 17.0
     },
     {
      "k": "Averages stacked",
      "w": 15,
-     "e": 0.0
+     "e": 5.5
     },
     {
      "k": "1-month thrust",
      "w": 20,
-     "e": 17.6
+     "e": 20.0
     },
     {
      "k": "3-month trend",
      "w": 10,
-     "e": 2.9
+     "e": 3.7
     },
     {
      "k": "Volume confirming",
      "w": 10,
-     "e": 9.9
+     "e": 4.2
     }
    ],
-   "ema20": 2195.95,
+   "ema20": 2299.21,
    "tv": "NSE:TCS",
-   "thesis": "13.2% one\u2011month rise, 10.1% three\u2011month climb, price 12.2% above 20\u2011day average with 1.79\u00d7 volume, composite 72."
-  },
-  {
-   "symbol": "TATAELXSI.NS",
-   "name": "TATAELXSI",
-   "ext20": 14.34,
-   "vol_ratio": 2.57,
-   "price": 3850.1,
-   "change_1d": 4.06,
-   "mom_1m": 14.1,
-   "mom_3m": 8.9,
-   "score": 72,
-   "target": 5845.18,
-   "stop_loss": 3367.27,
-   "target_basis": "the 52-week high",
-   "stop_basis": "the 20-day average",
-   "horizon_basis": "52% to go at its recent 3.0%/month",
-   "rr": 4.13,
-   "atr": 127.6,
-   "high_52w": 5845.18,
-   "timeframe": "over a year at this pace",
-   "currency": "\u20b9",
-   "factors": [
-    {
-     "k": "Above 20-day avg",
-     "w": 25,
-     "e": 25.0
-    },
-    {
-     "k": "Above 50-day avg",
-     "w": 20,
-     "e": 16.1
-    },
-    {
-     "k": "Averages stacked",
-     "w": 15,
-     "e": 0.0
-    },
-    {
-     "k": "1-month thrust",
-     "w": 20,
-     "e": 18.9
-    },
-    {
-     "k": "3-month trend",
-     "w": 10,
-     "e": 2.5
-    },
-    {
-     "k": "Volume confirming",
-     "w": 10,
-     "e": 10.0
-    }
-   ],
-   "ema20": 3367.27,
-   "tv": "NSE:TATAELXSI",
-   "thesis": "14.3% above its 20\u2011day average, with 2.57\u202f\u00d7\u202fnormal volume, 1\u2011month\u202f+14.1% and 3\u2011month\u202f+8.9% returns, scoring 72/100."
+   "thesis": "20.8% one\u2011month rise, 12.8% three\u2011month gain, price 10% above 20\u2011day average, volume 1.28\u00d7 norm, composite 75."
   },
   {
    "symbol": "HCLTECH.NS",
    "name": "HCLTECH",
-   "ext20": 9.37,
-   "vol_ratio": 2.13,
-   "price": 1380.0,
-   "change_1d": 2.37,
-   "mom_1m": 11.1,
-   "mom_3m": 14.0,
+   "ext20": 8.41,
+   "vol_ratio": 0.96,
+   "price": 1422.2,
+   "change_1d": 0.04,
+   "mom_1m": 12.9,
+   "mom_3m": 12.9,
    "score": 69,
    "target": 1713.75,
-   "stop_loss": 1261.8,
+   "stop_loss": 1311.85,
    "target_basis": "the 52-week high",
    "stop_basis": "the 20-day average",
-   "horizon_basis": "24% to go at its recent 4.7%/month",
-   "rr": 2.82,
-   "atr": 39.96,
+   "horizon_basis": "21% to go at its recent 4.3%/month",
+   "rr": 2.64,
+   "atr": 43.18,
    "high_52w": 1713.75,
    "timeframe": "3-6 months",
    "currency": "\u20b9",
@@ -144,107 +200,51 @@
     {
      "k": "Above 50-day avg",
      "w": 20,
-     "e": 14.0
+     "e": 15.6
     },
     {
      "k": "Averages stacked",
      "w": 15,
-     "e": 1.3
+     "e": 6.5
     },
     {
      "k": "1-month thrust",
      "w": 20,
-     "e": 14.8
+     "e": 17.3
     },
     {
      "k": "3-month trend",
      "w": 10,
-     "e": 4.0
+     "e": 3.7
     },
     {
      "k": "Volume confirming",
      "w": 10,
-     "e": 10.0
+     "e": 0.7
     }
    ],
-   "ema20": 1261.8,
+   "ema20": 1311.85,
    "tv": "NSE:HCLTECH",
-   "thesis": "Three\u2011month return up 14.0% with price 9.4% above its 20\u2011day average and volume 2.13\u00d7 normal, scoring 69/100."
+   "thesis": "12.9% identical 1\u2011month and 3\u2011month gains signal sustained upward momentum as price trades 8.4% above its 20\u2011day average."
   },
   {
-   "symbol": "COFORGE.NS",
-   "name": "COFORGE",
-   "ext20": 4.86,
-   "vol_ratio": 1.19,
-   "price": 1951.9,
-   "change_1d": 0.91,
-   "mom_1m": 10.5,
-   "mom_3m": 29.8,
-   "score": 62,
-   "target": 2149.8,
-   "stop_loss": 1861.46,
-   "target_basis": "2x the 14-day range beyond the 52-week high (the high is too close to be worth the stop)",
-   "stop_basis": "the 20-day average",
-   "horizon_basis": "10% to go at its recent 9.9%/month",
-   "rr": 2.19,
-   "atr": 64.3,
-   "high_52w": 2021.2,
-   "timeframe": "about a month",
-   "currency": "\u20b9",
-   "factors": [
-    {
-     "k": "Above 20-day avg",
-     "w": 25,
-     "e": 17.1
-    },
-    {
-     "k": "Above 50-day avg",
-     "w": 20,
-     "e": 11.7
-    },
-    {
-     "k": "Averages stacked",
-     "w": 15,
-     "e": 7.3
-    },
-    {
-     "k": "1-month thrust",
-     "w": 20,
-     "e": 14.0
-    },
-    {
-     "k": "3-month trend",
-     "w": 10,
-     "e": 8.5
-    },
-    {
-     "k": "Volume confirming",
-     "w": 10,
-     "e": 3.3
-    }
-   ],
-   "ema20": 1861.46,
-   "tv": "NSE:COFORGE",
-   "thesis": "29.8% three\u2011month gain, 10.5% one\u2011month rise, price 4.9% above its 20\u2011day average, volume 1.19\u00d7 norm, composite 62/100."
-  },
-  {
-   "symbol": "INFY.NS",
-   "name": "INFY",
-   "ext20": 9.94,
-   "vol_ratio": 1.44,
-   "price": 1161.2,
-   "change_1d": 4.61,
-   "mom_1m": 9.5,
-   "mom_3m": 6.8,
-   "score": 58,
-   "target": 1691.4,
-   "stop_loss": 1056.23,
+   "symbol": "WIPRO.NS",
+   "name": "WIPRO",
+   "ext20": 8.87,
+   "vol_ratio": 1.39,
+   "price": 189.84,
+   "change_1d": -0.3,
+   "mom_1m": 14.4,
+   "mom_3m": 8.4,
+   "score": 67,
+   "target": 263.22,
+   "stop_loss": 174.37,
    "target_basis": "the 52-week high",
    "stop_basis": "the 20-day average",
-   "horizon_basis": "46% to go at its recent 2.3%/month",
-   "rr": 5.05,
-   "atr": 33.4,
-   "high_52w": 1691.4,
+   "horizon_basis": "39% to go at its recent 2.8%/month",
+   "rr": 4.74,
+   "atr": 5.58,
+   "high_52w": 263.22,
    "timeframe": "over a year at this pace",
    "currency": "\u20b9",
    "factors": [
@@ -256,32 +256,32 @@
     {
      "k": "Above 50-day avg",
      "w": 20,
-     "e": 12.1
+     "e": 13.5
     },
     {
      "k": "Averages stacked",
      "w": 15,
-     "e": 0.0
+     "e": 1.5
     },
     {
      "k": "1-month thrust",
      "w": 20,
-     "e": 12.7
+     "e": 19.1
     },
     {
      "k": "3-month trend",
      "w": 10,
-     "e": 1.9
+     "e": 2.4
     },
     {
      "k": "Volume confirming",
      "w": 10,
-     "e": 6.0
+     "e": 5.4
     }
    ],
-   "ema20": 1056.23,
-   "tv": "NSE:INFY",
-   "thesis": "9.9% above its 20\u2011day average, with 1\u2011month\u202f+9.5%, 3\u2011month\u202f+6.8%, volume\u202f1.44\u00d7 norm, composite\u202f58/100."
+   "ema20": 174.37,
+   "tv": "NSE:WIPRO",
+   "thesis": "14.4% one\u2011month rise, 8.4% three\u2011month gain, price 8.9% above 20\u2011day average with 1.39\u00d7 volume."
   }
  ],
  "engine": [
@@ -531,10 +531,23 @@
   ]
  },
  "data_health": {
-  "worst": "FRESH",
-  "current": 12,
+  "worst": "DEGRADED",
+  "current": 10,
   "total": 12,
-  "degraded": []
+  "degraded": [
+   {
+    "dataset": "Fund screen",
+    "status": "DEGRADED",
+    "age": "7 days old",
+    "note": "older than its weekly refresh"
+   },
+   {
+    "dataset": "New listings",
+    "status": "STALE",
+    "age": "7 days old",
+    "note": "older than its weekly refresh"
+   }
+  ]
  },
  "desk": {
   "chess": {
@@ -693,112 +706,112 @@
    "total": 30
   },
   "daughter": {
-   "months": 9,
-   "days": 303,
-   "heading": "Nine months old.",
-   "band": "crawling",
+   "months": 10,
+   "days": 304,
+   "heading": "Ten months old.",
+   "band": "cruising",
    "born": "2025-12-25"
   },
   "productivity": "Eat the frog: hardest task first, before checking any messages.",
   "father": [
    {
-    "title": "Read her a real book",
-    "do": "Read something you are reading, aloud, for five minutes. Content is irrelevant.",
-    "why": "Prosody, turn-taking and attention are carried by adult speech regardless of vocabulary. It also means reading time survives on days when the board pack is due."
+    "title": "Introduce water in an open cup",
+    "do": "Offer a few sips from a small open cup, held by you. Expect most of it to spill.",
+    "why": "Open-cup drinking develops different oral motor patterns than a bottle or spout. Starting now, badly, is easier than starting later, correctly."
    },
    {
-    "title": "Let her see you fail",
-    "do": "When you drop or fumble something in front of her, react calmly and try again visibly.",
-    "why": "Emotional regulation is learned by observation long before instruction. Your reaction to small frustrations is a template she is already recording."
+    "title": "Massage after the bath",
+    "do": "Two minutes of firm, slow strokes on legs and back after bathing.",
+    "why": "Sustained touch by a father has measurable effects on infant stress response, and it gives you a reliable daily block of contact that is not feeding or settling."
    }
   ],
   "life_wisdom": [
    {
     "tradition": "Jainism",
-    "term": "Samyak Darshana",
-    "translation": "Right perception",
-    "teaching": "Seeing things as they are, before preference distorts them. The first of the three jewels, and deliberately placed before right conduct.",
-    "apply": "Separate the number from what you want the number to be. Write the actual result before writing the explanation \u2014 the order changes the explanation."
+    "term": "Sallekhana's principle",
+    "translation": "Gradual reduction, not sudden renunciation",
+    "teaching": "The Jain tradition values incremental letting-go over dramatic gestures \u2014 small consistent reduction beats one grand sacrifice.",
+    "apply": "Do not overhaul the budget in one heroic month. Cut one recurring thing permanently. Repeat next month. Sustainable beats spectacular."
    },
    {
     "tradition": "Buddhism",
-    "term": "The Two Truths",
-    "translation": "Conventional and ultimate",
-    "teaching": "Something can be true conventionally and empty ultimately \u2014 a table is a table for practical purposes and a collection of parts on analysis. Both are needed.",
-    "apply": "Hold the forecast as both real enough to act on and provisional enough to abandon. Treating a model as ultimately true is how people ride a position down."
+    "term": "Kalama Sutta",
+    "translation": "Test it yourself",
+    "teaching": "The Buddha told the Kalamas not to accept teaching on authority, tradition, or scripture \u2014 but to test whether it leads to benefit when practised.",
+    "apply": "Apply it to strategy advice, including from people senior to you. What is the evidence, and what would falsify it? Deference is not evidence."
    }
   ],
   "spanish": [
    {
-    "word": "ma\u00f1ana",
-    "meaning": "tomorrow / morning",
-    "es": "Nos vemos ma\u00f1ana por la ma\u00f1ana.",
-    "en": "See you tomorrow morning.",
-    "tag": "Everyday"
+    "word": "la hija",
+    "meaning": "the daughter",
+    "es": "Mi hija tiene siete meses.",
+    "en": "My daughter is seven months old.",
+    "tag": "Family"
    },
    {
-    "word": "aprender",
-    "meaning": "to learn",
-    "es": "Estoy aprendiendo espa\u00f1ol.",
-    "en": "I am learning Spanish.",
-    "tag": "Everyday"
+    "word": "vale la pena",
+    "meaning": "it is worth it",
+    "es": "Vale la pena esperar.",
+    "en": "It is worth waiting for.",
+    "tag": "Idiom"
    }
   ],
   "vocab": [
    {
-    "word": "Tenuous",
-    "say": "TEN-yoo-uhs",
-    "meaning": "Weak; barely holding together.",
-    "example": "The link between the campaign and the sales lift is tenuous.",
-    "note": "Precise way to challenge a claim without calling it wrong."
+    "word": "Material",
+    "say": "muh-TEER-ee-uhl",
+    "meaning": "Large enough to change a decision.",
+    "example": "The variance is real but not material to the group result.",
+    "note": "In finance this is a technical word \u2014 use it only when you mean the threshold."
    },
    {
-    "word": "Mitigate",
-    "say": "MIT-i-gayt",
-    "meaning": "To make less severe.",
-    "example": "We mitigated the FX exposure with forward contracts.",
-    "note": "Not the same as 'eliminate'. Precision matters when a board is listening."
+    "word": "Attrition",
+    "say": "uh-TRISH-uhn",
+    "meaning": "Gradual loss, usually of people or customers.",
+    "example": "We lost the margin to attrition, not to a single event.",
+    "note": "More precise than 'churn' when the loss is slow and structural."
    }
   ],
   "speaking": {
-   "title": "Say the difficult number",
-   "drill": "Practise delivering bad news out loud: 'We are AED 14M behind.' No preamble, no cushion.",
-   "why": "The instinct is to soften it with context first. Context after the number is briefing; before it is stalling."
+   "title": "One-minute summary",
+   "drill": "At the end of the day, summarise it out loud in 60 seconds as if to a CFO.",
+   "why": "Daily practice at compressing information is the underlying skill in every senior finance conversation."
   },
   "interview_tech": [
    {
-    "q": "How do you account for customer loyalty points under IFRS 15?",
-    "a": "Points are a separate performance obligation. You allocate part of the original transaction price to the points based on their standalone selling price, adjusted for expected breakage, and defer that portion as contract liability. Revenue is recognised when points are redeemed or expire. Practically: the deferral reduces reported revenue today, and the breakage estimate is a judgement auditors probe every year. Retailers who ignore this overstate current-period revenue and get a restatement.",
-    "who": "Alshaya \u00b7 Carrefour \u00b7 Starbucks"
+    "q": "Online returns are 30% versus 8% in store. How does that change unit economics?",
+    "a": "It can invert them. Model the full return cost: outbound delivery, return shipping, inspection labour, repackaging, markdown on anything not resaleable as new, and the working capital locked in goods in transit. At 30% returns a nominally profitable online order can land negative. Fixes: better size guidance and imagery to cut the cause; charge for returns where the market allows; route returns to stores so the item re-enters saleable stock nearest demand. Report online contribution after returns, never before.",
+    "who": "Zara \u00b7 ASOS \u00b7 Namshi"
    },
    {
-    "q": "A category has 40% gross margin but negative contribution. How?",
-    "a": "Gross margin ignores everything below the line. That category may carry disproportionate space, handling cost, markdown, shrink or return rate. Bulky low-value goods are the classic case \u2014 good percentage margin, terrible margin per square metre per week. Move to a contribution view: gross profit less directly attributable space, labour, logistics and markdown. Assortment decisions made on gross margin percentage alone are how retailers end up with profitable-looking categories that lose money.",
-    "who": "Costco \u00b7 Lulu \u00b7 Tesco"
+    "q": "How would you hedge FX exposure for a retailer buying in USD and selling in MYR?",
+    "a": "First separate transaction exposure (committed purchase orders) from translation exposure (consolidating a foreign subsidiary). Hedge transaction exposure with forwards matched to the payment dates on the buying calendar \u2014 typically rolling 6\u201312 months, hedging a declining percentage the further out you go. Do not hedge translation exposure with derivatives; it is an accounting effect, not a cash one. State the policy in a treasury mandate with limits, so hedging never becomes speculation with a different name.",
+    "who": "Landmark Group \u00b7 Unilever \u00b7 Shell"
    }
   ],
   "interview_soft": [
    {
-    "q": "What would your last manager say is your weakness?",
-    "a": "Name a real one with a boundary. The pattern that works: a genuine weakness, evidence you know its cost, and the specific mechanism you use to contain it. 'I go too deep into detail before surfacing a view \u2014 it has cost me time on low-stakes analysis. I now set a decision deadline before starting and present at that point regardless of how complete it feels.' Avoid perfectionism, avoid anything that would disqualify you for the role itself.",
-    "who": "Universal"
+    "q": "How do you explain a complex financial concept to a non-finance audience?",
+    "a": "Demonstrate it rather than describe it. Pick something like IFRS 16 or working capital and explain it in the answer, in plain words, in under 30 seconds, with a number. The technique: one analogy, one number, one consequence. Then stop. The most common failure is finance people proving they understand it instead of making the other person understand it.",
+    "who": "Retail boards \u00b7 P&G \u00b7 Mars"
    },
    {
-    "q": "What is the hardest decision you have made in your career?",
-    "a": "Hard means genuinely two-sided, not merely unpleasant. Redundancies, closing a site, overruling someone you respected, or choosing between two people for one role. Structure: the trade-off, the information you had and did not have, how you decided, what it cost, and what you would do differently. Interviewers discount any answer where the right choice was obvious in hindsight \u2014 say what made it genuinely close.",
-    "who": "Majid Al Futtaim \u00b7 GE \u00b7 Unilever"
+    "q": "Describe a time you led a team through significant change.",
+    "a": "Use the ERP implementation \u2014 it is the strongest card in your hand. Cover what changed for the people, not just the systems: roles that disappeared, processes relearned, the period where everything took longer. Explain how you handled the dip in morale at go-live, who resisted and how you brought them round, and the measurable outcome. The 40% close reduction is the proof point; the retention of the team through it is the actual answer.",
+    "who": "Your own D365 story"
    }
   ],
   "cfo_field": [
    {
-    "q": "The offer is decided by the non-technical questions.",
-    "a": "Everyone shortlisted can do the technical work \u2014 that is why they were shortlisted. What separates the offer is whether the panel believes you can hold a room, disagree with a CEO without theatre, and be trusted with bad news. Prepare the failure story properly: what you decided, what it cost, what you changed afterwards. A candidate with no failure story reads as someone who has never owned a decision.",
-    "who": "Why strong CVs lose"
+    "q": "The controller who never leaves the close never becomes CFO.",
+    "a": "The job you are promoted out of is 'the person who produces the numbers'. The job you are promoted into is 'the person who decides what to do about them'. If your calendar is 70% close, reconciliation and audit prep, you are demonstrating that you are excellent at the job you already have. Push the close down: a well-run retail group closes in 5 working days, and every day you shave buys back roughly 12 days a year of capacity to spend on decisions instead of production.",
+    "who": "The single most common plateau"
    },
    {
-    "q": "A forecast that is never wrong is a forecast nobody is using.",
-    "a": "Track forecast accuracy as a metric in its own right \u2014 absolute percentage error by month, by category. Under 5% at group level is good in retail; over 15% and the business has stopped believing you. But an FP&A team that is never wrong is sandbagging, and sandbagging is more expensive than error: it prices in a buffer everyone plans around, and the buffer compounds up the hierarchy.",
-    "who": "What separates FP&A from reporting"
+    "q": "The Gulf pays for scarcity, not for years.",
+    "a": "Salary in the region tracks the intersection of skills, not the length of the CV. CA plus genuine FP&A plus retail plus a system implementation is a much rarer combination than any one of them is deep. If you are negotiating, the leverage is in naming the intersection, not in listing the years. And check the structure: basic versus allowances changes gratuity, which is calculated on basic salary alone.",
+    "who": "Compensation structure"
    }
   ],
   "review": {
@@ -815,8 +828,150 @@
   },
   "podcasts": {
    "ok": true,
-   "generated_at": "2026-10-24T00:12:43.862323+00:00",
+   "generated_at": "2026-10-24T23:56:37.621493+00:00",
    "episodes": [
+    {
+     "show": "Figuring Out",
+     "author": "Raj Shamani",
+     "category": "Business",
+     "title": "Ex Navy SEAL Who Killed Osama Bin Laden On The Raid & Fear | Robert J. O\u2019Neill | FO579 Raj Shamani",
+     "guest": "",
+     "published": "2026-10-24",
+     "link": "https://www.youtube.com/watch?v=sRH-XlBE2cQ",
+     "takeaways": [
+      "He wrote goodbye letters to his daughters before the mission.",
+      "He follows the rule \u201cquit tomorrow, never today\u201d to get through the hardest training."
+     ]
+    },
+    {
+     "show": "Ankur Warikoo",
+     "author": "warikoo",
+     "category": "Career",
+     "title": "Can You Afford a Child in India? 3 Costs You Need to Plan For",
+     "guest": "",
+     "published": "2026-10-24",
+     "link": "https://www.youtube.com/watch?v=Cgs2AYMsQu8",
+     "takeaways": [
+      "Three hidden costs of raising a child are lost income, lifestyle upgrades, and education dreams that can collide with retirement.",
+      "The episode shares a 1\u20112\u20113\u20114 framework for thinking through decisions about affording a child."
+     ]
+    },
+    {
+     "show": "Pranjal Kamra",
+     "author": "Pranjal Kamra",
+     "category": "Investing",
+     "title": "What is happening to the Indian Stock Market??",
+     "guest": "",
+     "published": "2026-10-24",
+     "link": "https://www.youtube.com/watch?v=JZ7sUV0O3IM",
+     "takeaways": [
+      "The Indian stock market has experienced notable volatility and a correction recently.",
+      "The episode examines domestic and macroeconomic factors behind the recent market drop."
+     ]
+    },
+    {
+     "show": "Zero1 by Zerodha",
+     "author": "Zero1 by Zerodha",
+     "category": "Money",
+     "title": "Should you BUY A House Or Invest in Stock Market?",
+     "guest": "",
+     "published": "2026-10-24",
+     "link": "https://www.youtube.com/watch?v=0Ga_YTnC4Yc",
+     "takeaways": [
+      "The episode compares the financial outcomes of buying a flat versus renting and investing the difference in SIPs over 5, 10, and 20 years.",
+      "A calculator is provided so listeners can input their own numbers to see which option is more financially viable."
+     ]
+    },
+    {
+     "show": "Finance With Sharan",
+     "author": "Finance With Sharan",
+     "category": "Money",
+     "title": "Harsh Reality of India\u2019s Growth: Taxes, Jobs & the Cost of Doing Business | Jayant Mundhra | FWS",
+     "guest": "",
+     "published": "2026-10-24",
+     "link": "https://www.youtube.com/watch?v=C3WpbUc8UC0",
+     "takeaways": [
+      "Why does India keep its biggest reforms for a crisis?",
+      "Why do Indian factories pay more for power than their Chinese rivals?"
+     ]
+    },
+    {
+     "show": "Groww",
+     "author": "Groww",
+     "category": "Investing",
+     "title": "These Stocks Are Seeing Buying From Both FIIs & DIIs",
+     "guest": "",
+     "published": "2026-10-24",
+     "link": "https://www.youtube.com/watch?v=GYzyriY6vxQ",
+     "takeaways": [
+      "What happens when FIIs are selling the broader market, but increasing their stake in a few specific companies?",
+      "In this video, we analyse five stocks where both foreign and domestic institutional ownership has recently increased despite weak overall market sentiment."
+     ]
+    },
+    {
+     "show": "Dhruv Rathee",
+     "author": "Dhruv Rathee",
+     "category": "Society",
+     "title": "How Indian Media BRAINWASHES You! | Dhruv Rathee",
+     "guest": "",
+     "published": "2026-10-24",
+     "link": "https://www.youtube.com/watch?v=qWjfDow0xGQ",
+     "takeaways": [
+      "The fastest and the most affordable way to upskill yourself in AI.",
+      "Live workshop happening on 25th Oct, 7pm IST!"
+     ]
+    },
+    {
+     "show": "The Deshbhakt",
+     "author": "The Deshbhakt",
+     "category": "Society",
+     "title": "China Eating Into Arunachal - USA Bullying India 24X7 | PM Modi's National Security Promise Broken?",
+     "guest": "",
+     "published": "2026-10-24",
+     "link": "https://www.youtube.com/watch?v=WGRBFxcuqZ0",
+     "takeaways": [
+      "\ud83d\udea8 Your emails and files shouldn't be anyone's business.",
+      "For a decade, national security was Modi government\u2019s biggest success story."
+     ]
+    },
+    {
+     "show": "The Wire",
+     "author": "The Wire",
+     "category": "Politics",
+     "title": "The Arunachal Standoff: Modi's Inability to Deal with China Comes to the Fore",
+     "guest": "China Comes",
+     "published": "2026-10-24",
+     "link": "https://www.youtube.com/watch?v=dFPOqPabc3Y",
+     "takeaways": [
+      "The Wire's founding editor, Siddharth Varadarajan is joined by Sushant Singh, Lecturer, Yale University to discuss the significance of the inadvertent revelations by the DG, ITBP, Shatrujeet Kapur on the disturbing situation on the Arunachal border.",
+      "What does this tell us about Modi\u2019s China policy?"
+     ]
+    },
+    {
+     "show": "ANI Podcast (clips)",
+     "author": "ANI Podcast with Smita Prakash Clips",
+     "category": "Politics",
+     "title": "\u201cIndia's Economy Is Rapidly Growing While China Has Reached Its Levels Of Growth\u201d Meera Shankar",
+     "guest": "",
+     "published": "2026-10-24",
+     "link": "https://www.youtube.com/watch?v=F9botABoob0",
+     "takeaways": [
+      "\u201cIndia's Economy Is Rapidly Growing While China Has Reached Its Levels Of Growth\u201d Meera Shankar #ANIPodcast #SmitaPrakash #Modi #XiJinping #China #India #Economy Tune in here: linktr.ee/podcastwithsmitaprakash"
+     ]
+    },
+    {
+     "show": "Drishti IAS",
+     "author": "Drishti IAS",
+     "category": "Education",
+     "title": "The Hindu Newspaper Analysis & PIB | 24 October 2026 | Current Affairs for UPSC CSE | Drishti IAS",
+     "guest": "",
+     "published": "2026-10-24",
+     "link": "https://www.youtube.com/watch?v=f8QptJgRo3A",
+     "takeaways": [
+      "\ud83d\udea8 Today\u2019s MOST IMPORTANT Current Affairs for UPSC 2026!",
+      "In this video, We breaks down the key headlines from The Hindu Newspaper with a clear focus on Prelims + Mains relevance."
+     ]
+    },
     {
      "show": "CA Rachana Ranade",
      "author": "CA Rachana Phadke Ranade",
@@ -826,21 +981,8 @@
      "published": "2026-10-23",
      "link": "https://www.youtube.com/watch?v=PZiv2VKsdhA",
      "takeaways": [
-      "Vedanta has split into four new listed companies in addition to the existing Vedanta Limited.",
-      "The episode analyzes the demerger structure, cost\u2011of\u2011acquisition allocation, tax treatment of gains, financial metrics and dividend policy of all five entities."
-     ]
-    },
-    {
-     "show": "Pranjal Kamra",
-     "author": "Pranjal Kamra",
-     "category": "Investing",
-     "title": "Should you invest in REITs? | Alok Aggarwal | Finology Podcast Ep. 5",
-     "guest": "",
-     "published": "2026-10-23",
-     "link": "https://www.youtube.com/watch?v=ZzkF9uQvuog",
-     "takeaways": [
-      "Brookfield entered the Indian market in 2009.",
-      "BIRET was listed in February\u202f2021 as India\u2019s only 100% institutionally managed office REIT."
+      "Vedanta has been split into four new listed companies in addition to the existing Vedanta Limited, creating five separate entities.",
+      "The episode explains how Short\u2011Term Capital Gains (STCG) or Long\u2011Term Capital Gains (LTCG) tax applies when selling the new shares after the demerger."
      ]
     },
     {
@@ -857,19 +999,6 @@
      ]
     },
     {
-     "show": "The Wire",
-     "author": "The Wire",
-     "category": "Politics",
-     "title": "Detaining Democracy? Law, Order and Freedom with Nitya Ramakrishnan",
-     "guest": "Nitya Ramakrishnan",
-     "published": "2026-10-23",
-     "link": "https://www.youtube.com/watch?v=gGIe-kDvQMA",
-     "takeaways": [
-      "In an interview explaining the ABC of preventive detention in India, and if there was anything legal or \u2018constitutional\u2019 about what was seen of police behaviour with citizens during the protest, senior advocate and well known voice on serious constitutional matters, including media law and free speech, and one of our finest lawyers, Nitya Ramakrishnan is in conversation with The Wire\u2019s Editor.",
-      "She answers basic questions on how we should look at the journey of \u2018preventive detention\u2019 in India?"
-     ]
-    },
-    {
      "show": "The Ranveer Show",
      "author": "Ranveer Allahbadia",
      "category": "Philosophy",
@@ -878,34 +1007,8 @@
      "published": "2026-10-23",
      "link": "https://www.youtube.com/watch?v=hF9lf3cjO1o",
      "takeaways": [
-      "In this 551st (overall 1056th) episode of The Ranveer Show, We sits down with Kamlesh Patel (Daaji), Padma Bhushan awardee and guide of the Heartfulness way of meditation, for a deep and thought-provoking conversation about meditation, consciousness, chakras, karma and life beyond this realm.",
-      "Daaji shares insights from decades of spiritual practice, from starting meditation as a college student to leading the Heartfulness movement."
-     ]
-    },
-    {
-     "show": "Drishti IAS",
-     "author": "Drishti IAS",
-     "category": "Education",
-     "title": "First Human Case of Shamonda Virus | Symptoms, Risks & Zoonotic Diseases | Drishti IAS",
-     "guest": "",
-     "published": "2026-10-23",
-     "link": "https://www.youtube.com/watch?v=putj19x53xY",
-     "takeaways": [
-      "France has reported the first known human case of the Shamonda virus, raising important questions about zoonotic infections and the potential risks posed by animal-borne pathogens.",
-      "In this video, we explain what the Shamonda virus is, how it spreads, and why this reported human infection has attracted global health attention."
-     ]
-    },
-    {
-     "show": "Figuring Out",
-     "author": "Raj Shamani",
-     "category": "Business",
-     "title": "How To Build An Unbreakable Mind & Push Beyond Your Limits | Ayyoub El Osrouti | FO578 Raj Shamani",
-     "guest": "",
-     "published": "2026-10-22",
-     "link": "https://www.youtube.com/watch?v=BV7QRw8wtjs",
-     "takeaways": [
-      "He stopped after running over 620\u202fkm in a Backyard Ultra.",
-      "He focuses on one loop at a time instead of the total distance."
+      "Meditation can lift the burdens we carry and help us hear the voice of our own heart.",
+      "Struggle is necessary for growth."
      ]
     },
     {
@@ -917,8 +1020,8 @@
      "published": "2026-10-22",
      "link": "https://www.youtube.com/watch?v=d5Nu2Fg37no",
      "takeaways": [
-      "Jio faces an outstanding spectrum obligation of \u20b91,04,514\u202fcrore and a deferred tax expense of \u20b910,182\u202fcrore.",
-      "The company reports \u20b91,46,885\u202fcrore in revenue, \u20b930,049\u202fcrore in profit, and serves 524\u202fmillion customers."
+      "\u20b91,04,514\u202fcrore is listed as an outstanding spectrum obligation for Jio.",
+      "The draft prospectus shows Jio has \u20b910,182\u202fcrore in deferred tax expense."
      ]
     },
     {
@@ -930,85 +1033,7 @@
      "published": "2026-10-22",
      "link": "https://www.youtube.com/watch?v=XHxOA3PvTYQ",
      "takeaways": [
-      "The banner chart\u2019s predictions of market peaks and lows have been proven right (almost) every time.",
-      "The episode\u2019s content is not investment advice; listeners should do their own due diligence."
-     ]
-    },
-    {
-     "show": "Dhruv Rathee",
-     "author": "Dhruv Rathee",
-     "category": "Society",
-     "title": "Dhruv Rathee Interviews Former Chief Election Commissioner | Dr. S.Y. Quraishi",
-     "guest": "",
-     "published": "2026-10-22",
-     "link": "https://www.youtube.com/watch?v=foEYL-ElhTc",
-     "takeaways": [
-      "The fastest and the most affordable way to upskill yourself in AI.",
-      "Live workshop happening on 25th Oct, 7pm IST!"
-     ]
-    },
-    {
-     "show": "The Deshbhakt",
-     "author": "The Deshbhakt",
-     "category": "Society",
-     "title": "Trump Controlling Modi? | America Deciding On India\u2019s Oil Purchase & Dictating Terms On Trade Deal?",
-     "guest": "",
-     "published": "2026-10-22",
-     "link": "https://www.youtube.com/watch?v=6J8keOiKCG8",
-     "takeaways": [
-      "- Become a Deshbhakt Member & Get Exclusive Access!!",
-      "Is Jamnagar diplomacy becoming more important than the Modi-Trump bro code?"
-     ]
-    },
-    {
-     "show": "ANI Podcast (clips)",
-     "author": "ANI Podcast with Smita Prakash Clips",
-     "category": "Politics",
-     "title": "\u201cIran Has Practically Imposed A Strategic Defeat On The United States\u201d Zorawar Singh",
-     "guest": "",
-     "published": "2026-10-22",
-     "link": "https://www.youtube.com/watch?v=xrhxGC5VaBw",
-     "takeaways": [
-      "\u201cIran Has Practically Imposed A Strategic Defeat On The United States\u201d Zorawar Singh #ANIPodcast #SmitaPrakash #ZorawarSingh #Iran #USA #Trump #MojtabaKhamenei #War #Oil Tune in here: linktr.ee/podcastwithsmitaprakash"
-     ]
-    },
-    {
-     "show": "Ankur Warikoo",
-     "author": "warikoo",
-     "category": "Career",
-     "title": "Can She Buy a Home on a \u20b935,000 Salary? | Money Matters 127",
-     "guest": "",
-     "published": "2026-10-21",
-     "link": "https://www.youtube.com/watch?v=s-ZV-Rw4lJ4",
-     "takeaways": [
-      "We\u2019ll walk through essential purchases, insurance, an emergency fund and her home\u2011buying goal before discussing investments.",
-      "Return projections shown are illustrations only and are not guaranteed."
-     ]
-    },
-    {
-     "show": "Finance With Sharan",
-     "author": "Finance With Sharan",
-     "category": "Money",
-     "title": "Jio IPO, IT Job Crisis, AI Bubble & What This Week Means for Your Money | 1% Club News",
-     "guest": "",
-     "published": "2026-10-21",
-     "link": "https://www.youtube.com/watch?v=MQ3GA9xMZ7U",
-     "takeaways": [
-      "The episode opens with JP Morgan describing India as the largest liquid non-AI market, and why global funds exposed to AI-linked valuations in the US, South Korea and Taiwan may look to India as a hedge.",
-      "Shashank compares today\u2019s AI rally with the dot-com bubble, discusses Ray Dalio\u2019s bubble warning, and explains the risks of leveraged retail trading."
-     ]
-    },
-    {
-     "show": "Groww",
-     "author": "Groww",
-     "category": "Investing",
-     "title": "5 stocks showing strength in a weak market",
-     "guest": "",
-     "published": "2026-10-21",
-     "link": "https://www.youtube.com/watch?v=pLuJ45-4p2A",
-     "takeaways": [
-      "Indian stock market is under pressure with Nifty 50 and Nifty 500 down around 6% amid FII selling, yet these 5 breakout stocks in India are showing strong relative strength with all-time high breakout, retest and consolidation patterns, covering Bluestone Jewellery and Lifestyle with omnichannel expansion and Q3FY26 profitability turnaround, E2E Networks riding AI data centre and GPU rental demand with 5x sales growth in 4 years, Black Box with digital infrastructure growth, 34% ROE, 27% ROCE and 1.5x order backlog, Dr Lal Pathlabs with stable diagnostics growth, mid-teens revenue outlook and net cash balance sheet, and Aegis Logistics with LPG logistics volume growth and terminal capacity expansion, along with detailed stock analysis of business model, sales and profit CAGR, EBITDA margin, operating cash flow, PE ratio, price-to-sales, capex, risks and valuation for investors tracking falling market, technical analysis and long term investing; this video is for education only and not investment advice, please do your own research and consult your advisor.",
-      "Groww is India\u2019s Best Investment App and the Largest Stock Broker."
+      "The banner chart has historically predicted stock market peaks and lows correctly almost every time."
      ]
     },
     {
@@ -1020,15 +1045,15 @@
      "published": "2026-10-20",
      "link": "https://www.youtube.com/watch?v=JrPhalmUQos",
      "takeaways": [
-      "This video explains whether the AI boom is turning into a massive financial bubble.",
-      "AI stocks like Nvidia, Microsoft, Google and Meta have delivered extraordinary returns, but behind this growth are trillions of dollars in data centre investments, rising debt, hidden financial commitments, questionable profitability and increasing dependence on just a few AI companies."
+      "AI stocks like Nvidia, Microsoft, Google and Meta have delivered extraordinary returns, but the growth is backed by trillions of dollars in data\u2011centre investments, rising debt and hidden financial commitments.",
+      "The concentration of AI stocks in the S&P\u202f500 and Nasdaq creates a risk that a trigger could burst an AI bubble."
      ]
     },
     {
      "show": "Sid Warrier",
      "author": "Dr Sid Warrier",
      "category": "Health",
-     "title": "Why You Quit by Thursday | Dr Sid Warrier",
+     "title": "How to Stay Motivated: Dopamine vs Serotonin | Explained by a Neurologist",
      "guest": "",
      "published": "2026-10-19",
      "link": "https://www.youtube.com/watch?v=G0tTK2ErC7I",
@@ -1046,21 +1071,8 @@
      "published": "2026-10-18",
      "link": "https://www.youtube.com/watch?v=x28y4VH-9-o",
      "takeaways": [
-      "Episode 383 of the #AskAbhijit show: Ask me your best questions in the comments, and I shall answer them.",
-      "Dark Stars to Black Holes: The 250-Year Journey from Impossible Idea to Nobel Prize (The Black Hole Chronicles Book 1) 2."
-     ]
-    },
-    {
-     "show": "Zero1 by Zerodha",
-     "author": "Zero1 by Zerodha",
-     "category": "Money",
-     "title": "Why a normal life now feels like a Luxury?",
-     "guest": "",
-     "published": "2026-10-17",
-     "link": "https://www.youtube.com/watch?v=cBe9pIOhNOo",
-     "takeaways": [
-      "The episode explains how to calculate the \u201cright\u201d inflation rate for you.",
-      "It also shows ways to beat that inflation number when managing personal finance."
+      "The episode invites listeners to submit their best questions in the comments for Abhijit to answer.",
+      "The Chandrasekhar Limit discovery was buried for fifty years before changing the universe."
      ]
     },
     {
@@ -1072,8 +1084,8 @@
      "published": "2026-10-17",
      "link": "https://www.youtube.com/watch?v=PZmjYFBAO6U",
      "takeaways": [
-      "Sadhguru examines how the traditional belief that women should not worship during their menstrual cycles originated and whether it is still relevant today.",
-      "The episode is a unique, direct\u2011to\u2011audience solo podcast where Sadhguru speaks straight to listeners."
+      "Sadhguru explores how the traditional belief that women need not worship during their menstrual cycles came about, and whether it is relevant today.",
+      "A unique, direct-to-audience solo podcast where Sadhguru speaks straight to you, diving deep into topics ranging from the mystical to current affairs and spiritual insights."
      ]
     }
    ],
@@ -1087,58 +1099,96 @@
    {
     "source": "ET Opinion",
     "cat": "money",
-    "title": "Listing nothing",
-    "link": "https://economictimes.indiatimes.com/opinion/bliss-of-everyday-life/listing-nothing/articleshow/135154498.cms",
-    "summary": "Zero Innovations launched its IPO at a valuation of \u20b912,000 cr without any products or registered office. The company's prospectus highlighted an asset-light business model, leading to substantial investor interest and oversubscription. Shortly after, a food-delivery startup went public at a higher valuation despite hi",
-    "date": "Oct 23, 2026",
-    "_sort": "2026-10-23T19:11:12+00:00",
+    "title": "It's time Delhi set the pace in scaling up businesses",
+    "link": "https://economictimes.indiatimes.com/opinion/et-commentary/delhi-leading-the-charge-towards-a-thriving-business-ecosystem-in-india/articleshow/135174575.cms",
+    "summary": "India is working towards improving the ease of scaling businesses to boost economic growth and employment. The role of Delhi is critical in fostering a supportive business environment that enhances investment. Effective infrastructure, skilled labor, and access to finance are essential for businesses to grow confidentl",
+    "date": "Oct 24, 2026",
+    "_sort": "2026-10-24T17:11:06+00:00",
     "smart": {
      "what_happened": [
-      "Zero Innovations launched its IPO at a valuation of \u20b912,000\u202fcr despite having no products or registered office.",
-      "The prospectus emphasized an asset\u2011light model and the issue was heavily oversubscribed, while a food\u2011delivery startup later went public at an even higher valuation."
+      "India is working to improve the ease of scaling businesses to boost economic growth and employment.",
+      "The article says Delhi's role is critical in fostering a supportive business environment with effective infrastructure, skilled labor, and access to finance."
      ],
-     "why_it_matters": "The listing highlights strong investor appetite for asset\u2011light companies even when they lack tangible products or a registered office, raising questions about valuation standards and due\u2011diligence practices in the market. The comparison with a food\u2011delivery startup achieving a higher valuation underscores how market sentiment can prioritize growth narratives over concrete operational foundations.",
-     "what_to_watch": "Regulatory filings and subsequent disclosures from Zero Innovations to see if the company establishes a registered office or product pipeline within the next reporting period.",
-     "headline": "Zero Innovations IPO raises \u20b912,000\u202fcr despite no products",
+     "why_it_matters": "Improving the ability of companies to scale can increase productivity, create jobs, and attract investment, which are key drivers of India's overall economic development. By focusing on Delhi as a catalyst, the government aims to create a model that other regions can replicate, potentially accelerating growth across the country.",
+     "what_to_watch": "Watch for any policy announcements or initiatives from the Delhi government that target infrastructure upgrades, skill development programs, or financial access for scaling firms.",
+     "headline": "Delhi urged to lead scaling of Indian businesses",
      "read_seconds": 26
     }
    },
    {
     "source": "Livemint",
     "cat": "money",
-    "title": "UPI payment failed but money debited? Banks must refund and pay  \u20b9100 per day compensation under RBI rules",
-    "link": "https://www.livemint.com/money/personal-finance/upi-payment-failed-but-money-debited-banks-must-refund-and-pay-rs-100-per-day-compensation-under-rbi-rules-11792774013883.html",
-    "summary": "The Reserve Bank\u2019s framework on turnaround time and customer compensation for failed transactions sets clear deadlines. Here is all you need to know.",
-    "date": "Oct 23, 2026",
-    "_sort": "2026-10-23T17:54:52+00:00",
+    "title": "New GST Rules 2026: From November 1, reforms to be rolled out in phases - What CBIC confirmed",
+    "link": "https://www.livemint.com/money/new-gst-rules-2026-from-november-1-reforms-to-be-rolled-out-in-phases-what-cbic-confirmed-11792846843775.html",
+    "summary": "The Council has decided to amend the return filing mechanism so that tax declared as payable by a supplier, which is then passed on as ITC to the recipient, must actually be paid.",
+    "date": "Oct 24, 2026",
+    "_sort": "2026-10-24T14:05:14+00:00",
     "smart": {
      "what_happened": [
-      "RBI rules mandate banks refund the amount when a UPI transaction fails but the debit is recorded.",
-      "Banks must also pay the customer \u20b9100 per day until the issue is resolved."
+      "The Council decided to amend the GST return filing mechanism so that tax declared as payable by a supplier and claimed as ITC must actually be paid.",
+      "The reforms will be rolled out in phases starting November 1, 2026."
      ],
-     "why_it_matters": "The directive clarifies the liability of banks for failed UPI transactions, ensuring that consumers are promptly reimbursed and compensated for inconvenience. It also creates a financial incentive for banks to improve transaction processing and dispute resolution, potentially reducing systemic delays and enhancing confidence in digital payments.",
-     "what_to_watch": "Watch for RBI's upcoming compliance reports or enforcement notices to banks regarding adherence to the refund and daily compensation requirements.",
-     "headline": "RBI requires banks to refund failed UPI payments and pay \u20b9100 daily compensation",
+     "why_it_matters": "The change ties input tax credit to actual tax payment, tightening compliance and potentially affecting cash flow for businesses that rely on claiming ITC before settling supplier taxes. It increases the risk of credit reversal and may require adjustments to accounting and payment processes across the supply chain.",
+     "what_to_watch": "The first phase implementation guidelines released by the CBIC and the effective date of the November 1, 2026 rollout.",
+     "headline": "CBIC to amend GST return filing mechanism from Nov 1 2026",
+     "read_seconds": 20
+    }
+   },
+   {
+    "source": "The Marginalian",
+    "cat": "ideas",
+    "title": "Dostoyevsky, Just After His Death Sentence Was Repealed, on the Meaning of Life",
+    "link": "https://www.themarginalian.org/2026/10/24/dostoyevsky-execution-life/",
+    "summary": "\"To be a human being among people and to remain one forever, no matter in what circumstances, not to grow despondent and not to lose heart \u2014 that\u2019s what life is all about, that's its task.\"",
+    "date": "Oct 24, 2026",
+    "_sort": "2026-10-24T11:12:53+00:00",
+    "smart": {
+     "what_happened": [
+      "Dostoyevsky made a statement about the meaning of life.",
+      "He said it shortly after his death sentence was repealed."
+     ],
+     "why_it_matters": "The remarks provide insight into Dostoyevsky's philosophical outlook at a pivotal moment in his life, illustrating how personal adversity shaped his views on human resilience and purpose, which later influenced his literary legacy.",
+     "what_to_watch": "Monitor any further public statements or writings by Dostoyevsky in the weeks following the repeal.",
+     "headline": "Dostoyevsky speaks on meaning of life after death sentence repealed",
+     "read_seconds": 20
+    }
+   },
+   {
+    "source": "Peter Attia",
+    "cat": "health",
+    "title": "Personalized medicine comes to cancer immunotherapy",
+    "link": "https://peterattiamd.com/personalized-medicine-comes-to-cancer-immunotherapy/",
+    "summary": "A phase III trial for personalized melanoma vaccination foreshadows a new era of cancer treatment\n\nThe post Personalized medicine comes to cancer immunotherapy appeared first on Peter Attia MD.",
+    "date": "Oct 24, 2026",
+    "_sort": "2026-10-24T11:00:00+00:00",
+    "smart": {
+     "what_happened": [
+      "A phase III trial evaluated a personalized melanoma vaccination.",
+      "The trial is presented as a foreshadowing of a new era in cancer treatment."
+     ],
+     "why_it_matters": "The study demonstrates that tailoring immunotherapy to individual tumor profiles can potentially improve efficacy, marking a shift from one-size\u2011fits\u2011all approaches toward more precise cancer care. If successful, this strategy could expand the role of personalized vaccines across oncology, influencing research priorities and clinical practice.",
+     "what_to_watch": "The publication of the full phase III trial results.",
+     "headline": "Phase III trial tests personalized melanoma vaccine",
      "read_seconds": 20
     }
    },
    {
     "source": "Economic Times",
     "cat": "money",
-    "title": "ICICI Bank and Indian Bank increase FD interest rates: Senior citizens can now earn up to 7.30% in this FD",
-    "link": "https://economictimes.indiatimes.com/wealth/invest/icici-bank-and-indian-bank-increase-fd-interest-rates-senior-citizens-can-now-earn-up-to-7-30-in-this-fd/articleshow/135144686.cms",
-    "summary": "ICICI Bank and Indian Bank have raised fixed deposit interest rates for select tenures effective October 23, 2026.  Indian Bank also adjusted its rates, increasing FD rates on their special 555-day and 777-day FDs.",
-    "date": "Oct 23, 2026",
-    "_sort": "2026-10-23T11:58:15+00:00",
+    "title": "Gold and silver rate today (October 24, 2026): Check 24k, 22k, 20k and 18k gold jewellery prices from IBJA, Malabar Gold &amp; Diamonds, Joy",
+    "link": "https://economictimes.indiatimes.com/wealth/invest/gold-silver-rate-today-october-24-2026-check-24k-22k-20k-and-18k-gold-jewellery-prices-from-ibja-malabar-gold-diamonds-joyalukkas-kalyan-jewellers-and-tanishq/articleshow/135164785.cms",
+    "summary": "Gold- Silver rate today (October 24, 2026): Gold prices saw a decline on October 24, 2026, providing a welcome opportunity for jewelry shoppers. Major jewelers like Tanishq and Malabar Gold &amp; Diamonds have released their prices across different cities.",
+    "date": "Oct 24, 2026",
+    "_sort": "2026-10-24T07:36:10+00:00",
     "smart": {
      "what_happened": [
-      "ICICI Bank increased fixed deposit interest rates for selected tenures effective October 23, 2026.",
-      "Indian Bank raised rates on its special 555\u2011day and 777\u2011day fixed deposits, letting senior citizens earn up to 7.30%."
+      "Gold prices declined on October 24, 2026, offering a buying opportunity for jewelry shoppers.",
+      "Major jewelers Tanishq and Malabar Gold & Diamonds published their jewelry prices across various cities."
      ],
-     "why_it_matters": "Higher fixed\u2011deposit rates improve returns for senior citizens, who rely on interest income for retirement needs, and signal intensified competition among Indian banks to attract deposit inflows amid a low\u2011interest environment.",
-     "what_to_watch": "Watch for any further adjustments to FD rates announced by major banks in the next quarter.",
-     "headline": "ICICI Bank and Indian Bank raise FD rates for seniors to 7.30%",
-     "read_seconds": 20
+     "why_it_matters": "The drop in gold prices can influence consumer spending on jewelry and may affect demand trends for precious metals, while the published rates give retailers and buyers a benchmark for pricing across different markets.",
+     "what_to_watch": "Track the next day's gold price movement and any updated price lists from Tanishq or Malabar Gold & Diamonds.",
+     "headline": "Gold prices fall on Oct 24 2026 as jewelers release rates",
+     "read_seconds": 21
     }
    },
    {
@@ -1151,42 +1201,13 @@
     "_sort": "2026-10-23T09:03:06+00:00"
    },
    {
-    "source": "The Marginalian",
-    "cat": "ideas",
-    "title": "Ursula K. Le Guin on the Meaning of Life",
-    "link": "https://www.themarginalian.org/2026/10/22/le-guin-life/",
-    "summary": "We are the survivors of immense and minute events &#8212; violent cosmic collisions and subtle genetic mutations, the deaths of innumerable suns and the births of innumerable cells, the splitting of continents and the splitting of atoms. Out of it all, we emerged as creatures muzzled by a consciousness that demands we ",
-    "date": "Oct 22, 2026",
-    "_sort": "2026-10-22T19:21:50+00:00",
-    "smart": {
-     "what_happened": [
-      "Le Guin describes humans as survivors of vast cosmic collisions and tiny genetic mutations.",
-      "She notes that consciousness compels humanity to seek meaning amid the universe's chaos."
-     ],
-     "why_it_matters": "The essay underscores how humanity's self\u2011awareness shapes its interpretation of existence, offering a philosophical lens that can influence cultural discourse, education, and the way societies frame scientific and ethical debates about humanity's place in the cosmos.",
-     "what_to_watch": "Future publications or speeches by Le Guin that further explore the relationship between consciousness and humanity's cosmic origins.",
-     "headline": "Ursula K. Le Guin reflects on humanity's origins and consciousness",
-     "read_seconds": 26
-    }
-   },
-   {
     "source": "Psyche",
     "cat": "mind",
     "title": "Why romantic relationships matter more to men than to women",
     "link": "https://psyche.co/ideas/why-romantic-relationships-matter-more-to-men-than-to-women",
     "summary": "For too long, men were told to be self-sufficient. The research shows they\u2019re more likely to thrive in a loving couple- by Iris WahringRead on Psyche",
     "date": "Oct 22, 2026",
-    "_sort": "2026-10-22T10:00:00+00:00",
-    "smart": {
-     "what_happened": [
-      "Study finds men are more likely to thrive in a loving couple than women",
-      "Findings challenge the long\u2011standing notion that men should be self\u2011sufficient"
-     ],
-     "why_it_matters": "The results suggest that romantic partnerships play a larger role in men's well\u2011being, which could influence how mental\u2011health professionals and policymakers design support programs and relationship education, recognizing gender differences in the benefits of intimate relationships.",
-     "what_to_watch": "Future research publications that compare the mental\u2011health outcomes of men and women in long\u2011term relationships",
-     "headline": "Research shows men benefit more from romantic relationships than women",
-     "read_seconds": 20
-    }
+    "_sort": "2026-10-22T10:00:00+00:00"
    },
    {
     "source": "Scott Young",
@@ -1196,15 +1217,6 @@
     "summary": "My three-step process for self-directed learning projects you'll actually complete.\nThe post The Key to Creating Learning Projects You\u2019ll Finish appeared first on Scott H Young.",
     "date": "Oct 21, 2026",
     "_sort": "2026-10-21T20:25:47+00:00"
-   },
-   {
-    "source": "Peter Attia",
-    "cat": "health",
-    "title": "#412 \u2012 The evolving science of cancer: emerging approaches to prevention and early detection, and the advances reshaping treatment | Siddhar",
-    "link": "https://peterattiamd.com/sidmukherjee3/",
-    "summary": "\u201cThe idea that cancer metabolically is different from normal cells, is a potential way to treat cancers. We know that there are second line and third line therapies in certain cancers that will truly expand your lifespan.\u201d\u2012 Sid Mukherjee\nThe post #412 \u2012 The evolving science of cancer: emerging approaches to prevention ",
-    "date": "Oct 19, 2026",
-    "_sort": "2026-10-19T04:15:00+00:00"
    },
    {
     "source": "Farnam Street",
@@ -1218,39 +1230,48 @@
   ],
   "lichess_games": [
    {
-    "id": "KLzrW2rI",
-    "url": "https://lichess.org/KLzrW2rI",
-    "result": "Win",
-    "icon": "\u2705",
-    "cls": "win",
+    "id": "6Md8ix1o",
+    "url": "https://lichess.org/6Md8ix1o",
+    "result": "Loss",
+    "icon": "\u274c",
+    "cls": "loss",
     "my_side": "Black",
-    "my_rating": 1549,
-    "opp_rating": 1523,
-    "opponent": "Walter_Whitman",
-    "me_diff": 5,
-    "opp_diff": -8,
-    "opening": "Vienna Game",
-    "eco": "C25",
-    "moves": 28,
+    "my_rating": 1554,
+    "opp_rating": 1562,
+    "opponent": "Vasileva_Maria",
+    "me_diff": -5,
+    "opp_diff": 6,
+    "opening": "Philidor Defense",
+    "eco": "C41",
+    "moves": 37,
     "termination": "Checkmate",
     "speed": "Blitz",
-    "analysis": "Focus on early king safety: avoid moving the f\u2011pawn before castling; your king stayed exposed, costing ~30\u202fcentipawn accuracy.",
+    "analysis": "Focus on early piece activity: develop knights before moving the queen; after 1.e4 e5 2.Nf3 d6, play 3...Nf6, not 3...Qe7, to avoid passive positions and prevent quick mates.",
     "is_upset": false,
     "is_collapse": false,
     "is_long": false,
     "best_move": {},
     "key_facts": [
-     "Rating gap -26 (1549 vs 1523)",
-     "28 moves \u00b7 Blitz"
+     "Rating gap +8 (1554 vs 1562)",
+     "Endgame from move 27",
+     "37 moves \u00b7 Blitz"
     ],
-    "standout": "Finished by checkmate on move 28 \u2014 you converted rather than letting it drift.",
+    "standout": "",
     "game_strength": null,
-    "est_fide": 1149,
+    "est_fide": 1154,
     "accuracy": null,
     "acpl": null,
     "analysed": false,
     "_mode": "full",
     "_trend": [
+     {
+      "day": "10/24",
+      "wins": 0,
+      "losses": 1,
+      "draws": 0,
+      "total": 1,
+      "pct": 0
+     },
      {
       "day": "10/23",
       "wins": 2,
@@ -1298,109 +1319,41 @@
       "draws": 0,
       "total": 2,
       "pct": 0
-     },
-     {
-      "day": "10/14",
-      "wins": 1,
-      "losses": 0,
-      "draws": 0,
-      "total": 1,
-      "pct": 100
      }
     ],
     "_yest_counts": {
      "blitz": {
-      "win": 2,
+      "win": 0,
       "loss": 1,
       "draw": 0,
       "rp": {
-       "before": 1549,
-       "after": 1554
+       "before": 1554,
+       "after": 1549
       }
      }
     },
-    "_session_date": "2026-10-23",
+    "_session_date": "2026-10-24",
     "_is_yesterday": true
-   },
-   {
-    "id": "A063n5Dc",
-    "url": "https://lichess.org/A063n5Dc",
-    "result": "Win",
-    "icon": "\u2705",
-    "cls": "win",
-    "my_side": "White",
-    "my_rating": 1543,
-    "opp_rating": 1571,
-    "opponent": "Abhitam",
-    "me_diff": 6,
-    "opp_diff": -6,
-    "opening": "Horwitz Defense",
-    "eco": "A40",
-    "moves": 46,
-    "termination": "Resignation",
-    "speed": "Blitz",
-    "analysis": "Focus on early pawn structure: after 1.e4 d5, you missed a simple 2.exd5 Qxd5 3.Nc3, losing a tempo and allowing Black\u2019s active queen; improve by 5% faster development and avoid queen\u2011side weaknesses.",
-    "is_upset": false,
-    "is_collapse": false,
-    "is_long": true,
-    "best_move": {},
-    "key_facts": [
-     "Rating gap +28 (1543 vs 1571)",
-     "Endgame from move 34",
-     "46 moves \u00b7 Blitz"
-    ],
-    "standout": "",
-    "game_strength": null,
-    "est_fide": 1143,
-    "accuracy": null,
-    "acpl": null,
-    "analysed": false
-   },
-   {
-    "id": "HJYcdOw0",
-    "url": "https://lichess.org/HJYcdOw0",
-    "result": "Loss",
-    "icon": "\u274c",
-    "cls": "loss",
-    "my_side": "Black",
-    "my_rating": 1549,
-    "opp_rating": 1541,
-    "opponent": "JezhkovyVochi",
-    "me_diff": -6,
-    "opp_diff": 5,
-    "opening": "Scandinavian Defense",
-    "eco": "B01",
-    "moves": 24,
-    "termination": "Resignation",
-    "speed": "Blitz",
-    "analysis": "Focus on early king safety: after 1.e4 d5, avoid 2\u2026Qxd5\u202f\u2192\u202f3\u2026Qa5; instead play 2\u2026Nf6, develop knights, castle by move\u202f10, and keep the queen off the board. This reduces tactical threats and improves your average centipawn loss.",
-    "is_upset": false,
-    "is_collapse": false,
-    "is_long": false,
-    "best_move": {},
-    "key_facts": [
-     "Rating gap -8 (1549 vs 1541)",
-     "Endgame from move 22",
-     "24 moves \u00b7 Blitz"
-    ],
-    "standout": "",
-    "game_strength": null,
-    "est_fide": 1149,
-    "accuracy": null,
-    "acpl": null,
-    "analysed": false
    }
   ],
   "lichess_summary": {
    "mode": "full",
-   "total": 3,
-   "wins": 2,
+   "total": 1,
+   "wins": 0,
    "losses": 1,
    "draws": 0,
-   "pct": 67,
-   "icon": "\u2705",
-   "score": "2/3",
+   "pct": 0,
+   "icon": "\u274c",
+   "score": "0/1",
    "trend": [
+    {
+     "day": "10/24",
+     "wins": 0,
+     "losses": 1,
+     "draws": 0,
+     "total": 1,
+     "pct": 0
+    },
     {
      "day": "10/23",
      "wins": 2,
@@ -1448,33 +1401,25 @@
      "draws": 0,
      "total": 2,
      "pct": 0
-    },
-    {
-     "day": "10/14",
-     "wins": 1,
-     "losses": 0,
-     "draws": 0,
-     "total": 1,
-     "pct": 100
     }
    ],
    "weak_op": "",
    "best_op": "",
    "upsets": 0,
    "collapses": 0,
-   "long_games": 1,
-   "session_summary": "Your 67\u202f% win rate masks a dangerous habit: you consistently over\u2011extend in the Sicilian Defense, where you lose the majority of your points. Stop trying to out\u2011attack opponents who are already ahead; instead, adopt a solid, prophylactic setup\u2014e.g., the London System or a Classical Caro\u2011Kann\u2014and focus on piece coordination rather than speculative attacks. From the next game onward, play only the first 10\u201312 moves of a proven, low\u2011risk opening, then reassess the position before committing to any tactical fireworks.",
-   "session_date": "2026-10-23",
+   "long_games": 0,
+   "session_summary": "Your opening repertoire is a liability\u2014every game you play starts with a predictable, low\u2011quality line that lets opponents seize the initiative within the first ten moves.\u202fYou\u2019re failing to convert even simple advantages because you never develop a coherent middlegame plan and repeatedly blunder tactical threats you should see at a glance.\u202fFix this now: study and memorize the main\u2011line theory of one solid, reputable opening (e.g., the Caro\u2011Kann or the London System), drill its typical pawn structures and tactical motifs daily, and force yourself to play only those moves in every practice game until the patterns become second nature.",
+   "session_date": "2026-10-24",
    "is_yesterday": true,
    "token_missing": false
   },
   "lichess_puzzle": {
-   "pid": "QjzCH",
-   "rating": 1847,
+   "pid": "Mk8wu",
+   "rating": 2050,
    "level": "\ud83d\udd34 stretch",
-   "themes": "Endgame \u00b7 Advanced Pawn \u00b7 Advantage",
-   "tip": "King activity and pawn structure dominate. Technique over tactics here.",
-   "url": "https://lichess.org/training/QjzCH"
+   "themes": "Middlegame \u00b7 Short \u00b7 Crushing",
+   "tip": "Calculate 3 moves deep before touching a piece.",
+   "url": "https://lichess.org/training/Mk8wu"
   }
  }
 }
