@@ -1,6 +1,6 @@
 {
   "ok": true,
-  "generated_at": "2026-10-23T17:58:36+00:00",
+  "generated_at": "2026-10-26T19:35:59+00:00",
   "today": {
     "regime": "highvol_mr",
     "close": 22600.0,
@@ -22,7 +22,7 @@
   },
   "breadth": {
     "above_200dma_pct": 0,
-    "counted": 989,
+    "counted": 988,
     "note": "Shown for context. Not an input to the label above, because pulse.json keeps no history and a regime that cannot be backfilled cannot be measured."
   },
   "regimes": {
