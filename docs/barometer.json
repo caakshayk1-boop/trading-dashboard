@@ -1,6 +1,6 @@
 {
   "ok": true,
-  "generated_at": "2026-10-23T17:58:19+00:00",
+  "generated_at": "2026-10-26T19:35:19+00:00",
   "weights": {
     "trend": 30,
     "breadth": 30,
@@ -9,7 +9,7 @@
     "highs": 10
   },
   "today": {
-    "score": 24,
+    "score": 22,
     "band": {
       "k": "poor",
       "t": "Poor",
@@ -26,16 +26,16 @@
       {
         "key": "breadth",
         "label": "Names above their 200-day",
-        "score": 38.4,
+        "score": 34.3,
         "weight": 30,
-        "detail": "380 of 989 hold their 200-day average"
+        "detail": "339 of 988 hold their 200-day average"
       },
       {
         "key": "participation",
         "label": "Advancing today",
-        "score": 12.0,
+        "score": 7.6,
         "weight": 15,
-        "detail": "119 of 989 advanced"
+        "detail": "75 of 988 advanced"
       },
       {
         "key": "volatility",
@@ -47,9 +47,9 @@
       {
         "key": "highs",
         "label": "Names at a 52-week high",
-        "score": 0.0,
+        "score": 2.0,
         "weight": 10,
-        "detail": "0 of 989 at a 52-week high"
+        "detail": "1 of 988 at a 52-week high"
       }
     ],
     "coverage": {
@@ -65,10 +65,10 @@
       "t": "Slightly cheaper",
       "c": ""
     },
-    "counted": 989,
+    "counted": 988,
     "nifty": 22600.0,
     "drawdown_pct": 14.31,
-    "above_200dma_pct": 38.4,
+    "above_200dma_pct": 34.3,
     "vix": 16.860000610351562,
     "nifty_date": "2026-10-23",
     "vix_date": "2026-10-23"
@@ -441,6 +441,21 @@
       "nifty_date": "2026-10-23",
       "drawdown_pct": 14.31,
       "above_200dma_pct": 38.4,
+      "vix": 16.860000610351562
+    },
+    {
+      "date": "2026-10-26",
+      "score": 22,
+      "band": "poor",
+      "stage": {
+        "k": "early",
+        "t": "Slightly cheaper",
+        "c": ""
+      },
+      "nifty": 22600.0,
+      "nifty_date": "2026-10-23",
+      "drawdown_pct": 14.31,
+      "above_200dma_pct": 34.3,
       "vix": 16.860000610351562
     }
   ],
