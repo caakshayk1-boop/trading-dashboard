@@ -1,22 +1,22 @@
 {
- "generated_at": "2026-10-27T06:00:11Z",
- "next_refresh": "2026-10-28T06:00:11Z",
+ "generated_at": "2026-10-27T10:11:05Z",
+ "next_refresh": "2026-10-28T10:11:05Z",
  "sources": [
   {
    "name": "Majid Al Futtaim",
    "kind": "employer",
    "status": "ok",
-   "jobs_found": 19,
+   "jobs_found": 18,
    "detail": "",
-   "last_success": "2026-10-27T06:00:11Z"
+   "last_success": "2026-10-27T10:11:05Z"
   },
   {
    "name": "Chalhoub Group",
    "kind": "employer",
    "status": "ok",
-   "jobs_found": 5,
+   "jobs_found": 4,
    "detail": "",
-   "last_success": "2026-10-27T06:00:11Z"
+   "last_success": "2026-10-27T10:11:05Z"
   },
   {
    "name": "GMG",
@@ -24,7 +24,7 @@
    "status": "ok",
    "jobs_found": 1,
    "detail": "",
-   "last_success": "2026-10-27T06:00:11Z"
+   "last_success": "2026-10-27T10:11:05Z"
   },
   {
    "name": "Al-Futtaim",
@@ -32,7 +32,7 @@
    "status": "ok",
    "jobs_found": 40,
    "detail": "",
-   "last_success": "2026-10-27T06:00:11Z"
+   "last_success": "2026-10-27T10:11:05Z"
   },
   {
    "name": "Abdul Latif Jameel",
@@ -40,7 +40,7 @@
    "status": "ok",
    "jobs_found": 2,
    "detail": "",
-   "last_success": "2026-10-27T06:00:11Z"
+   "last_success": "2026-10-27T10:11:05Z"
   },
   {
    "name": "Landmark Group",
@@ -48,15 +48,15 @@
    "status": "ok",
    "jobs_found": 10,
    "detail": "",
-   "last_success": "2026-10-27T06:00:11Z"
+   "last_success": "2026-10-27T10:11:05Z"
   },
   {
    "name": "Al Tayer",
    "kind": "employer",
    "status": "ok",
-   "jobs_found": 3,
+   "jobs_found": 4,
    "detail": "",
-   "last_success": "2026-10-27T06:00:11Z"
+   "last_success": "2026-10-27T10:11:05Z"
   },
   {
    "name": "Apparel Group",
@@ -64,7 +64,7 @@
    "status": "ok",
    "jobs_found": 5,
    "detail": "",
-   "last_success": "2026-10-27T06:00:11Z"
+   "last_success": "2026-10-27T10:11:05Z"
   },
   {
    "name": "Emaar",
@@ -96,7 +96,7 @@
    "status": "ok",
    "jobs_found": 3,
    "detail": "",
-   "last_success": "2026-10-27T06:00:11Z"
+   "last_success": "2026-10-27T10:11:05Z"
   },
   {
    "name": "Etihad Airways",
@@ -104,7 +104,7 @@
    "status": "ok",
    "jobs_found": 11,
    "detail": "",
-   "last_success": "2026-10-27T06:00:11Z"
+   "last_success": "2026-10-27T10:11:05Z"
   },
   {
    "name": "Aldar",
@@ -112,7 +112,7 @@
    "status": "ok",
    "jobs_found": 5,
    "detail": "",
-   "last_success": "2026-10-27T06:00:11Z"
+   "last_success": "2026-10-27T10:11:05Z"
   },
   {
    "name": "Michael Page",
@@ -120,7 +120,7 @@
    "status": "ok",
    "jobs_found": 30,
    "detail": "",
-   "last_success": "2026-10-27T06:00:11Z"
+   "last_success": "2026-10-27T10:11:05Z"
   }
  ],
  "stats": {
@@ -137,9 +137,9 @@
   "stale_removed": 1,
   "sources_ok": 12,
   "sources_attempted": 15,
-  "urls_verified": 77,
-  "urls_unverified": 0,
-  "urls_broken": 0
+  "urls_verified": 71,
+  "urls_unverified": 6,
+  "urls_broken": 6
  },
  "jobs": [
   {
@@ -155,8 +155,8 @@
    "employment_type": null,
    "posted_date": "2026-10-05",
    "closing_date": "2026-10-31",
-   "scraped_at": "2026-10-27T06:00:11Z",
-   "last_verified_at": "2026-10-27T06:00:11Z",
+   "scraped_at": "2026-10-27T10:11:05Z",
+   "last_verified_at": "2026-10-27T10:11:05Z",
    "status": "AGING",
    "source": "Al-Futtaim",
    "sources": [
@@ -270,8 +270,8 @@
    "employment_type": "Regular",
    "posted_date": "2026-10-21",
    "closing_date": null,
-   "scraped_at": "2026-10-27T06:00:11Z",
-   "last_verified_at": "2026-10-27T06:00:11Z",
+   "scraped_at": "2026-10-27T10:11:05Z",
+   "last_verified_at": "2026-10-27T10:11:05Z",
    "status": "NEW",
    "source": "Majid Al Futtaim",
    "sources": [
@@ -376,8 +376,8 @@
    "employment_type": null,
    "posted_date": "2026-09-02",
    "closing_date": null,
-   "scraped_at": "2026-10-27T06:00:11Z",
-   "last_verified_at": "2026-10-27T06:00:11Z",
+   "scraped_at": "2026-10-27T10:11:05Z",
+   "last_verified_at": "2026-10-27T10:11:05Z",
    "status": "STALE",
    "source": "Landmark Group",
    "sources": [
@@ -489,8 +489,8 @@
    "employment_type": "Experienced hires",
    "posted_date": "2026-07-27",
    "closing_date": null,
-   "scraped_at": "2026-10-27T06:00:11Z",
-   "last_verified_at": "2026-10-27T06:00:11Z",
+   "scraped_at": "2026-10-27T10:11:05Z",
+   "last_verified_at": "2026-10-27T10:11:05Z",
    "status": "STALE",
    "source": "Aldar",
    "sources": [
@@ -594,8 +594,8 @@
    "employment_type": null,
    "posted_date": "2026-10-09",
    "closing_date": "2026-11-27",
-   "scraped_at": "2026-10-27T06:00:11Z",
-   "last_verified_at": "2026-10-27T06:00:11Z",
+   "scraped_at": "2026-10-27T10:11:05Z",
+   "last_verified_at": "2026-10-27T10:11:05Z",
    "status": "ACTIVE",
    "source": "Al-Futtaim",
    "sources": [
@@ -702,8 +702,8 @@
    "employment_type": null,
    "posted_date": "2026-10-15",
    "closing_date": null,
-   "scraped_at": "2026-10-27T06:00:11Z",
-   "last_verified_at": "2026-10-27T06:00:11Z",
+   "scraped_at": "2026-10-27T10:11:05Z",
+   "last_verified_at": "2026-10-27T10:11:05Z",
    "status": "ACTIVE",
    "source": "Landmark Group",
    "sources": [
@@ -805,8 +805,8 @@
    "employment_type": "Full-Time",
    "posted_date": "2026-06-26",
    "closing_date": null,
-   "scraped_at": "2026-10-27T06:00:11Z",
-   "last_verified_at": "2026-10-27T06:00:11Z",
+   "scraped_at": "2026-10-27T10:11:05Z",
+   "last_verified_at": "2026-10-27T10:11:05Z",
    "status": "STALE",
    "source": "GMG",
    "sources": [
@@ -886,8 +886,8 @@
    "employment_type": "Experienced hires",
    "posted_date": "2026-09-02",
    "closing_date": null,
-   "scraped_at": "2026-10-27T06:00:11Z",
-   "last_verified_at": "2026-10-27T06:00:11Z",
+   "scraped_at": "2026-10-27T10:11:05Z",
+   "last_verified_at": "2026-10-27T10:11:05Z",
    "status": "STALE",
    "source": "Aldar",
    "sources": [
@@ -992,8 +992,8 @@
    "employment_type": null,
    "posted_date": "2026-10-15",
    "closing_date": "2026-11-15",
-   "scraped_at": "2026-10-27T06:00:11Z",
-   "last_verified_at": "2026-10-27T06:00:11Z",
+   "scraped_at": "2026-10-27T10:11:05Z",
+   "last_verified_at": "2026-10-27T10:11:05Z",
    "status": "ACTIVE",
    "source": "Al-Futtaim",
    "sources": [
@@ -1094,8 +1094,8 @@
    "employment_type": null,
    "posted_date": "2026-10-23",
    "closing_date": "2026-11-22",
-   "scraped_at": "2026-10-27T06:00:11Z",
-   "last_verified_at": "2026-10-27T06:00:11Z",
+   "scraped_at": "2026-10-27T10:11:05Z",
+   "last_verified_at": "2026-10-27T10:11:05Z",
    "status": "NEW",
    "source": "Al-Futtaim",
    "sources": [
@@ -1185,8 +1185,8 @@
    "employment_type": null,
    "posted_date": "2026-10-14",
    "closing_date": "2026-10-31",
-   "scraped_at": "2026-10-27T06:00:11Z",
-   "last_verified_at": "2026-10-27T06:00:11Z",
+   "scraped_at": "2026-10-27T10:11:05Z",
+   "last_verified_at": "2026-10-27T10:11:05Z",
    "status": "ACTIVE",
    "source": "Landmark Group",
    "sources": [
@@ -1279,8 +1279,8 @@
    "employment_type": null,
    "posted_date": "2026-10-07",
    "closing_date": "2026-11-28",
-   "scraped_at": "2026-10-27T06:00:11Z",
-   "last_verified_at": "2026-10-27T06:00:11Z",
+   "scraped_at": "2026-10-27T10:11:05Z",
+   "last_verified_at": "2026-10-27T10:11:05Z",
    "status": "ACTIVE",
    "source": "Al-Futtaim",
    "sources": [
@@ -1372,8 +1372,8 @@
    "employment_type": null,
    "posted_date": "2026-10-13",
    "closing_date": null,
-   "scraped_at": "2026-10-27T06:00:11Z",
-   "last_verified_at": "2026-10-27T06:00:11Z",
+   "scraped_at": "2026-10-27T10:11:05Z",
+   "last_verified_at": "2026-10-27T10:11:05Z",
    "status": "ACTIVE",
    "source": "Apparel Group",
    "sources": [
@@ -1447,8 +1447,8 @@
    "employment_type": null,
    "posted_date": "2026-10-23",
    "closing_date": "2026-11-23",
-   "scraped_at": "2026-10-27T06:00:11Z",
-   "last_verified_at": "2026-10-27T06:00:11Z",
+   "scraped_at": "2026-10-27T10:11:05Z",
+   "last_verified_at": "2026-10-27T10:11:05Z",
    "status": "NEW",
    "source": "Al-Futtaim",
    "sources": [
@@ -1530,105 +1530,6 @@
    "exclusion_reason": null
   },
   {
-   "id": "cd5650f4c22f20224b18222437d76f1b80231aba",
-   "company": "Majid Al Futtaim",
-   "company_group": "Majid Al Futtaim",
-   "title": "Manager, Commercial | Emirati Talent",
-   "normalized_title": "manager commercial",
-   "location": "Dubai",
-   "country": "UAE",
-   "region": "GCC",
-   "department": "Other",
-   "employment_type": "Regular",
-   "posted_date": "2026-09-17",
-   "closing_date": null,
-   "scraped_at": "2026-10-27T06:00:11Z",
-   "last_verified_at": "2026-10-27T06:00:11Z",
-   "status": "AGING",
-   "source": "Majid Al Futtaim",
-   "sources": [
-    "Majid Al Futtaim"
-   ],
-   "source_url": "https://careers.majidalfuttaim.com/global/en/job/22727/Manager-Commercial-Emirati-Talent",
-   "application_url": "https://careers.majidalfuttaim.com/global/en/apply?jobSeqNo=MAFMAFGLOBAL22727EXTERNALENGLOBAL",
-   "is_direct_apply": true,
-   "application_url_verified": true,
-   "source_confidence": "high",
-   "salary_min": null,
-   "salary_max": null,
-   "salary_currency": null,
-   "experience_min": 4,
-   "experience_max": null,
-   "description": "JOB TITLE \nManager, Commercial | Emirati Talent\n\n ROLE SUMMARY \nCommercial Manager responsible for driving revenue growth through strategic partnerships, customer propositions, and commercial initiatives. The role focuses on business case development, financial modelling, partnership management, monetization opportunities, and performance optimization. Working cross-functionally with stakeholders, the role identifies growth opportunities, evaluates investments, negotiates commercial agreements, and delivers customer-centric solutions that enhance commercial performance and long-term business value.\n\n ROLE PROFILE \n Develop and execute the financial services and partnerships strategy for the SHARE platform to drive revenue growth and customer value.\n Identify, evaluate, onboard, and manage strategic partners across credit cards, BNPL, remittances, payments, and other commercial opportunities.\n Build robust business cases, including ROI analysis, financial forecasts, KPI targets, and commercial recommendations.\n Create and maintain financial models to assess revenue potential, cost drivers, sensitivities, and partnership performance.\n Lead commercial negotiations with partners, including commercials, scope, deliverables, and contract terms that impact business performance.\n Collaborate with cross-functional stakeholders including Finance, Legal, Product, Technology, Marketing, Analytics, Operations, and Customer Experience to launch and scale partnerships.\n Monitor partnership performance against financial and operational KPIs, driving continuous improvement and achieving budgeted targets.\n Build strong partner relationships, deliver performance reviews, and leverage customer insights and analytics to enhance commercial outcomes and member engagement.\n \n REQUIREMENTS \n Bachelor’s degree in Business, Finance, Economics, Marketing, Engineering, or a related field, or equivalent professional experience.\n 4+ years of experience in Commercial Strategy, Partnerships, Business Development, Revenue Growth, Customer Solutions, or related commercial functions.\n Proven experience in developing business cases, financial models, investment appraisals, ROI analysis, and commercial recommendations to support strategic decision-making.\n Strong track record in driving revenue growth, monetization initiatives, customer proposition development, and commercial performance improvement.\n Experience managing strategic partnerships, commercial negotiations, stakeholder relationships, and cross-functional initiatives with measurable business impact.\n Strong analytical and problem-solving skills with expertise in commercial analytics, market assessments, pricing, forecasting, and performance optimization, preferably within FinTech, Digital Commerce, Loyalty, Payments, Telecommunications, Consulting, or\n \n WHAT WE OFFER \n At Majid Al Futtaim, we’re on a mission to create great moments, to spread happiness, to build, experiences that stay in our memories for a lifetime. We’re proud to say that over the past 27 years, we have built a reputation as a regional market leader in what we do. Join us!\n Work in a friendly environment, where everyone shares positive vibes and excited about our future.\n Work with over 45,000 diverse and talented colleagues, all guided by our Leadership Model.",
-   "responsibilities": [
-    "Develop and execute the financial services and partnerships strategy for the SHARE platform to drive revenue growth and customer value",
-    "Identify, evaluate, onboard, and manage strategic partners across credit cards, BNPL, remittances, payments, and other commercial opportunities",
-    "Build robust business cases, including ROI analysis, financial forecasts, KPI targets, and commercial recommendations",
-    "Create and maintain financial models to assess revenue potential, cost drivers, sensitivities, and partnership performance",
-    "Lead commercial negotiations with partners, including commercials, scope, deliverables, and contract terms that impact business performance",
-    "Collaborate with cross-functional stakeholders including Finance, Legal, Product, Technology, Marketing, Analytics, Operations, and Customer Experience to launch and scale partnerships",
-    "Monitor partnership performance against financial and operational KPIs, driving continuous improvement and achieving budgeted targets",
-    "Build strong partner relationships, deliver performance reviews, and leverage customer insights and analytics to enhance commercial outcomes and member engagement",
-    "Bachelor’s degree in Business, Finance, Economics, Marketing, Engineering, or a related field, or equivalent professional experience",
-    "4+ years of experience in Commercial Strategy, Partnerships, Business Development, Revenue Growth, Customer Solutions, or related commercial functions",
-    "Proven experience in developing business cases, financial models, investment appraisals, ROI analysis, and commercial recommendations to support strategic decision-making",
-    "Strong track record in driving revenue growth, monetization initiatives, customer proposition development, and commercial performance improvement",
-    "Experience managing strategic partnerships, commercial negotiations, stakeholder relationships, and cross-functional initiatives with measurable business impact",
-    "Strong analytical and problem-solving skills with expertise in commercial analytics, market assessments, pricing, forecasting, and performance optimization, preferably within FinTech, Digital Commerce, Loyalty, Payments, Telecommunications, Consulting, or",
-    "At Majid Al Futtaim, we’re on a mission to create great moments, to spread happiness, to build, experiences that stay in our memories for a lifetime. We’re proud to say that over the past 27 years, we have built a reputation as a regional market leader in what we do. Join us!",
-    "Work in a friendly environment, where everyone shares positive vibes and excited about our future",
-    "Work with over 45,000 diverse and talented colleagues, all guided by our Leadership Model"
-   ],
-   "requirements": [],
-   "skills": [
-    "financial modeling",
-    "business case development",
-    "commercial negotiations",
-    "partnership management",
-    "revenue growth",
-    "monetization",
-    "roi analysis",
-    "financial forecasting",
-    "performance optimization",
-    "stakeholder management",
-    "commercial analytics",
-    "market assessment"
-   ],
-   "nationality_requirement": null,
-   "work_authorization_requirement": null,
-   "emiratisation_requirement": false,
-   "saudization_requirement": false,
-   "candidate_fit_score": 69,
-   "employer_score": 90,
-   "career_upside_score": 50,
-   "opportunity_score": 71,
-   "score_breakdown": {
-    "seniority": 15,
-    "functional": 16,
-    "industry": 15,
-    "geographic": 10,
-    "scope": 3,
-    "leadership": 2,
-    "qualification": 2,
-    "upside": 6
-   },
-   "tier": "B",
-   "application_priority": "GOOD FIT",
-   "why_fit": [
-    "Multi-country / multi-entity scope maps directly onto his Malaysia + Indonesia P&L ownership across 60+ Max Fashion and Babyshop stores.",
-    "Majid Al Futtaim is peer retail to his current employer — the 60+ store, multi-brand lifestyle retail P&L he already owns transfers without a sector learning curve.",
-    "Capital allocation fit — he builds the ROI/IRR/NPV store feasibility models that decide new-store capex.",
-    "Real-estate exposure is on his record — 3 years as Asst Manager Accounts at Emami Realty in Kolkata before the retail move."
-   ],
-   "watch_out": [
-    "Posted 2026-09-17 — this req is aging and may already be filled."
-   ],
-   "resume_match": null,
-   "duplicate_group": "0aea3ce400a2d2f41ae8bb09e00a5b3757f41557",
-   "is_excluded": false,
-   "exclusion_reason": null
-  },
-  {
    "id": "9a02247c6b67a7e63eeac891c6c1dc85a6b40dfd",
    "company": "Majid Al Futtaim",
    "company_group": "Majid Al Futtaim",
@@ -1641,8 +1542,8 @@
    "employment_type": "Regular",
    "posted_date": "2026-07-07",
    "closing_date": null,
-   "scraped_at": "2026-10-27T06:00:11Z",
-   "last_verified_at": "2026-10-27T06:00:11Z",
+   "scraped_at": "2026-10-27T10:11:05Z",
+   "last_verified_at": "2026-10-27T10:11:05Z",
    "status": "STALE",
    "source": "Majid Al Futtaim",
    "sources": [
@@ -1729,6 +1630,105 @@
    "exclusion_reason": null
   },
   {
+   "id": "cd5650f4c22f20224b18222437d76f1b80231aba",
+   "company": "Majid Al Futtaim",
+   "company_group": "Majid Al Futtaim",
+   "title": "Manager, Commercial | Emirati Talent",
+   "normalized_title": "manager commercial",
+   "location": "Dubai",
+   "country": "UAE",
+   "region": "GCC",
+   "department": "Other",
+   "employment_type": "Regular",
+   "posted_date": "2026-09-17",
+   "closing_date": null,
+   "scraped_at": "2026-10-27T10:11:05Z",
+   "last_verified_at": "2026-10-27T10:11:05Z",
+   "status": "AGING",
+   "source": "Majid Al Futtaim",
+   "sources": [
+    "Majid Al Futtaim"
+   ],
+   "source_url": "https://careers.majidalfuttaim.com/global/en/job/22727/Manager-Commercial-Emirati-Talent",
+   "application_url": "https://careers.majidalfuttaim.com/global/en/apply?jobSeqNo=MAFMAFGLOBAL22727EXTERNALENGLOBAL",
+   "is_direct_apply": true,
+   "application_url_verified": true,
+   "source_confidence": "high",
+   "salary_min": null,
+   "salary_max": null,
+   "salary_currency": null,
+   "experience_min": 4,
+   "experience_max": null,
+   "description": "JOB TITLE \nManager, Commercial | Emirati Talent\n\n ROLE SUMMARY \nCommercial Manager responsible for driving revenue growth through strategic partnerships, customer propositions, and commercial initiatives. The role focuses on business case development, financial modelling, partnership management, monetization opportunities, and performance optimization. Working cross-functionally with stakeholders, the role identifies growth opportunities, evaluates investments, negotiates commercial agreements, and delivers customer-centric solutions that enhance commercial performance and long-term business value.\n\n ROLE PROFILE \n Develop and execute the financial services and partnerships strategy for the SHARE platform to drive revenue growth and customer value.\n Identify, evaluate, onboard, and manage strategic partners across credit cards, BNPL, remittances, payments, and other commercial opportunities.\n Build robust business cases, including ROI analysis, financial forecasts, KPI targets, and commercial recommendations.\n Create and maintain financial models to assess revenue potential, cost drivers, sensitivities, and partnership performance.\n Lead commercial negotiations with partners, including commercials, scope, deliverables, and contract terms that impact business performance.\n Collaborate with cross-functional stakeholders including Finance, Legal, Product, Technology, Marketing, Analytics, Operations, and Customer Experience to launch and scale partnerships.\n Monitor partnership performance against financial and operational KPIs, driving continuous improvement and achieving budgeted targets.\n Build strong partner relationships, deliver performance reviews, and leverage customer insights and analytics to enhance commercial outcomes and member engagement.\n \n REQUIREMENTS \n Bachelor’s degree in Business, Finance, Economics, Marketing, Engineering, or a related field, or equivalent professional experience.\n 4+ years of experience in Commercial Strategy, Partnerships, Business Development, Revenue Growth, Customer Solutions, or related commercial functions.\n Proven experience in developing business cases, financial models, investment appraisals, ROI analysis, and commercial recommendations to support strategic decision-making.\n Strong track record in driving revenue growth, monetization initiatives, customer proposition development, and commercial performance improvement.\n Experience managing strategic partnerships, commercial negotiations, stakeholder relationships, and cross-functional initiatives with measurable business impact.\n Strong analytical and problem-solving skills with expertise in commercial analytics, market assessments, pricing, forecasting, and performance optimization, preferably within FinTech, Digital Commerce, Loyalty, Payments, Telecommunications, Consulting, or\n \n WHAT WE OFFER \n At Majid Al Futtaim, we’re on a mission to create great moments, to spread happiness, to build, experiences that stay in our memories for a lifetime. We’re proud to say that over the past 27 years, we have built a reputation as a regional market leader in what we do. Join us!\n Work in a friendly environment, where everyone shares positive vibes and excited about our future.\n Work with over 45,000 diverse and talented colleagues, all guided by our Leadership Model.",
+   "responsibilities": [
+    "Develop and execute the financial services and partnerships strategy for the SHARE platform to drive revenue growth and customer value",
+    "Identify, evaluate, onboard, and manage strategic partners across credit cards, BNPL, remittances, payments, and other commercial opportunities",
+    "Build robust business cases, including ROI analysis, financial forecasts, KPI targets, and commercial recommendations",
+    "Create and maintain financial models to assess revenue potential, cost drivers, sensitivities, and partnership performance",
+    "Lead commercial negotiations with partners, including commercials, scope, deliverables, and contract terms that impact business performance",
+    "Collaborate with cross-functional stakeholders including Finance, Legal, Product, Technology, Marketing, Analytics, Operations, and Customer Experience to launch and scale partnerships",
+    "Monitor partnership performance against financial and operational KPIs, driving continuous improvement and achieving budgeted targets",
+    "Build strong partner relationships, deliver performance reviews, and leverage customer insights and analytics to enhance commercial outcomes and member engagement",
+    "Bachelor’s degree in Business, Finance, Economics, Marketing, Engineering, or a related field, or equivalent professional experience",
+    "4+ years of experience in Commercial Strategy, Partnerships, Business Development, Revenue Growth, Customer Solutions, or related commercial functions",
+    "Proven experience in developing business cases, financial models, investment appraisals, ROI analysis, and commercial recommendations to support strategic decision-making",
+    "Strong track record in driving revenue growth, monetization initiatives, customer proposition development, and commercial performance improvement",
+    "Experience managing strategic partnerships, commercial negotiations, stakeholder relationships, and cross-functional initiatives with measurable business impact",
+    "Strong analytical and problem-solving skills with expertise in commercial analytics, market assessments, pricing, forecasting, and performance optimization, preferably within FinTech, Digital Commerce, Loyalty, Payments, Telecommunications, Consulting, or",
+    "At Majid Al Futtaim, we’re on a mission to create great moments, to spread happiness, to build, experiences that stay in our memories for a lifetime. We’re proud to say that over the past 27 years, we have built a reputation as a regional market leader in what we do. Join us!",
+    "Work in a friendly environment, where everyone shares positive vibes and excited about our future",
+    "Work with over 45,000 diverse and talented colleagues, all guided by our Leadership Model"
+   ],
+   "requirements": [],
+   "skills": [
+    "financial modeling",
+    "business case development",
+    "commercial negotiations",
+    "partnership management",
+    "revenue growth",
+    "monetization",
+    "roi analysis",
+    "financial forecasting",
+    "performance optimization",
+    "stakeholder management",
+    "commercial analytics",
+    "market assessment"
+   ],
+   "nationality_requirement": null,
+   "work_authorization_requirement": null,
+   "emiratisation_requirement": false,
+   "saudization_requirement": false,
+   "candidate_fit_score": 69,
+   "employer_score": 90,
+   "career_upside_score": 50,
+   "opportunity_score": 71,
+   "score_breakdown": {
+    "seniority": 15,
+    "functional": 16,
+    "industry": 15,
+    "geographic": 10,
+    "scope": 3,
+    "leadership": 2,
+    "qualification": 2,
+    "upside": 6
+   },
+   "tier": "B",
+   "application_priority": "GOOD FIT",
+   "why_fit": [
+    "Multi-country / multi-entity scope maps directly onto his Malaysia + Indonesia P&L ownership across 60+ Max Fashion and Babyshop stores.",
+    "Majid Al Futtaim is peer retail to his current employer — the 60+ store, multi-brand lifestyle retail P&L he already owns transfers without a sector learning curve.",
+    "Capital allocation fit — he builds the ROI/IRR/NPV store feasibility models that decide new-store capex.",
+    "Real-estate exposure is on his record — 3 years as Asst Manager Accounts at Emami Realty in Kolkata before the retail move."
+   ],
+   "watch_out": [
+    "Posted 2026-09-17 — this req is aging and may already be filled."
+   ],
+   "resume_match": null,
+   "duplicate_group": "0aea3ce400a2d2f41ae8bb09e00a5b3757f41557",
+   "is_excluded": false,
+   "exclusion_reason": null
+  },
+  {
    "id": "302734d3282a514f76bf17ecbc8e32428fbb012d",
    "company": "Al-Futtaim",
    "company_group": "Al-Futtaim",
@@ -1741,8 +1741,8 @@
    "employment_type": null,
    "posted_date": "2026-10-07",
    "closing_date": "2026-10-31",
-   "scraped_at": "2026-10-27T06:00:11Z",
-   "last_verified_at": "2026-10-27T06:00:11Z",
+   "scraped_at": "2026-10-27T10:11:05Z",
+   "last_verified_at": "2026-10-27T10:11:05Z",
    "status": "ACTIVE",
    "source": "Al-Futtaim",
    "sources": [
@@ -1834,8 +1834,8 @@
    "employment_type": "Regular",
    "posted_date": "2026-09-07",
    "closing_date": null,
-   "scraped_at": "2026-10-27T06:00:11Z",
-   "last_verified_at": "2026-10-27T06:00:11Z",
+   "scraped_at": "2026-10-27T10:11:05Z",
+   "last_verified_at": "2026-10-27T10:11:05Z",
    "status": "STALE",
    "source": "Majid Al Futtaim",
    "sources": [
@@ -1934,8 +1934,8 @@
    "employment_type": "Experienced hires",
    "posted_date": "2026-08-25",
    "closing_date": null,
-   "scraped_at": "2026-10-27T06:00:11Z",
-   "last_verified_at": "2026-10-27T06:00:11Z",
+   "scraped_at": "2026-10-27T10:11:05Z",
+   "last_verified_at": "2026-10-27T10:11:05Z",
    "status": "STALE",
    "source": "Aldar",
    "sources": [
@@ -2027,8 +2027,8 @@
    "employment_type": null,
    "posted_date": "2026-10-13",
    "closing_date": "2026-11-27",
-   "scraped_at": "2026-10-27T06:00:11Z",
-   "last_verified_at": "2026-10-27T06:00:11Z",
+   "scraped_at": "2026-10-27T10:11:05Z",
+   "last_verified_at": "2026-10-27T10:11:05Z",
    "status": "ACTIVE",
    "source": "Al-Futtaim",
    "sources": [
@@ -2123,8 +2123,8 @@
    "employment_type": "Full-Time",
    "posted_date": "2026-08-14",
    "closing_date": null,
-   "scraped_at": "2026-10-27T06:00:11Z",
-   "last_verified_at": "2026-10-27T06:00:11Z",
+   "scraped_at": "2026-10-27T10:11:05Z",
+   "last_verified_at": "2026-10-27T10:11:05Z",
    "status": "STALE",
    "source": "Michael Page",
    "sources": [
@@ -2183,45 +2183,88 @@
     "Sourced via Michael Page rather than the employer's own site — confirm the role exists directly with the company."
    ],
    "resume_match": null,
-   "duplicate_group": "1bae5a44530159e1ab78635b5320ab549e1cd448",
+   "duplicate_group": "3c16207b3b75917c9bcc5f951b5c14eb98de5b04",
    "is_excluded": false,
    "exclusion_reason": null
   },
   {
-   "id": "b780a3eae96094a71da4c9482ca3869dd3c8b393",
-   "company": "Chalhoub Group",
-   "company_group": "Chalhoub",
-   "title": "Regional Account Manager - Christofle",
-   "normalized_title": "regional account manager christofle",
+   "id": "15384e1763c64cedf0502f96fcf5dad5ccb1e0b2",
+   "company": "Al Tayer",
+   "company_group": "Al Tayer",
+   "title": "Inventory Controller - Retail Finance - 1year Contract",
+   "normalized_title": "inventory controller retail finance 1year",
    "location": "Dubai",
    "country": "UAE",
    "region": "GCC",
    "department": null,
-   "employment_type": "Full-Time",
-   "posted_date": "2026-09-21",
+   "employment_type": null,
+   "posted_date": "2026-10-27",
    "closing_date": null,
-   "scraped_at": "2026-10-27T06:00:11Z",
-   "last_verified_at": "2026-10-27T06:00:11Z",
-   "status": "AGING",
-   "source": "Chalhoub Group",
+   "scraped_at": "2026-10-27T10:11:05Z",
+   "last_verified_at": "2026-10-27T10:11:05Z",
+   "status": "NEW",
+   "source": "Al Tayer",
    "sources": [
-    "Chalhoub Group"
+    "Al Tayer"
    ],
-   "source_url": "https://careers.chalhoubgroup.com/jobs/8417975-regional-account-manager-christofle",
-   "application_url": "https://careers.chalhoubgroup.com/jobs/8417975-regional-account-manager-christofle/applications/new",
+   "source_url": "https://hchx.fa.em2.oraclecloud.com/hcmUI/CandidateExperience/en/sites/CX_1/job/3895/",
+   "application_url": "https://hchx.fa.em2.oraclecloud.com/hcmUI/CandidateExperience/en/sites/CX_1/job/3895/",
    "is_direct_apply": true,
    "application_url_verified": true,
    "source_confidence": "high",
    "salary_min": null,
    "salary_max": null,
    "salary_currency": null,
-   "experience_min": null,
-   "experience_max": null,
-   "description": "<p dir=\"ltr\"><strong>INSPIRE | EXHILARATE | DELIGHT</strong></p><p dir=\"ltr\">For over seven decades, Chalhoub Group has been a partner and creator of luxury experiences in the Middle East. In its pursuit to excel as a hybrid luxury retailer, the Group has curated a portfolio of over 10 owned brands and strengthened its distribution and marketing expertise for over 400 international names across luxury fashion, beauty, jewellery, watches, eyewear, and art de vivre categories.</p><p dir=\"ltr\">Every step at Chalhoub Group is taken to build a future where luxury dreams become reality — bridging cultures and crafting memorable experiences for our consumers. Be it by constantly reinventing itself, committing to innovation, or embracing new technologies, the Group is shaping the future of luxury retail. It delivers seamless omnichannel experiences across more than 950 stores, online platforms, and mobile apps. Driving this innovation journey is The Greenhouse — the Group’s innovation hub, incubator, and accelerator for startups and emerging businesses, regionally and globally.</p><p dir=\"ltr\">Chalhoub Group fosters a people-at-heart culture rooted in diversity, equity, and inclusion, and a workplace catalysed by forward thinking and future-proofing. Today, it brings together over 16,000 talented professionals across eight countries in the Middle East, with a presence in LATAM.</p><p dir=\"ltr\">Sustainability is at the core of the Group’s strategy, guided by a clear commitment to people, partners, and the planet. Chalhoub Group is proud to be a member of the United Nations Global Compact, a signatory of the Women’s Empowerment Principles, and to have pledged to reach Net Zero by 2040.<br></p><p dir=\"ltr\"><strong>What you'll be doing</strong>&nbsp;&nbsp;</p><p dir=\"ltr\">On behalf of Christofle Paris, <span>we are looking for a GCC Sales &amp; Account Manager to represent Christofle and drive the Maison’s commercial development across the region, with a particular focus on Hospitality and Decorators.</span></p><p dir=\"ltr\"><span>Based in Dubai and reporting into Christofle’s Hospitality &amp; Business Development team in Paris, this is a highly entrepreneurial Account Management and Business Development role. Your responsibilities will be to:</span></p><p dir=\"ltr\"><span>• Build and develop relationships with leading hotel groups, owners, developers, restaurant groups, procurement companies, architects, interior designers and decorators</span></p><p dir=\"ltr\"><span>• Identify new projects and commercial opportunities across the GCC</span></p><p dir=\"ltr\"><span>• Manage the full client journey from prospecting and initial discussions through presentations, tenders, negotiations, contracting and delivery</span></p><p dir=\"ltr\"><span>• Develop existing key accounts while actively opening new relationships and partnerships</span></p><p dir=\"ltr\"><span>• Build a strong pipeline of hospitality and design projects and maintain accurate forecasts</span></p><p dir=\"ltr\"><span>• Identify opportunities across Christofle’s wider universe, including dining, decoration, gifting, residences, personalization and bespoke projects</span></p><p dir=\"ltr\"><span>• Represent the Maison at industry events, trade shows, client meetings and networking opportunities across the region</span></p><p dir=\"ltr\"><strong>What you’ll need to succeed</strong>&nbsp;&nbsp;</p><p dir=\"ltr\">&nbsp;&nbsp;<span>• Strong Account Management and/or Business Development experience within the GCC</span></p><p dir=\"ltr\"><span>• An established network within Hospitality, Hotels, F&amp;B, Interior Design, Architecture, OS&amp;E or a related B2B environment</span></p><p dir=\"ltr\"><span>• Experience developing senior client relationships and managing complex, project-led sales cycles</span></p><p dir=\"ltr\"><span>• Strong commercial acumen with experience managing pipelines, negotiations and commercial terms</span></p><p dir=\"ltr\"><span>• A proactive, entrepreneurial approach with excellent follow-through</span></p><p dir=\"ltr\"><span>• Strong communication, presentation and relationship-building skills</span></p><p dir=\"ltr\"><span>• Ability to operate independently within the GCC while working closely with an international team based in Paris</span></p><p dir=\"ltr\"><strong>What we can offer you</strong>&nbsp;&nbsp;</p><p dir=\"ltr\">With us,&nbsp;you will turn your aspirations into reality.&nbsp; We will help shape your journey through enriching experiences, learning and development opportunities and exposure to different assignments within your role or through internal mobility. Our Group offers diverse career paths for those who are extraordinary, every day.&nbsp;&nbsp;</p><p dir=\"ltr\">We recognise the value that you bring, and we strive to provide a competitive benefits package which includes health care, child education contribution, remote and flexible working policies as well as exclusive employee&nbsp;discounts.&nbsp;&nbsp;</p><p dir=\"ltr\"><strong>Using GenAI in Your Application Process</strong></p><p dir=\"ltr\"><span>To support a fair and consistent experience for all candidates, we ask that assessments and interviews are completed independently and without assistance from generative AI tools. This ensures we understand your strengths, your thinking, and how you approach real situations.</span></p><p dir=\"ltr\"><strong>We Invite All Applicants to Apply</strong></p><p dir=\"ltr\">It Takes Diversity Of Thought, Culture, Background, Differing Abilities and Perspectives to truly Inspire, Exhilarate and Delight our customers. At Chalhoub Group, we are committed to inclusion and diversity.</p><p dir=\"ltr\">We welcome all applicants to apply and be part of our exciting future. We ensure equal opportunity for all our applicants without regard to gender, age, race, religion, national origin or disability status.</p>",
-   "responsibilities": [],
-   "requirements": [],
+   "experience_min": 3,
+   "experience_max": 5,
+   "description": "About the Role \n We are looking for a detail-oriented and commercially minded Retail Finance Analyst - Inventory & Stock Control to join our Finance team. This role is ideal for a finance professional with strong inventory accounting knowledge who enjoys working closely with Finance, Supply Chain, Buying, Warehouse, and Store Operations teams.\n You will be responsible for ensuring inventory accuracy across the business, monitoring stock movements, investigating discrepancies, supporting stock counts, and providing meaningful analysis and reporting to drive financial accuracy and operational excellence.\n The role focuses on inventory control, stock reconciliation, inventory accounting, physical stock verification, and financial reporting related to merchandise inventory. Responsibilities include oversight of stock transfers, stock counts, discrepancy investigations, inventory reconciliations, audit support, and inventory controls.\n\n Functional Roles and Responsibilities \n \n Inventory Accounting & Controls:\n Monitor and control inventory movements across warehouses, stores, and distribution channels.\n Ensure inventory balances are accurately reflected within financial and inventory systems.\n Review and reconcile inventory accounts, stock adjustments, and inventory-related financial postings.\n Support month-end and year-end inventory close activities.\n \n Stock Reconciliation & Analysis:\n Investigate inventory discrepancies and identify root causes.\n Reconcile physical stock counts against system records.\n Analyze inventory variances, shrinkage, damages, and stock losses.\n Ensure inventory transactions are accurately recorded and supported by documentation.\n \n Physical Stock Counts:\n Coordinate and support cycle counts and annual stock-taking activities.\n Review stock count results and partner with operational teams to resolve discrepancies.\n Monitor compliance with inventory policies and procedures.\n Provide recommendations to improve inventory accuracy and control.\n \n Reporting & Business Support:\n Prepare inventory, stock aging, shrinkage, and variance reports for management.\n Develop dashboards and reports using Excel and Power BI.\n Translate inventory data into actionable insights for finance and commercial teams.\n Support decision-making through accurate inventory reporting and analysis.\n \n Audit & Compliance:\n Support internal and external audits related to inventory.\n Maintain strong inventory documentation and audit trails.\n Ensure compliance with financial controls, policies, and accounting standards.\n Monitor inventory-related risks and implement corrective actions when required.\n\n What We're Looking for \n \nEducation:\n Bachelor's Degree in Finance, Accounting, Commerce (B.Com), Business Administration, or a related discipline.\n Professional qualifications such as CMA, CPA, CIMA, or equivalent are advantageous.\n \n Experience:\n 3-5 years of experience in Inventory Accounting, Retail Finance, Cost Accounting, Inventory Control, or Financial Analysis.\n Retail, fashion, lifestyle, FMCG, consumer goods, warehousing, or supply chain experience is highly preferred.\n Experience working within a fast-paced, multi-site retail environment.\n \n Technical Skills:\n Strong understanding of: Inventory Accounting\n Cost of Goods Sold (COGS)\n Stock Reconciliations\n Inventory Valuation\n Landed Cost Calculation\n Inventory Controls\n Gross Margin Analysis\n \n Advanced Excel skills including Pivot Tables, XLOOKUP, SUMIFS, INDEX/MATCH, and financial analysis.\n Experience with ERP systems such as SAP, Oracle, Dynamics, JDE, or similar.\n Power BI experience is highly desirable.\n\n Knowledge Areas \n Candidates should have practical understanding of:\n Inventory accounting and inventory valuation methods.\n Cost of Goods Sold (COGS) and inventory accounting flow.\n Physical stock counts and inventory verification processes.\n Landed cost calculations, including freight, customs duty, insurance, and import costs.\n Inventory-related journal entries and financial controls.\n \n Competencies;\n Strong analytical and problem-solving skills.\n Excellent attention to detail and financial accuracy.\n Ability to work independently and manage multiple priorities.\n Strong communication and stakeholder management skills.\n Continuous improvement mindset and passion for process excellence.\n \n Why Join Us?\n Join a dynamic retail organization operating across multiple brands and markets.\n Work closely with commercial, buying, supply chain, and finance teams.\n Gain exposure to inventory, retail operations, commercial finance, and business performance.\n Opportunity to contribute to process improvements and operational efficiencies.\n Collaborative environment with strong professional development opportunities.\n \n Apply now \n If you have a passion for retail finance, inventory management, and turning data into meaningful business insights, we'd love to hear from you.",
+   "responsibilities": [
+    "Monitor and control inventory movements across warehouses, stores, and distribution channels",
+    "Ensure inventory balances are accurately reflected within financial and inventory systems",
+    "Review and reconcile inventory accounts, stock adjustments, and inventory-related financial postings",
+    "Support month-end and year-end inventory close activities",
+    "Investigate inventory discrepancies and identify root causes",
+    "Reconcile physical stock counts against system records",
+    "Analyze inventory variances, shrinkage, damages, and stock losses",
+    "Ensure inventory transactions are accurately recorded and supported by documentation",
+    "Coordinate and support cycle counts and annual stock-taking activities",
+    "Review stock count results and partner with operational teams to resolve discrepancies",
+    "Monitor compliance with inventory policies and procedures",
+    "Provide recommendations to improve inventory accuracy and control",
+    "Prepare inventory, stock aging, shrinkage, and variance reports for management",
+    "Develop dashboards and reports using Excel and Power BI",
+    "Translate inventory data into actionable insights for finance and commercial teams",
+    "Support decision-making through accurate inventory reporting and analysis",
+    "Support internal and external audits related to inventory",
+    "Maintain strong inventory documentation and audit trails",
+    "Ensure compliance with financial controls, policies, and accounting standards",
+    "Monitor inventory-related risks and implement corrective actions when required"
+   ],
+   "requirements": [
+    "Bachelor's Degree in Finance, Accounting, Commerce (B.Com), Business Administration, or a related discipline",
+    "Professional qualifications such as CMA, CPA, CIMA, or equivalent are advantageous",
+    "3-5 years of experience in Inventory Accounting, Retail Finance, Cost Accounting, Inventory Control, or Financial Analysis",
+    "Retail, fashion, lifestyle, FMCG, consumer goods, warehousing, or supply chain experience is highly preferred",
+    "Experience working within a fast-paced, multi-site retail environment",
+    "Strong understanding of: Inventory Accounting",
+    "Cost of Goods Sold (COGS)",
+    "Stock Reconciliations",
+    "Inventory Valuation",
+    "Landed Cost Calculation",
+    "Inventory Controls",
+    "Gross Margin Analysis",
+    "Advanced Excel skills including Pivot Tables, XLOOKUP, SUMIFS, INDEX/MATCH, and financial analysis",
+    "Experience with ERP systems such as SAP, Oracle, Dynamics, JDE, or similar",
+    "Power BI experience is highly desirable",
+    "Inventory accounting and inventory valuation methods",
+    "Cost of Goods Sold (COGS) and inventory accounting flow",
+    "Physical stock counts and inventory verification processes",
+    "Landed cost calculations, including freight, customs duty, insurance, and import costs",
+    "Inventory-related journal entries and financial controls"
+   ],
    "skills": [
-    "Forecasting",
+    "Power BI",
+    "SAP",
     "Excel"
    ],
    "nationality_requirement": null,
@@ -2229,32 +2272,31 @@
    "emiratisation_requirement": false,
    "saudization_requirement": false,
    "candidate_fit_score": 59,
-   "employer_score": 88,
-   "career_upside_score": 50,
-   "opportunity_score": 65,
+   "employer_score": 82,
+   "career_upside_score": 57,
+   "opportunity_score": 64,
    "score_breakdown": {
-    "seniority": 15,
-    "functional": 7,
+    "seniority": 9,
+    "functional": 11,
     "industry": 15,
     "geographic": 10,
-    "scope": 6,
-    "leadership": 0,
-    "qualification": 0,
-    "upside": 6
+    "scope": 0,
+    "leadership": 2,
+    "qualification": 5,
+    "upside": 7
    },
-   "tier": "B",
-   "application_priority": "GOOD FIT",
+   "tier": "C",
+   "application_priority": "OPTIONAL",
    "why_fit": [
-    "Multi-country / multi-entity scope maps directly onto his Malaysia + Indonesia P&L ownership across 60+ Max Fashion and Babyshop stores.",
-    "Chalhoub Group is peer retail to his current employer — the 60+ store, multi-brand lifestyle retail P&L he already owns transfers without a sector learning curve.",
-    "Core FP&A remit — he runs budgeting, forecasting and variance analysis on an MYR 400M+ P&L as FP&A Manager at Lifestyle Retail Malaysia (Landmark Group) since May 2023.",
+    "Al Tayer is peer retail to his current employer — the 60+ store, multi-brand lifestyle retail P&L he already owns transfers without a sector learning curve.",
+    "Systems fit — he led the D365 ERP implementation that cut the close cycle 40%, and builds the Power BI reporting on top of it.",
     "UAE is one of his two target markets, and he is already GCC-adjacent inside a Dubai-headquartered group."
    ],
    "watch_out": [
-    "Posted 2026-09-21 — this req is aging and may already be filled."
+    "Nothing disqualifying surfaced in the posted text, which itself means the description is thin — probe scope and reporting line."
    ],
    "resume_match": null,
-   "duplicate_group": "43cdc9af6a59acc307847b457716f8adc2f33c22",
+   "duplicate_group": "a3becfd8cc6d6264d899e8a13466e6abe67de059",
    "is_excluded": false,
    "exclusion_reason": null
   },
@@ -2271,8 +2313,8 @@
    "employment_type": null,
    "posted_date": "2026-10-23",
    "closing_date": "2026-12-08",
-   "scraped_at": "2026-10-27T06:00:11Z",
-   "last_verified_at": "2026-10-27T06:00:11Z",
+   "scraped_at": "2026-10-27T10:11:05Z",
+   "last_verified_at": "2026-10-27T10:11:05Z",
    "status": "NEW",
    "source": "Al-Futtaim",
    "sources": [
@@ -2361,8 +2403,8 @@
    "employment_type": null,
    "posted_date": "2026-10-05",
    "closing_date": "2026-10-31",
-   "scraped_at": "2026-10-27T06:00:11Z",
-   "last_verified_at": "2026-10-27T06:00:11Z",
+   "scraped_at": "2026-10-27T10:11:05Z",
+   "last_verified_at": "2026-10-27T10:11:05Z",
    "status": "AGING",
    "source": "Al-Futtaim",
    "sources": [
@@ -2449,8 +2491,8 @@
    "employment_type": "Full-Time",
    "posted_date": "2026-08-25",
    "closing_date": null,
-   "scraped_at": "2026-10-27T06:00:11Z",
-   "last_verified_at": "2026-10-27T06:00:11Z",
+   "scraped_at": "2026-10-27T10:11:05Z",
+   "last_verified_at": "2026-10-27T10:11:05Z",
    "status": "STALE",
    "source": "Michael Page",
    "sources": [
@@ -2526,8 +2568,8 @@
    "employment_type": "Full-Time",
    "posted_date": "2026-03-23",
    "closing_date": null,
-   "scraped_at": "2026-10-27T06:00:11Z",
-   "last_verified_at": "2026-10-27T06:00:11Z",
+   "scraped_at": "2026-10-27T10:11:05Z",
+   "last_verified_at": "2026-10-27T10:11:05Z",
    "status": "STALE",
    "source": "Michael Page",
    "sources": [
@@ -2621,8 +2663,8 @@
    "employment_type": null,
    "posted_date": "2026-10-20",
    "closing_date": null,
-   "scraped_at": "2026-10-27T06:00:11Z",
-   "last_verified_at": "2026-10-27T06:00:11Z",
+   "scraped_at": "2026-10-27T10:11:05Z",
+   "last_verified_at": "2026-10-27T10:11:05Z",
    "status": "NEW",
    "source": "Landmark Group",
    "sources": [
@@ -2701,8 +2743,8 @@
    "employment_type": null,
    "posted_date": "2026-10-07",
    "closing_date": null,
-   "scraped_at": "2026-10-27T06:00:11Z",
-   "last_verified_at": "2026-10-27T06:00:11Z",
+   "scraped_at": "2026-10-27T10:11:05Z",
+   "last_verified_at": "2026-10-27T10:11:05Z",
    "status": "ACTIVE",
    "source": "Landmark Group",
    "sources": [
@@ -2781,8 +2823,8 @@
    "employment_type": null,
    "posted_date": "2026-10-09",
    "closing_date": "2026-11-08",
-   "scraped_at": "2026-10-27T06:00:11Z",
-   "last_verified_at": "2026-10-27T06:00:11Z",
+   "scraped_at": "2026-10-27T10:11:05Z",
+   "last_verified_at": "2026-10-27T10:11:05Z",
    "status": "ACTIVE",
    "source": "Al Ghurair",
    "sources": [
@@ -2874,8 +2916,8 @@
    "employment_type": null,
    "posted_date": "2026-10-27",
    "closing_date": null,
-   "scraped_at": "2026-10-27T06:00:11Z",
-   "last_verified_at": "2026-10-27T06:00:11Z",
+   "scraped_at": "2026-10-27T10:11:05Z",
+   "last_verified_at": "2026-10-27T10:11:05Z",
    "status": "NEW",
    "source": "Al Tayer",
    "sources": [
@@ -2968,8 +3010,8 @@
    "employment_type": "Regular",
    "posted_date": "2026-09-22",
    "closing_date": null,
-   "scraped_at": "2026-10-27T06:00:11Z",
-   "last_verified_at": "2026-10-27T06:00:11Z",
+   "scraped_at": "2026-10-27T10:11:05Z",
+   "last_verified_at": "2026-10-27T10:11:05Z",
    "status": "AGING",
    "source": "Majid Al Futtaim",
    "sources": [
@@ -3052,8 +3094,8 @@
    "employment_type": null,
    "posted_date": "2026-10-11",
    "closing_date": "2026-11-15",
-   "scraped_at": "2026-10-27T06:00:11Z",
-   "last_verified_at": "2026-10-27T06:00:11Z",
+   "scraped_at": "2026-10-27T10:11:05Z",
+   "last_verified_at": "2026-10-27T10:11:05Z",
    "status": "ACTIVE",
    "source": "Al-Futtaim",
    "sources": [
@@ -3142,8 +3184,8 @@
    "employment_type": null,
    "posted_date": "2026-10-11",
    "closing_date": "2026-11-15",
-   "scraped_at": "2026-10-27T06:00:11Z",
-   "last_verified_at": "2026-10-27T06:00:11Z",
+   "scraped_at": "2026-10-27T10:11:05Z",
+   "last_verified_at": "2026-10-27T10:11:05Z",
    "status": "ACTIVE",
    "source": "Al-Futtaim",
    "sources": [
@@ -3232,8 +3274,8 @@
    "employment_type": null,
    "posted_date": "2026-09-29",
    "closing_date": "2026-10-28",
-   "scraped_at": "2026-10-27T06:00:11Z",
-   "last_verified_at": "2026-10-27T06:00:11Z",
+   "scraped_at": "2026-10-27T10:11:05Z",
+   "last_verified_at": "2026-10-27T10:11:05Z",
    "status": "AGING",
    "source": "Al Ghurair",
    "sources": [
@@ -3335,8 +3377,8 @@
    "employment_type": "Regular",
    "posted_date": "2026-10-19",
    "closing_date": null,
-   "scraped_at": "2026-10-27T06:00:11Z",
-   "last_verified_at": "2026-10-27T06:00:11Z",
+   "scraped_at": "2026-10-27T10:11:05Z",
+   "last_verified_at": "2026-10-27T10:11:05Z",
    "status": "ACTIVE",
    "source": "Majid Al Futtaim",
    "sources": [
@@ -3431,8 +3473,8 @@
    "employment_type": null,
    "posted_date": "2026-10-06",
    "closing_date": "2026-10-31",
-   "scraped_at": "2026-10-27T06:00:11Z",
-   "last_verified_at": "2026-10-27T06:00:11Z",
+   "scraped_at": "2026-10-27T10:11:05Z",
+   "last_verified_at": "2026-10-27T10:11:05Z",
    "status": "ACTIVE",
    "source": "Al-Futtaim",
    "sources": [
@@ -3523,8 +3565,8 @@
    "employment_type": "Full-Time",
    "posted_date": "2026-07-20",
    "closing_date": null,
-   "scraped_at": "2026-10-27T06:00:11Z",
-   "last_verified_at": "2026-10-27T06:00:11Z",
+   "scraped_at": "2026-10-27T10:11:05Z",
+   "last_verified_at": "2026-10-27T10:11:05Z",
    "status": "STALE",
    "source": "Michael Page",
    "sources": [
@@ -3583,7 +3625,7 @@
     "SAP is named and his ERP depth is D365, not SAP — expect to address that gap directly."
    ],
    "resume_match": null,
-   "duplicate_group": "3c16207b3b75917c9bcc5f951b5c14eb98de5b04",
+   "duplicate_group": "1bae5a44530159e1ab78635b5320ab549e1cd448",
    "is_excluded": false,
    "exclusion_reason": null
   },
@@ -3600,8 +3642,8 @@
    "employment_type": "Full-Time",
    "posted_date": "2026-09-28",
    "closing_date": null,
-   "scraped_at": "2026-10-27T06:00:11Z",
-   "last_verified_at": "2026-10-27T06:00:11Z",
+   "scraped_at": "2026-10-27T10:11:05Z",
+   "last_verified_at": "2026-10-27T10:11:05Z",
    "status": "AGING",
    "source": "Michael Page",
    "sources": [
@@ -3694,8 +3736,8 @@
    "employment_type": null,
    "posted_date": "2026-10-21",
    "closing_date": null,
-   "scraped_at": "2026-10-27T06:00:11Z",
-   "last_verified_at": "2026-10-27T06:00:11Z",
+   "scraped_at": "2026-10-27T10:11:05Z",
+   "last_verified_at": "2026-10-27T10:11:05Z",
    "status": "NEW",
    "source": "Al Tayer",
    "sources": [
@@ -3792,8 +3834,8 @@
    "employment_type": "Regular",
    "posted_date": "2026-09-01",
    "closing_date": null,
-   "scraped_at": "2026-10-27T06:00:11Z",
-   "last_verified_at": "2026-10-27T06:00:11Z",
+   "scraped_at": "2026-10-27T10:11:05Z",
+   "last_verified_at": "2026-10-27T10:11:05Z",
    "status": "STALE",
    "source": "Majid Al Futtaim",
    "sources": [
@@ -3893,8 +3935,8 @@
    "employment_type": "Full-Time",
    "posted_date": "2026-10-13",
    "closing_date": null,
-   "scraped_at": "2026-10-27T06:00:11Z",
-   "last_verified_at": "2026-10-27T06:00:11Z",
+   "scraped_at": "2026-10-27T10:11:05Z",
+   "last_verified_at": "2026-10-27T10:11:05Z",
    "status": "ACTIVE",
    "source": "Michael Page",
    "sources": [
@@ -3968,8 +4010,8 @@
    "employment_type": "Full-Time",
    "posted_date": "2026-09-17",
    "closing_date": null,
-   "scraped_at": "2026-10-27T06:00:11Z",
-   "last_verified_at": "2026-10-27T06:00:11Z",
+   "scraped_at": "2026-10-27T10:11:05Z",
+   "last_verified_at": "2026-10-27T10:11:05Z",
    "status": "AGING",
    "source": "Michael Page",
    "sources": [
@@ -4063,8 +4105,8 @@
    "employment_type": "Temporary",
    "posted_date": "2026-09-09",
    "closing_date": null,
-   "scraped_at": "2026-10-27T06:00:11Z",
-   "last_verified_at": "2026-10-27T06:00:11Z",
+   "scraped_at": "2026-10-27T10:11:05Z",
+   "last_verified_at": "2026-10-27T10:11:05Z",
    "status": "STALE",
    "source": "Michael Page",
    "sources": [
@@ -4152,8 +4194,8 @@
    "employment_type": "Experienced hires",
    "posted_date": "2026-04-28",
    "closing_date": null,
-   "scraped_at": "2026-10-27T06:00:11Z",
-   "last_verified_at": "2026-10-27T06:00:11Z",
+   "scraped_at": "2026-10-27T10:11:05Z",
+   "last_verified_at": "2026-10-27T10:11:05Z",
    "status": "STALE",
    "source": "Aldar",
    "sources": [
@@ -4240,8 +4282,8 @@
    "employment_type": "Full-Time",
    "posted_date": "2026-10-14",
    "closing_date": null,
-   "scraped_at": "2026-10-27T06:00:11Z",
-   "last_verified_at": "2026-10-27T06:00:11Z",
+   "scraped_at": "2026-10-27T10:11:05Z",
+   "last_verified_at": "2026-10-27T10:11:05Z",
    "status": "ACTIVE",
    "source": "Michael Page",
    "sources": [
@@ -4329,8 +4371,8 @@
    "employment_type": "Full-Time",
    "posted_date": "2026-10-26",
    "closing_date": null,
-   "scraped_at": "2026-10-27T06:00:11Z",
-   "last_verified_at": "2026-10-27T06:00:11Z",
+   "scraped_at": "2026-10-27T10:11:05Z",
+   "last_verified_at": "2026-10-27T10:11:05Z",
    "status": "NEW",
    "source": "Michael Page",
    "sources": [
@@ -4417,9 +4459,9 @@
    "employment_type": "Full-time",
    "posted_date": "2026-10-21",
    "closing_date": null,
-   "scraped_at": "2026-10-27T06:00:11Z",
-   "last_verified_at": "2026-10-27T06:00:11Z",
-   "status": "NEW",
+   "scraped_at": "2026-10-27T10:11:05Z",
+   "last_verified_at": "2026-10-27T10:11:05Z",
+   "status": "LINK_BROKEN",
    "source": "Etihad Airways",
    "sources": [
     "Etihad Airways"
@@ -4427,7 +4469,7 @@
    "source_url": "https://jobs.smartrecruiters.com/EtihadAirways5/744000156779659-technology-supplier-cost-management-specialist",
    "application_url": "https://jobs.smartrecruiters.com/EtihadAirways5/744000156779659-technology-supplier-cost-management-specialist?oga=true",
    "is_direct_apply": true,
-   "application_url_verified": true,
+   "application_url_verified": false,
    "source_confidence": "high",
    "salary_min": null,
    "salary_max": null,
@@ -4493,8 +4535,8 @@
     "UAE is one of his two target markets, and he is already GCC-adjacent inside a Dubai-headquartered group."
    ],
    "watch_out": [
-    "The posting names a qualification he does not hold; his is CA (ICAI, 2017).",
-    "Sector is outside retail and real estate, so the industry half of his track record does not carry over."
+    "The application link could not be confirmed reachable — verify it before relying on it.",
+    "The posting names a qualification he does not hold; his is CA (ICAI, 2017)."
    ],
    "resume_match": null,
    "duplicate_group": "4d1ab2e9e8ee1876b46a9e927ec50192d71ba45d",
@@ -4514,9 +4556,9 @@
    "employment_type": "Full-time",
    "posted_date": "2026-10-06",
    "closing_date": null,
-   "scraped_at": "2026-10-27T06:00:11Z",
-   "last_verified_at": "2026-10-27T06:00:11Z",
-   "status": "ACTIVE",
+   "scraped_at": "2026-10-27T10:11:05Z",
+   "last_verified_at": "2026-10-27T10:11:05Z",
+   "status": "LINK_BROKEN",
    "source": "Etihad Airways",
    "sources": [
     "Etihad Airways"
@@ -4524,7 +4566,7 @@
    "source_url": "https://jobs.smartrecruiters.com/EtihadAirways5/744000153701069-manager-cargo-revenue-management",
    "application_url": "https://jobs.smartrecruiters.com/EtihadAirways5/744000153701069-manager-cargo-revenue-management?oga=true",
    "is_direct_apply": true,
-   "application_url_verified": true,
+   "application_url_verified": false,
    "source_confidence": "high",
    "salary_min": null,
    "salary_max": null,
@@ -4583,6 +4625,7 @@
     "UAE is one of his two target markets, and he is already GCC-adjacent inside a Dubai-headquartered group."
    ],
    "watch_out": [
+    "The application link could not be confirmed reachable — verify it before relying on it.",
     "Sector is outside retail and real estate, so the industry half of his track record does not carry over."
    ],
    "resume_match": null,
@@ -4603,8 +4646,8 @@
    "employment_type": "Temporary",
    "posted_date": "2026-09-14",
    "closing_date": null,
-   "scraped_at": "2026-10-27T06:00:11Z",
-   "last_verified_at": "2026-10-27T06:00:11Z",
+   "scraped_at": "2026-10-27T10:11:05Z",
+   "last_verified_at": "2026-10-27T10:11:05Z",
    "status": "AGING",
    "source": "Michael Page",
    "sources": [
@@ -4695,9 +4738,9 @@
    "employment_type": "Full-time",
    "posted_date": "2026-07-22",
    "closing_date": null,
-   "scraped_at": "2026-10-27T06:00:11Z",
-   "last_verified_at": "2026-10-27T06:00:11Z",
-   "status": "STALE",
+   "scraped_at": "2026-10-27T10:11:05Z",
+   "last_verified_at": "2026-10-27T10:11:05Z",
+   "status": "LINK_BROKEN",
    "source": "Etihad Airways",
    "sources": [
     "Etihad Airways"
@@ -4705,7 +4748,7 @@
    "source_url": "https://jobs.smartrecruiters.com/EtihadAirways5/744000139019709-finance-business-partner-officer-uae-national-only-",
    "application_url": "https://jobs.smartrecruiters.com/EtihadAirways5/744000139019709-finance-business-partner-officer-uae-national-only-?oga=true",
    "is_direct_apply": true,
-   "application_url_verified": true,
+   "application_url_verified": false,
    "source_confidence": "high",
    "salary_min": null,
    "salary_max": null,
@@ -4765,7 +4808,7 @@
     "UAE is one of his two target markets, and he is already GCC-adjacent inside a Dubai-headquartered group."
    ],
    "watch_out": [
-    "Posted 2026-07-22 — this req is stale and may already be filled.",
+    "The application link could not be confirmed reachable — verify it before relying on it.",
     "SAP is named and his ERP depth is D365, not SAP — expect to address that gap directly."
    ],
    "resume_match": null,
@@ -4786,8 +4829,8 @@
    "employment_type": "Full-Time",
    "posted_date": "2026-09-09",
    "closing_date": null,
-   "scraped_at": "2026-10-27T06:00:11Z",
-   "last_verified_at": "2026-10-27T06:00:11Z",
+   "scraped_at": "2026-10-27T10:11:05Z",
+   "last_verified_at": "2026-10-27T10:11:05Z",
    "status": "STALE",
    "source": "Michael Page",
    "sources": [
@@ -4860,9 +4903,9 @@
    "employment_type": "Full-time",
    "posted_date": "2026-10-22",
    "closing_date": null,
-   "scraped_at": "2026-10-27T06:00:11Z",
-   "last_verified_at": "2026-10-27T06:00:11Z",
-   "status": "NEW",
+   "scraped_at": "2026-10-27T10:11:05Z",
+   "last_verified_at": "2026-10-27T10:11:05Z",
+   "status": "LINK_BROKEN",
    "source": "Etihad Airways",
    "sources": [
     "Etihad Airways"
@@ -4870,7 +4913,7 @@
    "source_url": "https://jobs.smartrecruiters.com/EtihadAirways5/744000157113259-knowledge-base-and-content-controller",
    "application_url": "https://jobs.smartrecruiters.com/EtihadAirways5/744000157113259-knowledge-base-and-content-controller?oga=true",
    "is_direct_apply": true,
-   "application_url_verified": true,
+   "application_url_verified": false,
    "source_confidence": "high",
    "salary_min": null,
    "salary_max": null,
@@ -4928,7 +4971,7 @@
     "UAE is one of his two target markets, and he is already GCC-adjacent inside a Dubai-headquartered group."
    ],
    "watch_out": [
-    "Nothing disqualifying surfaced in the posted text, which itself means the description is thin — probe scope and reporting line."
+    "The application link could not be confirmed reachable — verify it before relying on it."
    ],
    "resume_match": null,
    "duplicate_group": "a89c13a9e7b41bdc610575d794a19cf6914949c1",
@@ -4948,9 +4991,9 @@
    "employment_type": "Full-time",
    "posted_date": "2026-09-02",
    "closing_date": null,
-   "scraped_at": "2026-10-27T06:00:11Z",
-   "last_verified_at": "2026-10-27T06:00:11Z",
-   "status": "STALE",
+   "scraped_at": "2026-10-27T10:11:05Z",
+   "last_verified_at": "2026-10-27T10:11:05Z",
+   "status": "LINK_BROKEN",
    "source": "Etihad Airways",
    "sources": [
     "Etihad Airways"
@@ -4958,7 +5001,7 @@
    "source_url": "https://jobs.smartrecruiters.com/EtihadAirways5/744000146940809-premium-guest-recovery-controller-uae-nationals-only",
    "application_url": "https://jobs.smartrecruiters.com/EtihadAirways5/744000146940809-premium-guest-recovery-controller-uae-nationals-only?oga=true",
    "is_direct_apply": true,
-   "application_url_verified": true,
+   "application_url_verified": false,
    "source_confidence": "high",
    "salary_min": null,
    "salary_max": null,
@@ -5009,7 +5052,7 @@
     "Nothing further in the posted text matches his record. His lane is retail FP&A — MYR 400M+ P&L across 60+ Max Fashion and Babyshop stores in Malaysia and Indonesia, IFRS/MPERS consolidation, and a D365 ERP implementation. Judge the rest of this role against that."
    ],
    "watch_out": [
-    "Posted 2026-09-02 — this req is stale and may already be filled.",
+    "The application link could not be confirmed reachable — verify it before relying on it.",
     "Sector is outside retail and real estate, so the industry half of his track record does not carry over."
    ],
    "resume_match": null,
@@ -5030,9 +5073,9 @@
    "employment_type": "Full-time",
    "posted_date": "2026-07-28",
    "closing_date": null,
-   "scraped_at": "2026-10-27T06:00:11Z",
-   "last_verified_at": "2026-10-27T06:00:11Z",
-   "status": "STALE",
+   "scraped_at": "2026-10-27T10:11:05Z",
+   "last_verified_at": "2026-10-27T10:11:05Z",
+   "status": "LINK_BROKEN",
    "source": "Etihad Airways",
    "sources": [
     "Etihad Airways"
@@ -5040,7 +5083,7 @@
    "source_url": "https://jobs.smartrecruiters.com/EtihadAirways5/744000140171180-revenue-management-systems-officer",
    "application_url": "https://jobs.smartrecruiters.com/EtihadAirways5/744000140171180-revenue-management-systems-officer?oga=true",
    "is_direct_apply": true,
-   "application_url_verified": true,
+   "application_url_verified": false,
    "source_confidence": "high",
    "salary_min": null,
    "salary_max": null,
@@ -5112,7 +5155,7 @@
     "UAE is one of his two target markets, and he is already GCC-adjacent inside a Dubai-headquartered group."
    ],
    "watch_out": [
-    "Posted 2026-07-28 — this req is stale and may already be filled."
+    "The application link could not be confirmed reachable — verify it before relying on it."
    ],
    "resume_match": null,
    "duplicate_group": "b4a07d12c120c83bfe5597bd11795c90ef7abf33",
@@ -5132,8 +5175,8 @@
    "employment_type": null,
    "posted_date": "2026-10-05",
    "closing_date": "2026-11-27",
-   "scraped_at": "2026-10-27T06:00:11Z",
-   "last_verified_at": "2026-10-27T06:00:11Z",
+   "scraped_at": "2026-10-27T10:11:05Z",
+   "last_verified_at": "2026-10-27T10:11:05Z",
    "status": "AGING",
    "source": "Al-Futtaim",
    "sources": [
@@ -5235,8 +5278,8 @@
    "employment_type": null,
    "posted_date": "2026-10-01",
    "closing_date": "2026-10-31",
-   "scraped_at": "2026-10-27T06:00:11Z",
-   "last_verified_at": "2026-10-27T06:00:11Z",
+   "scraped_at": "2026-10-27T10:11:05Z",
+   "last_verified_at": "2026-10-27T10:11:05Z",
    "status": "AGING",
    "source": "Al-Futtaim",
    "sources": [
@@ -5326,8 +5369,8 @@
    "employment_type": null,
    "posted_date": "2026-10-22",
    "closing_date": "2026-11-06",
-   "scraped_at": "2026-10-27T06:00:11Z",
-   "last_verified_at": "2026-10-27T06:00:11Z",
+   "scraped_at": "2026-10-27T10:11:05Z",
+   "last_verified_at": "2026-10-27T10:11:05Z",
    "status": "NEW",
    "source": "Al-Futtaim",
    "sources": [
@@ -5418,8 +5461,8 @@
    "employment_type": "Experienced hires",
    "posted_date": "2026-09-01",
    "closing_date": null,
-   "scraped_at": "2026-10-27T06:00:11Z",
-   "last_verified_at": "2026-10-27T06:00:11Z",
+   "scraped_at": "2026-10-27T10:11:05Z",
+   "last_verified_at": "2026-10-27T10:11:05Z",
    "status": "STALE",
    "source": "Aldar",
    "sources": [
@@ -5514,8 +5557,8 @@
    "employment_type": null,
    "posted_date": "2026-10-07",
    "closing_date": "2026-11-06",
-   "scraped_at": "2026-10-27T06:00:11Z",
-   "last_verified_at": "2026-10-27T06:00:11Z",
+   "scraped_at": "2026-10-27T10:11:05Z",
+   "last_verified_at": "2026-10-27T10:11:05Z",
    "status": "ACTIVE",
    "source": "Al-Futtaim",
    "sources": [
@@ -5606,8 +5649,8 @@
    "employment_type": "Full-Time",
    "posted_date": "2026-10-13",
    "closing_date": null,
-   "scraped_at": "2026-10-27T06:00:11Z",
-   "last_verified_at": "2026-10-27T06:00:11Z",
+   "scraped_at": "2026-10-27T10:11:05Z",
+   "last_verified_at": "2026-10-27T10:11:05Z",
    "status": "ACTIVE",
    "source": "Chalhoub Group",
    "sources": [
@@ -5680,8 +5723,8 @@
    "employment_type": null,
    "posted_date": "2026-09-23",
    "closing_date": null,
-   "scraped_at": "2026-10-27T06:00:11Z",
-   "last_verified_at": "2026-10-27T06:00:11Z",
+   "scraped_at": "2026-10-27T10:11:05Z",
+   "last_verified_at": "2026-10-27T10:11:05Z",
    "status": "AGING",
    "source": "Apparel Group",
    "sources": [
@@ -5774,8 +5817,8 @@
    "employment_type": null,
    "posted_date": "2026-10-20",
    "closing_date": "2026-11-20",
-   "scraped_at": "2026-10-27T06:00:11Z",
-   "last_verified_at": "2026-10-27T06:00:11Z",
+   "scraped_at": "2026-10-27T10:11:05Z",
+   "last_verified_at": "2026-10-27T10:11:05Z",
    "status": "NEW",
    "source": "Al-Futtaim",
    "sources": [
@@ -5853,8 +5896,8 @@
    "employment_type": null,
    "posted_date": "2026-10-10",
    "closing_date": "2026-10-31",
-   "scraped_at": "2026-10-27T06:00:11Z",
-   "last_verified_at": "2026-10-27T06:00:11Z",
+   "scraped_at": "2026-10-27T10:11:05Z",
+   "last_verified_at": "2026-10-27T10:11:05Z",
    "status": "ACTIVE",
    "source": "Al-Futtaim",
    "sources": [
@@ -5944,8 +5987,8 @@
    "employment_type": "Regular",
    "posted_date": "2026-09-24",
    "closing_date": null,
-   "scraped_at": "2026-10-27T06:00:11Z",
-   "last_verified_at": "2026-10-27T06:00:11Z",
+   "scraped_at": "2026-10-27T10:11:05Z",
+   "last_verified_at": "2026-10-27T10:11:05Z",
    "status": "AGING",
    "source": "Majid Al Futtaim",
    "sources": [
@@ -6040,8 +6083,8 @@
    "employment_type": null,
    "posted_date": "2026-10-22",
    "closing_date": "2026-11-06",
-   "scraped_at": "2026-10-27T06:00:11Z",
-   "last_verified_at": "2026-10-27T06:00:11Z",
+   "scraped_at": "2026-10-27T10:11:05Z",
+   "last_verified_at": "2026-10-27T10:11:05Z",
    "status": "NEW",
    "source": "Al-Futtaim",
    "sources": [
@@ -6130,8 +6173,8 @@
    "employment_type": null,
    "posted_date": "2026-09-02",
    "closing_date": null,
-   "scraped_at": "2026-10-27T06:00:11Z",
-   "last_verified_at": "2026-10-27T06:00:11Z",
+   "scraped_at": "2026-10-27T10:11:05Z",
+   "last_verified_at": "2026-10-27T10:11:05Z",
    "status": "STALE",
    "source": "Landmark Group",
    "sources": [
@@ -6228,8 +6271,8 @@
    "employment_type": null,
    "posted_date": "2026-10-16",
    "closing_date": "2026-10-31",
-   "scraped_at": "2026-10-27T06:00:11Z",
-   "last_verified_at": "2026-10-27T06:00:11Z",
+   "scraped_at": "2026-10-27T10:11:05Z",
+   "last_verified_at": "2026-10-27T10:11:05Z",
    "status": "ACTIVE",
    "source": "Al-Futtaim",
    "sources": [
@@ -6321,8 +6364,8 @@
    "employment_type": null,
    "posted_date": "2026-10-14",
    "closing_date": "2026-11-08",
-   "scraped_at": "2026-10-27T06:00:11Z",
-   "last_verified_at": "2026-10-27T06:00:11Z",
+   "scraped_at": "2026-10-27T10:11:05Z",
+   "last_verified_at": "2026-10-27T10:11:05Z",
    "status": "ACTIVE",
    "source": "Al-Futtaim",
    "sources": [
@@ -6416,8 +6459,8 @@
    "employment_type": null,
    "posted_date": "2026-10-13",
    "closing_date": "2026-11-13",
-   "scraped_at": "2026-10-27T06:00:11Z",
-   "last_verified_at": "2026-10-27T06:00:11Z",
+   "scraped_at": "2026-10-27T10:11:05Z",
+   "last_verified_at": "2026-10-27T10:11:05Z",
    "status": "ACTIVE",
    "source": "Al-Futtaim",
    "sources": [
@@ -6495,8 +6538,8 @@
    "employment_type": null,
    "posted_date": "2026-10-01",
    "closing_date": "2027-01-15",
-   "scraped_at": "2026-10-27T06:00:11Z",
-   "last_verified_at": "2026-10-27T06:00:11Z",
+   "scraped_at": "2026-10-27T10:11:05Z",
+   "last_verified_at": "2026-10-27T10:11:05Z",
    "status": "AGING",
    "source": "Al-Futtaim",
    "sources": [
@@ -6592,8 +6635,8 @@
    "employment_type": null,
    "posted_date": "2026-10-23",
    "closing_date": "2026-11-30",
-   "scraped_at": "2026-10-27T06:00:11Z",
-   "last_verified_at": "2026-10-27T06:00:11Z",
+   "scraped_at": "2026-10-27T10:11:05Z",
+   "last_verified_at": "2026-10-27T10:11:05Z",
    "status": "NEW",
    "source": "Al-Futtaim",
    "sources": [
@@ -6684,8 +6727,8 @@
    "employment_type": null,
    "posted_date": "2026-10-21",
    "closing_date": "2026-10-30",
-   "scraped_at": "2026-10-27T06:00:11Z",
-   "last_verified_at": "2026-10-27T06:00:11Z",
+   "scraped_at": "2026-10-27T10:11:05Z",
+   "last_verified_at": "2026-10-27T10:11:05Z",
    "status": "NEW",
    "source": "Al-Futtaim",
    "sources": [
@@ -6776,8 +6819,8 @@
    "employment_type": null,
    "posted_date": "2026-10-15",
    "closing_date": "2026-10-31",
-   "scraped_at": "2026-10-27T06:00:11Z",
-   "last_verified_at": "2026-10-27T06:00:11Z",
+   "scraped_at": "2026-10-27T10:11:05Z",
+   "last_verified_at": "2026-10-27T10:11:05Z",
    "status": "ACTIVE",
    "source": "Al-Futtaim",
    "sources": [
@@ -6866,8 +6909,8 @@
    "employment_type": null,
    "posted_date": "2026-10-14",
    "closing_date": "2026-11-27",
-   "scraped_at": "2026-10-27T06:00:11Z",
-   "last_verified_at": "2026-10-27T06:00:11Z",
+   "scraped_at": "2026-10-27T10:11:05Z",
+   "last_verified_at": "2026-10-27T10:11:05Z",
    "status": "ACTIVE",
    "source": "Al-Futtaim",
    "sources": [
@@ -6883,7 +6926,7 @@
    "salary_currency": null,
    "experience_min": 1,
    "experience_max": 3,
-   "description": "Overview Of The Role: \n\n The Cost Clerk supports the Aftersales department by maintaining accurate cost records for service operations. This responsibility involves verifying and recording costs related to repair orders, parts, and labor, ensuring these are processed in accordance with company policies. The role is integral to financial reporting and cost control, requiring collaboration with various teams such as service advisors, technicians, and finance. Success in this role directly contributes to the operational and financial efficiency of the Aftersales Service center.\n \n What You Will Do: \n\n General \n Accurately record all service orders, parts, and labor costs in the system with minimal errors.\n Process and update cost data promptly to support accurate daily, weekly, and monthly reporting.\n Ensure that reports for management and accounting are accurate, complete, and delivered on time.\n Ensure all cost entries and transactions comply with company financial policies and standard operating procedures.\n Coordinate with service advisors, technicians, and parts teams to ensure cost data accuracy and completeness.\n Identify opportunities to streamline cost recording, reporting, or reconciliation processes.\n Efficiently identify and resolve discrepancies between invoices, parts usage, and service orders.\n\n Required Skills To Be Successful: \n\n Strong numerical and analytical skills.\n Proficiency in MS Office applications, especially Excel; ERP experience is a plus.\n Attention to detail and accuracy in data management.\n Effective communication and coordination skills with internal teams.\n \n What Qualifies You For The Role: \n\n Diploma or Bachelor's degree in Accounting, Finance, Business Administration, or a related field.\n 1-3 years of experience in accounting, finance, or cost control, preferably within automotive, service, or manufacturing environments.\n Strong numerical and analytical skills paired with proficiency in MS Office, especially Excel; experience with ERP systems is advantageous.\n Attention to detail, accuracy in recording and reporting data, and understanding of accounting principles and financial policies.\n\n Apply now » \n\n Find similar jobs: \n\n HOME PAGE \n\n PRIVACY \n\n CORPORATE WEBSITE \n\n CONTACT US \n\n Opens in a new tab. \n\n Opens in a new tab. \n\n Opens in a new tab. \n\n Opens in a new tab. \n\n © Copyright 2026 | afuturewithus.com\n\n // \n\n // \n\n // \n\n const jobAlertSpans = document.querySelectorAll(\"[data-testid=jobAlertSpanText]\");\n jobAlertSpans?.forEach((jobEl) => {\n jobEl.textContent = window?.jsStr?.tcjobresultscreatejobalertsdetailstext || \"\";\n });\n\n // \n\n // \n\n // \n\n //",
+   "description": "Overview Of The Role: \n\n The Cost Clerk supports the Aftersales department by maintaining accurate cost records for service operations. This responsibility involves verifying and recording costs related to repair orders, parts, and labor, ensuring these are processed in accordance with company policies. The role is integral to financial reporting and cost control, requiring collaboration with various teams such as service advisors, technicians, and finance. Success in this role directly contributes to the operational and financial efficiency of the Aftersales Service center.\n \n What You Will Do: \n\n General \n Accurately record all service orders, parts, and labor costs in the system with minimal errors.\n Process and update cost data promptly to support accurate daily, weekly, and monthly reporting.\n Ensure that reports for management and accounting are accurate, complete, and delivered on time.\n Ensure all cost entries and transactions comply with company financial policies and standard operating procedures.\n Coordinate with service advisors, technicians, and parts teams to ensure cost data accuracy and completeness.\n Identify opportunities to streamline cost recording, reporting, or reconciliation processes.\n Efficiently identify and resolve discrepancies between invoices, parts usage, and service orders.\n\n Required Skills To Be Successful: \n\n Strong numerical and analytical skills.\n Proficiency in MS Office applications, especially Excel; ERP experience is a plus.\n Attention to detail and accuracy in data management.\n Effective communication and coordination skills with internal teams.\n \n What Qualifies You For The Role: \n\n Diploma or Bachelor's degree in Accounting, Finance, Business Administration, or a related field.\n 1-3 years of experience in accounting, finance, or cost control, preferably within automotive, service, or manufacturing environments.\n Strong numerical and analytical skills paired with proficiency in MS Office, especially Excel; experience with ERP systems is advantageous.\n Attention to detail, accuracy in recording and reporting data, and understanding of accounting principles and financial policies.\n\n Apply now » \n\n Find similar jobs: \n\n Sales Jobs \n\n HOME PAGE \n\n PRIVACY \n\n CORPORATE WEBSITE \n\n CONTACT US \n\n Opens in a new tab. \n\n Opens in a new tab. \n\n Opens in a new tab. \n\n Opens in a new tab. \n\n © Copyright 2026 | afuturewithus.com\n\n // \n\n // \n\n // \n\n const jobAlertSpans = document.querySelectorAll(\"[data-testid=jobAlertSpanText]\");\n jobAlertSpans?.forEach((jobEl) => {\n jobEl.textContent = window?.jsStr?.tcjobresultscreatejobalertsdetailstext || \"\";\n });\n\n // \n\n // \n\n // \n\n //",
    "responsibilities": [
     "Accurately record all service orders, parts, and labor costs in the system with minimal errors",
     "Process and update cost data promptly to support accurate daily, weekly, and monthly reporting",
@@ -6956,8 +6999,8 @@
    "employment_type": "Full-Time",
    "posted_date": "2026-09-10",
    "closing_date": null,
-   "scraped_at": "2026-10-27T06:00:11Z",
-   "last_verified_at": "2026-10-27T06:00:11Z",
+   "scraped_at": "2026-10-27T10:11:05Z",
+   "last_verified_at": "2026-10-27T10:11:05Z",
    "status": "STALE",
    "source": "Michael Page",
    "sources": [
@@ -7053,8 +7096,8 @@
    "employment_type": null,
    "posted_date": "2026-10-26",
    "closing_date": "2026-11-23",
-   "scraped_at": "2026-10-27T06:00:11Z",
-   "last_verified_at": "2026-10-27T06:00:11Z",
+   "scraped_at": "2026-10-27T10:11:05Z",
+   "last_verified_at": "2026-10-27T10:11:05Z",
    "status": "NEW",
    "source": "Apparel Group",
    "sources": [
@@ -7138,8 +7181,8 @@
    "employment_type": "Full-Time",
    "posted_date": "2026-09-29",
    "closing_date": null,
-   "scraped_at": "2026-10-27T06:00:11Z",
-   "last_verified_at": "2026-10-27T06:00:11Z",
+   "scraped_at": "2026-10-27T10:11:05Z",
+   "last_verified_at": "2026-10-27T10:11:05Z",
    "status": "AGING",
    "source": "Michael Page",
    "sources": [
