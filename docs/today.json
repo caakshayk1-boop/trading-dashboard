@@ -1,7 +1,7 @@
 {
- "build_id": "20261026T074303",
- "date": "2026-10-26",
- "date_str": "Monday, October 26 2026",
+ "build_id": "20261027T090256",
+ "date": "2026-10-27",
+ "date_str": "Tuesday, October 27 2026",
  "picks": [
   {
    "symbol": "ZS",
@@ -538,427 +538,426 @@
    {
     "dataset": "Fund screen",
     "status": "DEGRADED",
-    "age": "8 days old",
+    "age": "9 days old",
     "note": "older than its weekly refresh"
    }
   ]
  },
  "desk": {
   "chess": {
-   "title": "Endgame: King Activity",
-   "body": "In the endgame, the king becomes a fighting piece. Centralise your king immediately. A king on e4 controls d3, d4, d5, e3, e5, f3, f4, f5 \u2014 8 squares. A king on a1 controls only 3. Rule: when queens are off the board, march your king to the centre. Opposition matters: two kings facing each other, one move apart \u2014 the side NOT to move has the opposition.",
-   "index": 8,
+   "title": "Strategy: Weak Squares",
+   "body": "A weak square is one that cannot be defended by a pawn. d5 is weak for Black if the c6 and e6 pawns are gone or never played. Plant a knight on a weak square \u2014 it becomes an 'outpost.' From d5, a knight controls 8 squares and cannot be chased. Outpost knight + weak squares = long-term advantage.",
+   "index": 10,
    "total": 20
   },
   "wisdom": {
-   "title": "The Gratitude Practise",
-   "body": "Every morning, before checking your phone: name 3 specific things you're grateful for. Not 'health and family' \u2014 that's lazy. Something specific: 'my daughter smiled when she saw me yesterday,' 'I understood a balance sheet faster than last year,' 'KL at 26\u00b0C.' Specificity trains the brain to notice abundance.",
-   "index": 6,
+   "title": "On Anger",
+   "body": "Anger is information, not instruction. It tells you a boundary was crossed or a value was violated. But acting on anger rarely solves the problem. Practice: when you feel it rising, say 'I need 5 minutes' and leave the room. Return calm. Then address the issue. You can be firm without being explosive.",
+   "index": 8,
    "total": 18
   },
   "book": {
-   "book": "The Lean Startup",
-   "author": "Eric Ries",
-   "chapter": "Build-Measure-Learn: Stop Building What Nobody Wants",
-   "lesson": "The biggest waste in startups \u2014 and in corporate innovation \u2014 is building products nobody wants. Ries's solution: the Build-Measure-Learn loop. Start with a hypothesis about what customers want. Build the minimum viable product (MVP) to test it \u2014 not a polished product, just enough to learn. Measure how real customers actually behave. Learn whether your hypothesis was right. Pivot or persevere based on evidence, not ego. The goal is to minimise the total time through the loop. Most teams optimise for building fast. They should optimise for learning fast.",
-   "key_quote": "Speed of learning, not speed of building, is the true competitive advantage of innovative teams.",
-   "action": "Identify one assumption behind your current project. What is the cheapest, fastest test you could run to validate or invalidate it this week?",
-   "index": 18,
+   "book": "Shoe Dog",
+   "author": "Phil Knight",
+   "chapter": "Just Start. Ship the Prototype.",
+   "lesson": "Phil Knight's memoir of building Nike is a masterclass in starting before you're ready. He started by importing Japanese running shoes from Onitsuka Tiger with no retail experience, no capital, no strategy. He sold them from the boot of his car at track meets. He kept the company alive for 12 years on the edge of bankruptcy, constantly one rejected bank loan away from collapse. His key lesson: don't wait until you have it figured out. Start with the version you can afford. Learn on real customers with real money at stake. Iterate from there. Nike's swoosh was designed by a student for $35.",
+   "key_quote": "The perfect plan never survives first contact with reality. Start imperfectly and iterate.",
+   "action": "Identify one project you've been waiting to start until conditions are better. What is the smallest possible version you could execute this week?",
+   "index": 20,
    "total": 48,
    "crux": [
-    "A startup is an organisation built to find a repeatable business model under extreme uncertainty.",
-    "Build\u2013Measure\u2013Learn. Speed through the loop is the core competency.",
-    "Validated learning is the unit of progress, not code shipped or hours worked.",
-    "Minimum Viable Product: the smallest thing that tests the riskiest assumption.",
-    "Two leap-of-faith assumptions: value (do they want it?) and growth (how does it spread?).",
-    "Genchi genbutsu \u2014 go and see. Talk to actual users, not to your model of them.",
-    "Vanity metrics (totals, page views) flatter. Actionable metrics (cohort retention, conversion) inform.",
-    "Cohort analysis and split testing are the only honest reads on whether you improved anything.",
-    "Innovation accounting: define the baseline, tune the engine, then pivot or persevere.",
-    "Three growth engines: sticky (retention), viral (referral), paid (unit economics). Pick one.",
-    "Pivot types: zoom-in, zoom-out, customer segment, platform, business architecture, value capture.",
-    "Small batches expose problems immediately. Large batches hide them until launch.",
-    "Stop the line \u2014 fix root causes with five whys rather than shipping over them.",
-    "The question is never 'can we build this?' It is 'should we build this?'"
+    "Knight started by importing Onitsuka Tigers from a car boot, with no capital and no plan.",
+    "Nike ran nearly insolvent for almost two decades while growing fast. Growth consumes cash.",
+    "The Crazy Idea only has to be believed by you at the start.",
+    "Bank relationships nearly killed the company more often than competitors did.",
+    "The Onitsuka betrayal forced Nike into becoming a brand rather than a distributor.",
+    "Hire obsessives and misfits. The Buttfaces argued viciously and shipped.",
+    "Bowerman's tinkering \u2014 waffle iron to waffle sole \u2014 was product development without a process.",
+    "The $8,000 the US government demanded could have ended it. Legal risk is existential risk.",
+    "Don't tell people how to do their jobs. Tell them what to do and let them surprise you.",
+    "Losing hurts more than winning feels good, and that asymmetry is fuel and poison.",
+    "Cash flow, not profit, decides whether you survive the year.",
+    "Faith outlasts evidence for a long time before evidence arrives.",
+    "Business is war without bullets \u2014 and the price is paid in family time."
    ],
    "learnings": [
-    "Shipping is not progress. Learning is progress.",
-    "Most feature work is waste because most assumptions are wrong.",
-    "A metric that only goes up is not telling you anything.",
-    "Deciding to pivot late is the expensive part, not the pivot itself."
+    "Fast growth and near-bankruptcy routinely coexist. Watch cash, not revenue.",
+    "Dependence on a single supplier or channel is an existential risk, not an inconvenience.",
+    "Obsessive, difficult people build the things that matter.",
+    "The cost of building is paid by the people at home too. Count it honestly."
    ],
    "examples": [
-    "Dropbox tested demand with a 3-minute video before building sync. Beta waitlist went 5,000 \u2192 75,000 overnight.",
-    "Zappos began by photographing shoes in local shops and buying at retail per order \u2014 testing willingness to buy online before holding inventory.",
-    "Ries's IMVU spent months on an IM-interoperability feature nobody used. Users didn't want to add friends; they wanted new ones."
+    "Nike hit $8m in sales while unable to make payroll \u2014 the classic growth-cash trap.",
+    "The waffle sole came from Bowerman pouring rubber into his wife's waffle iron. No R&D budget.",
+    "Knight sold shoes out of his car at track meets for years before any retail presence."
    ],
    "adapt": [
-    "The signal edge measurement was validated learning \u2014 t=+2.87 on daily equity, noise on 1H. That result should drive the roadmap.",
-    "Cohort the newspaper: are the same readers returning, or is it new traffic each morning? Totals won't tell you.",
-    "Five whys on the alert flood: no time stop \u2192 because no lifecycle rule \u2192 because the backtest's horizon was never ported to live code."
+    "Single-channel risk is real: Meta restriction and Railway's shutdown are the same lesson twice.",
+    "Cash first. The SIP and 6-month buffer are what let you take a career risk at all.",
+    "Ship the imperfect version. Nike's first shoes fell apart and they iterated in public.",
+    "Count the family cost of the Dubai push explicitly, and decide it's worth it \u2014 don't let it accumulate silently."
    ]
   },
   "way": {
    "minimalism": {
-    "title": "Maintenance Is The Tell",
-    "body": "If you own more than you can maintain, you do not own it \u2014 you are storing it on its way to landfill. Count what you actually maintain.",
-    "action": "Identify one thing you own but never maintain. Decide: maintain it or release it.",
-    "index": 20,
+    "title": "The 90/90 Rule",
+    "body": "Have you used it in the last 90 days? Will you in the next 90? If both answers are no, it is storage, not ownership. You are paying rent on it in square feet and attention.",
+    "action": "Pick one drawer. Apply 90/90 to every item in it.",
+    "index": 2,
     "total": 20,
     "label": "Minimalism"
    },
    "etiquette": {
-    "title": "Praise Publicly, Correct Privately",
-    "body": "Reverse it and you buy resentment that outlasts the correction by years. This costs nothing and is violated constantly.",
-    "action": "Send one specific public thank-you today. Not generic \u2014 specific.",
-    "index": 6,
+    "title": "Phone Face Down, Or Away",
+    "body": "A visible phone halves the perceived quality of a conversation \u2014 measurably, in studies. Face down is the minimum. Out of sight is the standard.",
+    "action": "Phone in your bag, not on the table, for every conversation today.",
+    "index": 8,
     "total": 20,
     "label": "Etiquette"
    },
    "stillness": {
-    "title": "Walk Without Input",
-    "body": "No podcast, no music, no call. Boredom is the raw material of original thought, and it has been almost entirely eliminated from modern life.",
-    "action": "Twenty minutes of walking with nothing in your ears.",
-    "index": 4,
+    "title": "Memento Mori",
+    "body": "You will die. Marcus Aurelius wrote it to himself daily while running an empire. Not morbid \u2014 clarifying. It sorts the urgent from the important in about four seconds.",
+    "action": "Ask of one commitment: would this matter if I had a year left?",
+    "index": 6,
     "total": 20,
     "label": "Stillness"
    },
    "model": {
-    "title": "Pareto Principle",
-    "body": "80% of results come from 20% of inputs \u2014 and the distribution is often sharper than that. The work is identifying the 20%, which requires measuring rather than assuming.",
-    "action": "Find the 20% of your effort producing most of the result. Cut something from the rest.",
-    "index": 16,
+    "title": "Via Negativa",
+    "body": "Improvement by removal. Subtracting a bad habit, a bad client, or a bad process is more reliable than adding a good one, and the effect is immediate.",
+    "action": "Remove one thing today rather than adding an improvement.",
+    "index": 18,
     "total": 20,
     "label": "Mental Model"
    },
    "arabic": {
-    "script": "\u0634\u0643\u0631\u0627\u064b \u062c\u0632\u064a\u0644\u0627\u064b",
-    "translit": "shukran jazeelan",
-    "meaning": "Thank you very much",
-    "use": "Stronger than plain shukran. Use after someone has genuinely helped you.",
-    "index": 2,
+    "script": "\u0625\u0646 \u0634\u0627\u0621 \u0627\u0644\u0644\u0647",
+    "translit": "in shaa Allah",
+    "meaning": "God willing",
+    "use": "Attached to any future plan. Culturally expected \u2014 its absence sounds presumptuous about the future.",
+    "index": 4,
     "total": 30,
     "label": "Arabic"
    },
    "drill": {
-    "title": "Write The One-Line Summary",
-    "body": "Every analysis compresses to one sentence with a number in it. 'Margin fell 340bps because freight doubled.' If you cannot write that line, the analysis is not finished.",
-    "action": "Compress your most recent piece of work to one sentence with one number.",
-    "index": 8,
+    "title": "Steelman The Other Side",
+    "body": "Argue the opposing position better than its advocates do. Until you can, you do not understand your own position \u2014 you just prefer it.",
+    "action": "Write the strongest case against a view you hold firmly.",
+    "index": 10,
     "total": 20,
     "label": "Drill"
    },
    "health": {
-    "title": "Stress Is Physiological, Not Just Mental",
-    "body": "Chronic cortisol elevation drives visceral fat, impairs sleep, and suppresses immune function. The body does not distinguish financial stress from physical threat.",
-    "action": "Five minutes of slow exhale-biased breathing. Exhale twice as long as inhale.",
-    "index": 18,
+    "title": "Consistency Beats Optimisation",
+    "body": "The perfect protocol you follow 30% of the time loses to the adequate one you follow 90% of the time. Every fitness argument online is about the last 5% and ignores the first 95%.",
+    "action": "Pick the minimum session you would do on your worst week. That is your floor.",
+    "index": 20,
     "total": 20,
     "label": "Health"
    }
   },
   "quote": {
-   "name": "Indra Nooyi",
-   "quote": "Just because you are CEO, don't think you have landed. You must continually increase your learning.",
-   "index": 43,
+   "name": "NR Narayana Murthy",
+   "quote": "Software is a great combination between artistry and engineering.",
+   "index": 45,
    "total": 96
   },
   "lesson": {
-   "tradition": "Learning",
-   "lesson": "Tell me and I forget. Teach me and I remember. Involve me and I learn.",
-   "source": "Benjamin Franklin"
+   "tradition": "Legacy",
+   "lesson": "Plant trees under whose shade you do not plan to sit.",
+   "source": "Greek Proverb"
   },
   "case": {
-   "title": "Berkshire Hathaway: Float as a Business Model",
-   "story": "Buffett uses insurance float \u2014 money collected in premiums before claims \u2014 as free capital to invest. $160B float generates investment returns at zero cost.",
-   "lesson": "The best business models create free capital. Study how your industry's best companies actually make money \u2014 it's rarely where you think."
+   "title": "SpaceX: Reusable Rockets",
+   "story": "Every expert said reusable rockets were impossible. SpaceX landed Falcon 9 first stage in 2015. Launch cost dropped from $150M to $28M. Changed the industry.",
+   "lesson": "Impossible is a consensus opinion, not a fact. When everyone says something can't be done, check if they've done the math or just the tradition."
   },
   "fpna": {
-   "title": "80/20 of Month-End",
-   "body": "20% of accounts drive 80% of variance. Focus commentary there. The rest is noise.",
-   "index": 15,
+   "title": "Dubai FP&A Stack",
+   "body": "AED 30K+ roles: CA/ACCA + Power BI + SAP or Oracle + IFRS 9/16. Targets: ADNOC, Emirates, MAF, DP World.",
+   "index": 17,
    "total": 20
   },
   "cfo": {
-   "title": "CFO Step 1: Strategy + Finance",
-   "body": "CFOs translate business strategy into financial reality. They ask: what's the ROI, what's the IRR, what's the payback period? Practice building business cases. Every investment decision has a financial model behind it.",
-   "index": 6,
+   "title": "CFO Step 3: M&A Fundamentals",
+   "body": "Basic M&A literacy: DCF valuation, EV/EBITDA multiples, due diligence process, SPA (Share Purchase Agreement), earn-out structures. You don't need to be an investment banker, but you need to read a deal memo and ask smart questions.",
+   "index": 8,
    "total": 15
   },
   "money_hack": {
-   "title": "Index Funds over Active",
-   "body": "85% of large-cap active funds underperform Nifty over 10 years. Index at 0.1% expense ratio."
+   "title": "ELSS Lock-in Trick",
+   "body": "ELSS 3-year lock-in: SIP each month \u2192 each instalment unlocks separately. Best 80C option."
   },
   "dubai": {
-   "title": "Interviews here are panels",
-   "body": "Expect three rounds: recruiter screen, hiring manager, then a panel with the CFO and a business head. The business head is the one to convince \u2014 they decide whether finance is useful or overhead.",
-   "targets": "Answer the business head in their language, not in accounting standards.",
-   "action_label": "Prep",
-   "action": "Have one story about a decision you changed with a number.",
-   "index": 28,
+   "title": "Why applications stall at 60%",
+   "body": "Most Gulf portals reject on missing fields, not on merit. Passport number, visa status, notice period, current and expected salary. Leave one blank and the application never reaches a human.",
+   "targets": "Expected salary blank is read as 'unclear', which is worse than a high number.",
+   "action_label": "Fix",
+   "action": "Keep a text file with every field the portals ask for. Paste, do not retype.",
+   "index": 30,
    "total": 30
   },
   "daughter": {
    "months": 10,
-   "days": 305,
+   "days": 306,
    "heading": "Ten months old.",
    "band": "cruising",
    "born": "2025-12-25"
   },
-  "productivity": "2-minute rule: if it takes under 2 min, do it now. Don't queue it.",
+  "productivity": "90-min deep work sprints. No phone. Door closed. Results compound.",
   "father": [
    {
-    "title": "Notice what she is not doing",
-    "do": "Once a week, check the milestone list rather than assuming.",
-    "why": "Sitting, transferring objects hand to hand, responding to her name, and babbling with consonants are the seven-month markers. Knowing the list means concerns get raised early, when intervention works best."
+    "title": "Sing the same song at the same moment",
+    "do": "Attach one song to one transition \u2014 nappy change, bath, car seat.",
+    "why": "Predictable audio cues reduce transition resistance because she knows what comes next. It is the cheapest behavioural tool available at this age."
    },
    {
-    "title": "Talk to her about your day",
-    "do": "Tell her what happened at work, in full sentences, as if she understands.",
-    "why": "The content is irrelevant and the exposure is not. It also forces you to articulate the day, which is a decent end-of-work ritual in its own right."
+    "title": "Give her something to solve",
+    "do": "Put a favourite toy just inside an open container so she has to reach in.",
+    "why": "Means-end reasoning \u2014 using one action to achieve a separate goal \u2014 is developing now. Small solvable problems build it; unsolvable ones just frustrate."
    }
   ],
   "life_wisdom": [
    {
     "tradition": "Jainism",
-    "term": "Asteya",
-    "translation": "Non-stealing, widely defined",
-    "teaching": "Extends beyond property to taking what was not freely given \u2014 credit, time, attention.",
-    "apply": "Attribute the idea to the person who had it, in the meeting, by name. Taking credit is the most common form and the least noticed."
+    "term": "Satya",
+    "translation": "Truthfulness",
+    "teaching": "The second great vow. Jain teaching qualifies it sharply: truth that causes harm is not virtue, so silence is sometimes the higher form of satya.",
+    "apply": "Before delivering a hard truth, ask whether you are serving accuracy or serving yourself. Both can be honest; only one is useful."
    },
    {
     "tradition": "Buddhism",
-    "term": "Mudita",
-    "translation": "Sympathetic joy",
-    "teaching": "The third sublime state: genuine pleasure at another's success. Named separately because it is rarer and harder than compassion for suffering.",
-    "apply": "Pick the peer whose progress you find least comfortable and find the thing they did well. Envy is the most common emotion in a competitive finance function and the least admitted."
+    "term": "Papa\u00f1ca",
+    "translation": "Mental proliferation",
+    "teaching": "The mind's tendency to spin a single perception into an elaborate narrative \u2014 one ambiguous email becoming a theory about your standing at work.",
+    "apply": "When you notice the story running, return to what actually happened, stated in one sentence with no interpretation. The gap is usually startling."
    }
   ],
   "spanish": [
    {
-    "word": "cansado",
-    "meaning": "tired",
-    "es": "Estoy muy cansado hoy.",
-    "en": "I am very tired today.",
+    "word": "tener raz\u00f3n",
+    "meaning": "to be right",
+    "es": "Tienes raz\u00f3n, cambiemos el plan.",
+    "en": "You are right, let us change the plan.",
     "tag": "Everyday"
    },
    {
-    "word": "sin embargo",
-    "meaning": "however",
-    "es": "Sin embargo, el costo subi\u00f3.",
-    "en": "However, the cost went up.",
+    "word": "ahorrar",
+    "meaning": "to save (money)",
+    "es": "Necesitamos ahorrar m\u00e1s cada mes.",
+    "en": "We need to save more each month.",
     "tag": "Business"
    }
   ],
   "vocab": [
    {
-    "word": "Discretionary",
-    "say": "dis-KRESH-uh-nair-ee",
-    "meaning": "Spent at one's own choosing; not committed.",
-    "example": "Only 18% of the cost base is genuinely discretionary.",
-    "note": "The word that separates costs you can cut from costs you cannot."
+    "word": "Robust",
+    "say": "roh-BUST",
+    "meaning": "Strong enough to withstand stress.",
+    "example": "The forecast is robust to a 10% sales decline.",
+    "note": "Pair it with the stress it survives, or it is just a filler word."
    },
    {
-    "word": "Nominal",
-    "say": "NOM-i-nuhl",
-    "meaning": "In name only; or, not adjusted for inflation.",
-    "example": "Nominal growth was 8%; real growth was closer to 3%.",
-    "note": "Two meanings \u2014 make the context obvious or you will be misread."
+    "word": "Pragmatic",
+    "say": "prag-MAT-ik",
+    "meaning": "Dealing with things practically rather than ideally.",
+    "example": "The pragmatic route is to phase it over two quarters.",
+    "note": "Useful when you are choosing the workable option over the elegant one."
    }
   ],
   "speaking": {
-   "title": "Slow the Q&A",
-   "drill": "Have someone ask you three questions in a row. Pause two seconds before each answer.",
-   "why": "Rapid answers read as reflexive. A deliberate pause reads as considered, and buys you the sentence you actually want."
+   "title": "Vary sentence length",
+   "drill": "Speak for 90 seconds deliberately alternating one short sentence and one longer one.",
+   "why": "Monotone rhythm loses a room faster than monotone pitch. Your writing already does this \u2014 make speech match."
   },
   "interview_tech": [
    {
-    "q": "Sales per square foot is falling but total sales are rising. Diagnose it.",
-    "a": "You are adding space faster than sales. That is not automatically wrong \u2014 new stores ramp, so a growth phase depresses the average mechanically. Split the estate: stores open more than 24 months versus less. If mature-store density is also falling, you have a genuine productivity problem \u2014 likely range, pricing, or footfall. If mature density is flat or up and only the blended number falls, it is a mix effect and it corrects as the new stores mature. Never let a board see the blended number alone.",
-    "who": "IKEA \u00b7 Marks & Spencer \u00b7 Max Fashion"
+    "q": "What is open-to-buy and why should finance care?",
+    "a": "Open-to-buy is the budget available to purchase stock for a future period, given planned sales, planned markdowns and target closing stock. It is where merchandise planning and finance meet. Finance should care because it is the single control that prevents over-buying \u2014 the root cause of the markdown spiral that destroys gross margin two seasons later. If buyers can commit outside OTB without sign-off, your inventory forecast is decoration.",
+    "who": "Landmark Group \u00b7 H&M \u00b7 Inditex"
    },
    {
-    "q": "Describe the difference between a cash flow forecast and a liquidity plan.",
-    "a": "The forecast is your best estimate of receipts and payments. The liquidity plan is what you do if the forecast is wrong \u2014 committed facilities, uncommitted lines, the order in which you would draw them, what you would stop spending, and how quickly you could release working capital. Boards ask for the forecast; the CFO's real job is the plan. Stress it: what happens to cash if sales fall 20% for two quarters while committed rent and payroll continue.",
-    "who": "Every treasurer since 2020"
+    "q": "What is the effect of a sale-and-leaseback on your financials?",
+    "a": "Cash in now, occupancy cost forever. You derecognise the asset, recognise a gain or loss limited to the rights transferred, and recognise a right-of-use asset and lease liability under IFRS 16 \u2014 so leverage does not fall by the full cash proceeds. It flatters current-year cash and often current-year profit while committing you to rent for 15\u201320 years. Legitimate for releasing capital from non-core property; a warning sign when used to plug an operating cash shortfall.",
+    "who": "Tesco \u00b7 Carrefour \u00b7 Retail REITs"
    }
   ],
   "interview_soft": [
    {
-    "q": "Tell me about a time you changed your mind after being convinced by someone junior.",
-    "a": "This is a culture question about ego. Pick a real instance, name the person's role, describe the argument they made and why it was better than yours, and say what you did afterwards to make sure they got the credit. The best version includes what you changed structurally so junior challenge became normal rather than exceptional.",
-    "who": "Amazon \u00b7 Google \u00b7 Unilever"
+    "q": "How do you handle a request from the CEO that you believe is unethical?",
+    "a": "Slow it down without escalating to confrontation. First assume miscommunication and restate what you understood \u2014 a surprising share of these resolve there. If it holds, state your objection privately, in writing, with the specific standard or law engaged. Offer the compliant alternative that gets closest to the commercial aim. If pressed, escalate to the audit committee chair. Say plainly that you would resign rather than sign something you believe is false \u2014 the willingness is the answer they are testing for.",
+    "who": "Every CFO search \u00b7 post-Wirecard"
    },
    {
-    "q": "Why are you leaving your current role?",
-    "a": "Never criticise the employer. Frame as pull, not push, and make it structural rather than personal: the scope you want next does not exist there in the timeframe you want it. If there is an obvious reason they will infer \u2014 a merger, a new boss, relocation \u2014 name it briefly and neutrally before they ask. Anything that sounds like a grievance transfers directly onto how they imagine you will talk about them.",
-    "who": "Universal"
+    "q": "A peer takes credit for your team's work in front of the CEO. What do you do?",
+    "a": "Not in the room. Afterwards, directly and without an audience: describe what you observed, not their motive, and say what you need going forward. If it repeats, correct it factually in the moment \u2014 'just to add, the modelling on that was Priya's team' \u2014 which is a contribution rather than an accusation. Escalating first, or absorbing it silently and resenting it, are both worse. They are testing composure and whether you protect your team.",
+    "who": "Any matrixed organisation"
    }
   ],
   "cfo_field": [
    {
-    "q": "Learn the lease standard properly. In the Gulf it is not a footnote.",
-    "a": "IFRS 16 put every store lease on the balance sheet as a right-of-use asset and a lease liability. Two consequences a CFO must be able to say out loud: EBITDA is now flattered, because rent that used to sit in operating costs is split into depreciation and interest; and leverage ratios move even though nothing about the business changed. If your covenant is set on a pre-IFRS-16 basis, know it before the bank asks.",
-    "who": "Every leased-store business"
+    "q": "Know your break-even by store, not by chain.",
+    "a": "A chain at group-level profitability can be carrying a quarter of its estate below contribution. Compute store contribution \u2014 gross profit less rent, staff and directly attributable fixed cost \u2014 and rank it. Then, before closing anything: is the lease committed, what does the store contribute to online fulfilment in its catchment, and what is the exit cost. A negative-contribution store with four years left on a non-cancellable lease is usually cheaper to run than to close.",
+    "who": "The analysis that gets you noticed"
    },
    {
-    "q": "Automation without a control map is how a finance function loses its audit trail.",
-    "a": "Before automating a process, write down: who can initiate, who approves, what the system does without a human, and where the exception report goes. Automation does not remove controls; it moves them from people to configuration, and configuration drifts silently. The question 'what breaks if this runs wrong for a month before anyone notices' is the one that separates a finance automation from a finance incident.",
-    "who": "Every CFO agenda, 2024 onward"
+    "q": "VAT in the GCC is a cash-flow instrument, not just a compliance task.",
+    "a": "Registration thresholds, filing frequency and the timing of input recovery all move working capital. A group filing quarterly rather than monthly holds recoverable input VAT longer than it needs to. Know the filing calendar in every jurisdiction the group trades in, and know which entity holds the recoverable balance \u2014 a refund stuck in the wrong entity is cash you own and cannot use.",
+    "who": "UAE \u00b7 KSA \u00b7 Oman"
    }
   ],
   "review": {
-   "prompt": "Which single decision this week will still matter in a year?",
-   "why": "Most weeks contain one. If you cannot find it, that is the finding.",
-   "index": 2,
+   "prompt": "Where did you confuse motion for progress?",
+   "why": "Busy is the most convincing disguise failure wears.",
+   "index": 3,
    "total": 20,
-   "week": 43,
+   "week": 44,
    "year": 2026,
-   "key": "2026-W43",
-   "weekday": 7,
-   "days_left": 0,
-   "is_review_day": true
+   "key": "2026-W44",
+   "weekday": 2,
+   "days_left": 5,
+   "is_review_day": false
   },
   "podcasts": {
    "ok": true,
-   "generated_at": "2026-10-25T23:43:37.627495+00:00",
+   "generated_at": "2026-10-27T01:03:32.678864+00:00",
    "episodes": [
     {
-     "show": "Sadhguru",
-     "author": "Sadhguru",
-     "category": "Philosophy",
-     "title": "Sadhguru 360 - Ep #7: The Forgotten Power of the Divine Feminine | 4K UHD",
+     "show": "Labour Law Advisor",
+     "author": "Labour Law Advisor",
+     "category": "Money",
+     "title": "The Biggest Financial Bubble Is Happening Right Now! @naandisclosure",
      "guest": "",
-     "published": "2026-10-25",
-     "link": "https://www.youtube.com/watch?v=BWfS-KmA3mM",
+     "published": "2026-10-20",
+     "link": "https://www.youtube.com/watch?v=JrPhalmUQos",
      "takeaways": [
-      "The episode is a unique, direct\u2011to\u2011audience solo podcast where Sadhguru speaks straight to listeners.",
-      "Save Soil, launched by Sadhguru, has reached 3.91\u202fbillion people worldwide to address soil extinction."
+      "The concentration of AI stocks in the S&P\u202f500 and Nasdaq creates a risk that a trigger could burst an AI bubble."
      ]
     },
     {
-     "show": "Sadhguru",
-     "author": "Sadhguru",
-     "category": "Philosophy",
-     "title": "Navratri & Periods: Can Women Visit Temples? | Sadhguru",
+     "show": "Labour Law Advisor",
+     "author": "Labour Law Advisor",
+     "category": "Money",
+     "title": "Why India's Tax System Is Broken",
      "guest": "",
-     "published": "2026-10-17",
-     "link": "https://www.youtube.com/watch?v=PZmjYFBAO6U",
+     "published": "2026-10-12",
+     "link": "https://www.youtube.com/watch?v=RsR1j_nmWGc",
      "takeaways": [
-      "Sadhguru examines how the traditional belief that women should not worship during their menstrual cycles originated.",
-      "He considers whether that belief is still relevant in modern times."
+      "The type of business you choose can directly impact your tax liability, profits, compliance requirements and long\u2011term wealth creation.",
+      "A Private Limited Company may not always be the most tax\u2011efficient option."
      ]
     }
    ],
    "shows": 1,
    "source": "each channel's public Atom feed",
-   "built_on": "2026-10-25",
+   "built_on": "2026-10-27",
    "age_days": 0.0,
    "is_fallback": false
   },
   "smart_reads": [
    {
-    "source": "The Marginalian",
-    "cat": "ideas",
-    "title": "20 Favorite Children\u2019s Books from 20 Years of The Marginalian",
-    "link": "https://www.themarginalian.org/2026/10/25/20-childrens-books/",
-    "summary": "&#8220;Anyone who writes down to children is simply wasting his time,&#8221; E.B. White insisted. &#8220;You have to write up, not down. Children are demanding. They are the most attentive, curious, eager, observant, sensitive, quick, and generally congenial readers on earth.&#8221; Both as a reader of them and as a wr",
-    "date": "Oct 25, 2026",
-    "_sort": "2026-10-25T20:13:16+00:00"
-   },
-   {
-    "source": "ET Opinion",
-    "cat": "money",
-    "title": "Hermes, try a scarf around just China",
-    "link": "https://economictimes.indiatimes.com/opinion/et-editorial/hermes-must-launch-a-china-only-luxury-line-to-revive-sales-amid-weak-demand/articleshow/135196600.cms",
-    "summary": "Hermes is facing a decline in revenue growth driven by decreasing demand in its Chinese market. The brand recognizes the importance of maintaining its unique selling proposition in luxury offerings. Given the rise of high-end local brands, Hermes plans to introduce a 'China-only' line for affluent consumers. This strat",
-    "date": "Oct 25, 2026",
-    "_sort": "2026-10-25T18:27:23+00:00",
-    "smart": {
-     "what_happened": [
-      "Hermes reported slower revenue growth as demand fell in its Chinese market.",
-      "The company announced a China-only line aimed at affluent Chinese consumers."
-     ],
-     "why_it_matters": "The initiative signals Hermes' response to weakening sales in its biggest growth market and the rising competition from high-end local brands, highlighting a shift in strategy to protect its market share and maintain its luxury positioning in China.",
-     "what_to_watch": "First-quarter sales figures for the China-only line once reported",
-     "headline": "Hermes to launch China-only line amid slowing Chinese demand",
-     "read_seconds": 26
-    }
-   },
-   {
     "source": "Livemint",
     "cat": "money",
-    "title": "Fell for a fake trading app or guaranteed-return WhatsApp group? What to do immediately? Can you recover your money?",
-    "link": "https://www.livemint.com/money/fell-for-a-fake-trading-app-or-guaranteed-return-whatsapp-group-what-to-do-immediately-can-you-recover-your-money-11792941357637.html",
-    "summary": "As investment participation grows in India, scammers are using messaging groups and fake apps to lure investors with promises of quick returns. Here's what to do if you fall for such frauds.&amp;nbsp;",
-    "date": "Oct 25, 2026",
-    "_sort": "2026-10-25T17:04:15+00:00",
+    "title": "S&amp;P 500 vs Nasdaq 100: Which global index fund is right for Indian investors seeking international market exposure?",
+    "link": "https://www.livemint.com/money/personal-finance/sp-500-vs-nasdaq-100-which-global-index-fund-is-right-for-indian-investors-seeking-international-market-exposure-11793033100177.html",
+    "summary": "S&amp;amp;P 500 or Nasdaq 100? The S&amp;amp;P 500 covers over 40% of global stock market value, while the Nasdaq 100 offers greater technology exposure. A PPFAS report explains their differences, risks and how much Indian investors can allocate globally.",
+    "date": "Oct 26, 2026",
+    "_sort": "2026-10-26T18:00:49+00:00",
     "smart": {
      "what_happened": [
-      "Investment participation is growing in India, and scammers are using messaging groups and fake apps to promise quick returns.",
-      "The article outlines steps to take immediately if a person falls for such fraud and discusses recovery options."
+      "The S&P 500 accounts for more than 40% of global stock market value.",
+      "The Nasdaq 100 provides higher technology exposure and a PPFAS report outlines their differences, risks and allocation for Indian investors."
      ],
-     "why_it_matters": "The rise of fraudulent schemes exploiting the expanding investor base poses a risk to retail investors and can undermine confidence in legitimate financial services, prompting the need for clear guidance on immediate actions and potential recovery.",
-     "what_to_watch": "Monitor announcements from Indian financial regulators or consumer protection agencies regarding alerts or new measures against fake trading apps and WhatsApp investment scams.",
-     "headline": "Scammers lure Indian investors with fake apps and WhatsApp groups",
-     "read_seconds": 20
-    }
-   },
-   {
-    "source": "Livemint Opinion",
-    "cat": "money",
-    "title": "Let Indians spend their gold to help ease our rupee problems\u2014Here's how",
-    "link": "https://www.livemint.com/opinion/online-views/let-indians-spend-their-gold-to-help-ease-our-rupee-problems-heres-how-11792674046297.html",
-    "summary": "Official policy discourages Indians from buying gold, but maybe a better policy would be to let them spend it. India could enjoy a gold standard without asking the Reserve Bank of India (RBI) to buy a gram of it or peg the rupee to anything. Here's how.",
-    "date": "Oct 25, 2026",
-    "_sort": "2026-10-25T12:31:04+00:00",
-    "smart": {
-     "what_happened": [
-      "The article states that official policy currently discourages Indians from buying gold.",
-      "It suggests allowing citizens to spend gold instead of a formal gold standard or RBI purchases."
-     ],
-     "why_it_matters": "If India were to permit widespread spending of gold holdings, it could affect the demand for foreign exchange reserves and the rupee's valuation by providing an informal hedge against currency weakness, thereby influencing monetary policy considerations without requiring the RBI to directly intervene in the gold market.",
-     "what_to_watch": "Watch for any RBI or government announcement regarding changes to gold purchase restrictions or new guidelines on using gold as a medium of exchange.",
-     "headline": "India policy discourages gold purchases, proposes citizen spending as alternative",
+     "why_it_matters": "The choice between the S&P 500 and Nasdaq 100 determines how Indian investors diversify internationally, influencing the balance between broad market coverage and sector\u2011specific (technology) exposure, which can affect portfolio risk and return profiles.",
+     "what_to_watch": "The specific allocation guidelines recommended in the upcoming PPFAS report for Indian investors.",
+     "headline": "S&P 500 and Nasdaq 100 differ coverage and tech exposure for Indian investors",
      "read_seconds": 21
     }
    },
    {
-    "source": "Peter Attia",
-    "cat": "health",
-    "title": "Personalized medicine comes to cancer immunotherapy",
-    "link": "https://peterattiamd.com/personalized-medicine-comes-to-cancer-immunotherapy/",
-    "summary": "A phase III trial for personalized melanoma vaccination foreshadows a new era of cancer treatment\n\nThe post Personalized medicine comes to cancer immunotherapy appeared first on Peter Attia MD.",
-    "date": "Oct 24, 2026",
-    "_sort": "2026-10-24T11:00:00+00:00",
+    "source": "ET Opinion",
+    "cat": "money",
+    "title": "Lula's extra time goal sends a signal",
+    "link": "https://economictimes.indiatimes.com/opinion/et-editorial/lulas-extra-time-goal-sends-a-signal/articleshow/135217164.cms",
+    "summary": "Luiz Inacio Lula da Silva has returned as Brazilian president for a record fourth term after a competitive election. He must now address various economic challenges, including high inflation and public debt levels. The recent electoral results reflect significant voter dissatisfaction with the previous administration's",
+    "date": "Oct 26, 2026",
+    "_sort": "2026-10-26T17:49:30+00:00",
     "smart": {
      "what_happened": [
-      "A phase III trial evaluated a personalized vaccine for melanoma.",
-      "The study suggests a potential new era for cancer treatment."
+      "Luiz Inacio Lula da Silva was sworn in for a record fourth term after a competitive election.",
+      "He inherits high inflation, elevated public debt and voter dissatisfaction with the prior administration."
      ],
-     "why_it_matters": "The trial indicates that tailoring immunotherapy to individual tumor profiles could improve outcomes, marking a shift from one-size-fits-all approaches toward more precise cancer care.",
-     "what_to_watch": "Future results and regulatory filings from the ongoing phase III personalized melanoma vaccine trial.",
-     "headline": "Phase III trial tests personalized melanoma vaccine",
-     "read_seconds": 20
+     "why_it_matters": "The new administration faces immediate pressure to stabilise Brazil's economy, as persistent inflation erodes consumer purchasing power and high public debt limits fiscal flexibility. Policy choices on monetary tightening, fiscal consolidation, and social spending will influence growth prospects, investor confidence, and Brazil's credit ratings.",
+     "what_to_watch": "The government\u2019s first fiscal framework proposal, expected to be presented to Congress within the next 30 days.",
+     "headline": "Lula begins fourth term amid inflation and debt challenges",
+     "read_seconds": 26
     }
    },
    {
     "source": "NYT Well",
     "cat": "health",
-    "title": "Sleep Habits May Indicate a Type of Depression, Researchers Say",
-    "link": "https://www.nytimes.com/2026/10/23/well/mind/circadian-depression-subtype.html",
-    "summary": "Researchers say people with \u2018circadian depression\u2019 might benefit from therapies that help adjust the body\u2019s clock.",
-    "date": "Oct 23, 2026",
-    "_sort": "2026-10-23T09:03:06+00:00"
+    "title": "How to Embrace a Fitness Mind-Set",
+    "link": "https://www.nytimes.com/2026/10/26/well/move/exercise-mindset-advice.html",
+    "summary": "To build an effective workout habit, you have to start by changing how you see yourself.",
+    "date": "Oct 26, 2026",
+    "_sort": "2026-10-26T14:39:00+00:00"
+   },
+   {
+    "source": "Economic Times",
+    "cat": "money",
+    "title": "Latest FD interest rates after recent rate changes: ICICI Bank, Indian Bank, SBI and HDFC Bank",
+    "link": "https://economictimes.indiatimes.com/wealth/invest/latest-fd-interest-rates-after-recent-rate-changes-icici-bank-indian-bank-sbi-and-hdfc-bank/articleshow/135211909.cms",
+    "summary": "Several banks including ICICI Bank and Indian Bank have increased their fixed deposit interest rates recently. The Reserve Bank of India raised the repo rate, influencing banks to adjust their deposit rates. ICICI Bank now offers 6.60% for general citizens and 7.20% for senior citizens on select tenures. Indian Bank ha",
+    "date": "Oct 26, 2026",
+    "_sort": "2026-10-26T12:30:00+00:00",
+    "smart": {
+     "what_happened": [
+      "The Reserve Bank of India raised the repo rate, prompting several banks to adjust their fixed deposit rates.",
+      "ICICI Bank now offers 6.60% for general citizens and 7.20% for senior citizens on select tenures, and Indian Bank also increased its rates."
+     ],
+     "why_it_matters": "Higher fixed deposit rates make bank deposits more attractive, helping banks secure low\u2011cost funding while potentially increasing competition for savers' money. The changes reflect banks' response to the RBI's tighter monetary stance and can affect the cost of credit in the economy.",
+     "what_to_watch": "Monitor whether major banks announce further adjustments to their fixed deposit rates in the next quarter.",
+     "headline": "ICICI and Indian Bank raise fixed deposit rates after RBI repo hike",
+     "read_seconds": 26
+    }
    },
    {
     "source": "Psyche",
     "cat": "mind",
-    "title": "Why romantic relationships matter more to men than to women",
-    "link": "https://psyche.co/ideas/why-romantic-relationships-matter-more-to-men-than-to-women",
-    "summary": "For too long, men were told to be self-sufficient. The research shows they\u2019re more likely to thrive in a loving couple- by Iris WahringRead on Psyche",
-    "date": "Oct 22, 2026",
-    "_sort": "2026-10-22T10:00:00+00:00"
+    "title": "Everyone says they have anxiety. Clinical anxiety is different",
+    "link": "https://psyche.co/ideas/everyone-says-they-have-anxiety-clinical-anxiety-is-different",
+    "summary": "Anxiety put me in hospital. I\u2019ve learned you can\u2019t eradicate what is part of you \u2013 but you can change how you relate to it- by India SturgisRead on Psyche",
+    "date": "Oct 26, 2026",
+    "_sort": "2026-10-26T10:00:00+00:00",
+    "smart": {
+     "what_happened": [
+      "India Sturgis says her anxiety led to a hospital stay.",
+      "She notes clinical anxiety differs from everyday worry and can be managed by changing one\u2019s relationship to it."
+     ],
+     "why_it_matters": "The piece underscores that not all anxiety is alike, distinguishing everyday stress from clinical anxiety that may require medical attention. Recognizing this difference can prompt individuals to seek appropriate care and adopt strategies that focus on relationship to the condition rather than attempting to eliminate it entirely.",
+     "what_to_watch": "Future articles by India Sturgis that discuss practical approaches to managing clinical anxiety.",
+     "headline": "Author hospitalized by anxiety emphasizes coping over eradication",
+     "read_seconds": 20
+    }
+   },
+   {
+    "source": "Aeon",
+    "cat": "ideas",
+    "title": "How to build real peace",
+    "link": "https://aeon.co/essays/what-cooperatives-for-an-anticapitalist-peace-look-like",
+    "summary": "From Colombia to Syria, I\u2019ve seen that capitalist logic can\u2019t help to rebuild postwar countries but cooperatives can- by Azize AslanRead on Aeon",
+    "date": "Oct 26, 2026",
+    "_sort": "2026-10-26T10:00:00+00:00"
+   },
+   {
+    "source": "Peter Attia",
+    "cat": "health",
+    "title": "#413 \u2012 The neuroscience of emotion: challenging conventional theories of emotion, how the brain predicts and constructs our experiences, and",
+    "link": "https://peterattiamd.com/lisafeldmanbarrett/",
+    "summary": "\u201cWhat is an emotion? It's a set of predictions that tells a story about what a set of sensory signals mean to you in that situation.\u201d\u2012 Lisa Feldman Barrett\nThe post #413 \u2012 The neuroscience of emotion: challenging conventional theories of emotion, how the brain predicts and constructs our experiences, and gaining greate",
+    "date": "Oct 26, 2026",
+    "_sort": "2026-10-26T04:15:00+00:00"
    },
    {
     "source": "Scott Young",
@@ -997,7 +996,7 @@
     "moves": 37,
     "termination": "Checkmate",
     "speed": "Blitz",
-    "analysis": "Strengthen your king safety: after 22\u2026Nf6, avoid allowing 23.Qh5+; instead exchange knights and castle early, reducing mate threats.",
+    "analysis": "Focus on early king safety: after 1.e4 e5 2.Nf3 d6, avoid passive moves like \u2026Be7; develop knights, castle before 10th move, and prevent queen\u2011side attacks that led to mate at move\u202f37.",
     "is_upset": false,
     "is_collapse": false,
     "is_long": false,
@@ -1149,18 +1148,18 @@
    "upsets": 0,
    "collapses": 0,
    "long_games": 0,
-   "session_summary": "Your 0\u20110\u20111 record shows you\u2019re not even beating the bots; you\u2019re playing as if you don\u2019t know the rules. Stop opening with any \u201crandom\u201d move\u2014pick a solid, theory\u2011tested system (e.g., Caro\u2011Kann 1.e4 c6 or the London System) and master the first ten plies before you even think about tactics. Spend the next 20 hours reviewing every lost game, annotate every blunder, and then practice those exact positions on a tactics trainer until you can execute the correct move without hesitation.",
+   "session_summary": "Your opening choices are a disaster\u2014every game you play collapses before the middlegame, and you haven\u2019t even managed a single win. Stop relying on rote theory and force yourself to understand the key ideas behind the first 10 moves; pick one solid, low\u2011theory opening (e.g., the London System as White or the Caro\u2011Kann as Black) and master its pawn structures and typical plans. Immediately start a daily 30\u2011minute \u201copening drill\u201d where you play the first 12 moves against a computer, annotate every mistake, and only then move on to the rest of the board.",
    "session_date": "2026-10-24",
    "is_yesterday": false,
    "token_missing": false
   },
   "lichess_puzzle": {
-   "pid": "wX7Ch",
-   "rating": 1913,
+   "pid": "m5n0s",
+   "rating": 1839,
    "level": "\ud83d\udd34 stretch",
-   "themes": "Mate In2 \u00b7 Middlegame \u00b7 Short",
-   "tip": "Force mate in two. Find the move that limits all their responses.",
-   "url": "https://lichess.org/training/wX7Ch"
+   "themes": "Opening \u00b7 Advantage \u00b7 Long",
+   "tip": "Calculate 3 moves deep before touching a piece.",
+   "url": "https://lichess.org/training/m5n0s"
   }
  }
 }
