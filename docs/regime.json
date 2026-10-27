@@ -1,23 +1,23 @@
 {
   "ok": true,
-  "generated_at": "2026-10-26T19:35:59+00:00",
+  "generated_at": "2026-10-27T19:00:44+00:00",
   "today": {
     "regime": "highvol_mr",
-    "close": 22600.0,
-    "vol_ann_pct": 15.9,
-    "vol_pctile": 84.3,
-    "drawdown_pct": 14.16,
+    "close": 22753.2,
+    "vol_ann_pct": 15.2,
+    "vol_pctile": 82.5,
+    "drawdown_pct": 13.58,
     "above_200dma": false,
-    "date": "2026-10-23",
+    "date": "2026-10-26",
     "t": "Volatile and broken",
     "d": "Wide ranges with the index below its 200-day. Moves reverse; momentum entries are at their worst here."
   },
-  "run_days": 10,
+  "run_days": 11,
   "last_year": {
-    "calm_trend": 83,
+    "calm_trend": 82,
     "calm_range": 105,
     "highvol_trend": 15,
-    "highvol_mr": 56,
+    "highvol_mr": 57,
     "crisis": 1
   },
   "breadth": {
@@ -145,10 +145,6 @@
     "A cell needs 8 closed trades before any figure is shown, and the site's actual bar for trusting one is 30 closed at t >= 2.0. Most cells will not clear either, and the page says so rather than printing a multiplier nothing supports."
   ],
   "history": [
-    {
-      "date": "2024-10-16",
-      "regime": "highvol_trend"
-    },
     {
       "date": "2024-10-17",
       "regime": "highvol_trend"
@@ -2143,6 +2139,10 @@
     },
     {
       "date": "2026-10-23",
+      "regime": "highvol_mr"
+    },
+    {
+      "date": "2026-10-26",
       "regime": "highvol_mr"
     }
   ]
