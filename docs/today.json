@@ -1,7 +1,7 @@
 {
- "build_id": "20261028T085244",
- "date": "2026-10-28",
- "date_str": "Wednesday, October 28 2026",
+ "build_id": "20261029T090246",
+ "date": "2026-10-29",
+ "date_str": "Thursday, October 29 2026",
  "picks": [
   {
    "symbol": "ZS",
@@ -538,32 +538,32 @@
    {
     "dataset": "Fund screen",
     "status": "DEGRADED",
-    "age": "10 days old",
+    "age": "11 days old",
     "note": "older than its weekly refresh"
    }
   ]
  },
  "desk": {
   "chess": {
-   "title": "Strategy: Open Files for Rooks",
-   "body": "Rooks need open files to be active. An open file has no pawns. A semi-open file has only enemy pawns. Double rooks on an open file (called 'Rooks on 7th') is a deadly battery. Strategy: open files by pawn trades, then occupy them immediately. Don't leave your rooks passive on the back rank.",
-   "index": 11,
+   "title": "Strategy: Pawn Structure",
+   "body": "Your pawn structure dictates your plan. Doubled pawns (two pawns on same file) = weakness. Isolated pawn = can't be defended by a pawn, needs piece protection. Passed pawn = no enemy pawn can stop it = future queen. Backward pawn = can't advance, target for opponent. Know your pawn structure and play accordingly.",
+   "index": 12,
    "total": 20
   },
   "wisdom": {
-   "title": "Financial Peace = Emotional Peace",
-   "body": "Money stress is the #1 relationship killer. Getting to AED 30K/month isn't just ambition \u2014 it's removing a major source of family stress. Every step toward financial stability is a step toward being a calmer, more present parent and partner. The job hunt matters. The income matters. It's not selfish. It's foundational.",
-   "index": 9,
+   "title": "The Long Game of Parenting",
+   "body": "You won't remember 2026 as a year. You'll remember it as the year your daughter started talking, your first steps in Dubai, the grind that changed everything. Keep a journal. Even one line per day. In 10 years, you'll read it and understand why it was worth it.",
+   "index": 10,
    "total": 18
   },
   "book": {
    "book": "7 Habits of Highly Effective People",
    "author": "Stephen Covey",
-   "chapter": "Begin With the End in Mind",
-   "lesson": "Covey's second habit: all things are created twice \u2014 first in the mind, then in the physical world. Everything you build, achieve, or create begins as a mental blueprint. Most people let life happen to them rather than designing it deliberately. The exercise: write your own eulogy. What do you want people to say about you as a parent, partner, professional, community member? That vision becomes your personal mission statement. Every decision then gets filtered through it: does this action align with the person I'm trying to become? This is the difference between living by design and living by default.",
-   "key_quote": "If you don't define success for yourself, you'll spend your life achieving someone else's definition of it.",
-   "action": "Write 3 sentences about the legacy you want to leave as a father and as a finance professional. Read them every morning this week.",
-   "index": 21,
+   "chapter": "Habit 1: Be Proactive \u2014 The 90/10 Principle",
+   "lesson": "10% of life is what happens to you. 90% is how you respond. This is the core of proactivity: between stimulus and response, there is a gap. In that gap is your freedom to choose. Reactive people let their moods and circumstances determine their behaviour. Proactive people subordinate impulse to values. Covey's Circle of Influence vs Circle of Concern: proactive people focus on what they can control (Circle of Influence) and it expands. Reactive people focus on what they cannot control (Circle of Concern) \u2014 market conditions, other people's behaviour, the economy \u2014 and feel increasingly helpless.",
+   "key_quote": "Focus on what you can control. Your response is always within your Circle of Influence.",
+   "action": "List 3 things worrying you. Categorise each: can I influence this or not? Only spend energy on the ones you can influence.",
+   "index": 22,
    "total": 48,
    "crux": [
     "Character ethic beats personality ethic. Techniques without character are manipulation.",
@@ -601,211 +601,211 @@
   },
   "way": {
    "minimalism": {
-    "title": "Decision Fatigue Is The Real Cost",
-    "body": "A cluttered wardrobe costs you a decision every morning. Obama and Jobs wore the same thing daily for a reason \u2014 not style, bandwidth. Every trivial choice you delete is one more available for the choices that matter.",
-    "action": "Choose tomorrow's clothes tonight. Notice the morning it buys back.",
-    "index": 3,
+    "title": "Digital Minimalism First",
+    "body": "Physical clutter is visible and therefore self-limiting. Digital clutter is infinite. 40,000 unread emails and 200 apps cost more attention than a messy room ever did.",
+    "action": "Delete every app you have not opened in 30 days. No exceptions for 'might need'.",
+    "index": 4,
     "total": 20,
     "label": "Minimalism"
    },
    "etiquette": {
-    "title": "Ask One More Question",
-    "body": "Most people wait to talk. The one who asks a second follow-up is remembered as the best conversationalist in the room, having said almost nothing.",
-    "action": "Ask a second follow-up before offering your own view.",
-    "index": 9,
+    "title": "Introduce People Properly",
+    "body": "Do not just exchange names \u2014 give each person a reason to care. 'Sara, this is Ahmed, he rebuilt their close process in six weeks.' You have just made both look good.",
+    "action": "Make one introduction today with a reason attached.",
+    "index": 10,
     "total": 20,
     "label": "Etiquette"
    },
    "stillness": {
-    "title": "Voluntary Discomfort",
-    "body": "The Stoics practised poverty deliberately \u2014 plain food, cold, hard beds. Not self-punishment. Rehearsal, so that losing comfort stops being frightening.",
-    "action": "Cold shower. Or skip one meal. Notice it is survivable.",
-    "index": 7,
+    "title": "The Sabbath Principle",
+    "body": "One day in seven with no optimisation, no side project, no market. Every durable tradition independently arrived at this. They were not being inefficient.",
+    "action": "Block one screen-free half-day this week. Defend it.",
+    "index": 8,
     "total": 20,
     "label": "Stillness"
    },
    "model": {
-    "title": "Bottleneck Theory",
-    "body": "A system moves at the speed of its slowest constraint. Optimising anything else produces zero throughput gain and feels productive, which is why it is so common.",
-    "action": "Identify the real bottleneck in your week. Work only on that.",
-    "index": 19,
+    "title": "Skin In The Game",
+    "body": "Discount any forecast from someone who bears no cost for being wrong. Advice without exposure is entertainment, however credentialed the source.",
+    "action": "For your next major input, ask what the adviser loses if they are wrong.",
+    "index": 20,
     "total": 20,
     "label": "Mental Model"
    },
    "arabic": {
-    "script": "\u0627\u0644\u062d\u0645\u062f \u0644\u0644\u0647",
-    "translit": "al-hamdu lillah",
-    "meaning": "Praise be to God",
-    "use": "The standard answer to 'how are you'. Also used on hearing good news.",
-    "index": 5,
+    "script": "\u0645\u0627 \u0634\u0627\u0621 \u0627\u0644\u0644\u0647",
+    "translit": "maa shaa Allah",
+    "meaning": "What God has willed",
+    "use": "Said when admiring something \u2014 a child, a success, a new car. Omitting it can read as envy.",
+    "index": 6,
     "total": 30,
     "label": "Arabic"
    },
    "drill": {
-    "title": "Recall, Don't Reread",
-    "body": "Close the material and write what you remember. Retrieval builds memory; rereading builds only the feeling of knowing, which is why students who reread do worse.",
-    "action": "Close the last thing you studied. Write everything you recall. Then check.",
-    "index": 11,
+    "title": "Sensitivity, Not Point Estimates",
+    "body": "A single number is a guess dressed up. Run it at -20%, base, and +20% and present the range. Nobody credible presents one number.",
+    "action": "Take one forecast. Build the three cases. Note which input moves it most.",
+    "index": 12,
     "total": 20,
     "label": "Drill"
    },
    "health": {
-    "title": "VO2max Is The Strongest Predictor",
-    "body": "Cardiorespiratory fitness predicts all-cause mortality better than smoking status, blood pressure, or cholesterol. Moving from the bottom quartile to merely above-average is the single largest risk reduction available to you \u2014 larger than any drug.",
-    "action": "One 20-minute session where holding a conversation is difficult.",
-    "index": 1,
+    "title": "Zone 2, Most Of The Time",
+    "body": "Roughly 80% of cardio should be easy enough to hold a conversation. It builds mitochondrial density and fat oxidation. Most people train too hard to recover and too easy to adapt \u2014 the worst of both.",
+    "action": "45 minutes at a pace where you can speak in full sentences.",
+    "index": 2,
     "total": 20,
     "label": "Health"
    }
   },
   "quote": {
    "name": "Larry Page",
-   "quote": "If you're changing the world, you're working on important things. You're excited to get up in the morning.",
-   "index": 46,
+   "quote": "You don't need to have a 100-person company to develop that idea.",
+   "index": 47,
    "total": 96
   },
   "lesson": {
    "tradition": "Stoicism",
-   "lesson": "You have power over your mind \u2014 not outside events. Realize this, and you will find strength.",
-   "source": "Marcus Aurelius"
+   "lesson": "Wealth consists not in having great possessions, but in having few wants.",
+   "source": "Epictetus"
   },
   "case": {
-   "title": "Dunzo Shutdown: Last Mile Lessons",
-   "story": "Dunzo raised $240M, burned through it all on dark stores, rider salaries, and heavy subsidies. Shut down in 2024. Unit economics never worked.",
-   "lesson": "Last-mile logistics is brutally hard. Before raising money, prove you can deliver profitably at small scale. Capital scales problems, not just success."
+   "title": "McDonald's: Real Estate, Not Burgers",
+   "story": "Ray Kroc's insight: McDonald's isn't a food company \u2014 it's a real estate company. Franchise owners pay rent on land McDonald's owns.",
+   "lesson": "The most valuable part of a business is often hidden. Always ask: what are we actually selling? Who really controls the profit pool in our industry?"
   },
   "fpna": {
-   "title": "Power BI for FP&A",
-   "body": "Replace Excel pivots. Connect to ERP source. Saves 5+ hours/month on month-end decks.",
-   "index": 18,
+   "title": "Financial Storytelling",
+   "body": "Data without narrative is noise. Frame every number: vs budget, vs prior year, vs industry.",
+   "index": 19,
    "total": 20
   },
   "cfo": {
-   "title": "CFO Step 4: Board Communication",
-   "body": "CFOs present to the Board. Boards want: Are we on budget? What's the cash position? What risks keep you up at night? Practice speaking to non-finance people. Remove jargon. Lead with the conclusion, not the workings.",
-   "index": 9,
+   "title": "CFO Step 5: Culture + People",
+   "body": "The best CFOs build finance teams that the business trusts. Hire people better than you. Create a learning culture. A CFO who hoards information creates a bottleneck. One who shares insight creates leverage.",
+   "index": 10,
    "total": 15
   },
   "money_hack": {
-   "title": "Gold via SGB",
-   "body": "Sovereign Gold Bonds: 2.5% interest + gold price appreciation. No storage cost."
+   "title": "Auto-Sweep FD",
+   "body": "Link savings to sweep FD. Idle cash earns FD rates automatically."
   },
   "dubai": {
-   "title": "The stack that clears AED 30K",
-   "body": "CA or ACCA, plus SAP or Oracle, plus Power BI, plus IFRS 9 and 16. That is the whole gate. Miss one and you are competing on price.",
-   "targets": "Targets: ADNOC \u00b7 Emirates \u00b7 Majid Al Futtaim \u00b7 DP World \u00b7 FAB \u00b7 Emaar.",
-   "action_label": "Keyword tip",
-   "action": "Put \"IFRS 16 implementation\" and \"rolling forecast\" in the cover letter. Recruiters grep for exactly those two strings.",
-   "index": 1,
+   "title": "What AED 30K actually is",
+   "body": "AED 30,000/month is \u20b96,86,000 at 22.87. Tax on it: zero. The equivalent Indian gross, after 30% plus cess, is roughly \u20b91.18 crore a year. That is the arbitrage \u2014 not the number itself.",
+   "targets": "Reality check: housing eats AED 6\u20139K of it in Dubai Marina or JVC.",
+   "action_label": "Run the number",
+   "action": "Build the AED-to-net-savings model before the first interview. Negotiating without it is negotiating on vibes.",
+   "index": 2,
    "total": 30
   },
   "daughter": {
    "months": 10,
-   "days": 307,
+   "days": 308,
    "heading": "Ten months old.",
    "band": "cruising",
    "born": "2025-12-25"
   },
-  "productivity": "Write tomorrow's top 3 tasks tonight. Wake up with a plan.",
+  "productivity": "Done > perfect. Ship at 80%, iterate on real feedback.",
   "father": [
    {
-    "title": "Put her in front of a mirror",
-    "do": "Hold her at a mirror and name both of you.",
-    "why": "Self-recognition does not arrive until around 18 months, so she is currently treating the reflection as another baby \u2014 which is exactly why it holds her attention and drives social behaviours."
+    "title": "Stop at eye contact",
+    "do": "When she catches your eye across the room, stop and respond \u2014 smile, wave, say her name.",
+    "why": "Social referencing is beginning: she checks your face to decide how to feel about things. Responding consistently makes you a reliable reference point."
    },
    {
-    "title": "Ask her mother what she needs",
-    "do": "Ask directly, once, and act on the answer without negotiating it.",
-    "why": "The most reliable predictor of a child's early environment is the functioning of the partnership around them. This is a fatherhood task, not a marital one."
+    "title": "Let her lead the play",
+    "do": "Follow what she reaches for instead of redirecting to the toy you chose. Sit on the floor at her level for 15 minutes.",
+    "why": "Serve-and-return interaction builds the circuitry for attention and self-regulation. Following her focus teaches that her signals produce a response \u2014 the root of secure attachment."
    }
   ],
   "life_wisdom": [
    {
     "tradition": "Jainism",
-    "term": "Brahmacharya",
-    "translation": "Restraint, classically of the senses",
-    "teaching": "For laypeople this is moderation rather than abstinence \u2014 the discipline of not letting appetite set the agenda.",
-    "apply": "Pick the appetite that currently sets your agenda \u2014 the phone, the market screen, the second helping \u2014 and put one structural limit on it. Not willpower; a limit."
+    "term": "Karma as physical residue",
+    "translation": "Action leaves a trace",
+    "teaching": "Jain metaphysics treats karma as fine matter that adheres to the soul through action and intent. Unusually, intent matters as much as the act.",
+    "apply": "Judge your own decisions on intent and process, not only outcome. A profitable trade taken for bad reasons still deposits the bad habit."
    },
    {
     "tradition": "Buddhism",
-    "term": "Impermanence of success",
-    "translation": "Anicca applied upward",
-    "teaching": "Impermanence is usually offered as consolation in difficulty. It applies symmetrically: the good quarter, the promotion, the peak are equally conditioned.",
-    "apply": "On a good week, note it explicitly and hold it lightly. The habit of not over-identifying with wins is what makes losses survivable."
+    "term": "Dana",
+    "translation": "Generosity, listed first",
+    "teaching": "In the traditional sequence of practices, generosity comes before ethics and meditation \u2014 as the foundation rather than the reward.",
+    "apply": "Give something away before you feel you have surplus. Time or attention counts; the point is that it precedes abundance rather than following it."
    }
   ],
   "spanish": [
    {
-    "word": "no estoy seguro",
-    "meaning": "I am not sure",
-    "es": "No estoy seguro de esos n\u00fameros.",
-    "en": "I am not sure about those numbers.",
+    "word": "el equipo",
+    "meaning": "the team",
+    "es": "Mi equipo tiene cuatro personas.",
+    "en": "My team has four people.",
     "tag": "Business"
    },
    {
-    "word": "la tienda",
-    "meaning": "the shop / store",
-    "es": "Abrimos una tienda nueva en Dub\u00e1i.",
-    "en": "We are opening a new store in Dubai.",
+    "word": "mejorar",
+    "meaning": "to improve",
+    "es": "Queremos mejorar el margen bruto.",
+    "en": "We want to improve the gross margin.",
     "tag": "Business"
    }
   ],
   "vocab": [
    {
-    "word": "Concede",
-    "say": "kuhn-SEED",
-    "meaning": "To admit a point is valid.",
-    "example": "I concede the timing assumption was optimistic.",
-    "note": "Conceding one point early buys credibility for the ten you defend."
+    "word": "Onerous",
+    "say": "OH-nuhr-uhs",
+    "meaning": "Burdensome; costly to fulfil.",
+    "example": "The lease became onerous once footfall dropped.",
+    "note": "A technical term under IAS 37 \u2014 onerous contracts require provision."
    },
    {
-    "word": "Ostensibly",
-    "say": "os-TEN-si-blee",
-    "meaning": "Apparently, but perhaps not actually.",
-    "example": "The cost was ostensibly one-off.",
-    "note": "Signals scepticism without accusation. Powerful in a review meeting."
+    "word": "Contingent",
+    "say": "kuhn-TIN-juhnt",
+    "meaning": "Dependent on something else happening.",
+    "example": "The bonus is contingent on hitting the cash target.",
+    "note": "Also technical \u2014 contingent liabilities are disclosed, not recognised."
    }
   ],
   "speaking": {
-   "title": "Kill the upspeak on numbers",
-   "drill": "Say ten figures aloud, dropping pitch on the last syllable of each.",
-   "why": "Rising pitch on a number makes it sound like an estimate. You rarely want that."
+   "title": "Handle 'I do not know'",
+   "drill": "Rehearse: 'I do not have that number in front of me. I will have it to you by Thursday.' Say it without apology.",
+   "why": "Senior people say this comfortably. Guessing to avoid it is how credibility is actually lost."
   },
   "interview_tech": [
    {
-    "q": "Explain covenant headroom and how you monitor it.",
-    "a": "Covenants are contractual ratios \u2014 typically net debt to EBITDA, interest cover, and sometimes minimum net worth \u2014 tested quarterly. Headroom is the distance between your forecast ratio and the limit. Monitor it forward, not backward: run the covenant calculation inside the rolling forecast so you see a breach two quarters out while you can still act. Post-IFRS 16, check whether the definitions are frozen GAAP or current GAAP \u2014 lease liabilities entering net debt has breached covenants that had nothing to do with performance.",
-    "who": "Any leveraged group"
+    "q": "What is your WACC and how would you set the hurdle rate for a new store?",
+    "a": "WACC = cost of equity \u00d7 equity weight + after-tax cost of debt \u00d7 debt weight. Cost of equity via CAPM: risk-free rate plus beta times equity risk premium, with a country risk premium for emerging markets. But do not use group WACC as the store hurdle \u2014 a new store in a new market is riskier than the average of the existing business. Add a premium and be explicit about it. The common error is a single group hurdle applied to everything, which systematically over-invests in risky projects and under-invests in safe ones.",
+    "who": "Emaar \u00b7 Majid Al Futtaim \u00b7 IKEA"
    },
    {
-    "q": "What controls matter most in a 60-store retail environment?",
-    "a": "Rank by exposure. Cash and tender reconciliation daily at store level with independent review; goods receiving matched three-way to purchase order and invoice, because that is where margin leaks; inventory counts on a rolling cycle rather than one annual heroic count; markdown authorisation limits by role; and user access in the ERP reviewed quarterly, especially for leavers. Segregation of duties is hardest at small stores \u2014 compensate with detective controls and exception reporting rather than pretending it exists.",
-    "who": "Landmark Group \u00b7 Alshaya \u00b7 Americana"
+    "q": "Your ERP implementation is running three months late. What do you tell the steering committee?",
+    "a": "The date, the cause, the options with costs, and your recommendation. Be specific about which workstream is late and why \u2014 usually data migration or the volume of unresolved customisation requests, not the software. Present the real choice: go live late and clean, or on time with manual workarounds and a defined remediation plan. Quantify the workaround cost in FTE months. Having led D365 across two countries, the credible line is that data quality determines the date more than configuration does.",
+    "who": "Your own D365 experience"
    }
   ],
   "interview_soft": [
    {
-    "q": "How would your team describe your management style?",
-    "a": "Answer with evidence rather than adjectives. 'They would say I am specific \u2014 I give the number I expect and the date, and I do not change it quietly. They would also say I go into detail on their work more than some managers, which is useful when they are learning and irritating when they are not, so I have had to learn where to stop.' Naming the downside of your own style is what makes the strength believable.",
-    "who": "Universal"
+    "q": "How do you stay current technically while managing?",
+    "a": "Be specific and verifiable. Name the standard you last read in full and why, the technical update you attended, the thing you built yourself recently rather than delegated. Vague answers about 'reading widely' land badly with technical interviewers. The strongest version connects it to a decision: 'I went back through IFRS 16 properly when we hit the lease modification question on the Indonesian stores, and that changed how we structured the renewal.'",
+    "who": "Big Four partners \u00b7 Group CFOs"
    },
    {
-    "q": "How do you handle stress and long hours during close or audit?",
-    "a": "They are checking sustainability, not stoicism. Do not claim you thrive on pressure. Give the operating answer: what you do to make the peak smaller (moving work out of the close), how you protect the team (rotating the worst shifts, protecting recovery time after), and what you personally do that is non-negotiable. Having a young child is relevant here and worth saying \u2014 it reads as someone with real boundaries rather than someone who has not been tested yet.",
-    "who": "Universal"
+    "q": "Where do you think retail is heading in the next five years?",
+    "a": "Have a view and defend it with numbers, not trends. Something like: physical stores stop being judged on their own sales as fulfilment and returns blur the channels, which breaks conventional store P&L and forces a catchment-level view; margin pressure shifts from price to cost-to-serve; and in the Gulf specifically, corporate tax and e-invoicing professionalise finance functions that were previously light. Then say what you would do about it in the role you are interviewing for.",
+    "who": "Gulf retail boards \u00b7 Search firms"
    }
   ],
   "cfo_field": [
    {
-    "q": "Read the cash flow statement first. Always.",
-    "a": "P&L is an opinion, cash is a fact. Open any set of accounts at the cash flow statement, compare operating cash flow to EBITDA over three years, and look at the gap. A business converting 90%+ of EBITDA to operating cash is real. One converting 50% has its profit sitting in working capital or is capitalising something it should be expensing. That one ratio finds more problems than any variance pack.",
-    "who": "The first thing to check, every time"
+    "q": "Explain a variance in one sentence or you do not understand it yet.",
+    "a": "'Margin is down 180bps: 120 from promotional depth in electronics, 40 from freight, 20 mix.' That is a CFO answer. A table of forty lines is a controller answer. The discipline is to decompose until the drivers are additive and then name the largest two. If you cannot make the bridge add up, you have a data problem, not a communication problem.",
+    "who": "The board-meeting test"
    },
    {
-    "q": "Scenario planning beats a single budget, and costs less than it sounds.",
-    "a": "Three cases \u2014 base, downside, upside \u2014 with the two or three variables that actually move the outcome, not thirty. In retail that is usually like-for-like growth, gross margin, and rent renewals. The value is not the numbers; it is that the board has already discussed the downside before it arrives, so the conversation when it does is about the response rather than about whether it is happening.",
-    "who": "What a board actually wants"
+    "q": "Working capital is where a retail CFO is actually judged.",
+    "a": "EBITDA gets the headline; the cash conversion cycle gets the board's attention. DIO + DSO \u2212 DPO. Retail is inventory-heavy and often near-zero DSO, so the fight is DIO against DPO. Cutting DIO from 95 to 80 days on AED 400M COGS releases roughly AED 16.4M of cash \u2014 permanently, without selling a single extra unit. That is a bigger number than most cost programmes deliver, and it does not need a headcount conversation.",
+    "who": "Landmark \u00b7 Alshaya \u00b7 GMG"
    }
   ],
   "review": {
@@ -816,47 +816,91 @@
    "week": 44,
    "year": 2026,
    "key": "2026-W44",
-   "weekday": 3,
-   "days_left": 4,
+   "weekday": 4,
+   "days_left": 3,
    "is_review_day": false
   },
   "podcasts": {
    "ok": true,
-   "generated_at": "2026-10-27T01:03:32.678864+00:00",
+   "generated_at": "2026-10-29T01:03:19.894685+00:00",
    "episodes": [
     {
-     "show": "Labour Law Advisor",
-     "author": "Labour Law Advisor",
-     "category": "Money",
-     "title": "The Biggest Financial Bubble Is Happening Right Now! @naandisclosure",
-     "guest": "",
-     "published": "2026-10-20",
-     "link": "https://www.youtube.com/watch?v=JrPhalmUQos",
+     "show": "Shut Up Ya Kunal",
+     "author": "Kunal Kamra",
+     "category": "Society",
+     "title": "Lets Talk About Indian Courts... | Shut Up Ya Kunal w/ Kunal Kamra ft Arvind Narrain | Episode 37",
+     "guest": "Arvind Narrain",
+     "published": "2026-09-14",
+     "link": "https://www.youtube.com/watch?v=ovC-02pLKnI",
      "takeaways": [
-      "The concentration of AI stocks in the S&P\u202f500 and Nasdaq creates a risk that a trigger could burst an AI bubble."
-     ]
-    },
-    {
-     "show": "Labour Law Advisor",
-     "author": "Labour Law Advisor",
-     "category": "Money",
-     "title": "Why India's Tax System Is Broken",
-     "guest": "",
-     "published": "2026-10-12",
-     "link": "https://www.youtube.com/watch?v=RsR1j_nmWGc",
-     "takeaways": [
-      "The type of business you choose can directly impact your tax liability, profits, compliance requirements and long\u2011term wealth creation.",
-      "A Private Limited Company may not always be the most tax\u2011efficient option."
+      "Arvind Narrain says India\u2019s judiciary has faced an \u201cundeclared emergency\u201d since 2014, failing to protect the Constitution.",
+      "He argues courts can defend dissent, voting rights and minorities but often lack the courage to do so."
      ]
     }
    ],
    "shows": 1,
    "source": "each channel's public Atom feed",
-   "built_on": "2026-10-27",
-   "age_days": 1.0,
-   "is_fallback": true
+   "built_on": "2026-10-29",
+   "age_days": 0.0,
+   "is_fallback": false
   },
   "smart_reads": [
+   {
+    "source": "Scott Young",
+    "cat": "habits",
+    "title": "Should You Study The Solutions Or Solve Problems?",
+    "link": "https://www.scotthyoung.com/blog/2026/10/28/solving-hard-problems/",
+    "summary": "Watch the video of this essay. Learning requires effort. But not all effort is useful for learning. Consider the following situation. You have some problem sets for a class you\u2019re taking. You have two ways you can study them: Which method would result in more general learning, letting you perform better on new types of",
+    "date": "Oct 28, 2026",
+    "_sort": "2026-10-28T20:42:05+00:00"
+   },
+   {
+    "source": "ET Opinion",
+    "cat": "money",
+    "title": "Gulf AI buffering, but on-stream",
+    "link": "https://economictimes.indiatimes.com/opinion/et-editorial/gulf-ai-buffering-but-on-stream/articleshow/135277390.cms",
+    "summary": "The escalating tensions between the US and Iran have hindered the progress of AI infrastructure development throughout the Gulf. While Gulf nations were eager and ready to invest in innovative AI projects, increasing geopolitical instability has now stalled these efforts. Attacks on tech facilities by Iran have shaken ",
+    "date": "Oct 28, 2026",
+    "_sort": "2026-10-28T18:33:13+00:00",
+    "smart": {
+     "what_happened": [
+      "Escalating US-Iran tensions have hindered AI infrastructure development across Gulf states.",
+      "Iran's attacks on tech facilities have stalled Gulf nations' planned AI investments."
+     ],
+     "why_it_matters": "The slowdown in AI infrastructure hampers the Gulf region's effort to diversify economies and capture growth in emerging technologies, while also reducing the flow of capital into high\u2011tech projects that were previously slated for rapid deployment.",
+     "what_to_watch": "Monitor for any reported diplomatic developments between the United States and Iran that could affect the security environment for tech facilities in the Gulf.",
+     "headline": "US-Iran tensions stall Gulf AI infrastructure projects",
+     "read_seconds": 26
+    }
+   },
+   {
+    "source": "Livemint",
+    "cat": "money",
+    "title": "Investing in US stocks from India? How much can you invest, can you directly apply for IPOs? Complete guide here",
+    "link": "https://www.livemint.com/money/investing-in-us-stocks-from-india-how-much-can-you-invest-can-you-directly-apply-for-ipos-complete-guide-here-11793206657624.html",
+    "summary": "Indian residents can invest in foreign stocks through the RBI\u2019s Liberalised Remittance Scheme. Here's how much one can invest per year and whether Indians can directly apply for foreign IPOs.&amp;nbsp;",
+    "date": "Oct 28, 2026",
+    "_sort": "2026-10-28T18:29:32+00:00"
+   },
+   {
+    "source": "Economic Times",
+    "cat": "money",
+    "title": "Bank holidays in November 2026: Check state-wise list of bank closures and festival dates",
+    "link": "https://economictimes.indiatimes.com/wealth/save/bank-holidays-in-november-2026-check-state-wise-list-of-bank-closures-and-festival-dates/articleshow/135265057.cms",
+    "summary": "Bank holidays in November 2026 will vary across Indian states based on local festivals. Customers must check specific holiday schedules before visiting bank branches to avoid inconvenience. Some notable holidays include Diwali, Wangala festival, and Chhath Puja, affecting different states. The Reserve Bank of India has",
+    "date": "Oct 28, 2026",
+    "_sort": "2026-10-28T12:33:39+00:00",
+    "smart": {
+     "what_happened": [
+      "Bank closures in November 2026 will differ by state based on local festivals such as Diwali, Wangala and Chhath Puja.",
+      "Customers are advised to verify the specific holiday schedule for their state before visiting bank branches."
+     ],
+     "why_it_matters": "The varying holiday schedule can affect when banks are open, impacting customers' ability to conduct transactions, access services, or meet deadlines. Knowing the exact dates helps avoid inconvenience and potential delays in financial operations across different regions.",
+     "what_to_watch": "The Reserve Bank of India's official November 2026 holiday calendar when it is released.",
+     "headline": "Bank holidays across Indian states in November 2026",
+     "read_seconds": 26
+    }
+   },
    {
     "source": "The Marginalian",
     "cat": "ideas",
@@ -867,60 +911,13 @@
     "_sort": "2026-10-28T00:02:10+00:00"
    },
    {
-    "source": "Livemint",
-    "cat": "money",
-    "title": "Mother sells gold jewellery, gifts  \u20b916 lakh to son, Income Tax Department questions deposits but ITAT grants relief",
-    "link": "https://www.livemint.com/money/personal-finance/mother-sells-gold-jewellery-gifts-16-lakh-to-son-income-tax-department-questions-deposits-but-itat-grants-relief-11793123702021.html",
-    "summary": "A man received  \u20b916 lakh from his mother after she sold gold jewellery, but the Income Tax Department questioned the cash deposits. The Jaipur ITAT deleted the  \u20b913.04 lakh addition after examining the gift deed, jewellery valuation and supporting evidence.",
-    "date": "Oct 27, 2026",
-    "_sort": "2026-10-27T18:02:15+00:00"
-   },
-   {
-    "source": "ET Opinion",
-    "cat": "money",
-    "title": "The AI boom may transform the economy and still destroy capital, with stranded data centres and heavy investor losses",
-    "link": "https://economictimes.indiatimes.com/opinion/et-commentary/the-ai-boom-may-transform-the-economy-and-still-destroy-capital-with-stranded-data-centres-and-heavy-investor-losses/articleshow/135242503.cms",
-    "summary": "Investments in artificial intelligence by major companies have significantly increased in recent years. The overall investment in other sectors has shown minimal change during this period. AI's potential to enhance productivity suggests that current spending may benefit various industries like healthcare and education.",
-    "date": "Oct 27, 2026",
-    "_sort": "2026-10-27T17:42:38+00:00"
-   },
-   {
     "source": "Psyche",
     "cat": "mind",
     "title": "On Japan\u2019s Shinkansen trains, pork buns split reality in two",
     "link": "https://psyche.co/ideas/on-japans-shinkansen-trains-pork-buns-split-reality-in-two",
     "summary": "If eating on a public train gets seen as an act of terrorism, insights from olfactory genetics can pave the way for empathy- by Yusuke FujiokaRead on Psyche",
     "date": "Oct 27, 2026",
-    "_sort": "2026-10-27T10:00:00+00:00",
-    "smart": {
-     "what_happened": [
-      "A discussion emerged about eating pork buns on public Shinkansen trains in Japan.",
-      "Researchers propose that insights from olfactory genetics could foster empathy over the issue."
-     ],
-     "why_it_matters": "The debate highlights how cultural norms and sensory perception intersect in public spaces, potentially influencing social cohesion and policy decisions regarding acceptable behavior on mass transit in Japan.",
-     "what_to_watch": "Monitor any official statements or policy changes from Japanese railway authorities regarding food consumption on Shinkansen trains.",
-     "headline": "Japan Shinkansen passengers' pork buns spark olfactory debate",
-     "read_seconds": 20
-    }
-   },
-   {
-    "source": "Economic Times",
-    "cat": "money",
-    "title": "Gold rate and silver rate today (October 27, 2026): Check 24k, 22k, 20k and 18k gold jewellery prices from Malabar Gold &amp; Diamonds, Joya",
-    "link": "https://economictimes.indiatimes.com/wealth/invest/gold-silver-rate-today-october-27-2026-check-24k-22k-20k-and-18k-gold-jewellery-prices-from-malabar-gold-diamonds-joyalukkas-kalyan-jewellers-tanishq-ibja-in-delhi-mumbai-hyderabad-more-cities/articleshow/135228186.cms",
-    "summary": "Gold rate: Gold prices for 22k jewellery rose today in various showrooms across cities like Delhi and Mumbai. In contrast, the IBJA indicated a decline in gold and silver rates compared to yesterday's evening rates.",
-    "date": "Oct 27, 2026",
-    "_sort": "2026-10-27T08:05:51+00:00",
-    "smart": {
-     "what_happened": [
-      "Gold prices for 22k jewellery rose today in showrooms across Delhi and Mumbai.",
-      "The IBJA indicated a decline in gold and silver rates compared with yesterday's evening rates."
-     ],
-     "why_it_matters": "The contrasting movements highlight a split between retail jewellery pricing and wholesale market trends, suggesting that consumer demand may be influencing showroom prices even as broader market indicators show weakening precious metal values.",
-     "what_to_watch": "The next IBJA daily rate release for gold and silver",
-     "headline": "22k gold jewellery prices rise while IBJA reports decline in rates",
-     "read_seconds": 20
-    }
+    "_sort": "2026-10-27T10:00:00+00:00"
    },
    {
     "source": "NYT Well",
@@ -939,15 +936,6 @@
     "summary": "\u201cWhat is an emotion? It's a set of predictions that tells a story about what a set of sensory signals mean to you in that situation.\u201d\u2012 Lisa Feldman Barrett\nThe post #413 \u2012 The neuroscience of emotion: challenging conventional theories of emotion, how the brain predicts and constructs our experiences, and gaining greate",
     "date": "Oct 26, 2026",
     "_sort": "2026-10-26T04:15:00+00:00"
-   },
-   {
-    "source": "Scott Young",
-    "cat": "habits",
-    "title": "The Key to Creating Learning Projects You\u2019ll Finish",
-    "link": "https://www.scotthyoung.com/blog/2026/10/21/the-key-to-creating-learning-projects-youll-finish/",
-    "summary": "My three-step process for self-directed learning projects you'll actually complete.\nThe post The Key to Creating Learning Projects You\u2019ll Finish appeared first on Scott H Young.",
-    "date": "Oct 21, 2026",
-    "_sort": "2026-10-21T20:25:47+00:00"
    },
    {
     "source": "Farnam Street",
@@ -977,7 +965,7 @@
     "moves": 37,
     "termination": "Checkmate",
     "speed": "Blitz",
-    "analysis": "Focus on early king safety: after 1.e4 e5 2.Nf3 d6, develop knights before pushing ...f6; avoid moving the g\u2011pawn\u2014your king stayed exposed, leading to the mate at move\u202f37. Strengthen pawn structure and castle promptly.",
+    "analysis": "Focus on early piece activity: develop knights before moving the queen (e.g., avoid 3\u2026Qb6). Aim to complete development by move\u202f8, reducing opponent\u2019s attack chances.",
     "is_upset": false,
     "is_collapse": false,
     "is_long": false,
@@ -1129,18 +1117,18 @@
    "upsets": 0,
    "collapses": 0,
    "long_games": 0,
-   "session_summary": "AKK_010\u2019s single loss shows a complete collapse against even modest opposition\u2014your opening choices are either nonexistent or disastrously mis\u2011played, leaving you with no viable middle\u2011game plans. Stop relying on \u201cguesswork\u201d and adopt a concrete, tested repertoire (e.g., 1.e4\u202fC20\u202fItalian Game or 1.d4\u202fD00\u202fQueen\u2019s Gambit) and drill the first ten moves until they\u2019re second nature. From now on, review every game with a computer, annotate every mistake, and spend at least one hour daily on forced\u2011mate puzzles to rebuild tactical vision before you even think about playing again.",
+   "session_summary": "Your opening repertoire is a liability\u2014every game you\u2019ve played ends in defeat, showing you have no viable weapon to steer the board into familiar territory. Stop relying on vague \u201cprinciples\u201d and drill a single, sound system (e.g., Caro\u2011Kann for Black, London System for White) until you can execute the first ten moves without hesitation. Spend the next 10\u202fhours reviewing your lost games move\u2011by\u2011move, annotate every mistake, and then play 20 blitz games using only that opening to cement the patterns before you ever sit down for a serious match again.",
    "session_date": "2026-10-24",
    "is_yesterday": false,
    "token_missing": false
   },
   "lichess_puzzle": {
-   "pid": "VTLk5",
-   "rating": 1877,
-   "level": "\ud83d\udd34 stretch",
-   "themes": "Deflection \u00b7 Endgame \u00b7 Advanced Pawn",
-   "tip": "Lure the key defender away from its post with a forcing move.",
-   "url": "https://lichess.org/training/VTLk5"
+   "pid": "Ba42D",
+   "rating": 1711,
+   "level": "\ud83d\udfe1 at level",
+   "themes": "Exposed King \u00b7 Middlegame \u00b7 Long",
+   "tip": "Three-move combination. The first move must be forcing.",
+   "url": "https://lichess.org/training/Ba42D"
   }
  }
 }
