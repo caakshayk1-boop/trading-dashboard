@@ -1,7 +1,7 @@
 {
- "build_id": "20261101T083756",
- "date": "2026-11-01",
- "date_str": "Sunday, November 01 2026",
+ "build_id": "20261102T090228",
+ "date": "2026-11-02",
+ "date_str": "Monday, November 02 2026",
  "picks": [
   {
    "symbol": "ZS",
@@ -411,454 +411,447 @@
  "picks_week": null,
  "open_context": {},
  "ipos": {
-  "count": 20,
+  "count": 21,
   "months": 12,
-  "built_on": "2026-10-24",
+  "built_on": "2026-11-01",
   "summary": {
-   "count": 20,
+   "count": 21,
    "up": 12,
-   "down": 8,
-   "up_pct": 60.0,
-   "median_pct": 13.8
+   "down": 9,
+   "up_pct": 57.1,
+   "median_pct": 4.7
   },
   "rows": [
    {
     "sym": "UTLSOLAR",
-    "months_listed": 11.1,
+    "months_listed": 11.3,
     "first_close": 208.44,
-    "last_close": 362.05,
-    "since_listing_pct": 73.7,
+    "last_close": 365.2,
+    "since_listing_pct": 75.2,
     "high": 483.95,
     "low": 174.83,
-    "from_high_pct": -25.2,
+    "from_high_pct": -24.5,
     "below_first_ever": true,
-    "sessions": 229,
+    "sessions": 234,
     "listed_on": "2025-11-20"
    },
    {
-    "sym": "AEQUS",
-    "months_listed": 10.4,
-    "first_close": 151.29,
-    "last_close": 235.55,
-    "since_listing_pct": 55.7,
-    "high": 288.15,
-    "low": 115.11,
-    "from_high_pct": -18.3,
-    "below_first_ever": true,
-    "sessions": 215,
-    "listed_on": "2025-12-10"
-   },
-   {
     "sym": "LENSKART",
-    "months_listed": 11.4,
+    "months_listed": 11.7,
     "first_close": 403.1,
-    "last_close": 626.45,
-    "since_listing_pct": 55.4,
+    "last_close": 678.2,
+    "since_listing_pct": 68.2,
     "high": 707.2,
     "low": 400.15,
-    "from_high_pct": -11.4,
+    "from_high_pct": -4.1,
     "below_first_ever": true,
-    "sessions": 237,
+    "sessions": 242,
     "listed_on": "2025-11-10"
    },
    {
+    "sym": "CORONA",
+    "months_listed": 10.5,
+    "first_close": 1438.4,
+    "last_close": 2149.6,
+    "since_listing_pct": 49.4,
+    "high": 2236.1,
+    "low": 1347.7,
+    "from_high_pct": -3.9,
+    "below_first_ever": true,
+    "sessions": 217,
+    "listed_on": "2025-12-15"
+   },
+   {
     "sym": "PARKHOSPS",
-    "months_listed": 10.2,
+    "months_listed": 10.4,
     "first_close": 147.95,
-    "last_close": 215.1,
-    "since_listing_pct": 45.4,
+    "last_close": 219.7,
+    "since_listing_pct": 48.5,
     "high": 299.3,
     "low": 143.92,
-    "from_high_pct": -28.1,
+    "from_high_pct": -26.6,
     "below_first_ever": true,
-    "sessions": 210,
+    "sessions": 215,
     "listed_on": "2025-12-17"
    },
    {
-    "sym": "CORONA",
-    "months_listed": 10.3,
-    "first_close": 1438.4,
-    "last_close": 2051.1,
-    "since_listing_pct": 42.6,
-    "high": 2236.1,
-    "low": 1347.7,
-    "from_high_pct": -8.3,
-    "below_first_ever": true,
-    "sessions": 212,
-    "listed_on": "2025-12-15"
+    "sym": "GROWW",
+    "months_listed": 11.6,
+    "first_close": 131.33,
+    "last_close": 191.52,
+    "since_listing_pct": 45.8,
+    "high": 221.56,
+    "low": 131.33,
+    "from_high_pct": -13.6,
+    "below_first_ever": false,
+    "sessions": 240,
+    "listed_on": "2025-11-12"
    }
   ],
   "worst": [
    {
     "sym": "HEG",
-    "months_listed": 3.3,
+    "months_listed": 3.5,
     "first_close": 587.35,
-    "last_close": 198.78,
-    "since_listing_pct": -66.2,
+    "last_close": 237.61,
+    "since_listing_pct": -59.5,
     "high": 739.25,
     "low": 198.78,
-    "from_high_pct": -73.1,
+    "from_high_pct": -67.9,
     "below_first_ever": true,
-    "sessions": 68,
+    "sessions": 73,
     "listed_on": "2026-07-17"
    },
    {
     "sym": "PINELABS",
-    "months_listed": 11.3,
+    "months_listed": 11.5,
     "first_close": 250.89,
-    "last_close": 154.57,
-    "since_listing_pct": -38.4,
+    "last_close": 153.25,
+    "since_listing_pct": -38.9,
     "high": 250.89,
     "low": 137.94,
-    "from_high_pct": -38.4,
+    "from_high_pct": -38.9,
     "below_first_ever": true,
-    "sessions": 233,
+    "sessions": 238,
     "listed_on": "2025-11-14"
    },
    {
     "sym": "WAKEFIT",
-    "months_listed": 10.3,
+    "months_listed": 10.5,
     "first_close": 192.29,
-    "last_close": 132.43,
-    "since_listing_pct": -31.1,
+    "last_close": 135.03,
+    "since_listing_pct": -29.8,
     "high": 215.8,
     "low": 113.04,
-    "from_high_pct": -38.6,
+    "from_high_pct": -37.4,
     "below_first_ever": true,
-    "sessions": 211,
+    "sessions": 216,
     "listed_on": "2025-12-15"
    }
   ]
  },
  "data_health": {
-  "worst": "DEGRADED",
-  "current": 10,
+  "worst": "UNAVAILABLE",
+  "current": 11,
   "total": 12,
   "degraded": [
    {
     "dataset": "Fund screen",
-    "status": "DEGRADED",
-    "age": "14 days old",
-    "note": "older than its weekly refresh"
-   },
-   {
-    "dataset": "New listings",
-    "status": "STALE",
-    "age": "7 days old",
-    "note": "older than its weekly refresh"
+    "status": "UNAVAILABLE",
+    "age": "unknown vintage",
+    "note": "never published"
    }
   ]
  },
  "desk": {
   "chess": {
-   "title": "Time Management",
-   "body": "Chess is a timed game. Use 70-80% of your clock in complex positions, blitz transitions and endgames you know. Common mistake: spending 15 minutes in the opening, then rushing in the critical middlegame. Rule: if a position is complicated and you see candidate moves, spend the time here \u2014 not in simple positions. Clock is a resource, not just a constraint.",
-   "index": 15,
+   "title": "Opening: Sicilian Defence Basics",
+   "body": "After 1.e4 c5 \u2014 Black fights for the centre asymmetrically. Black gets queenside counterplay; White gets kingside attack. Most common openings at club level. Learn one variation: Sicilian Najdorf (1.e4 c5 2.Nf3 d6 3.d4 cxd4 4.Nxd4 Nf6 5.Nc3 a6). It's played by Kasparov, Fischer, Carlsen. Understand the plans before memorising moves.",
+   "index": 16,
    "total": 20
   },
   "wisdom": {
-   "title": "Rest is Productive",
-   "body": "High performers rest. Sleep is not laziness \u2014 it's when the brain consolidates learning, the body repairs, emotional regulation resets. Cutting sleep to work more is borrowing from tomorrow's performance to pay today's anxiety. Protect 7 hours. It will make you a better analyst, better father, better human.",
-   "index": 13,
+   "title": "The Identity Question",
+   "body": "Who are you when the job title is gone, when the market is closed, when your daughter is asleep? Define yourself by what you do, not what you've achieved. 'I am someone who learns daily. I love deeply. I show up.' These don't depend on AED 30K or a Dubai visa. They're yours now.",
+   "index": 14,
    "total": 18
   },
   "book": {
-   "book": "The Hard Thing About Hard Things",
-   "author": "Ben Horowitz",
-   "chapter": "Peacetime CEO vs Wartime CEO",
-   "lesson": "Horowitz's most cited framework: peacetime CEOs follow rules, build consensus, develop people. Wartime CEOs break rules, make unilateral calls, prioritise survival. The same leadership style that builds a great culture in a period of growth will lose the company in a crisis. The mistake most leaders make: being a peacetime CEO in wartime. When the company is burning \u2014 cash running out, key customer leaving, competitor eating your lunch \u2014 you cannot run consensus meetings. You need to make fast, clear decisions, even imperfect ones, and demand execution. Know which mode you're in.",
-   "key_quote": "Leadership style must match the situation. A peacetime approach in wartime is as dangerous as a wartime approach in peacetime.",
-   "action": "What mode is your current situation in \u2014 peacetime (optimise) or wartime (survive)? Is your leadership style calibrated to it?",
-   "index": 25,
+   "book": "Essentialism",
+   "author": "Greg McKeown",
+   "chapter": "The Disciplined Pursuit of Less",
+   "lesson": "Essentialism is not about doing less for the sake of it. It's about doing less so you can do the most important things better. McKeown's central question: 'Is this the most important thing I could be doing with my time right now?' Most non-essentialists say yes to almost everything \u2014 more responsibility, more projects, more commitments. They become diffuse, mediocre at many things. The essentialist says yes to almost nothing, then executes the few things with total focus and energy. The paradox: doing less produces more impact because the energy is concentrated.",
+   "key_quote": "If you don't prioritise your life, someone else will.",
+   "action": "List everything on your current plate. Identify the one thing that, if done brilliantly, would make the most difference. Protect that first.",
+   "index": 26,
    "total": 48,
    "crux": [
-    "There is no recipe for the hard things. Every playbook assumes conditions you won't have.",
-    "The Struggle is the default state of building something hard, not evidence of failure.",
-    "Wartime and peacetime CEOs are different jobs requiring different behaviour.",
-    "Take care of the people, the products, and the profits \u2014 in that order.",
-    "Tell it like it is. People can handle bad news; they cannot handle being managed.",
-    "Train your people. Neglecting it is the most common and most expensive omission.",
-    "Hire for strength, not absence of weakness. Every strong person has visible flaws.",
-    "Management debt, like technical debt, accrues interest: two people in one job, no performance process, unclear ownership.",
-    "Titles and promotions need a defined process or politics fills the vacuum.",
-    "One-on-ones belong to the employee. Silence there means information is not reaching you.",
-    "Minimise politics by designing systems, not by asking people to be less political.",
-    "The struggle is where greatness comes from. Courage is a habit built by making hard calls.",
-    "Focus on the battlefield you're on, not the one you wish you were on."
+    "Almost everything is noise. Very few things are exceptionally valuable.",
+    "The undisciplined pursuit of more is how capable people stall.",
+    "Replace 'How can I do it all?' with 'What is the one thing I should do?'",
+    "If you don't prioritise your life, someone else will.",
+    "Trade-offs are unavoidable. Pretending otherwise means choosing badly by default.",
+    "Explore widely before committing narrowly. More options examined, fewer selected.",
+    "Apply extreme criteria: not 'is this good?' but 'is this the best possible use of this time?'",
+    "'No' is a complete sentence. The discomfort of refusing lasts minutes; the cost of agreeing lasts months.",
+    "Sunk cost is not a reason. Ask what you would pay to acquire this commitment today.",
+    "Buffer time by 50%. Every plan without slack fails on contact with reality.",
+    "Remove the bottleneck rather than working harder around it.",
+    "Small wins beat big launches. Progress is the most effective motivator known.",
+    "Essentialism is a discipline, not a one-time purge. The noise regrows weekly."
    ],
    "learnings": [
-    "Nobody's plan survives. The skill is deciding well without enough information.",
-    "Transparency scales trust; managed messaging destroys it.",
-    "Management debt compounds faster and quieter than technical debt.",
-    "Your psychology is the bottleneck more often than the business is."
+    "Saying yes to everything is a decision \u2014 usually a bad one made passively.",
+    "The cost of a commitment is every alternative you can no longer take.",
+    "Capable people get buried precisely because they are capable.",
+    "Slack is not waste. Slack is what absorbs reality."
    ],
    "examples": [
-    "Loudcloud IPO'd in 2001 into a collapsing market because the private markets were shut \u2014 a bad option chosen over a fatal one.",
-    "Horowitz sold the managed-services business and pivoted to Opsware with $60m left, telling employees the truth about the odds.",
-    "Opsware sold to HP for $1.6bn after multiple near-death moments \u2014 none of which the plan anticipated."
+    "Southwest Airlines said no to meals, assigned seating, and hub routing \u2014 and stayed profitable for decades while full-service rivals collapsed.",
+    "Warren Buffett attributes most of his wealth to roughly ten decisions, having passed on thousands.",
+    "McKeown attended a client meeting hours after his daughter's birth. He got neither the client's respect nor the moment back \u2014 the book's founding regret."
    ],
    "adapt": [
-    "Meta restriction is a wartime problem. Recovery work first, growth experiments after.",
-    "Say the real number publicly \u2014 50% win rate, not the flattering framing. Trust is the asset.",
-    "Management debt in the stack: two entry points writing the same signals with different logic caused the duplicate rows.",
-    "The Struggle during the Dubai search is the job, not a sign it isn't working."
+    "Before any new build: what does this replace? If nothing, it doesn't start.",
+    "Kill features that no measurement supports. The deleted /fno and /options pages were the right call.",
+    "Buffer every deadline by 50%. A model promised Friday gets built by Wednesday."
    ]
   },
   "way": {
    "minimalism": {
-    "title": "The Box Test",
-    "body": "Pack a category into a box and seal it. If you have not opened it in a month, you do not need what is inside. Most people cannot name the contents a week later.",
-    "action": "Box one category \u2014 cables, kitchen gadgets, old chargers. Date the box.",
-    "index": 7,
+    "title": "Owning Is A Liability",
+    "body": "Every object requires storage, maintenance, insurance, cleaning, moving, and eventual disposal. The purchase price is the smallest number in that list. Accountants of all people should price the full cost.",
+    "action": "Before the next purchase, write the 5-year total cost of ownership.",
+    "index": 8,
     "total": 20,
     "label": "Minimalism"
    },
    "etiquette": {
-    "title": "Say The Difficult Thing Kindly And Once",
-    "body": "Softening it into unrecognisability is not kindness \u2014 it guarantees you say it again, worse, later. Direct and warm. Once.",
-    "action": "Name one thing you have been avoiding saying. Say it plainly today.",
-    "index": 13,
+    "title": "Handle The Bill Without Theatre",
+    "body": "Decide before you arrive. Settle it quietly. The public wrestle over a bill embarrasses everyone at the table.",
+    "action": "Settle the next bill before it reaches the table.",
+    "index": 14,
     "total": 20,
     "label": "Etiquette"
    },
    "stillness": {
-    "title": "Do One Thing At A Time",
-    "body": "The monastic instruction is: when walking, walk; when eating, eat. Multitasking is the belief that attention divides without loss. It does not.",
-    "action": "Do the next task with nothing else open.",
-    "index": 11,
+    "title": "Keep A Line A Day",
+    "body": "One sentence about the day. Not a journal habit that collapses in a week \u2014 one line. In ten years it becomes the only accurate record of your life that exists.",
+    "action": "Write one line tonight. Date it.",
+    "index": 12,
     "total": 20,
     "label": "Stillness"
    },
    "model": {
-    "title": "Opportunity Cost",
-    "body": "The real cost of anything is the best alternative you gave up. Cash sitting idle has a cost. So does a meeting. So does a project you keep alive out of habit.",
-    "action": "Name what your largest time commitment is displacing.",
-    "index": 3,
+    "title": "Base Rates",
+    "body": "Before believing your case is special, ask what usually happens. Most restaurants fail. Most projects overrun. Most traders lose. Your plan starts from that number, not from zero.",
+    "action": "Find the base rate for your current bet before adjusting for your edge.",
+    "index": 4,
     "total": 20,
     "label": "Mental Model"
    },
    "arabic": {
-    "script": "\u0643\u0645 \u0627\u0644\u0633\u0639\u0631\u061f",
-    "translit": "kam as-si'r?",
-    "meaning": "What is the price?",
-    "use": "Markets, taxis, any negotiation. Follow with a pause, not a counter.",
-    "index": 9,
+    "script": "\u0644\u0648 \u0633\u0645\u062d\u062a",
+    "translit": "law samaht",
+    "meaning": "Excuse me / if you please",
+    "use": "Getting attention politely \u2014 a waiter, a stranger, someone in your way.",
+    "index": 10,
     "total": 30,
     "label": "Arabic"
    },
    "drill": {
-    "title": "Reverse-Engineer A Good Model",
-    "body": "Take a model you admire and rebuild its structure from scratch. Copying output teaches nothing; reconstructing the logic teaches everything.",
-    "action": "Rebuild one section of a model you did not write.",
-    "index": 15,
+    "title": "The Five Whys",
+    "body": "Ask why five times to get from symptom to cause. Most analysis stops at why one and fixes a symptom, which guarantees the problem returns.",
+    "action": "Take one recurring problem. Ask why five times. Write each answer.",
+    "index": 16,
     "total": 20,
     "label": "Drill"
    },
    "health": {
-    "title": "Sleep Is The Performance Lever",
-    "body": "Under 7 hours measurably degrades reaction time, glucose control, immune function, and emotional regulation. One night at 4 hours drops next-day insulin sensitivity by around 25%. You cannot out-discipline this.",
-    "action": "Fixed lights-out tonight. Same time tomorrow.",
-    "index": 5,
+    "title": "Light Sets The Clock",
+    "body": "Morning daylight within an hour of waking anchors circadian rhythm and improves sleep that night more reliably than any supplement. Outdoor light is 10\u2013100x brighter than indoor, even when overcast.",
+    "action": "Ten minutes outside within an hour of waking. No sunglasses.",
+    "index": 6,
     "total": 20,
     "label": "Health"
    }
   },
   "quote": {
-   "name": "Reid Hoffman",
-   "quote": "An entrepreneur is someone who jumps off a cliff and builds a plane on the way down.",
-   "index": 50,
+   "name": "Marc Andreessen",
+   "quote": "Software is eating the world.",
+   "index": 51,
    "total": 96
   },
   "lesson": {
-   "tradition": "Stoicism",
-   "lesson": "You become what you give your attention to.",
-   "source": "Epictetus"
+   "tradition": "Buddhism",
+   "lesson": "Peace comes from within. Do not seek it without.",
+   "source": "Buddha"
   },
   "case": {
-   "title": "Stripe: Developer-First, CEO-Last",
-   "story": "Stripe built payment APIs for developers, not CFOs. 7 lines of code to accept payments. No sales team for the first 3 years \u2014 product sold itself.",
-   "lesson": "The best distribution is built into the product. If developers love it, adoption spreads through word of mouth. Sell to builders, not buyers."
+   "title": "Slack: From Failed Game to $27B",
+   "story": "Slack's founders built a failed multiplayer game called Glitch. They salvaged the internal communication tool they'd built. Sold to Salesforce for $27B.",
+   "lesson": "Pivots are not failures \u2014 they're redirected learning. The most valuable thing from a failed product is often the tool you built to build it."
   },
   "fpna": {
-   "title": "Driver-Based Forecasting",
-   "body": "Build forecasts on business drivers (units, headcount, utilization), not historical % growth.",
-   "index": 2,
+   "title": "Rolling Forecast",
+   "body": "Rolling 12-month forecasts beat static annual budgets. Less time defending, more time deciding.",
+   "index": 3,
    "total": 20
   },
   "cfo": {
-   "title": "FC Interview: Top 5 Questions",
-   "body": "1. Walk me through month-end close. 2. How do you handle a material variance? 3. What internal controls have you implemented? 4. Describe your IFRS 16 experience. 5. How do you present bad news to management? Prepare 2-min answers for all five.",
-   "index": 13,
+   "title": "CFO Interview: Top 5 Questions",
+   "body": "1. What's your capital allocation philosophy? 2. How do you manage a cash crisis? 3. Describe a time you stopped a bad investment. 4. How do you build trust with the CEO? 5. Walk me through a fundraise or M&A you led. Practice until smooth.",
+   "index": 14,
    "total": 15
   },
   "money_hack": {
-   "title": "SIP on Salary Day",
-   "body": "Set SIP date = salary day + 1. Invest before you spend. Pay yourself first."
+   "title": "Expense Tracking",
+   "body": "Track every expense for 30 days. You will find \u20b93\u20135K of invisible leaks."
   },
   "dubai": {
-   "title": "The visa question, answered",
-   "body": "Employment visa is sponsored by the employer \u2014 you do not need one to apply, and any recruiter asking you to pay for one is running a scam. The Golden Visa needs a AED 30K+ salary and a degree attestation, which is exactly why AED 30K is the threshold worth targeting.",
-   "targets": "Attest the degree in India first. It takes 3\u20136 weeks and blocks everything downstream.",
-   "action_label": "Do now",
-   "action": "MEA attestation on the CA certificate and the degree. Before an offer, not after.",
-   "index": 5,
+   "title": "Your CV is being read by software",
+   "body": "Most Gulf groups run Taleo or SuccessFactors. Two columns, tables, headers and a photo all parse to garbage. Single column, standard headings, .docx not PDF, no logos.",
+   "targets": "Job title in the CV header must match the job title in the posting. Literally.",
+   "action_label": "30-minute fix",
+   "action": "Rewrite the top third of the CV as: title, then five bullets, each with a number in it.",
+   "index": 6,
    "total": 30
   },
   "daughter": {
    "months": 10,
-   "days": 311,
+   "days": 312,
    "heading": "Ten months old.",
    "band": "cruising",
    "born": "2025-12-25"
   },
-  "productivity": "Phone in another room during deep work. Physical distance reduces urge 60%.",
+  "productivity": "End every meeting with: who does what by when. No action = no meeting.",
   "father": [
    {
-    "title": "Practise object permanence",
-    "do": "Hide a toy under a cloth while she watches, then let her pull it off. Repeat with longer delays.",
-    "why": "Around 7\u20138 months this clicks. It is also why separation anxiety starts now \u2014 she has learned you continue to exist when you leave, but not yet that you come back."
+    "title": "Offer food she can hold",
+    "do": "Soft strips she can grip herself \u2014 steamed carrot, banana, well-cooked pasta. Accept the mess.",
+    "why": "Self-feeding at 7 months develops the pincer grip and, more importantly, lets her control intake. Children who regulate their own portions early are less likely to over-eat later."
    },
    {
-    "title": "Respond to the babble",
-    "do": "When she makes a sound, answer as if it were a sentence. Wait. Let her go again.",
-    "why": "Turn-taking is the structure of conversation, learned months before words. The pause is the important part \u2014 filling it teaches her that her turn does not matter."
+    "title": "Protect the sleep routine",
+    "do": "Same order, same lighting, same time \u2014 bath, feed, book, bed. Do it yourself at least twice a week.",
+    "why": "Consistency of sequence matters more than the exact timing. Fathers who own bedtime regularly build a distinct attachment relationship rather than a substitute one."
    }
   ],
   "life_wisdom": [
    {
     "tradition": "Jainism",
-    "term": "Ahimsa in speech",
-    "translation": "Non-violence applied to words",
-    "teaching": "Jain tradition treats harsh speech as a form of violence, listing it alongside physical harm rather than as a lesser category.",
-    "apply": "Review one message you sent under pressure this week. Would you send it unchanged now? The gap between those two versions is the practice."
+    "term": "Anuvrata",
+    "translation": "The lesser vows",
+    "teaching": "Householders take limited versions of the great vows rather than the monastic form \u2014 the tradition explicitly designs for people with jobs and families.",
+    "apply": "Do not adopt a practice you cannot sustain alongside work and a seven-month-old. A small vow kept beats a large one abandoned."
    },
    {
     "tradition": "Buddhism",
-    "term": "Anicca",
-    "translation": "Impermanence",
-    "teaching": "Everything that arises passes. Applied properly this cuts both ways \u2014 bad quarters end, and so do good ones.",
-    "apply": "In a drawdown or a bad week, ask what will be true in six months. Most acute distress is a mis-estimate of duration."
+    "term": "The Second Arrow",
+    "translation": "Suffering added to pain",
+    "teaching": "The Buddha's image: struck by an arrow, most people fire a second one into themselves \u2014 the story about what the first arrow means.",
+    "apply": "A stopped-out trade is the first arrow. 'I am bad at this' is the second. Only one of them was caused by the market."
    }
   ],
   "spanish": [
    {
-    "word": "a largo plazo",
-    "meaning": "in the long run",
-    "es": "A largo plazo es la mejor decisi\u00f3n.",
-    "en": "In the long run it is the best decision.",
+    "word": "invertir",
+    "meaning": "to invest",
+    "es": "Prefiero invertir a largo plazo.",
+    "en": "I prefer to invest for the long term.",
     "tag": "Business"
    },
    {
-    "word": "con calma",
-    "meaning": "calmly / take it easy",
-    "es": "Vamos con calma.",
-    "en": "Let us take it slowly.",
-    "tag": "Idiom"
+    "word": "el margen bruto",
+    "meaning": "gross margin",
+    "es": "El margen bruto baj\u00f3 dos puntos.",
+    "en": "Gross margin fell two points.",
+    "tag": "Business"
    }
   ],
   "vocab": [
    {
-    "word": "Commensurate",
-    "say": "kuh-MEN-suh-rit",
-    "meaning": "In proportion to.",
-    "example": "The return is not commensurate with the capital at risk.",
-    "note": "The precise way to say something is not worth what it costs."
+    "word": "Judicious",
+    "say": "joo-DISH-uhs",
+    "meaning": "Showing good judgement.",
+    "example": "A judicious use of markdown clears stock without training customers to wait.",
+    "note": "Sounds considered rather than cautious."
    },
    {
-    "word": "Precipitate",
-    "say": "pri-SIP-i-tayt",
-    "meaning": "To cause something to happen suddenly.",
-    "example": "The covenant test precipitated the refinancing.",
-    "note": "As a verb it means trigger; as an adjective (pri-SIP-i-tit) it means hasty. Different stress."
+    "word": "Systemic",
+    "say": "sis-TEM-ik",
+    "meaning": "Affecting the whole system.",
+    "example": "This is a systemic control weakness, not an isolated error.",
+    "note": "Not 'systematic', which means methodical. The two get confused in audit reports constantly."
    }
   ],
   "speaking": {
-   "title": "Kill the filler",
-   "drill": "Pick one filler you overuse \u2014 'basically', 'actually', 'sort of', 'you know'. Speak for two minutes on today's market move and pause silently instead of using it.",
-   "why": "A silent pause reads as thinking. A filler reads as searching."
+   "title": "End the sentence",
+   "drill": "Read three sentences aloud and drop your pitch on the final word of each. Record and check you are not rising at the end.",
+   "why": "Upward inflection turns statements into questions. It is the fastest way to sound unsure of numbers you are certain about."
   },
   "interview_tech": [
    {
-    "q": "How would you use automation or AI in the finance function without losing control?",
-    "a": "Automate the deterministic and keep judgement human. Good candidates: bank reconciliation matching, invoice coding, intercompany elimination, variance flagging, and first-draft commentary. Bad candidates: provisioning, impairment, anything requiring an assertion to auditors. The control question is auditability \u2014 if you cannot explain how the output was produced and reperform it, it is not usable in a statutory process. Keep a human approval step on anything that posts to the ledger.",
-    "who": "Every CFO agenda, 2024 onward"
+    "q": "How do you close the books in five days instead of fifteen?",
+    "a": "Move work out of the close. Accruals estimated from a model rather than waiting for invoices; reconciliations performed continuously rather than at month end; intercompany agreed on a cut-off calendar with a hard deadline and a default position if unresolved; fixed asset and depreciation runs automated; and reporting built on the ledger rather than rebuilt in Excel. The cultural half matters more than the technical half \u2014 a fast close requires accepting a materiality threshold below which you do not adjust.",
+    "who": "Your own 40% reduction \u00b7 Unilever"
    },
    {
-    "q": "Your auditor raises going concern. How do you respond?",
-    "a": "Take it seriously and answer with evidence, not reassurance. Provide a cash flow forecast covering at least twelve months from signing, with the assumptions documented and stress cases run; the status of facilities including expiry dates and covenant projections; and board-approved mitigating actions with dates. If there is material uncertainty, the honest route is disclosure rather than argument \u2014 an unqualified opinion with a material uncertainty paragraph is survivable; a fight with the auditor that ends in a qualification is not.",
-    "who": "Any group under stress"
+    "q": "A store does AED 12M revenue at 38% gross margin. Rent is AED 1.8M, staff AED 2.1M, other fixed AED 900K. Is it worth keeping?",
+    "a": "Gross profit = 12 \u00d7 0.38 = AED 4.56M. Fixed costs = 1.8 + 2.1 + 0.9 = AED 4.8M. Store contribution = \u2212AED 240K. It loses money \u2014 but do not close it on that number alone. Ask three things: is the rent a committed lease you pay whether or not you trade; what does the store contribute to online fulfilment and brand presence in that catchment; and what is the exit cost. A negative-contribution store with four years left on a non-cancellable lease is often cheaper to run than to close.",
+    "who": "Landmark Group \u00b7 Alshaya \u00b7 Inditex"
    }
   ],
   "interview_soft": [
    {
-    "q": "What questions do you have for us?",
-    "a": "Never none. Ask things that reveal you are evaluating them: what does the first 12 months look like for whoever takes this; what is the finance function currently not able to answer that the board keeps asking; how is the relationship between finance and the commercial teams today; and why is the role open. The last one is the most informative and the least asked. Avoid salary and benefits at first interview.",
-    "who": "Universal"
+    "q": "Tell me about a time you were wrong about a person.",
+    "a": "A quieter question than it looks \u2014 it tests self-awareness and whether you revise judgements. Both directions work: someone you underestimated who turned out strong, or someone you backed who did not work out. The second is braver and lands better if you own the hiring or promotion decision. End with what you changed about how you assess people, ideally something structural like a different interview question or a probation checkpoint.",
+    "who": "Amazon \u00b7 Unilever \u00b7 Alshaya"
    },
    {
-    "q": "Describe a situation where you had incomplete information and had to decide anyway.",
-    "a": "Forecasting and provisioning are full of these. Structure: what you knew, what you could not know in the time available, the cost of waiting, the assumption you took and why, and how you made the assumption visible rather than burying it. The mark of seniority is deciding with 70% of the information and saying explicitly what would change your mind \u2014 say that phrase.",
-    "who": "Amazon \u00b7 McKinsey \u00b7 Boards"
+    "q": "If we hire you and in a year it has not worked, what is the most likely reason?",
+    "a": "A genuinely good question and a rare one. Answer honestly with the real risk, not a disguised strength: a mismatch on decision-making pace, an unclear boundary between your scope and someone else's, or a business where the data foundations are worse than described so the first year goes on plumbing rather than insight. Then say what you would do in month one to check for it. Naming the failure mode makes you look like someone who has thought about the job rather than the offer.",
+    "who": "Senior search processes"
    }
   ],
   "cfo_field": [
    {
-    "q": "Learn the lease standard properly. In the Gulf it is not a footnote.",
-    "a": "IFRS 16 put every store lease on the balance sheet as a right-of-use asset and a lease liability. Two consequences a CFO must be able to say out loud: EBITDA is now flattered, because rent that used to sit in operating costs is split into depreciation and interest; and leverage ratios move even though nothing about the business changed. If your covenant is set on a pre-IFRS-16 basis, know it before the bank asks.",
-    "who": "Every leased-store business"
+    "q": "Know your break-even by store, not by chain.",
+    "a": "A chain at group-level profitability can be carrying a quarter of its estate below contribution. Compute store contribution \u2014 gross profit less rent, staff and directly attributable fixed cost \u2014 and rank it. Then, before closing anything: is the lease committed, what does the store contribute to online fulfilment in its catchment, and what is the exit cost. A negative-contribution store with four years left on a non-cancellable lease is usually cheaper to run than to close.",
+    "who": "The analysis that gets you noticed"
    },
    {
-    "q": "Automation without a control map is how a finance function loses its audit trail.",
-    "a": "Before automating a process, write down: who can initiate, who approves, what the system does without a human, and where the exception report goes. Automation does not remove controls; it moves them from people to configuration, and configuration drifts silently. The question 'what breaks if this runs wrong for a month before anyone notices' is the one that separates a finance automation from a finance incident.",
-    "who": "Every CFO agenda, 2024 onward"
+    "q": "VAT in the GCC is a cash-flow instrument, not just a compliance task.",
+    "a": "Registration thresholds, filing frequency and the timing of input recovery all move working capital. A group filing quarterly rather than monthly holds recoverable input VAT longer than it needs to. Know the filing calendar in every jurisdiction the group trades in, and know which entity holds the recoverable balance \u2014 a refund stuck in the wrong entity is cash you own and cannot use.",
+    "who": "UAE \u00b7 KSA \u00b7 Oman"
    }
   ],
   "review": {
-   "prompt": "Where did you confuse motion for progress?",
-   "why": "Busy is the most convincing disguise failure wears.",
-   "index": 3,
+   "prompt": "What did you learn that changed a belief, not just added a fact?",
+   "why": "Facts accumulate. Beliefs updating is the rarer and more valuable event.",
+   "index": 4,
    "total": 20,
-   "week": 44,
+   "week": 45,
    "year": 2026,
-   "key": "2026-W44",
-   "weekday": 7,
-   "days_left": 0,
-   "is_review_day": true
+   "key": "2026-W45",
+   "weekday": 1,
+   "days_left": 6,
+   "is_review_day": false
   },
   "podcasts": {
    "ok": true,
-   "generated_at": "2026-11-01T00:38:37.786260+00:00",
+   "generated_at": "2026-11-02T01:03:03.177805+00:00",
    "episodes": [
     {
-     "show": "ANI Podcast (clips)",
-     "author": "ANI Podcast with Smita Prakash Clips",
-     "category": "Politics",
-     "title": "EP-463 with foundational medicine & lifestyle expert Luke Coutinho premieres today at 5 PM IST",
+     "show": "Drishti IAS",
+     "author": "Drishti IAS",
+     "category": "Education",
+     "title": "Drishti IAS Mega Diwali Gift Revealed! \ud83c\udf81 | Biggest Opportunity for UPSC Aspirants | Drishti IAS",
      "guest": "",
-     "published": "2026-10-31",
-     "link": "https://www.youtube.com/watch?v=Qz_MLyi70XI",
+     "published": "2026-11-01",
+     "link": "https://www.youtube.com/watch?v=rcx6tJ4voBE",
      "takeaways": [
-      "GLP drugs were not designed as a quick fix, yet they\u2019re being promoted as one.",
-      "Air pollution is affecting our DNA, and that's the scary fact."
+      "Drishti IAS is unveiling a special \u201cmega Diwali gift\u201d opportunity for UPSC and State PCS aspirants.",
+      "The announcement is being made on the occasion of Drishti IAS\u2019s 27th Foundation Day."
      ]
     },
     {
-     "show": "ANI Podcast (clips)",
-     "author": "ANI Podcast with Smita Prakash Clips",
-     "category": "Politics",
-     "title": "\u201cUnder Akhilesh\u2019s Rule, My Life Was In Danger, Even Though I Was A Sitting MP\u201d Pankaj Chaudhary",
+     "show": "Drishti IAS",
+     "author": "Drishti IAS",
+     "category": "Education",
+     "title": "Class 6 History Complete NCERT in One Shot | Full Revision | UPSC 2027",
      "guest": "",
-     "published": "2026-10-30",
-     "link": "https://www.youtube.com/watch?v=YqlzJ7DtDzI",
+     "published": "2026-11-01",
+     "link": "https://www.youtube.com/watch?v=PDKjpWVKGBs",
      "takeaways": [
-      "His life was in danger under Akhilesh\u2019s rule even though he was a sitting MP.",
-      "The episode is an ANIPodcast featuring Pankaj Chaudhary and host Smita\u202fPrakash."
+      "The session covers the entire Class\u202f6 NCERT History syllabus in a single class.",
+      "It is designed to help UPSC CSE, State PCS and other competitive exam aspirants quickly revise History fundamentals."
      ]
     }
    ],
    "shows": 1,
    "source": "each channel's public Atom feed",
-   "built_on": "2026-11-01",
+   "built_on": "2026-11-02",
    "age_days": 0.0,
    "is_fallback": false
   },
@@ -866,19 +859,37 @@
    {
     "source": "Livemint",
     "cat": "money",
-    "title": "Investing abroad via MFs: cap the investor, not the industry",
-    "link": "https://www.livemint.com/money/personal-finance/investing-abroad-via-mfs-cap-the-investor-not-the-industry-11793354134899.html",
-    "summary": "The privilege of overseas investment remains reserved for the wealthy. Small investors looking to invest abroad deserve a regulated, cheap way for doing so too. The answer: an individual cap per investor to make foreign investments",
+    "title": "Moved abroad, selling mutual funds to buy a house in India? Know the tax rules",
+    "link": "https://www.livemint.com/money/personal-finance/moved-abroad-selling-mutual-funds-to-buy-a-house-in-india-know-the-tax-rules-11793530476560.html",
+    "summary": "A non-resident Indian can claim Section 54F relief on long-term capital gains from selling mutual funds by investing the net sale proceeds in a residential house in India, subject to conditions.",
     "date": "Nov 01, 2026",
-    "_sort": "2026-11-01T00:30:38+00:00",
+    "_sort": "2026-11-01T18:11:43+00:00"
+   },
+   {
+    "source": "ET Opinion",
+    "cat": "money",
+    "title": "Tax-wise, $-foolish: Saving Dalal Street could come at a cost to Startup Street",
+    "link": "https://economictimes.indiatimes.com/opinion/et-commentary/tax-wise-foolish-saving-dalal-street-could-come-at-a-cost-to-startup-street/articleshow/135434272.cms",
+    "summary": "India's financial landscape is experiencing pressure with foreign portfolio investors becoming net sellers in the market. There are discussions about implementing tax cuts to stabilize the situation, which could disadvantage domestic investors. A focus on only listed shares may divert investments from private markets a",
+    "date": "Nov 01, 2026",
+    "_sort": "2026-11-01T18:03:28+00:00"
+   },
+   {
+    "source": "Livemint Opinion",
+    "cat": "money",
+    "title": "Lula's re-election: Brazil\u2019s public finances are already precarious\u2014is the country on the path to a crash landing?",
+    "link": "https://www.livemint.com/opinion/online-views/how-lula-s-re-election-has-put-brazil-s-economy-at-risk-of-crash-landing-11793509242325.html",
+    "summary": "The President's spending plans could drive up inflation, hurt the currency, push up real interest rates and thus weaken economic growth. Under such conditions, the country will be unable to gain any lift, no matter how hard it flaps its wings.",
+    "date": "Nov 01, 2026",
+    "_sort": "2026-11-01T13:30:52+00:00",
     "smart": {
      "what_happened": [
-      "The article notes that overseas investment is currently limited to wealthy investors.",
-      "It proposes an individual cap per investor to allow small investors to access foreign mutual funds."
+      "Lula was re-elected as Brazil's president.",
+      "His proposed spending could raise inflation, weaken the real and increase real interest rates, threatening economic growth."
      ],
-     "why_it_matters": "Allowing a regulated, low\u2011cost avenue for small investors to invest abroad could broaden market participation, increase capital flows to foreign assets, and prompt changes in mutual fund regulation and compliance requirements.",
-     "what_to_watch": "Watch for any regulatory filings or announcements detailing the specific individual cap limits for foreign mutual fund investments.",
-     "headline": "Proposal to cap individual foreign investments in mutual funds",
+     "why_it_matters": "The combination of a precarious fiscal position and expansive spending raises the risk of higher inflation, a weaker Brazilian real, and higher real interest rates, which together can suppress growth and limit the country's ability to recover, increasing the chance of a fiscal or economic crisis.",
+     "what_to_watch": "The next release of Brazil's consumer price index (IPCA) to gauge inflation pressure.",
+     "headline": "Brazil's public finances strained as Lula's spending plans risk inflation",
      "read_seconds": 20
     }
    },
@@ -901,12 +912,12 @@
     "_sort": "2026-10-31T11:00:00+00:00",
     "smart": {
      "what_happened": [
-      "The article titled \"Who is actually at risk for CTE?\" examines what autopsy studies can reveal about repetitive head impacts.",
-      "It was published on the Peter Attia MD website."
+      "The article discusses what autopsy studies can reveal about repetitive head impacts.",
+      "It outlines what autopsy studies cannot tell about the risks of chronic traumatic encephalopathy."
      ],
-     "why_it_matters": "Understanding the constraints of autopsy research is important for accurately assessing the prevalence and risk factors of chronic traumatic encephalopathy, which informs medical guidance and public policy on head injury prevention.",
-     "what_to_watch": "The next peer\u2011reviewed study that cites this post\u2019s analysis of autopsy data.",
-     "headline": "Post discusses autopsy study limits on CTE risk",
+     "why_it_matters": "Understanding the capabilities and limitations of autopsy research is crucial for accurately assessing who may be vulnerable to chronic traumatic encephalopathy, informing medical guidance, public health policies, and future research directions.",
+     "what_to_watch": "Monitor upcoming posts by Peter Attia MD for further analysis of CTE risk and related studies.",
+     "headline": "Study examines risk factors for chronic traumatic encephalopathy",
      "read_seconds": 20
     }
    },
@@ -917,53 +928,15 @@
     "link": "https://www.nytimes.com/2026/10/28/well/mind/mental-health-annual-checkup.html",
     "summary": "Here are a few questions to ask yourself \u2014 and your primary care doctor \u2014 to keep your psychological well-being on track.",
     "date": "Oct 30, 2026",
-    "_sort": "2026-10-30T21:36:18+00:00",
+    "_sort": "2026-10-30T21:36:19+00:00",
     "smart": {
      "what_happened": [
-      "Here are a few questions to ask yourself \u2014 and your primary care doctor \u2014 to keep your psychological well\u2011being on track.",
-      "The article provides guidance on self\u2011assessment and doctor communication for mental health."
+      "The piece offers several questions to ask yourself about psychological well\u2011being.",
+      "It also suggests asking those same questions of your primary care doctor."
      ],
-     "why_it_matters": "Regularly evaluating psychological well\u2011being helps individuals identify early signs of mental health issues, enabling timely intervention and support, which can improve overall health outcomes and reduce the burden on healthcare systems.",
-     "what_to_watch": "Monitor whether primary care practices incorporate mental\u2011health screening questions into routine visits.",
-     "headline": "Questions to Ask for a Mental Health Checkup",
-     "read_seconds": 20
-    }
-   },
-   {
-    "source": "ET Opinion",
-    "cat": "money",
-    "title": "Tricky trickle-down",
-    "link": "https://economictimes.indiatimes.com/opinion/bliss-of-everyday-life/tricky-trickle-down/articleshow/135373677.cms",
-    "summary": "A billionaire attempted to demonstrate trickle-down economics by pouring champagne from his mansion's roof. However, the champagne did not reach his employees, indicating that wealth did not trickle down as intended. Meanwhile, a government reported unexpected economic growth, while citizens faced rising prices and fal",
-    "date": "Oct 30, 2026",
-    "_sort": "2026-10-30T18:05:57+00:00",
-    "smart": {
-     "what_happened": [
-      "A billionaire poured champagne from his mansion's roof, but the champagne did not reach his employees.",
-      "A government reported unexpected economic growth while citizens faced rising prices."
-     ],
-     "why_it_matters": "The episode highlights the disconnect between symbolic displays of wealth and actual income distribution, underscoring doubts about trickle-down economics. At the same time, the government's surprise growth figure contrasts with consumers' experience of higher prices, suggesting that aggregate growth may not be translating into broader purchasing power.",
-     "what_to_watch": "The next government economic growth report for any revision to the unexpected growth figure.",
-     "headline": "Billionaire pours champagne from roof, government reports unexpected growth amid rising prices",
-     "read_seconds": 26
-    }
-   },
-   {
-    "source": "Livemint Opinion",
-    "cat": "money",
-    "title": "US-China tech war: How AI can help investors spot the fallout before it shows up",
-    "link": "https://www.livemint.com/opinion/online-views/uschina-tech-war-how-ai-can-help-investors-spot-the-fallout-before-it-shows-up-11793350371276.html",
-    "summary": "Investors profit from being able to spot unintended consequences before they appear in the price. Here\u2019s how machines reading corporate chatter could give them the edge to bet on geopolitics before the rest of the market catches on.",
-    "date": "Oct 30, 2026",
-    "_sort": "2026-10-30T09:31:01+00:00",
-    "smart": {
-     "what_happened": [
-      "Investors aim to identify unintended consequences before they affect market prices.",
-      "Machine learning tools that read corporate chatter are being used to anticipate geopolitical fallout in the US\u2011China tech conflict."
-     ],
-     "why_it_matters": "The ability to detect early signals of geopolitical tension allows investors to adjust exposure before price movements occur, potentially improving risk management and returns in sectors vulnerable to US\u2011China tech restrictions.",
-     "what_to_watch": "Track the frequency of AI\u2011generated sentiment alerts related to US\u2011China tech supply\u2011chain news over the next month.",
-     "headline": "US-China tech war: AI helps investors spot fallout early",
+     "why_it_matters": "Providing concrete questions helps individuals and their primary care doctors systematically assess psychological health, which can aid early identification of issues and support ongoing mental\u2011wellness management.",
+     "what_to_watch": "Schedule a primary care appointment and use the suggested questions to discuss your mental health.",
+     "headline": "Article lists questions for mental health checkup",
      "read_seconds": 20
     }
    },
@@ -997,40 +970,48 @@
   ],
   "lichess_games": [
    {
-    "id": "AjuR5cMB",
-    "url": "https://lichess.org/AjuR5cMB",
+    "id": "oXHn82pS",
+    "url": "https://lichess.org/oXHn82pS",
     "result": "Win",
     "icon": "\u2705",
     "cls": "win",
     "my_side": "Black",
-    "my_rating": 1536,
-    "opp_rating": 1436,
-    "opponent": "zerms",
-    "me_diff": 5,
-    "opp_diff": -5,
-    "opening": "King's Pawn Game",
-    "eco": "B07",
-    "moves": 45,
-    "termination": "Checkmate",
+    "my_rating": 1547,
+    "opp_rating": 1550,
+    "opponent": "tonylith",
+    "me_diff": 7,
+    "opp_diff": -6,
+    "opening": "Semi-Slav Defense",
+    "eco": "D31",
+    "moves": 30,
+    "termination": "Resignation",
     "speed": "Blitz",
-    "analysis": "Focus on early piece coordination: develop knights before moving the same bishop twice; aim to castle by move\u202f9 to reduce king vulnerability.",
+    "analysis": "Focus on early piece activity: your bishop stayed passive until move\u202f12, costing ~0.6\u202fpawns; develop it to g4/e6 sooner to increase pressure.",
     "is_upset": false,
     "is_collapse": false,
-    "is_long": true,
+    "is_long": false,
     "best_move": {},
     "key_facts": [
-     "Rating gap -100 (1536 vs 1436)",
+     "Rating gap +3 (1547 vs 1550)",
      "Endgame from move 29",
-     "45 moves \u00b7 Blitz"
+     "30 moves \u00b7 Blitz"
     ],
-    "standout": "Finished by checkmate on move 45 \u2014 you converted rather than letting it drift.",
+    "standout": "",
     "game_strength": null,
-    "est_fide": 1136,
+    "est_fide": 1147,
     "accuracy": null,
     "acpl": null,
     "analysed": false,
     "_mode": "full",
     "_trend": [
+     {
+      "day": "11/01",
+      "wins": 2,
+      "losses": 0,
+      "draws": 0,
+      "total": 2,
+      "pct": 100
+     },
      {
       "day": "10/31",
       "wins": 1,
@@ -1078,41 +1059,75 @@
       "draws": 0,
       "total": 2,
       "pct": 0
-     },
-     {
-      "day": "10/18",
-      "wins": 0,
-      "losses": 1,
-      "draws": 0,
-      "total": 1,
-      "pct": 0
      }
     ],
     "_yest_counts": {
      "blitz": {
-      "win": 1,
+      "win": 2,
       "loss": 0,
       "draw": 0,
       "rp": {
-       "before": 1536,
-       "after": 1541
+       "before": 1541,
+       "after": 1554
       }
      }
     },
-    "_session_date": "2026-10-31",
+    "_session_date": "2026-11-01",
     "_is_yesterday": true
+   },
+   {
+    "id": "5iL5hGII",
+    "url": "https://lichess.org/5iL5hGII",
+    "result": "Win",
+    "icon": "\u2705",
+    "cls": "win",
+    "my_side": "White",
+    "my_rating": 1541,
+    "opp_rating": 1555,
+    "opponent": "edoten",
+    "me_diff": 6,
+    "opp_diff": -6,
+    "opening": "Caro-Kann Defense",
+    "eco": "B12",
+    "moves": 42,
+    "termination": "Resignation",
+    "speed": "Blitz",
+    "analysis": "Focus on early piece activity: develop knights before moving the same bishop twice; aim to finish development by move\u202f8 (e.g., Nf3, Nc3, Bd3, O\u2011O). This cuts opponent\u2019s counter\u2011play and reduces unnecessary pawn pushes.",
+    "is_upset": false,
+    "is_collapse": false,
+    "is_long": true,
+    "best_move": {},
+    "key_facts": [
+     "Rating gap +14 (1541 vs 1555)",
+     "Endgame from move 35",
+     "42 moves \u00b7 Blitz"
+    ],
+    "standout": "",
+    "game_strength": null,
+    "est_fide": 1141,
+    "accuracy": null,
+    "acpl": null,
+    "analysed": false
    }
   ],
   "lichess_summary": {
    "mode": "full",
-   "total": 1,
-   "wins": 1,
+   "total": 2,
+   "wins": 2,
    "losses": 0,
    "draws": 0,
    "pct": 100,
    "icon": "\u2705",
-   "score": "1/1",
+   "score": "2/2",
    "trend": [
+    {
+     "day": "11/01",
+     "wins": 2,
+     "losses": 0,
+     "draws": 0,
+     "total": 2,
+     "pct": 100
+    },
     {
      "day": "10/31",
      "wins": 1,
@@ -1160,14 +1175,6 @@
      "draws": 0,
      "total": 2,
      "pct": 0
-    },
-    {
-     "day": "10/18",
-     "wins": 0,
-     "losses": 1,
-     "draws": 0,
-     "total": 1,
-     "pct": 0
     }
    ],
    "weak_op": "",
@@ -1175,18 +1182,18 @@
    "upsets": 0,
    "collapses": 0,
    "long_games": 1,
-   "session_summary": "AKK_010 blitzes through the opening book with a 100\u202f% win rate, but that success masks a fatal reliance on memorized lines\u2014any deviation will expose a shallow middlegame understanding.\u202fYour next opponent will punish the lack of positional nuance; study pawn structures and typical piece maneuvers in your favorite opening until you can play without reference moves.\u202fStop cramming variations and start drilling endgame fundamentals now, or your win streak will evaporate the moment you face a flexible, well\u2011prepared adversary.",
-   "session_date": "2026-10-31",
+   "session_summary": "AKK_010 smashes every opponent with a flawless 2\u2011game streak, but the data shows a single opening that already yields a sub\u201150\u202f% success rate\u2014drop it immediately and replace it with the line that delivered the win. Your only victory came from a sharp, engine\u2011approved gambit; stop experimenting with off\u2011beat sidelines and drill that exact variation to perfection. From now on, rehearse the winning opening daily, cut any move that deviates by more than one tempo, and schedule a 30\u2011minute post\u2011game review after each match to lock in consistency.",
+   "session_date": "2026-11-01",
    "is_yesterday": true,
    "token_missing": false
   },
   "lichess_puzzle": {
-   "pid": "fWQJU",
-   "rating": 1875,
+   "pid": "Mifvr",
+   "rating": 2075,
    "level": "\ud83d\udd34 stretch",
-   "themes": "Endgame \u00b7 Long \u00b7 Mate In3",
+   "themes": "Endgame \u00b7 Fork \u00b7 Long",
    "tip": "King activity and pawn structure dominate. Technique over tactics here.",
-   "url": "https://lichess.org/training/fWQJU"
+   "url": "https://lichess.org/training/Mifvr"
   }
  }
 }
