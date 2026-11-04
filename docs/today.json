@@ -1,5 +1,5 @@
 {
- "build_id": "20261104T090220",
+ "build_id": "20261104T094855",
  "date": "2026-11-04",
  "date_str": "Wednesday, November 04 2026",
  "picks": [
@@ -532,7 +532,7 @@
  },
  "data_health": {
   "worst": "UNAVAILABLE",
-  "current": 10,
+  "current": 11,
   "total": 12,
   "degraded": [
    {
@@ -540,12 +540,6 @@
     "status": "UNAVAILABLE",
     "age": "unknown vintage",
     "note": "never published"
-   },
-   {
-    "dataset": "Podcasts",
-    "status": "STALE",
-    "age": "24h old",
-    "note": "older than its daily refresh"
    }
   ]
  },
@@ -826,42 +820,61 @@
   },
   "podcasts": {
    "ok": true,
-   "generated_at": "2026-11-03T00:35:02.242860+00:00",
+   "generated_at": "2026-11-04T01:49:25.280752+00:00",
    "episodes": [
     {
-     "show": "Unfiltered by Samdish",
-     "author": "Unfiltered by Samdish (and a fantastic team)",
-     "category": "Society",
-     "title": "What's Happening at SRFTI?",
+     "show": "Zerodha Varsity",
+     "author": "Zerodha Varsity",
+     "category": "Investing",
+     "title": "Are You Saving Enough for Retirement?",
      "guest": "",
-     "published": "2026-11-02",
-     "link": "https://www.youtube.com/watch?v=2hiwvg4ccZg",
+     "published": "2026-10-23",
+     "link": "https://www.youtube.com/watch?v=QVlX_tKUQBs",
      "takeaways": [
-      "The two days spent on campus impacted us in many ways.",
-      "We saw student solidarity in action: if one person gets hit, 300 others will stand behind them."
+      "Saving 10% of your income may not be sufficient for retirement and could result in a significant shortfall.",
+      "The episode explains the \u201c33x retirement rule\u201d as a practical strategy for long\u2011term retirement planning."
      ]
     },
     {
-     "show": "Unfiltered by Samdish",
-     "author": "Unfiltered by Samdish (and a fantastic team)",
-     "category": "Society",
-     "title": "Outrageous Outings: Inside India's Most Unusual Defence Academy!",
+     "show": "Zerodha Varsity",
+     "author": "Zerodha Varsity",
+     "category": "Investing",
+     "title": "Should You Create an HUF? Everything You Need to Know?",
      "guest": "",
-     "published": "2026-08-15",
-     "link": "https://www.youtube.com/watch?v=6G6WkIYLlds",
+     "published": "2026-10-16",
+     "link": "https://www.youtube.com/watch?v=ykrxgCfcMt4",
      "takeaways": [
-      "Harishankar Sharma is preparing some young people in Bharatpur to become adults.",
-      "The episode emphasizes finding the extraordinary in ordinary lives."
+      "An HUF can make a difference to your tax planning in certain situations.",
+      "The episode explains how an HUF works and who is eligible to create one."
      ]
     }
    ],
    "shows": 1,
    "source": "each channel's public Atom feed",
-   "built_on": "2026-11-03",
-   "age_days": 1.0,
-   "is_fallback": true
+   "built_on": "2026-11-04",
+   "age_days": 0.0,
+   "is_fallback": false
   },
   "smart_reads": [
+   {
+    "source": "Livemint Opinion",
+    "cat": "money",
+    "title": "Mint Quick Edit | Did we get a sneak peak of the future of policy debates in the AI age?",
+    "link": "https://www.livemint.com/opinion/online-views/mint-quick-edit-sneak-peak-of-future-policy-debates-ai-age-claims-may-gain-traction-11793714131444.html",
+    "summary": "An AI-generated audit of papers by researchers associated with California's wealth tax issue has gained prominence of late, sparking debate about AI's ability to identify biases that escape human notice. Here's why policy debates could see more such bot-generated claims gaining ground.",
+    "date": "Nov 04, 2026",
+    "_sort": "2026-11-04T01:30:40+00:00",
+    "smart": {
+     "what_happened": [
+      "An AI-generated audit of papers by researchers associated with California's wealth tax issue has gained prominence.",
+      "The audit has sparked debate about AI's ability to identify biases that escape human notice."
+     ],
+     "why_it_matters": "The episode highlights how AI tools can surface hidden biases in policy research, potentially reshaping how lawmakers and stakeholders evaluate evidence. If AI-generated audits are accepted as credible, they could influence the framing and outcomes of future policy debates, especially on contentious issues like wealth taxation.",
+     "what_to_watch": "Track whether the California legislature or related committees incorporate AI-generated audit findings in upcoming wealth tax hearings.",
+     "headline": "AI-generated audit of California wealth tax papers sparks bias debate",
+     "read_seconds": 23
+    }
+   },
    {
     "source": "NYT Well",
     "cat": "health",
@@ -878,17 +891,7 @@
     "link": "https://economictimes.indiatimes.com/opinion/et-commentary/firm-it-up-dont-junk-itindia-needs-a-more-predictable-capital-gains-tax-regime-to-deepen-equity-markets-stt-equity-market/articleshow/135508865.cms",
     "summary": "India's capital markets have seen significant changes, with millions of households participating in equity investing. The current tax framework needs to evolve to encourage better investment behavior among participants. A predictable and neutral tax system can foster deeper domestic participation in capital markets. Im",
     "date": "Nov 03, 2026",
-    "_sort": "2026-11-03T18:11:32+00:00",
-    "smart": {
-     "what_happened": [
-      "India's capital markets have experienced significant changes with millions of households investing in equities.",
-      "The article argues that a more predictable and neutral capital gains tax regime is needed to deepen domestic market participation."
-     ],
-     "why_it_matters": "A predictable capital gains tax framework can influence investor behavior, encouraging longer\u2011term holdings and broader participation, which in turn can increase market liquidity, reduce volatility, and support the development of a deeper domestic equity market. Without such certainty, investors may face higher transaction costs or tax uncertainty, potentially limiting the growth of household participation and the overall size of the market.",
-     "what_to_watch": "Watch for any official announcements or legislative proposals from the Indian Finance Ministry regarding changes to the capital gains tax regime.",
-     "headline": "India needs predictable capital gains tax to deepen equity markets",
-     "read_seconds": 26
-    }
+    "_sort": "2026-11-03T18:11:32+00:00"
    },
    {
     "source": "Livemint",
@@ -897,26 +900,7 @@
     "link": "https://www.livemint.com/money/pnb-and-canara-bank-revise-fd-interest-rates-in-november-2026-how-much-can-general-senior-citizens-earn-now-11793718284429.html",
     "summary": "PNB and Canara Bank have revised their fixed deposit interest rates from November 1 and 2, 2026, respectively. The changes affect select tenures and returns for general customers and senior citizens, while Axis Bank has also revised rates on bulk deposits of  \u20b93 crore and above from November 3.",
     "date": "Nov 03, 2026",
-    "_sort": "2026-11-03T17:30:31+00:00",
-    "smart": {
-     "what_happened": [
-      "PNB changed its fixed deposit rates on November 1, 2026 and Canara Bank did the same on November 2, 2026 for selected tenures and for general customers and senior citizens.",
-      "Axis Bank also adjusted its bulk deposit rates of \u20b93\u202fcrore and above starting November 3, 2026."
-     ],
-     "why_it_matters": "The revisions alter the returns that both ordinary and senior\u2011citizen depositors receive on their fixed deposits, affecting cash\u2011flow planning for households and the cost of funds for the banks. Changes in FD rates can also influence competition among lenders as they vie for deposit inflows, potentially prompting further adjustments across the sector.",
-     "what_to_watch": "Monitor the next set of FD rate announcements from major Indian banks, typically released in the first week of each month, to see if the trend of higher or lower rates continues.",
-     "headline": "PNB and Canara Bank revise FD interest rates in November 2026",
-     "read_seconds": 24
-    }
-   },
-   {
-    "source": "Livemint Opinion",
-    "cat": "money",
-    "title": "Why crypto exchanges get hacked, and Bitcoin ETFs do not | Opinion",
-    "link": "https://www.livemint.com/opinion/why-crypto-exchanges-get-hacked-and-bitcoin-etfs-do-not-opinion-11793712681267.html",
-    "summary": "An ETF exists to hold. It has a daily cut-off, much like the stock market it trades on. New money is collected through the day and settled in a single batch.",
-    "date": "Nov 03, 2026",
-    "_sort": "2026-11-03T13:41:15+00:00"
+    "_sort": "2026-11-03T17:30:31+00:00"
    },
    {
     "source": "Psyche",
@@ -928,12 +912,12 @@
     "_sort": "2026-11-03T11:00:00+00:00",
     "smart": {
      "what_happened": [
-      "The article names the feeling of values crumbling as civic grief.",
-      "It frames grieving that loss as a first step toward action."
+      "Rebecca Lewandowski wrote an article titled \"That feeling of values crumbling has a name: civic grief\".",
+      "The piece frames grief over the loss of fairness, dignity and shared obligation as \"civic grief\"."
      ],
-     "why_it_matters": "Identifying civic grief provides a language for citizens to articulate collective disappointment in perceived declines in fairness, dignity, and shared obligation, which can facilitate dialogue and potentially mobilize efforts to restore those societal norms.",
-     "what_to_watch": "Watch for mentions of civic grief in upcoming public policy discussions and community forums.",
-     "headline": "Civic grief described as response to eroding values",
+     "why_it_matters": "By naming the collective sense of loss as civic grief, the article highlights a psychological response to perceived erosion of core societal values, suggesting that acknowledging this grief could be a prerequisite for addressing the underlying issues and fostering renewed civic engagement.",
+     "what_to_watch": "Monitor public and academic commentary on the concept of civic grief in the weeks following publication.",
+     "headline": "That feeling of values crumbling has a name: civic grief",
      "read_seconds": 20
     }
    },
@@ -947,12 +931,12 @@
     "_sort": "2026-11-03T11:00:00+00:00",
     "smart": {
      "what_happened": [
-      "The article argues the separation of church and state rests on an unspoken psychological basis.",
-      "It states that people choose what they believe, but not what they think."
+      "The piece argues that the separation of church and state has an unspoken psychological basis.",
+      "It claims people choose what they believe but not what they think."
      ],
-     "why_it_matters": "The piece highlights a hidden cognitive mechanism behind a foundational principle of governance, suggesting that public debates about church\u2011state relations may be influenced by how individuals perceive belief versus thought, which could affect policy framing and legal interpretations.",
-     "what_to_watch": "Monitor commentary and discussion generated by the article on Aeon's platform in the coming weeks.",
-     "headline": "Separation of church and state has psychological basis, authors say",
+     "why_it_matters": "Understanding the psychological underpinnings of the church-state divide could influence how policymakers and the public frame debates about religious freedom and governmental authority, potentially affecting future legal and cultural discussions.",
+     "what_to_watch": "Future articles by Neil Van Leeuwen and Jacob Eisler on this topic",
+     "headline": "Article discusses psychological basis of church-state separation",
      "read_seconds": 20
     }
    },
@@ -1002,7 +986,7 @@
     "moves": 26,
     "termination": "Checkmate",
     "speed": "Blitz",
-    "analysis": "Focus on early king safety: after 1.d4\u202fNf6\u202f2.c4\u202fe6\u202f3.Nf3\u202fb6, develop bishops before castling; avoid leaving the king on e1 past move\u202f12. This cuts mate threats dramatically.",
+    "analysis": "Focus on early king safety: after 9\u2026Ng4, you should have castled immediately (move\u202f10) instead of 10.Qc2, avoiding the forced queen\u2011trap that led to mate in 26.",
     "is_upset": false,
     "is_collapse": false,
     "is_long": false,
@@ -1164,14 +1148,14 @@
    "upsets": 0,
    "collapses": 0,
    "long_games": 0,
-   "session_summary": "Your opening choices are leaving you defenseless\u2014every game you start you\u2019re already a move behind, which explains the 0\u202f% win rate and the single loss. Stop playing the \u201cweakest opening\u201d you\u2019ve been defaulting to and study a solid, universal system (e.g., the London System or a basic King\u2019s Indian Attack) until you can execute the first three moves without hesitation. Spend the next 10\u202fhours reviewing master games in that line, then drill the resulting middle\u2011game plans until you can convert the slightest advantage into a win.",
+   "session_summary": "You\u2019re losing every game because you never get past the opening\u2014your repertoire is essentially non\u2011existent, leaving you vulnerable to even the simplest traps. Drop all off\u2011beat lines and master the mainline French Defense (1.e4 e6) and the London System (1.d4\u202fd5\u202f2.Nf3\u202fNf6\u202f3.Bf4), drilling each move until you can play them without thinking. Spend the next 10\u202fhours analyzing your last loss move\u2011by\u2011move, then replay the entire opening from memory against a computer until you achieve a flawless 20\u2011move sequence.",
    "session_date": "2026-11-03",
    "is_yesterday": true,
    "token_missing": false
   },
   "lichess_puzzle": {
    "pid": "FPFg0",
-   "rating": 1907,
+   "rating": 1821,
    "level": "\ud83d\udd34 stretch",
    "themes": "Very Long \u00b7 Middlegame \u00b7 Discovered Attack",
    "tip": "Move one piece to unleash the attack of another behind it.",
