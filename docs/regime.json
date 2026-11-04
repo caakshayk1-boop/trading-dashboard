@@ -1,28 +1,28 @@
 {
   "ok": true,
-  "generated_at": "2026-11-03T20:18:11+00:00",
+  "generated_at": "2026-11-04T20:34:33+00:00",
   "today": {
     "regime": "highvol_mr",
-    "close": 23440.8,
-    "vol_ann_pct": 15.1,
-    "vol_pctile": 81.7,
-    "drawdown_pct": 10.97,
+    "close": 23810.85,
+    "vol_ann_pct": 15.8,
+    "vol_pctile": 83.7,
+    "drawdown_pct": 9.56,
     "above_200dma": false,
-    "date": "2026-11-02",
+    "date": "2026-11-03",
     "t": "Volatile and broken",
     "d": "Wide ranges with the index below its 200-day. Moves reverse; momentum entries are at their worst here."
   },
-  "run_days": 16,
+  "run_days": 17,
   "last_year": {
-    "calm_trend": 77,
+    "calm_trend": 76,
     "calm_range": 105,
     "highvol_trend": 15,
-    "highvol_mr": 62,
+    "highvol_mr": 63,
     "crisis": 1
   },
   "breadth": {
     "above_200dma_pct": 0,
-    "counted": 993,
+    "counted": 986,
     "note": "Shown for context. Not an input to the label above, because pulse.json keeps no history and a regime that cannot be backfilled cannot be measured."
   },
   "regimes": {
@@ -145,10 +145,6 @@
     "A cell needs 8 closed trades before any figure is shown, and the site's actual bar for trusting one is 30 closed at t >= 2.0. Most cells will not clear either, and the page says so rather than printing a multiplier nothing supports."
   ],
   "history": [
-    {
-      "date": "2024-10-24",
-      "regime": "highvol_trend"
-    },
     {
       "date": "2024-10-25",
       "regime": "calm_trend"
@@ -2143,6 +2139,10 @@
     },
     {
       "date": "2026-11-02",
+      "regime": "highvol_mr"
+    },
+    {
+      "date": "2026-11-03",
       "regime": "highvol_mr"
     }
   ]
