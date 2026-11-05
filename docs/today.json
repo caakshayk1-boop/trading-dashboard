@@ -1,5 +1,5 @@
 {
- "build_id": "20261105T090232",
+ "build_id": "20261105T095637",
  "date": "2026-11-05",
  "date_str": "Thursday, November 05 2026",
  "picks": [
@@ -532,7 +532,7 @@
  },
  "data_health": {
   "worst": "UNAVAILABLE",
-  "current": 11,
+  "current": 10,
   "total": 12,
   "degraded": [
    {
@@ -540,6 +540,12 @@
     "status": "UNAVAILABLE",
     "age": "unknown vintage",
     "note": "never published"
+   },
+   {
+    "dataset": "Podcasts",
+    "status": "STALE",
+    "age": "24h old",
+    "note": "older than its daily refresh"
    }
   ]
  },
@@ -866,12 +872,12 @@
     "_sort": "2026-11-04T19:08:57+00:00",
     "smart": {
      "what_happened": [
-      "The US midterm elections resulted in a loss for former President Trump, prompting a reset in US politics.",
-      "Analysts say the new US policies could affect trade agreements with India and that possible Iran conflicts may sway energy prices in India."
+      "The recent US midterm elections could affect trade agreements between India and the US.",
+      "Potential conflicts involving Iran may influence energy prices in India."
      ],
-     "why_it_matters": "The change in US political direction introduces uncertainty for bilateral trade frameworks that influence both economies, while any escalation involving Iran could raise oil costs for India, impacting inflation and corporate margins.",
-     "what_to_watch": "Official statements on upcoming US-India trade policy developments in the next weeks",
-     "headline": "India braces for policy shifts after US midterm results",
+     "why_it_matters": "The outcome of the US midterms reshapes political priorities that can alter bilateral trade policy, directly impacting export\u2011import flows and economic growth for both nations. Simultaneously, any escalation with Iran could disrupt oil markets, raising energy costs in India and affecting inflation and corporate margins.",
+     "what_to_watch": "Monitor the Indian government's next official statements on US\u2011India trade negotiations in the coming weeks.",
+     "headline": "US midterm loss prompts India to reset amid trade and Iran tensions",
      "read_seconds": 26
     }
    },
@@ -885,12 +891,12 @@
     "_sort": "2026-11-04T18:00:41+00:00",
     "smart": {
      "what_happened": [
-      "Home loan interest rates start at 7.25% in November 2026.",
-      "Public and private sector banks and housing finance companies such as SBI, HDFC Bank and ICICI Bank are offering the rates."
+      "Home loan interest rates begin at 7.25% in November 2026.",
+      "Public and private sector banks and housing finance companies are offering varying rates, with SBI, HDFC Bank, and ICICI Bank highlighted."
      ],
-     "why_it_matters": "The announced 7.25% starting rate sets a benchmark for borrowing costs during the Diwali season, influencing homebuyer affordability and the demand for residential property. Since major lenders like SBI, HDFC Bank and ICICI Bank are participating, the rate will affect a large segment of the mortgage market and can impact overall credit growth in the housing sector.",
-     "what_to_watch": "Track any rate adjustments announced by the major lenders in December 2026.",
-     "headline": "Home loan interest rates start at 7.25% in November 2026",
+     "why_it_matters": "The 7.25% starting rate sets a benchmark for borrowers seeking financing during the Diwali season, influencing affordability calculations for prospective homebuyers and potentially shaping demand across the housing market as consumers compare offers from major lenders.",
+     "what_to_watch": "Monitor the Reserve Bank of India's policy rate announcements in December 2026 for any changes that could affect home loan pricing.",
+     "headline": "Home loan rates start at 7.25% for Diwali 2026",
      "read_seconds": 22
     }
    },
@@ -901,7 +907,17 @@
     "link": "https://economictimes.indiatimes.com/wealth/invest/gold-vs-silver-investment-return-calculator-on-dhanteras-diwali-which-precious-metal-gave-higher-returns-in-1-3-and-5-years/articleshow/135539142.cms",
     "summary": "Investing in gold and silver has shown different returns over various periods. Gold delivered approximately 190% returns over five years, while silver reached 178%. Silver has outperformed gold in the last three years, showing faster price increases.",
     "date": "Nov 04, 2026",
-    "_sort": "2026-11-04T12:26:36+00:00"
+    "_sort": "2026-11-04T12:26:36+00:00",
+    "smart": {
+     "what_happened": [
+      "Gold delivered approximately 190% return over five years.",
+      "Silver delivered approximately 178% return over five years and outperformed gold in the last three years with faster price increases."
+     ],
+     "why_it_matters": "The differing long\u2011term returns highlight how precious metal allocations can affect portfolio performance, with silver showing stronger recent momentum despite a slightly lower five\u2011year gain, suggesting investors may need to reassess the risk\u2011return profile of each metal.",
+     "what_to_watch": "Track the price spread between gold and silver over the next quarter to see if silver continues to outpace gold.",
+     "headline": "Gold and silver returns over 1, 3, and 5 years",
+     "read_seconds": 20
+    }
    },
    {
     "source": "The Marginalian",
@@ -928,17 +944,7 @@
     "link": "https://psyche.co/ideas/that-feeling-of-values-crumbling-has-a-name-civic-grief",
     "summary": "Fairness, dignity and shared obligation are precious. Grieving their loss is a first step toward doing something about it- by Rebecca LewandowskiRead on Psyche",
     "date": "Nov 03, 2026",
-    "_sort": "2026-11-03T11:00:00+00:00",
-    "smart": {
-     "what_happened": [
-      "The article defines \"civic grief\" as the mourning of lost societal values such as fairness, dignity and shared obligation.",
-      "It argues that grieving these losses is a first step toward taking action to restore them."
-     ],
-     "why_it_matters": "Understanding civic grief highlights how collective loss of core societal values can affect public morale and civic engagement, prompting policymakers and community leaders to address underlying issues rather than ignoring the emotional impact.",
-     "what_to_watch": "Monitor public discourse and policy initiatives that reference \"civic grief\" or similar concepts in addressing social cohesion.",
-     "headline": "That feeling of values crumbling has a name: civic grief",
-     "read_seconds": 20
-    }
+    "_sort": "2026-11-03T11:00:00+00:00"
    },
    {
     "source": "Peter Attia",
@@ -986,7 +992,7 @@
     "moves": 26,
     "termination": "Checkmate",
     "speed": "Blitz",
-    "analysis": "Focus on early king safety: avoid moving the g\u2011pawn before castling; in this game you lost 2\u202fcentral pawns and got checkmated at move\u202f26. Castling by move\u202f8 would have saved at least\u202f3\u202fpoints in accuracy.",
+    "analysis": "Focus on early king safety: stop moving the king into the center; castle by move\u202f8 and keep pawns solid to avoid the quick mating net.",
     "is_upset": false,
     "is_collapse": false,
     "is_long": false,
@@ -1138,14 +1144,14 @@
    "upsets": 0,
    "collapses": 0,
    "long_games": 0,
-   "session_summary": "Your opening choices are costing you every point\u2014pick a line you actually understand, study the first 10\u201315 critical moves, and stick to it until you can force a comfortable middlegame.\u202fIn the remaining games, you\u2019re playing passively; force yourself to create at least one active threat each move, even if it means trading pieces to simplify a losing position.\u202fStart a daily 30\u2011minute tactical drill and a focused opening repertoire (e.g., a solid 1.e4\u202fCarlsen System or a reliable 1.d4\u202fLondon) and you\u2019ll stop the bleed immediately.",
+   "session_summary": "Your play is abysmal\u2014zero wins out of one game and you can\u2019t even name a single opening you handle competently, which means you\u2019re essentially guessing moves. Stop relying on \u201cfeel\u201d and start studying the fundamental pawn structures and tactical motifs of the opening you actually face, then drill the resulting middle\u2011game plans until they become second nature. Allocate at least 30 minutes daily to a focused opening repertoire (e.g., the London System for White, Caro\u2011Kann for Black) and review every loss with a engine to identify the exact tactical blunders you keep repeating.",
    "session_date": "2026-11-03",
    "is_yesterday": false,
    "token_missing": false
   },
   "lichess_puzzle": {
    "pid": "zHnaR",
-   "rating": 2003,
+   "rating": 1881,
    "level": "\ud83d\udd34 stretch",
    "themes": "Very Long \u00b7 Attraction \u00b7 Sacrifice",
    "tip": "Lure the king or a key piece onto a bad square with a sacrifice.",
