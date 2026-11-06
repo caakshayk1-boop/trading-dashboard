@@ -32,3 +32,6 @@ class PublishTest(unittest.TestCase):
                 bad=copy.deepcopy(self.data);bad[key]=value
                 with self.assertRaises(ValueError):publish(bad,d)
                 self.assertEqual(before,(Path(d)/'screen.json').read_bytes())
+
+if __name__ == '__main__':
+    unittest.main()
