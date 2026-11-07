@@ -1,7 +1,7 @@
 {
- "build_id": "20261106T095831",
- "date": "2026-11-06",
- "date_str": "Friday, November 06 2026",
+ "build_id": "20261107T090229",
+ "date": "2026-11-07",
+ "date_str": "Saturday, November 07 2026",
  "picks": [
   {
    "symbol": "ZS",
@@ -544,32 +544,32 @@
    {
     "dataset": "Podcasts",
     "status": "STALE",
-    "age": "2 days old",
+    "age": "3 days old",
     "note": "older than its daily refresh"
    }
   ]
  },
  "desk": {
   "chess": {
-   "title": "Rating Progress Reality",
-   "body": "800\u21921000: Learn not to blunder pieces for free. 1000\u21921200: Basic tactics (forks, pins). 1200\u21921500: Strategy (plans, pawn structure). 1500\u21921800: Calculation depth + endgames. 1800+: Opening theory + deep calculation. Most adults plateau at 1000-1200 because they skip tactics training. Do 10 puzzles daily \u2014 minimum. No shortcut.",
-   "index": 20,
+   "title": "Opening Principle #1: Control the Centre",
+   "body": "Place pawns on e4/d4 (White) or e5/d5 (Black). Pieces control more squares from the centre. A pawn on e4 controls d5 and f5. A pawn on the edge controls only 1 square. Open with 1.e4 or 1.d4 and you immediately claim space. This is the foundation of all chess strategy.",
+   "index": 1,
    "total": 20
   },
   "wisdom": {
-   "title": "Your Daughter Will Watch Everything",
-   "body": "She'll watch how you handle a setback. How you speak about money. How you treat waiters. How you react when you're wrong. How you love her mother. You are her first example of what a man is. Be the man you'd want her to marry someday. That's the bar.",
-   "index": 18,
+   "title": "Being Present",
+   "body": "Your daughter doesn't need a perfect father. She needs a present one. Put the phone down for 20 minutes when you get home. Look her in the eyes. Play on the floor. These moments are the whole point. Work can wait. She is growing every day whether you show up or not.",
+   "index": 1,
    "total": 18
   },
   "book": {
    "book": "Thinking in Bets",
    "author": "Annie Duke",
-   "chapter": "Resulting: Don't Judge Decisions by Outcomes",
-   "lesson": "Professional poker player Annie Duke's core insight: we judge decisions by outcomes (resulting), but the quality of a decision is independent of its outcome. A bad decision can produce a good outcome (lucky). A good decision can produce a bad outcome (unlucky). If you judge your decisions by results, you'll reinforce bad thinking when it gets lucky and abandon good thinking when it gets unlucky. The fix: evaluate decisions by the quality of the reasoning and information available at the time, not by what happened. This is how professional investors, poker players, and military strategists think.",
-   "key_quote": "A great decision made with the information available can still produce a bad outcome. That doesn't make it a bad decision.",
-   "action": "Review your last 3 major decisions. For each one, ask: was this a good decision given what I knew? Separate the quality of the process from the result.",
-   "index": 30,
+   "chapter": "Seek Disconfirming Evidence",
+   "lesson": "Humans are wired for confirmation bias \u2014 we notice and remember information that confirms our existing beliefs and ignore or discount information that challenges them. Duke's remedy: actively seek people and information that disagree with you. Before committing to a position, ask 'what would have to be true for me to be wrong?' Find the strongest version of the opposing argument (steelmanning, not strawmanning). The goal is not to change your mind on everything \u2014 it's to update your beliefs proportionally to the evidence. Strong opinions, weakly held.",
+   "key_quote": "Your best thinking comes from actively testing your beliefs against the strongest opposing evidence.",
+   "action": "Before your next important decision, write the strongest possible case for the opposite position. Does it change your thinking?",
+   "index": 31,
    "total": 48,
    "crux": [
     "Every decision is a bet on an uncertain future. Certainty is not available.",
@@ -607,211 +607,211 @@
   },
   "way": {
    "minimalism": {
-    "title": "Gifts Are Not Obligations",
-    "body": "A gift's job ended the moment it was given. Keeping something unwanted out of guilt honours nobody and costs you space every day.",
-    "action": "Release one guilt-kept item. The giver will never know.",
-    "index": 12,
+    "title": "The Uniform",
+    "body": "Pick a small set of clothes that always work and buy multiples. Ends the morning decision, ends the mismatched purchase, ends the wardrobe that is 80% unworn.",
+    "action": "Define your uniform in one sentence. Buy toward it, not around it.",
+    "index": 13,
     "total": 20,
     "label": "Minimalism"
    },
    "etiquette": {
-    "title": "Do Not Correct Trivia In Public",
-    "body": "Being right about something small in front of an audience costs more in goodwill than the correction is worth. Let it go, or say it privately later.",
-    "action": "Let one minor inaccuracy pass uncorrected today.",
-    "index": 18,
+    "title": "Write The Follow-Up",
+    "body": "After any meeting that mattered: three lines confirming what was agreed and who does what. It prevents disputes and marks you as the reliable one. Almost nobody does it.",
+    "action": "Send a three-line recap after your next meeting.",
+    "index": 19,
     "total": 20,
     "label": "Etiquette"
    },
    "stillness": {
-    "title": "Impermanence Applies To The Bad Too",
-    "body": "The difficult period ends. So does the good one. This is not pessimism \u2014 it is the only reliable source of equanimity in both directions.",
-    "action": "Name the current difficulty. Say plainly: this also ends.",
-    "index": 16,
+    "title": "Solitude Is Not Loneliness",
+    "body": "Solitude is time free of other minds' input. It is where thinking happens. A room full of people and a phone full of voices are the same interruption.",
+    "action": "Take 30 minutes alone with no input. Not rest \u2014 thinking.",
+    "index": 17,
     "total": 20,
     "label": "Stillness"
    },
    "model": {
-    "title": "Compounding",
-    "body": "Small consistent gains dominate large sporadic ones, and the effect is invisible until suddenly it is not. The counterintuitive part: nearly all the value arrives at the end.",
-    "action": "Identify one habit that compounds. Protect it above anything urgent.",
-    "index": 8,
+    "title": "Confirmation Bias",
+    "body": "You will scrutinise disagreeing evidence and wave through agreeing evidence. Knowing this does not stop it. The only defence is to seek the counter-case deliberately.",
+    "action": "Find the strongest argument against your current position. Steelman it.",
+    "index": 9,
     "total": 20,
     "label": "Mental Model"
    },
    "arabic": {
-    "script": "\u0628\u0643\u0645 \u0647\u0630\u0627\u061f",
-    "translit": "bikam haadha?",
-    "meaning": "How much is this?",
-    "use": "Alternative to kam as-si'r. Common in shops.",
-    "index": 14,
+    "script": "\u0645\u0645\u0643\u0646",
+    "translit": "mumkin",
+    "meaning": "Possible / may I",
+    "use": "Enormously useful on its own. 'Mumkin?' while gesturing covers most requests.",
+    "index": 15,
     "total": 30,
     "label": "Arabic"
    },
    "drill": {
-    "title": "Review Your Own Work Cold",
-    "body": "Leave it 24 hours, then review as if a stranger wrote it and you are looking for errors. You will find them. Reviewing immediately finds nothing.",
-    "action": "Re-open yesterday's work. Find three things to fix.",
-    "index": 20,
+    "title": "Mental Math: 1% Anchoring",
+    "body": "Compute 1% of a number, then scale. 1% of 847,000 is 8,470. So 3% is 25,410 and 0.5% is 4,235. Fluency here makes you visibly faster in meetings than people with better degrees.",
+    "action": "Ten numbers. Find 1%, 3%, and 15% of each. Under 60 seconds total.",
+    "index": 1,
     "total": 20,
     "label": "Drill"
    },
    "health": {
-    "title": "Zone 5 Once A Week",
-    "body": "Short maximal intervals raise VO2max faster than steady work. Four minutes hard, four easy, four times. Unpleasant, brief, and disproportionately effective.",
-    "action": "One 4x4 interval session. Only if Zone 2 is already habitual.",
-    "index": 10,
+    "title": "Alcohol Has No Healthy Dose",
+    "body": "The J-curve was confounding \u2014 the abstainer group included the already-sick. Current evidence points to a linear dose-response for cancer risk from zero, and sleep architecture degrades from the first drink.",
+    "action": "Count last week's units honestly. Not a judgement, a baseline.",
+    "index": 11,
     "total": 20,
     "label": "Health"
    }
   },
   "quote": {
    "name": "Andy Grove",
-   "quote": "Success breeds complacency. Complacency breeds failure. Only the paranoid survive.",
-   "index": 55,
+   "quote": "Your time is limited, so don't waste it living someone else's life.",
+   "index": 56,
    "total": 96
   },
   "lesson": {
-   "tradition": "Buddhism",
-   "lesson": "No one saves us but ourselves. No one can and no one may.",
-   "source": "Buddha"
+   "tradition": "Japanese Wisdom",
+   "lesson": "Fall seven times, stand up eight.",
+   "source": "Japanese Proverb"
   },
   "case": {
-   "title": "Swiggy vs Zomato: The Profitability Race",
-   "story": "Both companies burned billions. Zomato reached profitability first by cutting dark stores, focusing on Blinkit synergies, and raising average order value.",
-   "lesson": "In competitive markets, the winner is often whoever cuts losses fastest and finds profitability before their competitor. Endurance beats speed."
+   "title": "Alibaba: Jack Ma's 1001st Try",
+   "story": "Jack Ma was rejected from Harvard 10 times. KFC rejected him. Failed at multiple businesses. Alibaba launched in 1999 and became a $600B company.",
+   "lesson": "Resilience is the most under-rated competitive advantage. Most people quit. The gap between failure and success is usually just one more attempt."
   },
   "fpna": {
-   "title": "Scenario Planning",
-   "body": "Always model 3: Base, Bull (+20%), Bear (\u201320%). Present the range. Executives hate surprises.",
-   "index": 7,
+   "title": "Contribution Margin",
+   "body": "CM = Revenue \u2013 Variable Costs. Know your CM by product, by customer, by geography.",
+   "index": 8,
    "total": 20
   },
   "cfo": {
-   "title": "FC Step 3: Internal Controls",
-   "body": "A Controller without strong controls is a liability. Know COSO framework. Segregation of duties. Maker-checker in AP/AR. SOX lite for listed companies. Document your controls. Auditors love documented processes.",
-   "index": 3,
+   "title": "FC Step 4: ERP Ownership",
+   "body": "SAP S/4HANA or Oracle Fusion \u2014 the FC owns the finance module. Know chart of accounts design, cost centre structure, intercompany eliminations, period-end close in the system. This separates candidates. SAP certification: \u20b915K online.",
+   "index": 4,
    "total": 15
   },
   "money_hack": {
-   "title": "Emergency Fund",
-   "body": "6 months of expenses in a liquid FD. Job loss + medical can overlap."
+   "title": "Credit Card Strategy",
+   "body": "Use card for all spends, pay in full before due. Earn 1\u20132% cashback. Never pay interest."
   },
   "dubai": {
-   "title": "The 'why Dubai' answer",
-   "body": "Every panel asks it, and 'better opportunities' loses the room. The answer that works is specific: the sector, the company's stage, and what you do about a problem they actually have.",
-   "targets": "Weak: growth and exposure. Strong: your lease portfolio doubled after the 2024 expansion.",
-   "action_label": "Homework",
-   "action": "Read the last annual report before the call. Quote one number from it.",
-   "index": 10,
+   "title": "Referral beats portal, by a lot",
+   "body": "Applications through a company portal convert at low single digits. An internal referral converts an order of magnitude better. The list of people who can refer you is smaller than you think and you already know most of them.",
+   "targets": "ICAI Dubai Chapter has roughly 4,000 members. That is the network.",
+   "action_label": "This week",
+   "action": "Message five CAs already in the UAE. Ask for a 15-minute call, not a job.",
+   "index": 11,
    "total": 30
   },
   "daughter": {
    "months": 10,
-   "days": 316,
+   "days": 317,
    "heading": "Ten months old.",
    "band": "cruising",
    "born": "2025-12-25"
   },
-  "productivity": "Define 'done' before starting. Vague tasks never finish.",
+  "productivity": "Build systems, not goals. Goals are outcomes; systems produce them.",
   "father": [
    {
-    "title": "Let her struggle briefly",
-    "do": "When a toy is just out of reach, wait five seconds before helping.",
-    "why": "Effort tolerance is trainable. Instant rescue is comfortable for you and teaches her that difficulty is someone else's problem."
+    "title": "Put the phone in another room",
+    "do": "One 20-minute block a day with the phone physically out of sight.",
+    "why": "Infants track gaze from very early. Divided attention is visible to her, and the research on 'still face' shows how quickly infants disengage when a caregiver's face goes flat."
    },
    {
-    "title": "Do one thing badly",
-    "do": "Take over a task you normally leave to her mother, and accept doing it worse for a fortnight.",
-    "why": "Competence gaps between parents are self-reinforcing \u2014 the more skilled parent does more, and the gap widens. Deliberately absorbing the early incompetence is how it closes."
+    "title": "Give her the spoon",
+    "do": "Let her hold a second spoon while you feed her with the first.",
+    "why": "It converts feeding from something done to her into something she participates in. Control over the process reduces resistance later, when refusal becomes a real phase."
    }
   ],
   "life_wisdom": [
    {
     "tradition": "Jainism",
-    "term": "Aparigraha",
-    "translation": "Non-attachment / non-possessiveness",
-    "teaching": "Accumulation beyond need becomes a burden that owns you. The vow is not poverty; it is limiting want deliberately.",
-    "apply": "Set a ceiling before you need one. Decide what income is enough now, in a number, so that lifestyle does not silently absorb every increment."
+    "term": "Ahimsa",
+    "translation": "Non-violence in thought, word and act",
+    "teaching": "The most demanding version is not physical \u2014 it is refusing to injure with speech or intent, including toward yourself.",
+    "apply": "Notice the sentence you would not say to a colleague, then check whether you say it to yourself about your own work. The standard should be the same."
    },
    {
     "tradition": "Buddhism",
-    "term": "Metta",
-    "translation": "Loving-kindness, deliberately extended",
-    "teaching": "A practice of extending goodwill outward in rings \u2014 to yourself, someone loved, someone neutral, someone difficult.",
-    "apply": "The difficult person is the point of the exercise. Pick the colleague who frustrates you most and find one thing they are genuinely right about."
+    "term": "Upekkha",
+    "translation": "Equanimity",
+    "teaching": "The fourth of the sublime states. Not indifference \u2014 full engagement without being destabilised by the outcome.",
+    "apply": "Judge the decision by the process you followed, not by how it turned out. A good decision with a bad outcome is still a good decision; conflating them is how you learn the wrong lesson."
    }
   ],
   "spanish": [
    {
-    "word": "tomar una decisi\u00f3n",
-    "meaning": "to make a decision",
-    "es": "Tenemos que tomar una decisi\u00f3n hoy.",
-    "en": "We have to make a decision today.",
-    "tag": "Business"
+    "word": "m\u00e1s vale tarde que nunca",
+    "meaning": "better late than never",
+    "es": "Entreg\u00f3 el informe \u2014 m\u00e1s vale tarde que nunca.",
+    "en": "He delivered the report \u2014 better late than never.",
+    "tag": "Idiom"
    },
    {
-    "word": "el pron\u00f3stico",
-    "meaning": "the forecast",
-    "es": "El pron\u00f3stico no coincide con la realidad.",
-    "en": "The forecast does not match reality.",
+    "word": "revisar",
+    "meaning": "to review / check",
+    "es": "Voy a revisar los n\u00fameros otra vez.",
+    "en": "I am going to check the numbers again.",
     "tag": "Business"
    }
   ],
   "vocab": [
    {
-    "word": "Attenuate",
-    "say": "uh-TEN-yoo-ayt",
-    "meaning": "To reduce in force or effect.",
-    "example": "Hedging attenuates the FX impact but does not remove it.",
-    "note": "The honest word when something is dampened rather than solved."
+    "word": "Requisite",
+    "say": "REK-wi-zit",
+    "meaning": "Required for a purpose.",
+    "example": "She has the requisite experience for the controller role.",
+    "note": "Slightly more formal than 'required'. Common in job specs and board papers."
    },
    {
-    "word": "Efficacy",
-    "say": "EF-i-kuh-see",
-    "meaning": "The ability to produce the intended result.",
-    "example": "We have no evidence on the efficacy of that promotion.",
-    "note": "Not the same as efficiency. Efficacy is 'does it work', efficiency is 'at what cost'."
+    "word": "Predicated",
+    "say": "PRED-i-kay-tid",
+    "meaning": "Founded or based on.",
+    "example": "The forecast is predicated on two store openings in Q3.",
+    "note": "The precise way to surface an assumption the whole number rests on."
    }
   ],
   "speaking": {
-   "title": "Replace 'I think'",
-   "drill": "Speak for 90 seconds about a decision, substituting 'I think' with 'the data shows', 'my view is', or nothing at all.",
-   "why": "'I think' before a fact undercuts the fact. Keep it for genuine opinion."
+   "title": "Name the number first",
+   "drill": "Practise flipping five sentences so the figure leads: not 'because of markdown, margin fell 180bps' but 'margin fell 180bps \u2014 markdown'.",
+   "why": "Numbers-first is your written voice. Make it your spoken one."
   },
   "interview_tech": [
    {
-    "q": "How does IFRS 16 change the picture for a retailer with 60 leases?",
-    "a": "Operating leases come on balance sheet as a right-of-use asset and a lease liability. Rent expense is replaced by depreciation plus interest, so EBITDA rises \u2014 often materially for retail \u2014 while EBIT moves little. Interest is front-loaded, so early-life leases depress net income versus the old treatment. Watch three consequences: gearing ratios jump and can breach covenants written pre-IFRS 16; EBITDA-based multiples are no longer comparable to history; and store-level return metrics need restating or you will misjudge performance.",
-    "who": "Al-Futtaim \u00b7 Carrefour MAF \u00b7 H&M"
+    "q": "Like-for-like sales are +3% but total sales are \u22122%. What is happening?",
+    "a": "The existing estate is growing while the total base shrank \u2014 you closed stores, or a material store left the LFL set. LFL strips out openings and closures, so the gap is the net space effect. Ask: was the closure deliberate portfolio pruning, in which case \u22122% total with +3% LFL and better margin is a good outcome; or did leases expire without replacement, which is a pipeline failure. Follow with sales density per sqm \u2014 that tells you whether the remaining estate is genuinely stronger.",
+    "who": "Marks & Spencer \u00b7 Americana \u00b7 Alshaya"
    },
    {
-    "q": "Explain working capital optimisation to a non-finance retail board.",
-    "a": "Working capital is cash tied up in running the business \u2014 stock on shelves and money owed to you, less money you owe suppliers. Every day of stock is cash sitting in a warehouse instead of in the bank. Frame it in days and rupees, not ratios: 'we hold 95 days of stock; every day we cut releases AED 1.1M in cash we can spend on new stores instead of borrowing.' Boards act on that. They do not act on 'DIO improved 4%.'",
-    "who": "Landmark Group \u00b7 Lulu \u00b7 Walmart"
+    "q": "You are consolidating Malaysia and Indonesia. Where do FX translation differences land?",
+    "a": "Functional currency results are translated at the closing rate for assets and liabilities, average rate for P&L, and the difference goes to other comprehensive income as a foreign currency translation reserve \u2014 not through P&L. It only recycles to P&L on disposal of the foreign operation. The trap: intercompany balances that are effectively permanent investment belong in the net investment, so their FX also goes to OCI. Getting that wrong puts noise through earnings every quarter.",
+    "who": "Landmark Group \u00b7 Unilever \u00b7 Shell"
    }
   ],
   "interview_soft": [
    {
-    "q": "What is your biggest professional failure?",
-    "a": "Pick a real one with a number, not a disguised strength. The structure: what you owned, what specifically you got wrong, what it cost, what you changed in your process, and evidence the change held. The disqualifying answers are 'I work too hard' and any failure where the fault lands on someone else. If you cannot name the cost in money or time, it was not a real failure and they will know.",
-    "who": "Amazon (Bar Raiser) \u00b7 P&G \u00b7 Nestl\u00e9"
+    "q": "Why Dubai? Why now?",
+    "a": "They are screening for whether you have thought about it or are just leaving somewhere. Be concrete: the Gulf retail market's scale and the concentration of regional HQs; UAE corporate tax making the finance function genuinely more technical than it was; and the specific fit between your multi-country consolidation experience and a group operating across GCC markets. Do not lead with tax-free income or lifestyle \u2014 every candidate says it and none of it is about the job.",
+    "who": "Every Gulf search firm"
    },
    {
-    "q": "Where do you see yourself in five years?",
-    "a": "Answer the real question: are you a flight risk and do you understand the ladder. Be specific about the next rung rather than the summit \u2014 'Financial Controller for a multi-market group, then Finance Director with commercial ownership, then CFO. What I need in between is treasury depth and a full M&A cycle, which is part of why this role interests me.' Naming what you lack reads as self-aware, not weak.",
+    "q": "How do you prioritise when everything is urgent?",
+    "a": "Give a working rule, not a philosophy. Something like: anything with a statutory deadline is non-negotiable; then anything that changes a decision being made this week; then anything that compounds \u2014 process fixes that stop the same fire recurring; then everything else. The part interviewers actually want: what you stopped doing and who you told. Prioritisation without explicit de-prioritisation is just a longer list.",
     "who": "Universal"
    }
   ],
   "cfo_field": [
    {
-    "q": "The controller who never leaves the close never becomes CFO.",
-    "a": "The job you are promoted out of is 'the person who produces the numbers'. The job you are promoted into is 'the person who decides what to do about them'. If your calendar is 70% close, reconciliation and audit prep, you are demonstrating that you are excellent at the job you already have. Push the close down: a well-run retail group closes in 5 working days, and every day you shave buys back roughly 12 days a year of capacity to spend on decisions instead of production.",
-    "who": "The single most common plateau"
+    "q": "Learn the lease standard properly. In the Gulf it is not a footnote.",
+    "a": "IFRS 16 put every store lease on the balance sheet as a right-of-use asset and a lease liability. Two consequences a CFO must be able to say out loud: EBITDA is now flattered, because rent that used to sit in operating costs is split into depreciation and interest; and leverage ratios move even though nothing about the business changed. If your covenant is set on a pre-IFRS-16 basis, know it before the bank asks.",
+    "who": "Every leased-store business"
    },
    {
-    "q": "The Gulf pays for scarcity, not for years.",
-    "a": "Salary in the region tracks the intersection of skills, not the length of the CV. CA plus genuine FP&A plus retail plus a system implementation is a much rarer combination than any one of them is deep. If you are negotiating, the leverage is in naming the intersection, not in listing the years. And check the structure: basic versus allowances changes gratuity, which is calculated on basic salary alone.",
-    "who": "Compensation structure"
+    "q": "Automation without a control map is how a finance function loses its audit trail.",
+    "a": "Before automating a process, write down: who can initiate, who approves, what the system does without a human, and where the exception report goes. Automation does not remove controls; it moves them from people to configuration, and configuration drifts silently. The question 'what breaks if this runs wrong for a month before anyone notices' is the one that separates a finance automation from a finance incident.",
+    "who": "Every CFO agenda, 2024 onward"
    }
   ],
   "review": {
@@ -822,9 +822,9 @@
    "week": 45,
    "year": 2026,
    "key": "2026-W45",
-   "weekday": 5,
-   "days_left": 2,
-   "is_review_day": false
+   "weekday": 6,
+   "days_left": 1,
+   "is_review_day": true
   },
   "podcasts": {
    "ok": true,
@@ -860,46 +860,84 @@
    "shows": 1,
    "source": "each channel's public Atom feed",
    "built_on": "2026-11-04",
-   "age_days": 2.0,
+   "age_days": 3.0,
    "is_fallback": true
   },
   "smart_reads": [
    {
     "source": "Livemint",
     "cat": "money",
-    "title": "Dhanteras 2026: Auspicious time to buy gold today, November 6; check muhurat and shopping tips",
-    "link": "https://www.livemint.com/money/dhanteras-2026-auspicious-time-to-buy-gold-today-november-6-check-muhurat-and-shopping-tips-11793928276851.html",
-    "summary": "Dhanteras 2026 falls on November 6, with gold and silver purchases considered auspicious. Check the gold-buying muhurat for New Delhi, important festival timings and four things to verify before purchasing jewellery, coins or other precious metals.",
+    "title": "UCO Bank fined  \u20b915,000 for delay in revising widow\u2019s family pension despite official instructions: Here's what happened",
+    "link": "https://www.livemint.com/money/uco-bank-fined-15-000-for-delay-in-revising-widow-s-family-pension-despite-official-instructions-heres-what-happened-11793981648967.html",
+    "summary": "A Chandigarh consumer commission directed UCO Bank to pay  \u20b915,000 to a widow after finding that its delay in revising her family pension amounted to deficiency in service. The commission said later payment of arrears did not erase the hardship and mental harassment caused.",
     "date": "Nov 06, 2026",
-    "_sort": "2026-11-06T01:30:44+00:00"
-   },
-   {
-    "source": "NYT Well",
-    "cat": "health",
-    "title": "Can Creatine Supplements Make Your Brain Stronger?",
-    "link": "https://www.nytimes.com/2026/11/05/well/mind/creatine-supplements-brain-benefits.html",
-    "summary": "Their muscle-building benefits are well-established. Their mind-building benefits are another story.",
-    "date": "Nov 05, 2026",
-    "_sort": "2026-11-05T22:44:24+00:00"
+    "_sort": "2026-11-06T17:50:03+00:00",
+    "smart": {
+     "what_happened": [
+      "The Chandigarh consumer commission ordered UCO Bank to pay \u20b915,000 to a widow after the bank delayed revising her family pension.",
+      "The commission said the late payment constituted a deficiency in service and caused hardship and mental harassment."
+     ],
+     "why_it_matters": "The ruling underscores the authority of consumer commissions to enforce timely pension adjustments and hold banks accountable for service lapses, highlighting the regulatory risk banks face when they fail to comply with official instructions, which can affect their reputation and lead to financial penalties.",
+     "what_to_watch": "Watch for any subsequent compliance orders or fines issued by the Chandigarh consumer commission or other regional consumer bodies against UCO Bank.",
+     "headline": "UCO Bank fined \u20b915,000 for delayed widow pension revision",
+     "read_seconds": 22
+    }
    },
    {
     "source": "ET Opinion",
     "cat": "money",
-    "title": "Diwali sweet nothings: Like soan papdi, the annual festival stock tip is admired, passed along, and almost never 'eaten'",
-    "link": "https://economictimes.indiatimes.com/opinion/et-commentary/diwali-sweet-nothings-like-soan-papdi-the-annual-festival-stock-tip-is-admired-passed-along-and-almost-never-eaten/articleshow/135583830.cms",
-    "summary": "Diwali gifting traditions influence stock market trading strategies and recommendations across various brokerages during the festive season. Many analysts provide stock picks with target prices, which are frequently unattainable in the falling market. A significant number of brokerage reports underperform their benchma",
-    "date": "Nov 05, 2026",
-    "_sort": "2026-11-05T18:09:58+00:00",
+    "title": "The high price of being King Trump: How tariffs and war fuelled voter anger",
+    "link": "https://economictimes.indiatimes.com/opinion/et-commentary/the-high-price-of-being-king-trump-how-tariffs-and-war-fuelled-voter-anger/articleshow/135616428.cms",
+    "summary": "Inflation has significantly impacted the political careers of Joe Biden and Donald Trump. Rising costs have led to voter discontent against both administrations in recent elections. Trump's tariff policies and military actions have contributed to increasing economic burdens on citizens. Democrats now have an opportunit",
+    "date": "Nov 06, 2026",
+    "_sort": "2026-11-06T17:40:17+00:00",
     "smart": {
      "what_happened": [
-      "During Diwali, many analysts issue stock picks with target prices that are often unattainable in a falling market.",
-      "A significant number of brokerage reports underperform their benchmarks during the festive season."
+      "Inflation has heightened voter discontent against both Biden and Trump administrations.",
+      "Trump's tariff policies and military actions have added to citizens' economic burdens."
      ],
-     "why_it_matters": "The practice of coupling Diwali gifting traditions with stock recommendations can lead investors to chase overly optimistic targets, potentially resulting in poorer portfolio performance when the market declines, and it highlights a seasonal bias that may affect the overall quality of brokerage research.",
-     "what_to_watch": "Monitor the target prices in Diwali-era brokerage reports to see if they align with broader market trends and benchmark performance.",
-     "headline": "Diwali gifting drives festive stock tips with unrealistic targets",
+     "why_it_matters": "The rise in voter anger linked to higher living costs creates political risk for both parties, giving Democrats an opening to capitalize on public frustration while potentially undermining Trump's support base ahead of upcoming elections.",
+     "what_to_watch": "Results of the upcoming midterm elections in districts most affected by tariff\u2011related price increases.",
+     "headline": "Tariffs and war boost voter anger toward Trump",
      "read_seconds": 26
     }
+   },
+   {
+    "source": "NYT Well",
+    "cat": "health",
+    "title": "As Hormone Use Increases, Some Doctors Warn Slight Cancer Risk Is Being Overlooked",
+    "link": "https://www.nytimes.com/2026/11/06/well/hormone-therapy-menopause-cancer.html",
+    "summary": "Doctors said that women should receive treatment for menopause symptoms, but need accurate information about the drugs.",
+    "date": "Nov 06, 2026",
+    "_sort": "2026-11-06T13:17:54+00:00"
+   },
+   {
+    "source": "Psyche",
+    "cat": "mind",
+    "title": "How to break a bad habit",
+    "link": "https://psyche.co/videos/to-break-a-bad-habit-try-telling-yourself-a-different-story",
+    "summary": "Feel stuck with a habit you know is bad for you? Getting to know your brain better could help you change the narrative- Video by Dr Tracey MarksWatch on Psyche",
+    "date": "Nov 06, 2026",
+    "_sort": "2026-11-06T11:01:00+00:00",
+    "smart": {
+     "what_happened": [
+      "The article offers advice on changing bad habits by understanding the brain.",
+      "It includes a video by Dr. Tracey Marks."
+     ],
+     "why_it_matters": "Understanding the neurological basis of habits can help individuals develop more effective strategies for behavior change, which may improve personal productivity and wellbeing.",
+     "what_to_watch": "The release of any follow\u2011up content or studies referenced by Dr. Tracey Marks on habit change.",
+     "headline": "How to break a bad habit",
+     "read_seconds": 20
+    }
+   },
+   {
+    "source": "Livemint Opinion",
+    "cat": "money",
+    "title": "Andy Mukherjee: Washington is fretting over China while Wall Street is embracing the yuan",
+    "link": "https://www.livemint.com/opinion/online-views/andy-mukherjee-how-wall-street-is-helping-china-build-a-global-yuan-11793952325395.html",
+    "summary": "Although the yuan is nowhere near challenging the greenback, the search for an alternative to the dollar is real. The irony is that it\u2019s America\u2019s megabanks that are helping Beijing turn the yuan into a viable funding currency.",
+    "date": "Nov 06, 2026",
+    "_sort": "2026-11-06T09:37:33+00:00"
    },
    {
     "source": "The Marginalian",
@@ -909,34 +947,6 @@
     "summary": "Our lives are defined not by what we have but what we give &#8212; on what and whom we spend our energy and time, how we share our material possessions and our mental powers, what we do with our gifts. \u201cAnything you do not give freely and abundantly becomes lost to you,&#8221; Annie Dillard wrote in contemplating the n",
     "date": "Nov 05, 2026",
     "_sort": "2026-11-05T17:58:43+00:00"
-   },
-   {
-    "source": "Livemint Opinion",
-    "cat": "money",
-    "title": "Well-being question: Why it is a blindspot in our development roadmaps",
-    "link": "https://www.livemint.com/opinion/online-views/wellbeing-question-why-it-is-a-blindspot-in-our-development-roadmaps-11793803403747.html",
-    "summary": "Several measures such as gross domestic product, gross national income and human development index still don\u2019t answer if people are actually living better. A report debunks the belief that economic progress means better lives. Here's what the data shows.",
-    "date": "Nov 05, 2026",
-    "_sort": "2026-11-05T12:19:49+00:00",
-    "smart": {
-     "what_happened": [
-      "A new report argues that gross domestic product, gross national income and the human development index do not answer whether people are actually living better.",
-      "The report\u2019s data shows that economic progress does not automatically translate into improved well\u2011being."
-     ],
-     "why_it_matters": "Policymakers and development planners rely on GDP, GNI and HDI to gauge progress; if these metrics overlook actual well\u2011being, strategies may miss critical social outcomes, leading to misallocation of resources and ineffective interventions.",
-     "what_to_watch": "Watch for the report\u2019s detailed data release that will outline the specific well\u2011being gaps identified.",
-     "headline": "Report finds GDP, GNI and HDI miss well\u2011being progress",
-     "read_seconds": 21
-    }
-   },
-   {
-    "source": "Psyche",
-    "cat": "mind",
-    "title": "Who am I if I don\u2019t run?",
-    "link": "https://psyche.co/notes-to-self/the-perils-of-stopping-an-activity-that-forms-your-identity",
-    "summary": "When an ankle injury put the brakes on my running habit, I had to rethink the wisdom of tying my identity to an activity- by Richard FisherRead on Psyche",
-    "date": "Nov 05, 2026",
-    "_sort": "2026-11-05T11:00:00+00:00"
    },
    {
     "source": "Farnam Street",
@@ -968,39 +978,48 @@
   ],
   "lichess_games": [
    {
-    "id": "WGM2s1tE",
-    "url": "https://lichess.org/WGM2s1tE",
+    "id": "aE8hRfz4",
+    "url": "https://lichess.org/aE8hRfz4",
     "result": "Loss",
     "icon": "\u274c",
     "cls": "loss",
-    "my_side": "Black",
-    "my_rating": 1540,
-    "opp_rating": 1478,
-    "opponent": "Dayazel",
-    "me_diff": -7,
-    "opp_diff": 9,
-    "opening": "Philidor Defense",
-    "eco": "C41",
-    "moves": 17,
+    "my_side": "White",
+    "my_rating": 1533,
+    "opp_rating": 1645,
+    "opponent": "Kirli21",
+    "me_diff": -4,
+    "opp_diff": 4,
+    "opening": "French Defense",
+    "eco": "C02",
+    "moves": 32,
     "termination": "Resignation",
     "speed": "Blitz",
-    "analysis": "Focus on early piece activity: after 1.e4 e5\u202f2.Nf3 d6, develop the knight to f6 before pushing \u2026c5; avoid passive \u2026Be7\u2011c5 ideas that let White seize space and force your queen early. Improve by 2\u2026Nf6, 3\u2026Nbd7, then \u2026c5, keeping the center balanced and preventing quick resignations.",
+    "analysis": "Focus on early queen development: avoid 6.Qb3? and 8.Qxd5?; instead play 6.Nc3, 7.Bd3, 8.0\u20110, keeping the queen safe and reducing tactical vulnerabilities. This alone should cut your ACPL by ~15\u202fpts.",
     "is_upset": false,
     "is_collapse": false,
     "is_long": false,
     "best_move": {},
     "key_facts": [
-     "Rating gap -62 (1540 vs 1478)",
-     "17 moves \u00b7 Blitz"
+     "Rating gap +112 (1533 vs 1645)",
+     "Endgame from move 30",
+     "32 moves \u00b7 Blitz"
     ],
-    "standout": "Over in 17 moves \u2014 decided in the opening, so the opening is what to study.",
+    "standout": "",
     "game_strength": null,
-    "est_fide": 1140,
+    "est_fide": 1133,
     "accuracy": null,
     "acpl": null,
     "analysed": false,
     "_mode": "full",
     "_trend": [
+     {
+      "day": "11/06",
+      "wins": 0,
+      "losses": 1,
+      "draws": 0,
+      "total": 1,
+      "pct": 0
+     },
      {
       "day": "11/05",
       "wins": 0,
@@ -1048,14 +1067,6 @@
       "draws": 0,
       "total": 2,
       "pct": 0
-     },
-     {
-      "day": "10/24",
-      "wins": 0,
-      "losses": 1,
-      "draws": 0,
-      "total": 1,
-      "pct": 0
      }
     ],
     "_yest_counts": {
@@ -1064,12 +1075,12 @@
       "loss": 1,
       "draw": 0,
       "rp": {
-       "before": 1540,
-       "after": 1533
+       "before": 1533,
+       "after": 1529
       }
      }
     },
-    "_session_date": "2026-11-05",
+    "_session_date": "2026-11-06",
     "_is_yesterday": true
    }
   ],
@@ -1083,6 +1094,14 @@
    "icon": "\u274c",
    "score": "0/1",
    "trend": [
+    {
+     "day": "11/06",
+     "wins": 0,
+     "losses": 1,
+     "draws": 0,
+     "total": 1,
+     "pct": 0
+    },
     {
      "day": "11/05",
      "wins": 0,
@@ -1130,14 +1149,6 @@
      "draws": 0,
      "total": 2,
      "pct": 0
-    },
-    {
-     "day": "10/24",
-     "wins": 0,
-     "losses": 1,
-     "draws": 0,
-     "total": 1,
-     "pct": 0
     }
    ],
    "weak_op": "",
@@ -1145,18 +1156,18 @@
    "upsets": 0,
    "collapses": 0,
    "long_games": 0,
-   "session_summary": "Your opening repertoire is a liability\u2014every game you play starts with a predictable, sub\u2011par line that lets opponents seize the initiative within the first ten moves. Stop relying on rote memorization and rebuild from the ground up: master a single solid defense (e.g., the Carlsen\u2011style London System) and a versatile counter\u2011attack (the Sicilian Najdorf), drilling each variation until you can transition to the middle game with a clear plan. From now on, allocate at least one hour daily to concrete calculation exercises and review every loss move\u2011by\u2011move, fixing the first tactical error you encounter before moving on.",
-   "session_date": "2026-11-05",
+   "session_summary": "AKK_010\u2019s sole loss came from a careless opening choice\u2014playing a passive Queen\u2019s Gambit Declined without contesting the center, allowing Black to seize space and dictate the pace. The defeat shows a glaring weakness in early\u2011game initiative; you must study and adopt more aggressive, principled openings (e.g., 1.e4\u202fc5 or 1.d4\u202fNf6) to seize the tempo from move\u202f1.\u202fStart a daily 30\u2011minute opening drill, memorize the first ten moves of two repertoire lines, and force yourself to play them in every practice game until they become automatic.",
+   "session_date": "2026-11-06",
    "is_yesterday": true,
    "token_missing": false
   },
   "lichess_puzzle": {
-   "pid": "u52YY",
-   "rating": 1858,
+   "pid": "PL5HE",
+   "rating": 1824,
    "level": "\ud83d\udd34 stretch",
-   "themes": "Middlegame \u00b7 Advantage \u00b7 Long",
-   "tip": "Give material for a decisive positional or mating advantage.",
-   "url": "https://lichess.org/training/u52YY"
+   "themes": "Exposed King \u00b7 Long \u00b7 Mate In3",
+   "tip": "Three-move combination. The first move must be forcing.",
+   "url": "https://lichess.org/training/PL5HE"
   }
  }
 }
