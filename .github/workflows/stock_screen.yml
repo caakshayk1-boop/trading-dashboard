@@ -1,58 +1,13 @@
 name: Stock Screen — daily NSE Total Market research screen
 
-# Builds the NSE Total Market (750 names) research screen and caches it in Turso
-# (newspaper_screen, keyed by ISO week). The daily newspaper only READS that
-# cache and writes docs/screen.json from it.
-#
-# Its own workflow for the same reason fund_screen.yml has one: this is ~750
-# symbols × (one quote + two statement frames), fetched sequentially because
-# Yahoo throttles an IP that bursts. That is roughly 29 minutes on a cold cache
-# and it does not belong anywhere near the 6 AM job's 15-minute budget.
-#
-# Runs AFTER the fund screen (01:30 IST) rather than alongside it — two jobs
-# hammering Yahoo from the same runner IP is how both end up rate-limited.
-
+# Publish directly after the close. The hourly-bar reconstruction already waits
+# for a complete 15:15 IST final bar; unavailable prices stay unavailable.
+# Newspaper generation is no longer a prerequisite for downstream research.
 on:
   schedule:
-    # DAILY as of 2026-08-27, not Sunday-only.
-    #
-    # The screen carries two kinds of column and they age at completely
-    # different rates. Fundamentals — ROCE, three-year compounding, leverage —
-    # come from annual filings and genuinely do not move in a week. Price, RSI,
-    # turnover and vol_spike move every session, and TWO published sections are
-    # built entirely from them: the volume board ("Who actually showed up") and
-    # the breakout table ("Breaking out, and liquid enough to leave").
-    #
-    # On a Sunday cadence both spent the week describing last Friday while
-    # reading as today: on 2026-08-27 the volume board was showing 08-21
-    # volumes under a heading that says "names trading at twice their own
-    # average volume". That is not staleness, it is a wrong answer.
-    #
-    # Cost measured, not assumed: the last full 750-name run took 10m27s. Daily
-    # is ~315 minutes a month. Re-reading unchanged fundamentals every day is
-    # waste, but it is cheap waste and far less risky than splitting the
-    # payload into two clocks that can disagree with each other.
-    # ── AND THE HOUR MATTERS AS MUCH AS THE CADENCE ─────────────────────
-    #
-    # Daily since 2026-08-27, and still two sessions behind, because 02:30 IST
-    # is the wrong 02:30. Yahoo publishes an NSE daily bar for session N with
-    # NaN prices and settles it roughly a day later — measured directly: on
-    # 2026-09-04 the 09-03 bar was NaN-priced for every NSE name, and by 23:19
-    # IST on 09-05 the 09-04 bar was real. The screen drops NaN closes, as it
-    # should, so a 02:30 build looks back past the unsettled bar and lands on
-    # the one before it.
-    #
-    # The receipt: the 2026-09-05 04:24 IST build stamped every one of its 750
-    # rows last_date 2026-09-03. Two sessions old on a screen whose volume
-    # board is headed "names trading at twice their own average volume".
-    #
-    # 21:00 IST reads a session that closed ~29 hours earlier rather than ~11,
-    # which is the far side of that settle. It cannot do better than the
-    # previous close from this source, and it no longer does worse.
-    - cron: '30 15 * * *'     # 21:00 IST daily — after Yahoo settles yesterday
-    # And a retry, because GitHub drops scheduled runs outright — it dropped
-    # three of this repo's workflows on 2026-08-27 alone.
-    - cron: '30 17 * * *'     # 23:00 IST — retry if the 21:00 run was dropped
+    - cron: '17 11 * * 1-5'     # 16:47 IST, after the completed session
+    - cron: '37 13 * * 1-5'     # 19:07 IST retry for delayed vendor data
+    - cron: '30 17 * * 1-5'     # 23:00 IST final retry
   workflow_dispatch:
     inputs:
       limit:
@@ -236,6 +191,8 @@ jobs:
                       f"but does not read back correctly from Turso. The remote DB "
                       f"still has last week's build. Not safe to report success."
                   )
+              from pathlib import Path
+              Path('/tmp/validated-screen.json').write_text(json.dumps(data))
               print(f"\ncached for week {week} — verified on Turso")
               newspaper.record_job_status(JOB, "success", f"week {week}, {data['count']} companies",
                                           records=attempt_records, expected=attempt_expected)
@@ -259,3 +216,26 @@ jobs:
       # TTL is 30 days, so a warm restore turns a ~11-minute cold build into
       # about two minutes. cache/nifty500.csv is the one file here that IS
       # committed, because it is an input rather than a cache — see .gitignore.
+
+      - name: Test the direct publisher
+        run: python -m unittest test_publish_screen.py
+      - name: Publish the verified screen now
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          for attempt in 1 2 3; do
+            git fetch origin main
+            git reset --hard origin/main
+            python publish_screen.py /tmp/validated-screen.json docs
+            git add docs/screen.json docs/screen-detail.json docs/screen-lite.json docs/swot.json
+            if git diff --cached --quiet; then exit 0; fi
+            git commit -m "data: publish validated daily screen [skip ci]"
+            if git push origin HEAD:main; then exit 0; fi
+          done
+          exit 1
+      - name: Refresh Tripwire from the published screen
+        env:
+          GH_TOKEN: ${{ secrets.GH_PAT }}
+        run: |
+          test -n "$GH_TOKEN" || { echo '::error::GH_PAT missing; direct screen published but Tripwire was not triggered'; exit 1; }
+          gh api repos/caakshayk1-boop/alpha/dispatches -f event_type=screen-published
