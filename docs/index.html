@@ -7,7 +7,7 @@
      style and script. Strict because nothing loads from a third party any
      more: no 'unsafe-inline', no CDN, no font host. Each inline block carries
      the per-build nonce. -->
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'nonce-w8ohtHasOK10mxs9Cy12Ew'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https://i.ytimg.com; font-src 'self'; frame-src https://www.youtube-nocookie.com; connect-src 'self'; base-uri 'self'; form-action 'self'; object-src 'none'; upgrade-insecure-requests">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'nonce-mfBFhpFARDHoXhf5JYWK5w'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https://i.ytimg.com; font-src 'self'; frame-src https://www.youtube-nocookie.com; connect-src 'self'; base-uri 'self'; form-action 'self'; object-src 'none'; upgrade-insecure-requests">
 <!-- Applies the stored theme BEFORE first paint. Placed in <head>, inline and
      synchronous on purpose: deferring it by even one frame means the page
      paints in one theme and repaints in the other, which is the single most
@@ -18,7 +18,7 @@
      no JavaScript at all to get the right theme — and a reader with JS
      disabled or blocked gets it too. This script only re-applies an explicit
      choice the reader made on a previous visit. -->
-<script nonce="w8ohtHasOK10mxs9Cy12Ew">
+<script nonce="mfBFhpFARDHoXhf5JYWK5w">
 (function(){try{
   var t=localStorage.getItem('aa-theme');
   if(t==='light'||t==='dark')document.documentElement.setAttribute('data-theme',t);
@@ -62,7 +62,7 @@
 <link rel="manifest" href="/manifest.webmanifest">
 
 <!-- This publishes a genuine public dataset; saying so is the honest schema. -->
-<script type="application/ld+json" nonce="w8ohtHasOK10mxs9Cy12Ew">{"@context":"https://schema.org","@graph":[{"@type":"Dataset","@id":"https://news.askakshay.com/#dataset","name":"The Daily Signal \u2014 NSE trading ledger","description":"Every trading signal this ledger generates, logged when it fires and scored when it closes. Includes entry, stop, targets, outcome and R-multiple.","url":"https://news.askakshay.com","license":"https://creativecommons.org/licenses/by/4.0/","creator":{"@id":"https://news.askakshay.com/#person"},"temporalCoverage":"2026-05-09/2026-11-10","dateModified":"2026-11-10T09:02:36.847872+08:00","keywords":["NSE","trading signals","India equities","track record","expectancy","R-multiple"],"distribution":[{"@type":"DataDownload","encodingFormat":"application/json","contentUrl":"https://news.askakshay.com/api/signals"}]},{"@type":"Person","@id":"https://news.askakshay.com/#person","name":"Akshay K Kothari","jobTitle":"Chartered Accountant \u00b7 FP&A","url":"https://askakshay.com","sameAs":["https://askakshay.com","https://www.linkedin.com/in/akkothari"]},{"@type":"WebSite","potentialAction":{"@type":"SearchAction","target":{"@type":"EntryPoint","urlTemplate":"https://news.askakshay.com/?q={search_term_string}"},"query-input":"required name=search_term_string"},"@id":"https://news.askakshay.com/#website","url":"https://news.askakshay.com","name":"The Daily Signal","publisher":{"@id":"https://news.askakshay.com/#person"},"inLanguage":"en-IN"}]}</script>
+<script type="application/ld+json" nonce="mfBFhpFARDHoXhf5JYWK5w">{"@context":"https://schema.org","@graph":[{"@type":"Dataset","@id":"https://news.askakshay.com/#dataset","name":"The Daily Signal \u2014 NSE trading ledger","description":"Every trading signal this ledger generates, logged when it fires and scored when it closes. Includes entry, stop, targets, outcome and R-multiple.","url":"https://news.askakshay.com","license":"https://creativecommons.org/licenses/by/4.0/","creator":{"@id":"https://news.askakshay.com/#person"},"temporalCoverage":"2026-05-09/2026-11-10","dateModified":"2026-11-10T11:59:02.259465+08:00","keywords":["NSE","trading signals","India equities","track record","expectancy","R-multiple"],"distribution":[{"@type":"DataDownload","encodingFormat":"application/json","contentUrl":"https://news.askakshay.com/api/signals"}]},{"@type":"Person","@id":"https://news.askakshay.com/#person","name":"Akshay K Kothari","jobTitle":"Chartered Accountant \u00b7 FP&A","url":"https://askakshay.com","sameAs":["https://askakshay.com","https://www.linkedin.com/in/akkothari"]},{"@type":"WebSite","potentialAction":{"@type":"SearchAction","target":{"@type":"EntryPoint","urlTemplate":"https://news.askakshay.com/?q={search_term_string}"},"query-input":"required name=search_term_string"},"@id":"https://news.askakshay.com/#website","url":"https://news.askakshay.com","name":"The Daily Signal","publisher":{"@id":"https://news.askakshay.com/#person"},"inLanguage":"en-IN"}]}</script>
 
 <!-- Self-hosted. Google Fonts was the ONLY third-party origin this page
      contacted; removing it means the site now truthfully loads nothing from
@@ -5089,7 +5089,7 @@ table.t tbody tr:hover{background:var(--surface2)}
         <span>⌘K</span><span>Search</span>
       </button>
       <span class="d">Tuesday, November 10 2026</span>
-      <span class="live" id="istClock"><i></i>09:02 MYT</span>
+      <span class="live" id="istClock"><i></i>11:59 MYT</span>
       
       <button type="button" class="thm" id="themeBtn"
               aria-label="Theme: system. Click to change." title="Theme">
@@ -5107,11 +5107,11 @@ table.t tbody tr:hover{background:var(--surface2)}
      it. One sequence now, top to bottom, nav and headings the same. -->
 
 
-<div class="trust ok">
+<div class="trust warn">
   <div class="trust-in">
     <span class="trust-dot" aria-hidden="true"></span>
     <span class="trust-txt">
-      <b>12 of 12</b> datasets current
+      <b>11 of 12</b> datasets current &middot; worst <b>stale</b>
     </span>
     
     <span class="livebar" id="livebar">
@@ -5194,7 +5194,7 @@ table.t tbody tr:hover{background:var(--surface2)}
      date and the hero still held yesterday's numbers. Two tabs open a minute
      apart disagreed about what day it was. The page now knows its own build id
      and says so when a newer one is published. -->
-<div class="editionbar" id="editionbar" data-build="20261110T090236">
+<div class="editionbar" id="editionbar" data-build="20261110T115902">
   
   
   <span class="ed-txt">
@@ -5248,36 +5248,36 @@ table.t tbody tr:hover{background:var(--surface2)}
     
     <div class="ti">
       <span class="n">Gold</span>
-      <span class="p">$4133.1</span>
-      <span class="c up">▲ +1.43%</span>
+      <span class="p">$4120.2</span>
+      <span class="c up">▲ +1.11%</span>
     </div>
     
     
     <div class="ti">
       <span class="n">Crude</span>
-      <span class="p">$86.60</span>
-      <span class="c dn">▼ -4.66%</span>
+      <span class="p">$85.62</span>
+      <span class="c dn">▼ -5.74%</span>
     </div>
     
     
     <div class="ti">
       <span class="n">USD/INR</span>
-      <span class="p">₹93.90</span>
-      <span class="c dn">▼ -0.59%</span>
+      <span class="p">₹93.92</span>
+      <span class="c up">▲ +0.02%</span>
     </div>
     
     
     <div class="ti">
       <span class="n">BTC</span>
-      <span class="p">$75152</span>
-      <span class="c up">▲ +0.76%</span>
+      <span class="p">$74452</span>
+      <span class="c dn">▼ -0.18%</span>
     </div>
     
     
     <div class="ti">
       <span class="n">Sensex</span>
-      <span class="p">₹81028</span>
-      <span class="c up">▲ +2.17%</span>
+      <span class="p">₹81107</span>
+      <span class="c up">▲ +0.1%</span>
     </div>
     
     <div class="tseg" style="--sc:var(--lime)"><span class="ic">📈</span><span class="lb">Markets</span></div>
@@ -5306,36 +5306,36 @@ table.t tbody tr:hover{background:var(--surface2)}
     
     <div class="ti">
       <span class="n">Gold</span>
-      <span class="p">$4133.1</span>
-      <span class="c up">▲ +1.43%</span>
+      <span class="p">$4120.2</span>
+      <span class="c up">▲ +1.11%</span>
     </div>
     
     
     <div class="ti">
       <span class="n">Crude</span>
-      <span class="p">$86.60</span>
-      <span class="c dn">▼ -4.66%</span>
+      <span class="p">$85.62</span>
+      <span class="c dn">▼ -5.74%</span>
     </div>
     
     
     <div class="ti">
       <span class="n">USD/INR</span>
-      <span class="p">₹93.90</span>
-      <span class="c dn">▼ -0.59%</span>
+      <span class="p">₹93.92</span>
+      <span class="c up">▲ +0.02%</span>
     </div>
     
     
     <div class="ti">
       <span class="n">BTC</span>
-      <span class="p">$75152</span>
-      <span class="c up">▲ +0.76%</span>
+      <span class="p">$74452</span>
+      <span class="c dn">▼ -0.18%</span>
     </div>
     
     
     <div class="ti">
       <span class="n">Sensex</span>
-      <span class="p">₹81028</span>
-      <span class="c up">▲ +2.17%</span>
+      <span class="p">₹81107</span>
+      <span class="c up">▲ +0.1%</span>
     </div>
     
   </div>
@@ -5551,15 +5551,15 @@ table.t tbody tr:hover{background:var(--surface2)}
     <div class="regime">
       <div class="rg-l">
         <span class="rg-k">Market regime</span>
-        <span class="rg-v up">Risk-on · 98<i>/100</i></span>
+        <span class="rg-v up">Leaning risk-on · 69<i>/100</i></span>
       </div>
-      <div class="rg-bar" style="--rg:98%"><i></i><b></b></div>
+      <div class="rg-bar" style="--rg:69%"><i></i><b></b></div>
       <div class="rg-why">
         Risk appetite across 8 instruments,
         weighted by move size. Moved most by
         <b class="up">Gold
-          +1.43%</b> and <b class="dn">USD/INR
-          -0.59%</b>.
+          +1.11%</b> and <b class="dn">Crude
+          -5.74%</b>.
         
         50 is neutral; risk assets push up, havens push down.
         
@@ -5617,8 +5617,8 @@ table.t tbody tr:hover{background:var(--surface2)}
     <div class="dboard">
       <a class="db" href="#marketintel">
         <span class="db-k">Market</span>
-        <span class="db-v">Risk-on</span>
-        <span class="db-s">98/100 regime</span>
+        <span class="db-v">Leaning risk-on</span>
+        <span class="db-s">69/100 regime</span>
       </a>
       <a class="db" href="#world">
         <span class="db-k">World</span>
@@ -5723,7 +5723,7 @@ table.t tbody tr:hover{background:var(--surface2)}
   <div class="shead rv">
     <div>
       <span class="snum">01 / MARKET INTEL</span> 
-<span class="dh dh-LIVE" title="Market Intelligence · 2h old.">LIVE<span class="dh-age">2h old</span></span>
+<span class="dh dh-LIVE" title="Market Intelligence · 5h old.">LIVE<span class="dh-age">5h old</span></span>
       <h2 class="stitle">What moved the tape today</h2>
     </div>
     <p class="sdesc">Sector heat, FII/DII net flow, and every corporate action NSE published —
@@ -5733,7 +5733,7 @@ table.t tbody tr:hover{background:var(--surface2)}
   <div class="prov rv">
     <span class="pv-tag">DAILY</span>
     <span>Rebuilt <b>~07:00 MYT</b>, before the 6 AM edition</span>
-    <span>Built <b>2026-11-09</b> · 0.1d old</span>
+    <span>Built <b>2026-11-09</b> · 0.2d old</span>
     
     
   </div>
@@ -5881,19 +5881,19 @@ table.t tbody tr:hover{background:var(--surface2)}
       <span class="db-lab db-fact">The breadth</span>
       <div class="db-body">
         <div class="db-big">
-          <b class="up">789</b> up
+          <b class="up">784</b> up
           <span class="db-vs">/</span>
-          <b class="dn">201</b> down
+          <b class="dn">200</b> down
         </div>
         
         <div class="db-bar" role="img"
-             aria-label="789 advancing against 201 declining of 994">
+             aria-label="784 advancing against 200 declining of 988">
           <span class="db-up" style="width:79.4%"></span>
           <span class="db-dn" style="width:20.2%"></span>
         </div>
-        <p class="db-note">Of 994 screened.
-          <b>51.4%</b> hold their 200-day average,
-          <b>42.0%</b> their 50-day.
+        <p class="db-note">Of 988 screened.
+          <b>51.3%</b> hold their 200-day average,
+          <b>42.1%</b> their 50-day.
           <b>3</b> sit at a 52-week high.</p>
       </div>
     </div>
@@ -5936,7 +5936,7 @@ table.t tbody tr:hover{background:var(--surface2)}
       <span class="db-lab db-view">Room for disagreement</span>
       <div class="db-body">
         <p class="db-note db-arg">
-          Breadth is a count, not a weight: 994 names each count once, so a
+          Breadth is a count, not a weight: 988 names each count once, so a
           day where the largest twenty carry the index and four hundred small names drift
           reads here as weak and in your portfolio as fine. The 200-day figure is
           slow by construction and will still look healthy some way into a real
@@ -5970,19 +5970,19 @@ table.t tbody tr:hover{background:var(--surface2)}
     <div class="dfind-row">
       
       <div class="dfind">
-        <span class="dfind-n num">241</span>
+        <span class="dfind-n num">239</span>
         <span class="dfind-t">Profit up sharply, price has not followed</span>
         <span class="dfind-r">profit growth ≥ 20% year on year and 3-month return ≤ 0%</span>
       </div>
       
       <div class="dfind">
-        <span class="dfind-n num">110</span>
+        <span class="dfind-n num">109</span>
         <span class="dfind-t">F-score 7+ while the price has gone nowhere</span>
         <span class="dfind-r">F-score ≥ 7 of 9 evaluated, and 6-month return ≤ 0%</span>
       </div>
       
       <div class="dfind">
-        <span class="dfind-n num">95</span>
+        <span class="dfind-n num">98</span>
         <span class="dfind-t">Improving profitability, still cheap against its own history</span>
         <span class="dfind-r">margin improving, ROCE trend up, and PE in the cheapest third of its own range</span>
       </div>
@@ -6000,7 +6000,7 @@ table.t tbody tr:hover{background:var(--surface2)}
     <h3>Moving today, by sector<span id="moversAsOf" class="dh dh-STALE">WAITING ON LIVE</span></h3>
     <p class="subdesc">Today&rsquo;s move, grouped by sector. Drawn from the live ticker, so it
       covers the names on the rail rather than the full screen &mdash; narrow but current.
-      The week&rsquo;s version, across all 994 screened names,
+      The week&rsquo;s version, across all 988 screened names,
       sits below it.</p>
   </div>
   <div class="fnd-grid rv" id="sectorMoversLive">
@@ -6021,7 +6021,7 @@ table.t tbody tr:hover{background:var(--surface2)}
     <details class="card fnd sec-movers">
       <summary>
         <strong>Financial Services</strong>
-        <span class="fnd-n">+6.5% median &middot; 138 names</span>
+        <span class="fnd-n">+6.5% median &middot; 137 names</span>
       </summary>
       <p class="fnd-r" style="margin-top:10px">Best five</p>
       <ul class="mv-list">
@@ -6619,7 +6619,7 @@ table.t tbody tr:hover{background:var(--surface2)}
     <details class="card fnd sec-movers">
       <summary>
         <strong>Healthcare</strong>
-        <span class="fnd-n">+3.9% median &middot; 90 names</span>
+        <span class="fnd-n">+3.9% median &middot; 89 names</span>
       </summary>
       <p class="fnd-r" style="margin-top:10px">Best five</p>
       <ul class="mv-list">
@@ -6711,7 +6711,7 @@ table.t tbody tr:hover{background:var(--surface2)}
     <details class="card fnd sec-movers">
       <summary>
         <strong>Consumer Cyclical</strong>
-        <span class="fnd-n">+3.2% median &middot; 38 names</span>
+        <span class="fnd-n">+3.1% median &middot; 39 names</span>
       </summary>
       <p class="fnd-r" style="margin-top:10px">Best five</p>
       <ul class="mv-list">
@@ -6849,7 +6849,7 @@ table.t tbody tr:hover{background:var(--surface2)}
     <details class="card fnd sec-movers">
       <summary>
         <strong>Industrials</strong>
-        <span class="fnd-n">+2.7% median &middot; 67 names</span>
+        <span class="fnd-n">+2.7% median &middot; 63 names</span>
       </summary>
       <p class="fnd-r" style="margin-top:10px">Best five</p>
       <ul class="mv-list">
@@ -7033,7 +7033,7 @@ table.t tbody tr:hover{background:var(--surface2)}
     <details class="card fnd sec-movers">
       <summary>
         <strong>Basic Materials</strong>
-        <span class="fnd-n">+1.8% median &middot; 37 names</span>
+        <span class="fnd-n">+1.8% median &middot; 36 names</span>
       </summary>
       <p class="fnd-r" style="margin-top:10px">Best five</p>
       <ul class="mv-list">
@@ -7422,7 +7422,7 @@ table.t tbody tr:hover{background:var(--surface2)}
   <div class="shead rv">
     <div>
       <span class="snum">02 / TRADE IDEAS</span> 
-<span class="dh dh-LIVE" title="Trade ideas · 2 min old.">LIVE<span class="dh-age">2 min old</span></span>
+<span class="dh dh-LIVE" title="Trade ideas · just built.">LIVE<span class="dh-age">just built</span></span>
       <h2 class="stitle">Top 5 trade ideas</h2>
     </div>
     <p class="sdesc">Global 200 universe — India, US, global. Scored, ranked, refreshed weekly.
@@ -7976,7 +7976,7 @@ table.t tbody tr:hover{background:var(--surface2)}
   <div class="shead rv">
     <div>
       <span class="snum">03 / WORLD</span> 
-<span class="dh dh-LIVE" title="World news · 2 min old.">LIVE<span class="dh-age">2 min old</span></span>
+<span class="dh dh-LIVE" title="World news · just built.">LIVE<span class="dh-age">just built</span></span>
       <h2 class="stitle">The world, last 24h</h2>
     </div>
     <p class="sdesc" id="worldDesc">Wires only. Deduplicated, ranked, and cut to what
@@ -7999,9 +7999,9 @@ table.t tbody tr:hover{background:var(--surface2)}
     <div class="lead rv">
       <div class="lead-m">
         <span class="tag">Economic Times · LEAD</span>
-        <h2><a href="https://economictimes.indiatimes.com/markets/us-stocks/news/global-market-today-asian-stocks-rally-after-us-tech-surge-oil-slump/articleshow/135696042.cms" target="_blank">Global Market Today: Asian stocks rally after US tech surge, oil slump</a></h2>
-        <p>South Korea’s Kospi Index jumped more than 5% in early trading while Japan’s Nikkei 225 rose nearly 3%. A broader gauge of Asian shares advanced 1.5% while futures for US benchmarks edged higher.</p>
-        <a class="readmore" href="https://economictimes.indiatimes.com/markets/us-stocks/news/global-market-today-asian-stocks-rally-after-us-tech-surge-oil-slump/articleshow/135696042.cms" target="_blank" rel="noopener">Read the full story &rarr;</a>
+        <h2><a href="https://economictimes.indiatimes.com/markets/us-stocks/news/anthropic-sends-out-then-retracts-details-of-ipo-filing-emails-show/articleshow/135696816.cms" target="_blank">Anthropic retracts details of $69 billion IPO filing sent to bankers. Why analysts are raising worries over valuations</a></h2>
+        <p>Anthropic initially shared its IPO filing details but later retracted the information due to inaccuracies. The company aimed to sell approximately 867 million shares priced between $70 and $80 each. A follow-up email clarified that these pricing details were incorrect. Anthropic indicated that an updated filing would be provided later. The company has chosen not to provide further comments regardi</p>
+        <a class="readmore" href="https://economictimes.indiatimes.com/markets/us-stocks/news/anthropic-sends-out-then-retracts-details-of-ipo-filing-emails-show/articleshow/135696816.cms" target="_blank" rel="noopener">Read the full story &rarr;</a>
       </div>
       <div class="lead-s">
         
@@ -8014,20 +8014,20 @@ table.t tbody tr:hover{background:var(--surface2)}
         
         <div class="mini">
           <span class="s">Livemint</span>
-          <a href="https://www.livemint.com/market/stock-market-news/stock-recommendations-for-11-november-from-marketsmith-india-11794226262086.html" target="_blank">Stock recommendations for 11 November from MarketSmith India</a>
-          <p class="mini-s">MarketSmith India reveals its top stock recommendations for today, 11 November. Get expert insights into the best-performing stock&hellip;</p>
+          <a href="https://www.livemint.com/market/stock-market-news/hul-dividend-2026-tomorrow-is-the-last-day-to-buy-check-payout-amount-record-date-history-yield-and-returns-11794278924006.html" target="_blank">HUL dividend 2026: Tomorrow is the last day to buy | Check payout amount, record date, history, yield and returns</a>
+          <p class="mini-s">HUL dividend 2026: HUL announced the interim dividend alongside its September-quarter results on October 28. The dividend amounts &hellip;</p>
         </div>
         
         <div class="mini">
           <span class="s">BusinessLine</span>
-          <a href="https://www.thehindubusinessline.com/markets/indian-it-stocks-strengthen-buoyed-by-weakness-in-the-global-ai-trade-and-attractive-valuations/article71683017.ece" target="_blank">Indian IT stocks strengthen buoyed by weakness in the global AI trade and attractive valuations</a>
-          <p class="mini-s">The IT sector emerged as the strongest-performing sector, gaining 17.69 per cent over the month, leading ahead of healthcare and b&hellip;</p>
+          <a href="https://www.thehindubusinessline.com/markets/q2-results-today-live-updates-kalyan-jewellers-mrf-cochin-shipyard-avanti-feeds-titagarh-rail-systems-mntc-company-results-10-november-2026/article71684906.ece" target="_blank">Q2 Results Today Live: Kalyan Jewellers, MRF, Cochin Shipyard, Avanti Feeds, Titagarh Rail Systems, MMTC to announce Q2 results</a>
+          <p class="mini-s">Q2 Results Today, 10th November 2026 Live Updates: businessline brings you the latest quarterly earnings, outlook and more.</p>
         </div>
         
         <div class="mini">
           <span class="s">Bloomberg</span>
-          <a href="https://www.bloomberg.com/news/articles/2026-11-09/china-starts-marketing-green-bonds-for-debut-sales-in-canada" target="_blank">China Sells Debut Green Bonds in Canada Amid Robust Demand</a>
-          <p class="mini-s">China drew robust demand for its debut yuan-denominated green bond sale in Canada, expanding its offshore debt footprint to financ&hellip;</p>
+          <a href="https://www.bloomberg.com/news/articles/2026-11-10/rising-fuel-flows-through-hormuz-may-help-ease-strained-market" target="_blank">Rising Fuel Flows Through Hormuz May Help Ease Strained Market</a>
+          <p class="mini-s">The volume of refined products being loaded within the Persian Gulf is rising, with most of that exiting the Strait of Hormuz and &hellip;</p>
         </div>
         
         <div class="mini">
@@ -8083,11 +8083,11 @@ table.t tbody tr:hover{background:var(--surface2)}
       
       <div class="ncard rv" style="--d:0.2s">
         <span class="s">Economic Times</span>
-        <h3><a href="https://economictimes.indiatimes.com/markets/us-stocks/news/trump-administrations-embrace-of-perp-futures-sets-off-risk-alarms-for-wall-street-stalwarts/articleshow/135688561.cms" target="_blank">Trump administration's embrace of "perp" futures sets off risk alarms for Wall Street stalwarts</a></h3>
-        <p>The decision by the Trump administration to launch perpetual futures has sparked significant worry among market stakeholders. Leaders from established exchanges contend that these &hellip;</p>
+        <h3><a href="https://economictimes.indiatimes.com/markets/bonds/rbi-said-to-query-bank-valuations-of-some-bond-derivative-trades/articleshow/135696624.cms" target="_blank">RBI said to query bank valuations of some bond derivative trades</a></h3>
+        <p>India's central bank has informed some lenders about the need to adjust bond forward accounting practices. This change could impact billions of dollars in assets across the banking&hellip;</p>
         <div class="ncard-f">
-          <span class="ts">Nov 09 16:58</span>
-          <a class="readmore" href="https://economictimes.indiatimes.com/markets/us-stocks/news/trump-administrations-embrace-of-perp-futures-sets-off-risk-alarms-for-wall-street-stalwarts/articleshow/135688561.cms" target="_blank" rel="noopener">Read more &rarr;</a>
+          <span class="ts">Nov 10 02:02</span>
+          <a class="readmore" href="https://economictimes.indiatimes.com/markets/bonds/rbi-said-to-query-bank-valuations-of-some-bond-derivative-trades/articleshow/135696624.cms" target="_blank" rel="noopener">Read more &rarr;</a>
         </div>
       </div>
       
@@ -8103,31 +8103,31 @@ table.t tbody tr:hover{background:var(--surface2)}
       
       <div class="ncard rv" style="--d:0.30000000000000004s">
         <span class="s">Livemint</span>
-        <h3><a href="https://www.livemint.com/market/jpmorgan-weighs-big-discount-to-lure-lenders-for-software-debt-11794262406093.html" target="_blank">JPMorgan Weighs Big Discount to Lure Lenders for Software Debt</a></h3>
-        <p>Banks led by JPMorgan Chase &amp; Co. could offer one of the year’s biggest discounts to sell some of the $5 billion in debt for software firm Qualtrics International Inc. that the&hellip;</p>
+        <h3><a href="https://www.livemint.com/market/stock-market-news/four-stocks-with-high-dividend-payout-ratios-to-watch-11794220722375.html" target="_blank">Four stocks with high dividend payout ratios to watch</a></h3>
+        <p>Dividend-paying companies can be an important part of an investor's portfolio, particularly for those looking for regular income.</p>
         <div class="ncard-f">
-          <span class="ts">Nov 09 22:13</span>
-          <a class="readmore" href="https://www.livemint.com/market/jpmorgan-weighs-big-discount-to-lure-lenders-for-software-debt-11794262406093.html" target="_blank" rel="noopener">Read more &rarr;</a>
+          <span class="ts">Nov 10 03:30</span>
+          <a class="readmore" href="https://www.livemint.com/market/stock-market-news/four-stocks-with-high-dividend-payout-ratios-to-watch-11794220722375.html" target="_blank" rel="noopener">Read more &rarr;</a>
         </div>
       </div>
       
       <div class="ncard rv" style="--d:0.35000000000000003s">
         <span class="s">BusinessLine</span>
-        <h3><a href="https://www.thehindubusinessline.com/markets/forex/rupees-5-day-winning-streak-ends-with-the-currency-closing-at-9393/article71683133.ece" target="_blank">Rupee’s 5-day winning streak ends with the currency closing at ₹93.93</a></h3>
-        <p>The Indian currency closed at 93.93 per US dollar (USD) against last Friday’s close of 93.91 and in intraday trade, it tested a high/ low of 93.69/94.11</p>
+        <h3><a href="https://www.thehindubusinessline.com/markets/promoter-holding-in-nifty-50-firms-falls-to-40/article71683186.ece" target="_blank">Promoter holding in Nifty 50 firms falls to 40%</a></h3>
+        <p>Private Indian promoter share hits 29-quarter low, while ownership across broader listed market rises to seven-quarter high</p>
         <div class="ncard-f">
-          <span class="ts">Nov 09 15:13</span>
-          <a class="readmore" href="https://www.thehindubusinessline.com/markets/forex/rupees-5-day-winning-streak-ends-with-the-currency-closing-at-9393/article71683133.ece" target="_blank" rel="noopener">Read more &rarr;</a>
+          <span class="ts">Nov 09 16:17</span>
+          <a class="readmore" href="https://www.thehindubusinessline.com/markets/promoter-holding-in-nifty-50-firms-falls-to-40/article71683186.ece" target="_blank" rel="noopener">Read more &rarr;</a>
         </div>
       </div>
       
       <div class="ncard rv" style="--d:0.4s">
         <span class="s">Bloomberg</span>
-        <h3><a href="https://www.bloomberg.com/news/articles/2026-11-10/inflation-data-to-test-limits-of-treasury-rally-after-haven-bid" target="_blank">Inflation Data to Test Limits of Treasury Rally After Haven Bid</a></h3>
-        <p>Bond traders are waiting for a key inflation report on Tuesday for clues on the direction of the Federal Reserve’s policy path and whether the recent Treasury rally has more room t&hellip;</p>
+        <h3><a href="https://www.bloomberg.com/news/articles/2026-11-10/japan-30-year-bond-sale-sees-weaker-demand-than-12-month-average-mwa53xcl" target="_blank">Japan 30-Year Bond Sale Sees Weaker Demand Than 12-Month Average</a></h3>
+        <p>Japan’s 30-year government bond auction drew weaker demand than its 12-month average as concerns over global fiscal policy weighed on investor appetite.</p>
         <div class="ncard-f">
-          <span class="ts">Nov 10 00:46</span>
-          <a class="readmore" href="https://www.bloomberg.com/news/articles/2026-11-10/inflation-data-to-test-limits-of-treasury-rally-after-haven-bid" target="_blank" rel="noopener">Read more &rarr;</a>
+          <span class="ts">Nov 10 03:38</span>
+          <a class="readmore" href="https://www.bloomberg.com/news/articles/2026-11-10/japan-30-year-bond-sale-sees-weaker-demand-than-12-month-average-mwa53xcl" target="_blank" rel="noopener">Read more &rarr;</a>
         </div>
       </div>
       
@@ -8153,7 +8153,7 @@ table.t tbody tr:hover{background:var(--surface2)}
       <span class="snum">04 / FINDINGS</span>
       <h2 class="stitle">What the data says that nobody looked for</h2>
     </div>
-    <p class="sdesc">Deterministic scans across 994 companies and the
+    <p class="sdesc">Deterministic scans across 988 companies and the
       market's own internals. Every finding states the rule that produced it, so it can be
       checked rather than believed. Research leads &mdash; not recommendations, and not
       ranked: the tables below already do the ranking, this answers a different question.</p>
@@ -8198,7 +8198,7 @@ table.t tbody tr:hover{background:var(--surface2)}
       <details class="fnd-all">
         <summary>+51 more &mdash; show all 59</summary>
         <p class="fnd-s">
-          <a href="#stocks" class="sym" data-stock="OSWALPUMPS">OSWALPUMPS</a> · <a href="#stocks" class="sym" data-stock="CRIZAC">CRIZAC</a> · <a href="#stocks" class="sym" data-stock="BLS">BLS</a> · <a href="#stocks" class="sym" data-stock="WAAREERTL">WAAREERTL</a> · <a href="#stocks" class="sym" data-stock="WAAREEENER">WAAREEENER</a> · <a href="#stocks" class="sym" data-stock="SBIFUNDS">SBIFUNDS</a> · <a href="#stocks" class="sym" data-stock="JSLL">JSLL</a> · <a href="#stocks" class="sym" data-stock="GRSE">GRSE</a> · <a href="#stocks" class="sym" data-stock="NMDC">NMDC</a> · <a href="#stocks" class="sym" data-stock="NATIONALUM">NATIONALUM</a> · <a href="#stocks" class="sym" data-stock="NEULANDLAB">NEULANDLAB</a> · <a href="#stocks" class="sym" data-stock="CMPDI">CMPDI</a> · <a href="#stocks" class="sym" data-stock="MAZDOCK">MAZDOCK</a> · <a href="#stocks" class="sym" data-stock="DIXON">DIXON</a> · <a href="#stocks" class="sym" data-stock="IRCTC">IRCTC</a> · <a href="#stocks" class="sym" data-stock="CRAMC">CRAMC</a> · <a href="#stocks" class="sym" data-stock="SANOFICONR">SANOFICONR</a> · <a href="#stocks" class="sym" data-stock="IEX">IEX</a> · <a href="#stocks" class="sym" data-stock="NATCOPHARM">NATCOPHARM</a> · <a href="#stocks" class="sym" data-stock="GODFRYPHLP">GODFRYPHLP</a> · <a href="#stocks" class="sym" data-stock="SUPRIYA">SUPRIYA</a> · <a href="#stocks" class="sym" data-stock="PRUDENT">PRUDENT</a> · <a href="#stocks" class="sym" data-stock="SUZLON">SUZLON</a> · <a href="#stocks" class="sym" data-stock="EIEL">EIEL</a> · <a href="#stocks" class="sym" data-stock="HINDCOPPER">HINDCOPPER</a> · <a href="#stocks" class="sym" data-stock="BBTC">BBTC</a> · <a href="#stocks" class="sym" data-stock="TRITURBINE">TRITURBINE</a> · <a href="#stocks" class="sym" data-stock="ENRIN">ENRIN</a> · <a href="#stocks" class="sym" data-stock="KPITTECH">KPITTECH</a> · <a href="#stocks" class="sym" data-stock="TRAVELFOOD">TRAVELFOOD</a> · <a href="#stocks" class="sym" data-stock="ASHOKA">ASHOKA</a> · <a href="#stocks" class="sym" data-stock="INDIAMART">INDIAMART</a> · <a href="#stocks" class="sym" data-stock="OFSS">OFSS</a> · <a href="#stocks" class="sym" data-stock="NETWEB">NETWEB</a> · <a href="#stocks" class="sym" data-stock="STYLAMIND">STYLAMIND</a> · <a href="#stocks" class="sym" data-stock="NESTLEIND">NESTLEIND</a> · <a href="#stocks" class="sym" data-stock="STYL">STYL</a> · <a href="#stocks" class="sym" data-stock="ABSLAMC">ABSLAMC</a> · <a href="#stocks" class="sym" data-stock="CUMMINSIND">CUMMINSIND</a> · <a href="#stocks" class="sym" data-stock="TENNIND">TENNIND</a> · <a href="#stocks" class="sym" data-stock="PFIZER">PFIZER</a> · <a href="#stocks" class="sym" data-stock="KUSUMGAR">KUSUMGAR</a> · <a href="#stocks" class="sym" data-stock="ECLERX">ECLERX</a> · <a href="#stocks" class="sym" data-stock="PGHH">PGHH</a> · <a href="#stocks" class="sym" data-stock="NEWGEN">NEWGEN</a> · <a href="#stocks" class="sym" data-stock="COLPAL">COLPAL</a> · <a href="#stocks" class="sym" data-stock="BAYERCROP">BAYERCROP</a> · <a href="#stocks" class="sym" data-stock="MMTC">MMTC</a> · <a href="#stocks" class="sym" data-stock="GPIL">GPIL</a> · <a href="#stocks" class="sym" data-stock="MAPMYINDIA">MAPMYINDIA</a> · <a href="#stocks" class="sym" data-stock="AIAENG">AIAENG</a> · <a href="#stocks" class="sym" data-stock="BRITANNIA">BRITANNIA</a> · <a href="#stocks" class="sym" data-stock="CONCORDBIO">CONCORDBIO</a> · <a href="#stocks" class="sym" data-stock="3MINDIA">3MINDIA</a> · <a href="#stocks" class="sym" data-stock="RITES">RITES</a> · <a href="#stocks" class="sym" data-stock="PIIND">PIIND</a> · <a href="#stocks" class="sym" data-stock="CLEAN">CLEAN</a> · <a href="#stocks" class="sym" data-stock="AVANTEL">AVANTEL</a> · <a href="#stocks" class="sym" data-stock="TATATECH">TATATECH</a>
+          <a href="#stocks" class="sym" data-stock="OSWALPUMPS">OSWALPUMPS</a> · <a href="#stocks" class="sym" data-stock="CRIZAC">CRIZAC</a> · <a href="#stocks" class="sym" data-stock="BLS">BLS</a> · <a href="#stocks" class="sym" data-stock="WAAREERTL">WAAREERTL</a> · <a href="#stocks" class="sym" data-stock="WAAREEENER">WAAREEENER</a> · <a href="#stocks" class="sym" data-stock="SBIFUNDS">SBIFUNDS</a> · <a href="#stocks" class="sym" data-stock="JSLL">JSLL</a> · <a href="#stocks" class="sym" data-stock="GRSE">GRSE</a> · <a href="#stocks" class="sym" data-stock="NMDC">NMDC</a> · <a href="#stocks" class="sym" data-stock="NATIONALUM">NATIONALUM</a> · <a href="#stocks" class="sym" data-stock="NEULANDLAB">NEULANDLAB</a> · <a href="#stocks" class="sym" data-stock="CMPDI">CMPDI</a> · <a href="#stocks" class="sym" data-stock="MAZDOCK">MAZDOCK</a> · <a href="#stocks" class="sym" data-stock="DIXON">DIXON</a> · <a href="#stocks" class="sym" data-stock="IRCTC">IRCTC</a> · <a href="#stocks" class="sym" data-stock="SANOFICONR">SANOFICONR</a> · <a href="#stocks" class="sym" data-stock="CRAMC">CRAMC</a> · <a href="#stocks" class="sym" data-stock="IEX">IEX</a> · <a href="#stocks" class="sym" data-stock="NATCOPHARM">NATCOPHARM</a> · <a href="#stocks" class="sym" data-stock="GODFRYPHLP">GODFRYPHLP</a> · <a href="#stocks" class="sym" data-stock="SUPRIYA">SUPRIYA</a> · <a href="#stocks" class="sym" data-stock="PRUDENT">PRUDENT</a> · <a href="#stocks" class="sym" data-stock="SUZLON">SUZLON</a> · <a href="#stocks" class="sym" data-stock="EIEL">EIEL</a> · <a href="#stocks" class="sym" data-stock="BBTC">BBTC</a> · <a href="#stocks" class="sym" data-stock="HINDCOPPER">HINDCOPPER</a> · <a href="#stocks" class="sym" data-stock="TRITURBINE">TRITURBINE</a> · <a href="#stocks" class="sym" data-stock="ENRIN">ENRIN</a> · <a href="#stocks" class="sym" data-stock="KPITTECH">KPITTECH</a> · <a href="#stocks" class="sym" data-stock="ASHOKA">ASHOKA</a> · <a href="#stocks" class="sym" data-stock="TRAVELFOOD">TRAVELFOOD</a> · <a href="#stocks" class="sym" data-stock="INDIAMART">INDIAMART</a> · <a href="#stocks" class="sym" data-stock="OFSS">OFSS</a> · <a href="#stocks" class="sym" data-stock="NETWEB">NETWEB</a> · <a href="#stocks" class="sym" data-stock="NESTLEIND">NESTLEIND</a> · <a href="#stocks" class="sym" data-stock="STYL">STYL</a> · <a href="#stocks" class="sym" data-stock="STYLAMIND">STYLAMIND</a> · <a href="#stocks" class="sym" data-stock="ABSLAMC">ABSLAMC</a> · <a href="#stocks" class="sym" data-stock="CUMMINSIND">CUMMINSIND</a> · <a href="#stocks" class="sym" data-stock="TENNIND">TENNIND</a> · <a href="#stocks" class="sym" data-stock="PFIZER">PFIZER</a> · <a href="#stocks" class="sym" data-stock="KUSUMGAR">KUSUMGAR</a> · <a href="#stocks" class="sym" data-stock="ECLERX">ECLERX</a> · <a href="#stocks" class="sym" data-stock="PGHH">PGHH</a> · <a href="#stocks" class="sym" data-stock="NEWGEN">NEWGEN</a> · <a href="#stocks" class="sym" data-stock="COLPAL">COLPAL</a> · <a href="#stocks" class="sym" data-stock="BAYERCROP">BAYERCROP</a> · <a href="#stocks" class="sym" data-stock="MMTC">MMTC</a> · <a href="#stocks" class="sym" data-stock="GPIL">GPIL</a> · <a href="#stocks" class="sym" data-stock="AIAENG">AIAENG</a> · <a href="#stocks" class="sym" data-stock="MAPMYINDIA">MAPMYINDIA</a> · <a href="#stocks" class="sym" data-stock="BRITANNIA">BRITANNIA</a> · <a href="#stocks" class="sym" data-stock="CONCORDBIO">CONCORDBIO</a> · <a href="#stocks" class="sym" data-stock="3MINDIA">3MINDIA</a> · <a href="#stocks" class="sym" data-stock="RITES">RITES</a> · <a href="#stocks" class="sym" data-stock="PIIND">PIIND</a> · <a href="#stocks" class="sym" data-stock="CLEAN">CLEAN</a> · <a href="#stocks" class="sym" data-stock="AVANTEL">AVANTEL</a> · <a href="#stocks" class="sym" data-stock="TATATECH">TATATECH</a>
         </p>
       </details>
       
@@ -8206,19 +8206,19 @@ table.t tbody tr:hover{background:var(--surface2)}
     </div>
     
     <div class="card fnd">
-      <h4 class="fnd-t">Improving profitability, still cheap against its own history <span class="fnd-n">95</span></h4>
+      <h4 class="fnd-t">Improving profitability, still cheap against its own history <span class="fnd-n">98</span></h4>
       
       <p class="fnd-r">margin improving, ROCE trend up, and PE in the cheapest third of its own range</p>
       <p class="fnd-s">
         
-        <a href="#stocks" class="sym" data-stock="BSE">BSE</a> · <a href="#stocks" class="sym" data-stock="ANANDRATHI">ANANDRATHI</a> · <a href="#stocks" class="sym" data-stock="RPEL">RPEL</a> · <a href="#stocks" class="sym" data-stock="MCX">MCX</a> · <a href="#stocks" class="sym" data-stock="ICICIAMC">ICICIAMC</a> · <a href="#stocks" class="sym" data-stock="MACPOWER">MACPOWER</a> · <a href="#stocks" class="sym" data-stock="AHCL">AHCL</a> · <a href="#stocks" class="sym" data-stock="NEULANDLAB">NEULANDLAB</a>
+        <a href="#stocks" class="sym" data-stock="BSE">BSE</a> · <a href="#stocks" class="sym" data-stock="ANANDRATHI">ANANDRATHI</a> · <a href="#stocks" class="sym" data-stock="MCX">MCX</a> · <a href="#stocks" class="sym" data-stock="RPEL">RPEL</a> · <a href="#stocks" class="sym" data-stock="ICICIAMC">ICICIAMC</a> · <a href="#stocks" class="sym" data-stock="MACPOWER">MACPOWER</a> · <a href="#stocks" class="sym" data-stock="AHCL">AHCL</a> · <a href="#stocks" class="sym" data-stock="NEULANDLAB">NEULANDLAB</a>
       </p>
       
       
       <details class="fnd-all">
-        <summary>+87 more &mdash; show all 95</summary>
+        <summary>+90 more &mdash; show all 98</summary>
         <p class="fnd-s">
-          <a href="#stocks" class="sym" data-stock="BSE">BSE</a> · <a href="#stocks" class="sym" data-stock="ANANDRATHI">ANANDRATHI</a> · <a href="#stocks" class="sym" data-stock="RPEL">RPEL</a> · <a href="#stocks" class="sym" data-stock="MCX">MCX</a> · <a href="#stocks" class="sym" data-stock="ICICIAMC">ICICIAMC</a> · <a href="#stocks" class="sym" data-stock="MACPOWER">MACPOWER</a> · <a href="#stocks" class="sym" data-stock="AHCL">AHCL</a> · <a href="#stocks" class="sym" data-stock="NEULANDLAB">NEULANDLAB</a> · <a href="#stocks" class="sym" data-stock="GVT&D">GVT&D</a> · <a href="#stocks" class="sym" data-stock="CUPID">CUPID</a> · <a href="#stocks" class="sym" data-stock="ACUTAAS">ACUTAAS</a> · <a href="#stocks" class="sym" data-stock="KPL">KPL</a> · <a href="#stocks" class="sym" data-stock="MANORAMA">MANORAMA</a> · <a href="#stocks" class="sym" data-stock="HINDCOPPER">HINDCOPPER</a> · <a href="#stocks" class="sym" data-stock="VIJAYA">VIJAYA</a> · <a href="#stocks" class="sym" data-stock="SAILIFE">SAILIFE</a> · <a href="#stocks" class="sym" data-stock="KANOHAR">KANOHAR</a> · <a href="#stocks" class="sym" data-stock="RADICO">RADICO</a> · <a href="#stocks" class="sym" data-stock="JYOTICNC">JYOTICNC</a> · <a href="#stocks" class="sym" data-stock="SHAILY">SHAILY</a> · <a href="#stocks" class="sym" data-stock="SHUKRAPHAR">SHUKRAPHAR</a> · <a href="#stocks" class="sym" data-stock="CARTRADE">CARTRADE</a> · <a href="#stocks" class="sym" data-stock="PARAS">PARAS</a> · <a href="#stocks" class="sym" data-stock="NAVINFLUOR">NAVINFLUOR</a> · <a href="#stocks" class="sym" data-stock="ALGOQUANT">ALGOQUANT</a> · <a href="#stocks" class="sym" data-stock="PIDILITIND">PIDILITIND</a> · <a href="#stocks" class="sym" data-stock="NUVAMA">NUVAMA</a> · <a href="#stocks" class="sym" data-stock="BOSCHLTD">BOSCHLTD</a> · <a href="#stocks" class="sym" data-stock="JAINREC">JAINREC</a> · <a href="#stocks" class="sym" data-stock="HONASA">HONASA</a> · <a href="#stocks" class="sym" data-stock="LLOYDSENT">LLOYDSENT</a> · <a href="#stocks" class="sym" data-stock="APOLLO">APOLLO</a> · <a href="#stocks" class="sym" data-stock="ESDS">ESDS</a> · <a href="#stocks" class="sym" data-stock="STYLEBAAZA">STYLEBAAZA</a> · <a href="#stocks" class="sym" data-stock="AZAD">AZAD</a> · <a href="#stocks" class="sym" data-stock="SMARTWORKS">SMARTWORKS</a> · <a href="#stocks" class="sym" data-stock="SAKAR">SAKAR</a> · <a href="#stocks" class="sym" data-stock="GMRAIRPORT">GMRAIRPORT</a> · <a href="#stocks" class="sym" data-stock="VIYASH">VIYASH</a> · <a href="#stocks" class="sym" data-stock="ASTRAMICRO">ASTRAMICRO</a> · <a href="#stocks" class="sym" data-stock="POWERINDIA">POWERINDIA</a> · <a href="#stocks" class="sym" data-stock="NBCC">NBCC</a> · <a href="#stocks" class="sym" data-stock="KARAMTARA">KARAMTARA</a> · <a href="#stocks" class="sym" data-stock="CEMPRO">CEMPRO</a> · <a href="#stocks" class="sym" data-stock="INOXGREEN">INOXGREEN</a> · <a href="#stocks" class="sym" data-stock="SYRMA">SYRMA</a> · <a href="#stocks" class="sym" data-stock="NYKAA">NYKAA</a> · <a href="#stocks" class="sym" data-stock="SMSPHARMA">SMSPHARMA</a> · <a href="#stocks" class="sym" data-stock="SEDEMAC">SEDEMAC</a> · <a href="#stocks" class="sym" data-stock="BLACKBUCK">BLACKBUCK</a> · <a href="#stocks" class="sym" data-stock="BHEL">BHEL</a> · <a href="#stocks" class="sym" data-stock="AMAGI">AMAGI</a> · <a href="#stocks" class="sym" data-stock="NEPHROPLUS">NEPHROPLUS</a> · <a href="#stocks" class="sym" data-stock="BIKAJI">BIKAJI</a> · <a href="#stocks" class="sym" data-stock="DLF">DLF</a> · <a href="#stocks" class="sym" data-stock="SGMART">SGMART</a> · <a href="#stocks" class="sym" data-stock="DEEDEV">DEEDEV</a> · <a href="#stocks" class="sym" data-stock="SHADOWFAX">SHADOWFAX</a> · <a href="#stocks" class="sym" data-stock="JSWENERGY">JSWENERGY</a> · <a href="#stocks" class="sym" data-stock="ELLEN">ELLEN</a> · <a href="#stocks" class="sym" data-stock="CAPILLARY">CAPILLARY</a> · <a href="#stocks" class="sym" data-stock="DIACABS">DIACABS</a> · <a href="#stocks" class="sym" data-stock="BLUESTONE">BLUESTONE</a> · <a href="#stocks" class="sym" data-stock="AEGISLOG">AEGISLOG</a> · <a href="#stocks" class="sym" data-stock="MARINE">MARINE</a> · <a href="#stocks" class="sym" data-stock="HORIZONIND">HORIZONIND</a> · <a href="#stocks" class="sym" data-stock="CENTUM">CENTUM</a> · <a href="#stocks" class="sym" data-stock="AVALON">AVALON</a> · <a href="#stocks" class="sym" data-stock="LINDEINDIA">LINDEINDIA</a> · <a href="#stocks" class="sym" data-stock="3MINDIA">3MINDIA</a> · <a href="#stocks" class="sym" data-stock="ASTERDM">ASTERDM</a> · <a href="#stocks" class="sym" data-stock="POLICYBZR">POLICYBZR</a> · <a href="#stocks" class="sym" data-stock="PREMEXPLN">PREMEXPLN</a> · <a href="#stocks" class="sym" data-stock="MAHSCOOTER">MAHSCOOTER</a> · <a href="#stocks" class="sym" data-stock="WOCKPHARMA">WOCKPHARMA</a> · <a href="#stocks" class="sym" data-stock="ABDL">ABDL</a> · <a href="#stocks" class="sym" data-stock="PAYTM">PAYTM</a> · <a href="#stocks" class="sym" data-stock="DBREALTY">DBREALTY</a> · <a href="#stocks" class="sym" data-stock="FORTIS">FORTIS</a> · <a href="#stocks" class="sym" data-stock="PINELABS">PINELABS</a> · <a href="#stocks" class="sym" data-stock="PRSMJOHNSN">PRSMJOHNSN</a> · <a href="#stocks" class="sym" data-stock="HINDPETRO">HINDPETRO</a> · <a href="#stocks" class="sym" data-stock="VARROC">VARROC</a> · <a href="#stocks" class="sym" data-stock="AXISCADES">AXISCADES</a> · <a href="#stocks" class="sym" data-stock="ICICIPRULI">ICICIPRULI</a> · <a href="#stocks" class="sym" data-stock="SHREECEM">SHREECEM</a> · <a href="#stocks" class="sym" data-stock="ADANIENT">ADANIENT</a> · <a href="#stocks" class="sym" data-stock="ARFIN">ARFIN</a> · <a href="#stocks" class="sym" data-stock="TVSSCS">TVSSCS</a> · <a href="#stocks" class="sym" data-stock="GODIGIT">GODIGIT</a> · <a href="#stocks" class="sym" data-stock="JBMA">JBMA</a> · <a href="#stocks" class="sym" data-stock="DREDGECORP">DREDGECORP</a> · <a href="#stocks" class="sym" data-stock="RHETAN">RHETAN</a> · <a href="#stocks" class="sym" data-stock="ASIANTILES">ASIANTILES</a> · <a href="#stocks" class="sym" data-stock="ITI">ITI</a>
+          <a href="#stocks" class="sym" data-stock="BSE">BSE</a> · <a href="#stocks" class="sym" data-stock="ANANDRATHI">ANANDRATHI</a> · <a href="#stocks" class="sym" data-stock="MCX">MCX</a> · <a href="#stocks" class="sym" data-stock="RPEL">RPEL</a> · <a href="#stocks" class="sym" data-stock="ICICIAMC">ICICIAMC</a> · <a href="#stocks" class="sym" data-stock="MACPOWER">MACPOWER</a> · <a href="#stocks" class="sym" data-stock="AHCL">AHCL</a> · <a href="#stocks" class="sym" data-stock="NEULANDLAB">NEULANDLAB</a> · <a href="#stocks" class="sym" data-stock="GVT&D">GVT&D</a> · <a href="#stocks" class="sym" data-stock="KRISHNADEF">KRISHNADEF</a> · <a href="#stocks" class="sym" data-stock="CUPID">CUPID</a> · <a href="#stocks" class="sym" data-stock="ACUTAAS">ACUTAAS</a> · <a href="#stocks" class="sym" data-stock="KPL">KPL</a> · <a href="#stocks" class="sym" data-stock="MANORAMA">MANORAMA</a> · <a href="#stocks" class="sym" data-stock="HINDCOPPER">HINDCOPPER</a> · <a href="#stocks" class="sym" data-stock="VIJAYA">VIJAYA</a> · <a href="#stocks" class="sym" data-stock="SAILIFE">SAILIFE</a> · <a href="#stocks" class="sym" data-stock="KANOHAR">KANOHAR</a> · <a href="#stocks" class="sym" data-stock="RADICO">RADICO</a> · <a href="#stocks" class="sym" data-stock="JYOTICNC">JYOTICNC</a> · <a href="#stocks" class="sym" data-stock="SHAILY">SHAILY</a> · <a href="#stocks" class="sym" data-stock="SHUKRAPHAR">SHUKRAPHAR</a> · <a href="#stocks" class="sym" data-stock="CARTRADE">CARTRADE</a> · <a href="#stocks" class="sym" data-stock="PARAS">PARAS</a> · <a href="#stocks" class="sym" data-stock="NAVINFLUOR">NAVINFLUOR</a> · <a href="#stocks" class="sym" data-stock="ALGOQUANT">ALGOQUANT</a> · <a href="#stocks" class="sym" data-stock="PIDILITIND">PIDILITIND</a> · <a href="#stocks" class="sym" data-stock="TECHNOCRAF">TECHNOCRAF</a> · <a href="#stocks" class="sym" data-stock="NUVAMA">NUVAMA</a> · <a href="#stocks" class="sym" data-stock="JAINREC">JAINREC</a> · <a href="#stocks" class="sym" data-stock="HONASA">HONASA</a> · <a href="#stocks" class="sym" data-stock="BOSCHLTD">BOSCHLTD</a> · <a href="#stocks" class="sym" data-stock="AZAD">AZAD</a> · <a href="#stocks" class="sym" data-stock="APOLLO">APOLLO</a> · <a href="#stocks" class="sym" data-stock="LLOYDSENT">LLOYDSENT</a> · <a href="#stocks" class="sym" data-stock="PRIVISCL">PRIVISCL</a> · <a href="#stocks" class="sym" data-stock="ESDS">ESDS</a> · <a href="#stocks" class="sym" data-stock="SMARTWORKS">SMARTWORKS</a> · <a href="#stocks" class="sym" data-stock="SAKAR">SAKAR</a> · <a href="#stocks" class="sym" data-stock="STYLEBAAZA">STYLEBAAZA</a> · <a href="#stocks" class="sym" data-stock="GMRAIRPORT">GMRAIRPORT</a> · <a href="#stocks" class="sym" data-stock="VIYASH">VIYASH</a> · <a href="#stocks" class="sym" data-stock="ASTRAMICRO">ASTRAMICRO</a> · <a href="#stocks" class="sym" data-stock="POWERINDIA">POWERINDIA</a> · <a href="#stocks" class="sym" data-stock="NBCC">NBCC</a> · <a href="#stocks" class="sym" data-stock="KARAMTARA">KARAMTARA</a> · <a href="#stocks" class="sym" data-stock="CEMPRO">CEMPRO</a> · <a href="#stocks" class="sym" data-stock="INOXGREEN">INOXGREEN</a> · <a href="#stocks" class="sym" data-stock="SYRMA">SYRMA</a> · <a href="#stocks" class="sym" data-stock="NYKAA">NYKAA</a> · <a href="#stocks" class="sym" data-stock="SMSPHARMA">SMSPHARMA</a> · <a href="#stocks" class="sym" data-stock="SEDEMAC">SEDEMAC</a> · <a href="#stocks" class="sym" data-stock="BLACKBUCK">BLACKBUCK</a> · <a href="#stocks" class="sym" data-stock="NEPHROPLUS">NEPHROPLUS</a> · <a href="#stocks" class="sym" data-stock="AMAGI">AMAGI</a> · <a href="#stocks" class="sym" data-stock="BIKAJI">BIKAJI</a> · <a href="#stocks" class="sym" data-stock="DLF">DLF</a> · <a href="#stocks" class="sym" data-stock="DEEDEV">DEEDEV</a> · <a href="#stocks" class="sym" data-stock="SGMART">SGMART</a> · <a href="#stocks" class="sym" data-stock="JSWENERGY">JSWENERGY</a> · <a href="#stocks" class="sym" data-stock="SHADOWFAX">SHADOWFAX</a> · <a href="#stocks" class="sym" data-stock="VMM">VMM</a> · <a href="#stocks" class="sym" data-stock="CAPILLARY">CAPILLARY</a> · <a href="#stocks" class="sym" data-stock="DIACABS">DIACABS</a> · <a href="#stocks" class="sym" data-stock="SSRETAIL">SSRETAIL</a> · <a href="#stocks" class="sym" data-stock="BLUESTONE">BLUESTONE</a> · <a href="#stocks" class="sym" data-stock="AEGISLOG">AEGISLOG</a> · <a href="#stocks" class="sym" data-stock="MARINE">MARINE</a> · <a href="#stocks" class="sym" data-stock="AVALON">AVALON</a> · <a href="#stocks" class="sym" data-stock="CENTUM">CENTUM</a> · <a href="#stocks" class="sym" data-stock="HORIZONIND">HORIZONIND</a> · <a href="#stocks" class="sym" data-stock="LINDEINDIA">LINDEINDIA</a> · <a href="#stocks" class="sym" data-stock="3MINDIA">3MINDIA</a> · <a href="#stocks" class="sym" data-stock="ASTERDM">ASTERDM</a> · <a href="#stocks" class="sym" data-stock="POLICYBZR">POLICYBZR</a> · <a href="#stocks" class="sym" data-stock="PREMEXPLN">PREMEXPLN</a> · <a href="#stocks" class="sym" data-stock="MAHSCOOTER">MAHSCOOTER</a> · <a href="#stocks" class="sym" data-stock="WOCKPHARMA">WOCKPHARMA</a> · <a href="#stocks" class="sym" data-stock="ABDL">ABDL</a> · <a href="#stocks" class="sym" data-stock="PAYTM">PAYTM</a> · <a href="#stocks" class="sym" data-stock="DBREALTY">DBREALTY</a> · <a href="#stocks" class="sym" data-stock="FORTIS">FORTIS</a> · <a href="#stocks" class="sym" data-stock="PINELABS">PINELABS</a> · <a href="#stocks" class="sym" data-stock="PRSMJOHNSN">PRSMJOHNSN</a> · <a href="#stocks" class="sym" data-stock="HINDPETRO">HINDPETRO</a> · <a href="#stocks" class="sym" data-stock="AXISCADES">AXISCADES</a> · <a href="#stocks" class="sym" data-stock="VARROC">VARROC</a> · <a href="#stocks" class="sym" data-stock="ICICIPRULI">ICICIPRULI</a> · <a href="#stocks" class="sym" data-stock="SHREECEM">SHREECEM</a> · <a href="#stocks" class="sym" data-stock="MOBIKWIK">MOBIKWIK</a> · <a href="#stocks" class="sym" data-stock="ADANIENT">ADANIENT</a> · <a href="#stocks" class="sym" data-stock="ARFIN">ARFIN</a> · <a href="#stocks" class="sym" data-stock="TVSSCS">TVSSCS</a> · <a href="#stocks" class="sym" data-stock="GODIGIT">GODIGIT</a> · <a href="#stocks" class="sym" data-stock="JBMA">JBMA</a> · <a href="#stocks" class="sym" data-stock="RHETAN">RHETAN</a> · <a href="#stocks" class="sym" data-stock="ASIANTILES">ASIANTILES</a> · <a href="#stocks" class="sym" data-stock="ITI">ITI</a>
         </p>
       </details>
       
@@ -8226,19 +8226,19 @@ table.t tbody tr:hover{background:var(--surface2)}
     </div>
     
     <div class="card fnd">
-      <h4 class="fnd-t">F-score 7+ while the price has gone nowhere <span class="fnd-n">110</span></h4>
+      <h4 class="fnd-t">F-score 7+ while the price has gone nowhere <span class="fnd-n">109</span></h4>
       
       <p class="fnd-r">F-score ≥ 7 of 9 evaluated, and 6-month return ≤ 0%</p>
       <p class="fnd-s">
         
-        <a href="#stocks" class="sym" data-stock="CRIZAC">CRIZAC</a> · <a href="#stocks" class="sym" data-stock="BSE">BSE</a> · <a href="#stocks" class="sym" data-stock="BLS">BLS</a> · <a href="#stocks" class="sym" data-stock="JSLL">JSLL</a> · <a href="#stocks" class="sym" data-stock="LUPIN">LUPIN</a> · <a href="#stocks" class="sym" data-stock="HBLENGINE">HBLENGINE</a> · <a href="#stocks" class="sym" data-stock="FORCEMOT">FORCEMOT</a> · <a href="#stocks" class="sym" data-stock="EMMVEE">EMMVEE</a>
+        <a href="#stocks" class="sym" data-stock="BSE">BSE</a> · <a href="#stocks" class="sym" data-stock="CRIZAC">CRIZAC</a> · <a href="#stocks" class="sym" data-stock="BLS">BLS</a> · <a href="#stocks" class="sym" data-stock="JSLL">JSLL</a> · <a href="#stocks" class="sym" data-stock="LUPIN">LUPIN</a> · <a href="#stocks" class="sym" data-stock="HBLENGINE">HBLENGINE</a> · <a href="#stocks" class="sym" data-stock="FORCEMOT">FORCEMOT</a> · <a href="#stocks" class="sym" data-stock="EMMVEE">EMMVEE</a>
       </p>
       
       
       <details class="fnd-all">
-        <summary>+102 more &mdash; show all 110</summary>
+        <summary>+101 more &mdash; show all 109</summary>
         <p class="fnd-s">
-          <a href="#stocks" class="sym" data-stock="CRIZAC">CRIZAC</a> · <a href="#stocks" class="sym" data-stock="BSE">BSE</a> · <a href="#stocks" class="sym" data-stock="BLS">BLS</a> · <a href="#stocks" class="sym" data-stock="JSLL">JSLL</a> · <a href="#stocks" class="sym" data-stock="LUPIN">LUPIN</a> · <a href="#stocks" class="sym" data-stock="HBLENGINE">HBLENGINE</a> · <a href="#stocks" class="sym" data-stock="FORCEMOT">FORCEMOT</a> · <a href="#stocks" class="sym" data-stock="EMMVEE">EMMVEE</a> · <a href="#stocks" class="sym" data-stock="GVT&D">GVT&D</a> · <a href="#stocks" class="sym" data-stock="DATAPATTNS">DATAPATTNS</a> · <a href="#stocks" class="sym" data-stock="SANOFICONR">SANOFICONR</a> · <a href="#stocks" class="sym" data-stock="HINDZINC">HINDZINC</a> · <a href="#stocks" class="sym" data-stock="BEL">BEL</a> · <a href="#stocks" class="sym" data-stock="HINDCOPPER">HINDCOPPER</a> · <a href="#stocks" class="sym" data-stock="BBTC">BBTC</a> · <a href="#stocks" class="sym" data-stock="GILLETTE">GILLETTE</a> · <a href="#stocks" class="sym" data-stock="JINDRILL">JINDRILL</a> · <a href="#stocks" class="sym" data-stock="BAJAJCON">BAJAJCON</a> · <a href="#stocks" class="sym" data-stock="SANDUMA">SANDUMA</a> · <a href="#stocks" class="sym" data-stock="KIRLPNU">KIRLPNU</a> · <a href="#stocks" class="sym" data-stock="ENRIN">ENRIN</a> · <a href="#stocks" class="sym" data-stock="TRAVELFOOD">TRAVELFOOD</a> · <a href="#stocks" class="sym" data-stock="DYCL">DYCL</a> · <a href="#stocks" class="sym" data-stock="ASHOKA">ASHOKA</a> · <a href="#stocks" class="sym" data-stock="DOMS">DOMS</a> · <a href="#stocks" class="sym" data-stock="TRANSRAILL">TRANSRAILL</a> · <a href="#stocks" class="sym" data-stock="MRF">MRF</a> · <a href="#stocks" class="sym" data-stock="BUILDPRO">BUILDPRO</a> · <a href="#stocks" class="sym" data-stock="INDUSTOWER">INDUSTOWER</a> · <a href="#stocks" class="sym" data-stock="ARSSBL">ARSSBL</a> · <a href="#stocks" class="sym" data-stock="ASHAPURMIN">ASHAPURMIN</a> · <a href="#stocks" class="sym" data-stock="THANGAMAYL">THANGAMAYL</a> · <a href="#stocks" class="sym" data-stock="REDTAPE">REDTAPE</a> · <a href="#stocks" class="sym" data-stock="SHARDACROP">SHARDACROP</a> · <a href="#stocks" class="sym" data-stock="CUMMINSIND">CUMMINSIND</a> · <a href="#stocks" class="sym" data-stock="TENNIND">TENNIND</a> · <a href="#stocks" class="sym" data-stock="VEDL">VEDL</a> · <a href="#stocks" class="sym" data-stock="GMRAIRPORT">GMRAIRPORT</a> · <a href="#stocks" class="sym" data-stock="PAGEIND">PAGEIND</a> · <a href="#stocks" class="sym" data-stock="PFIZER">PFIZER</a> · <a href="#stocks" class="sym" data-stock="ECLERX">ECLERX</a> · <a href="#stocks" class="sym" data-stock="POWERINDIA">POWERINDIA</a> · <a href="#stocks" class="sym" data-stock="PGHH">PGHH</a> · <a href="#stocks" class="sym" data-stock="ARIS">ARIS</a> · <a href="#stocks" class="sym" data-stock="STARCEMENT">STARCEMENT</a> · <a href="#stocks" class="sym" data-stock="BAYERCROP">BAYERCROP</a> · <a href="#stocks" class="sym" data-stock="NSLNISP">NSLNISP</a> · <a href="#stocks" class="sym" data-stock="CCL">CCL</a> · <a href="#stocks" class="sym" data-stock="SAFARI">SAFARI</a> · <a href="#stocks" class="sym" data-stock="YATRA">YATRA</a> · <a href="#stocks" class="sym" data-stock="CERA">CERA</a> · <a href="#stocks" class="sym" data-stock="SIEMENS">SIEMENS</a> · <a href="#stocks" class="sym" data-stock="ANURAS">ANURAS</a> · <a href="#stocks" class="sym" data-stock="BORORENEW">BORORENEW</a> · <a href="#stocks" class="sym" data-stock="GUJENERGY">GUJENERGY</a> · <a href="#stocks" class="sym" data-stock="NLCINDIA">NLCINDIA</a> · <a href="#stocks" class="sym" data-stock="IFBIND">IFBIND</a> · <a href="#stocks" class="sym" data-stock="STYRENIX">STYRENIX</a> · <a href="#stocks" class="sym" data-stock="AIAENG">AIAENG</a> · <a href="#stocks" class="sym" data-stock="AHLUCONT">AHLUCONT</a> · <a href="#stocks" class="sym" data-stock="GVPIL">GVPIL</a> · <a href="#stocks" class="sym" data-stock="SARDAEN">SARDAEN</a> · <a href="#stocks" class="sym" data-stock="BRITANNIA">BRITANNIA</a> · <a href="#stocks" class="sym" data-stock="LEMONTREE">LEMONTREE</a> · <a href="#stocks" class="sym" data-stock="SCHAEFFLER">SCHAEFFLER</a> · <a href="#stocks" class="sym" data-stock="BELRISE">BELRISE</a> · <a href="#stocks" class="sym" data-stock="ASIANPAINT">ASIANPAINT</a> · <a href="#stocks" class="sym" data-stock="ROUTE">ROUTE</a> · <a href="#stocks" class="sym" data-stock="JAYNECOIND">JAYNECOIND</a> · <a href="#stocks" class="sym" data-stock="ONGC">ONGC</a> · <a href="#stocks" class="sym" data-stock="BIRLACORPN">BIRLACORPN</a> · <a href="#stocks" class="sym" data-stock="FRACTAL">FRACTAL</a> · <a href="#stocks" class="sym" data-stock="RITES">RITES</a> · <a href="#stocks" class="sym" data-stock="RAYMONDLSL">RAYMONDLSL</a> · <a href="#stocks" class="sym" data-stock="PREMEXPLN">PREMEXPLN</a> · <a href="#stocks" class="sym" data-stock="JKTYRE">JKTYRE</a> · <a href="#stocks" class="sym" data-stock="MAHSCOOTER">MAHSCOOTER</a> · <a href="#stocks" class="sym" data-stock="KIRLOSENG">KIRLOSENG</a> · <a href="#stocks" class="sym" data-stock="JKCEMENT">JKCEMENT</a> · <a href="#stocks" class="sym" data-stock="BIOCON">BIOCON</a> · <a href="#stocks" class="sym" data-stock="DBREALTY">DBREALTY</a> · <a href="#stocks" class="sym" data-stock="FORTIS">FORTIS</a> · <a href="#stocks" class="sym" data-stock="JPPOWER">JPPOWER</a> · <a href="#stocks" class="sym" data-stock="PTC">PTC</a> · <a href="#stocks" class="sym" data-stock="ATUL">ATUL</a> · <a href="#stocks" class="sym" data-stock="PNCINFRA">PNCINFRA</a> · <a href="#stocks" class="sym" data-stock="JKLAKSHMI">JKLAKSHMI</a> · <a href="#stocks" class="sym" data-stock="RAMCOCEM">RAMCOCEM</a> · <a href="#stocks" class="sym" data-stock="PINELABS">PINELABS</a> · <a href="#stocks" class="sym" data-stock="PRSMJOHNSN">PRSMJOHNSN</a> · <a href="#stocks" class="sym" data-stock="CENTURYPLY">CENTURYPLY</a> · <a href="#stocks" class="sym" data-stock="GNFC">GNFC</a> · <a href="#stocks" class="sym" data-stock="SAIL">SAIL</a> · <a href="#stocks" class="sym" data-stock="RELIANCE">RELIANCE</a> · <a href="#stocks" class="sym" data-stock="TATASTEEL">TATASTEEL</a> · <a href="#stocks" class="sym" data-stock="SHREECEM">SHREECEM</a> · <a href="#stocks" class="sym" data-stock="UPL">UPL</a> · <a href="#stocks" class="sym" data-stock="SRF">SRF</a> · <a href="#stocks" class="sym" data-stock="TRIVENI">TRIVENI</a> · <a href="#stocks" class="sym" data-stock="AWL">AWL</a> · <a href="#stocks" class="sym" data-stock="BHARATFORG">BHARATFORG</a> · <a href="#stocks" class="sym" data-stock="SOBHA">SOBHA</a> · <a href="#stocks" class="sym" data-stock="SFL">SFL</a> · <a href="#stocks" class="sym" data-stock="DCMSHRIRAM">DCMSHRIRAM</a> · <a href="#stocks" class="sym" data-stock="TARC">TARC</a> · <a href="#stocks" class="sym" data-stock="ABLBL">ABLBL</a> · <a href="#stocks" class="sym" data-stock="DWARKESH">DWARKESH</a> · <a href="#stocks" class="sym" data-stock="TITAGARH">TITAGARH</a> · <a href="#stocks" class="sym" data-stock="RICOAUTO">RICOAUTO</a> · <a href="#stocks" class="sym" data-stock="PFOCUS">PFOCUS</a>
+          <a href="#stocks" class="sym" data-stock="BSE">BSE</a> · <a href="#stocks" class="sym" data-stock="CRIZAC">CRIZAC</a> · <a href="#stocks" class="sym" data-stock="BLS">BLS</a> · <a href="#stocks" class="sym" data-stock="JSLL">JSLL</a> · <a href="#stocks" class="sym" data-stock="LUPIN">LUPIN</a> · <a href="#stocks" class="sym" data-stock="HBLENGINE">HBLENGINE</a> · <a href="#stocks" class="sym" data-stock="FORCEMOT">FORCEMOT</a> · <a href="#stocks" class="sym" data-stock="EMMVEE">EMMVEE</a> · <a href="#stocks" class="sym" data-stock="GVT&D">GVT&D</a> · <a href="#stocks" class="sym" data-stock="DATAPATTNS">DATAPATTNS</a> · <a href="#stocks" class="sym" data-stock="SANOFICONR">SANOFICONR</a> · <a href="#stocks" class="sym" data-stock="BEL">BEL</a> · <a href="#stocks" class="sym" data-stock="HINDZINC">HINDZINC</a> · <a href="#stocks" class="sym" data-stock="BBTC">BBTC</a> · <a href="#stocks" class="sym" data-stock="GILLETTE">GILLETTE</a> · <a href="#stocks" class="sym" data-stock="HINDCOPPER">HINDCOPPER</a> · <a href="#stocks" class="sym" data-stock="JINDRILL">JINDRILL</a> · <a href="#stocks" class="sym" data-stock="SANDUMA">SANDUMA</a> · <a href="#stocks" class="sym" data-stock="BAJAJCON">BAJAJCON</a> · <a href="#stocks" class="sym" data-stock="KIRLPNU">KIRLPNU</a> · <a href="#stocks" class="sym" data-stock="ENRIN">ENRIN</a> · <a href="#stocks" class="sym" data-stock="ASHOKA">ASHOKA</a> · <a href="#stocks" class="sym" data-stock="TRAVELFOOD">TRAVELFOOD</a> · <a href="#stocks" class="sym" data-stock="DOMS">DOMS</a> · <a href="#stocks" class="sym" data-stock="DYCL">DYCL</a> · <a href="#stocks" class="sym" data-stock="TRANSRAILL">TRANSRAILL</a> · <a href="#stocks" class="sym" data-stock="MRF">MRF</a> · <a href="#stocks" class="sym" data-stock="BUILDPRO">BUILDPRO</a> · <a href="#stocks" class="sym" data-stock="ASHAPURMIN">ASHAPURMIN</a> · <a href="#stocks" class="sym" data-stock="INDUSTOWER">INDUSTOWER</a> · <a href="#stocks" class="sym" data-stock="REDTAPE">REDTAPE</a> · <a href="#stocks" class="sym" data-stock="SHARDACROP">SHARDACROP</a> · <a href="#stocks" class="sym" data-stock="THANGAMAYL">THANGAMAYL</a> · <a href="#stocks" class="sym" data-stock="CUMMINSIND">CUMMINSIND</a> · <a href="#stocks" class="sym" data-stock="TENNIND">TENNIND</a> · <a href="#stocks" class="sym" data-stock="PFIZER">PFIZER</a> · <a href="#stocks" class="sym" data-stock="VEDL">VEDL</a> · <a href="#stocks" class="sym" data-stock="GMRAIRPORT">GMRAIRPORT</a> · <a href="#stocks" class="sym" data-stock="ECLERX">ECLERX</a> · <a href="#stocks" class="sym" data-stock="PAGEIND">PAGEIND</a> · <a href="#stocks" class="sym" data-stock="POWERINDIA">POWERINDIA</a> · <a href="#stocks" class="sym" data-stock="PGHH">PGHH</a> · <a href="#stocks" class="sym" data-stock="ARIS">ARIS</a> · <a href="#stocks" class="sym" data-stock="STARCEMENT">STARCEMENT</a> · <a href="#stocks" class="sym" data-stock="BAYERCROP">BAYERCROP</a> · <a href="#stocks" class="sym" data-stock="NSLNISP">NSLNISP</a> · <a href="#stocks" class="sym" data-stock="CCL">CCL</a> · <a href="#stocks" class="sym" data-stock="SAFARI">SAFARI</a> · <a href="#stocks" class="sym" data-stock="YATRA">YATRA</a> · <a href="#stocks" class="sym" data-stock="SIEMENS">SIEMENS</a> · <a href="#stocks" class="sym" data-stock="GUJENERGY">GUJENERGY</a> · <a href="#stocks" class="sym" data-stock="ANURAS">ANURAS</a> · <a href="#stocks" class="sym" data-stock="CERA">CERA</a> · <a href="#stocks" class="sym" data-stock="BORORENEW">BORORENEW</a> · <a href="#stocks" class="sym" data-stock="NLCINDIA">NLCINDIA</a> · <a href="#stocks" class="sym" data-stock="AIAENG">AIAENG</a> · <a href="#stocks" class="sym" data-stock="IFBIND">IFBIND</a> · <a href="#stocks" class="sym" data-stock="STYRENIX">STYRENIX</a> · <a href="#stocks" class="sym" data-stock="AHLUCONT">AHLUCONT</a> · <a href="#stocks" class="sym" data-stock="GVPIL">GVPIL</a> · <a href="#stocks" class="sym" data-stock="SARDAEN">SARDAEN</a> · <a href="#stocks" class="sym" data-stock="BRITANNIA">BRITANNIA</a> · <a href="#stocks" class="sym" data-stock="SCHAEFFLER">SCHAEFFLER</a> · <a href="#stocks" class="sym" data-stock="LEMONTREE">LEMONTREE</a> · <a href="#stocks" class="sym" data-stock="ASIANPAINT">ASIANPAINT</a> · <a href="#stocks" class="sym" data-stock="BELRISE">BELRISE</a> · <a href="#stocks" class="sym" data-stock="ROUTE">ROUTE</a> · <a href="#stocks" class="sym" data-stock="JAYNECOIND">JAYNECOIND</a> · <a href="#stocks" class="sym" data-stock="ONGC">ONGC</a> · <a href="#stocks" class="sym" data-stock="FRACTAL">FRACTAL</a> · <a href="#stocks" class="sym" data-stock="BIRLACORPN">BIRLACORPN</a> · <a href="#stocks" class="sym" data-stock="RITES">RITES</a> · <a href="#stocks" class="sym" data-stock="PREMEXPLN">PREMEXPLN</a> · <a href="#stocks" class="sym" data-stock="RAYMONDLSL">RAYMONDLSL</a> · <a href="#stocks" class="sym" data-stock="JKTYRE">JKTYRE</a> · <a href="#stocks" class="sym" data-stock="KIRLOSENG">KIRLOSENG</a> · <a href="#stocks" class="sym" data-stock="MAHSCOOTER">MAHSCOOTER</a> · <a href="#stocks" class="sym" data-stock="JKCEMENT">JKCEMENT</a> · <a href="#stocks" class="sym" data-stock="BIOCON">BIOCON</a> · <a href="#stocks" class="sym" data-stock="DBREALTY">DBREALTY</a> · <a href="#stocks" class="sym" data-stock="FORTIS">FORTIS</a> · <a href="#stocks" class="sym" data-stock="JPPOWER">JPPOWER</a> · <a href="#stocks" class="sym" data-stock="PTC">PTC</a> · <a href="#stocks" class="sym" data-stock="ATUL">ATUL</a> · <a href="#stocks" class="sym" data-stock="PNCINFRA">PNCINFRA</a> · <a href="#stocks" class="sym" data-stock="JKLAKSHMI">JKLAKSHMI</a> · <a href="#stocks" class="sym" data-stock="RAMCOCEM">RAMCOCEM</a> · <a href="#stocks" class="sym" data-stock="PINELABS">PINELABS</a> · <a href="#stocks" class="sym" data-stock="PRSMJOHNSN">PRSMJOHNSN</a> · <a href="#stocks" class="sym" data-stock="CENTURYPLY">CENTURYPLY</a> · <a href="#stocks" class="sym" data-stock="GNFC">GNFC</a> · <a href="#stocks" class="sym" data-stock="SAIL">SAIL</a> · <a href="#stocks" class="sym" data-stock="RELIANCE">RELIANCE</a> · <a href="#stocks" class="sym" data-stock="SHREECEM">SHREECEM</a> · <a href="#stocks" class="sym" data-stock="TATASTEEL">TATASTEEL</a> · <a href="#stocks" class="sym" data-stock="UPL">UPL</a> · <a href="#stocks" class="sym" data-stock="SRF">SRF</a> · <a href="#stocks" class="sym" data-stock="TRIVENI">TRIVENI</a> · <a href="#stocks" class="sym" data-stock="AWL">AWL</a> · <a href="#stocks" class="sym" data-stock="BHARATFORG">BHARATFORG</a> · <a href="#stocks" class="sym" data-stock="SOBHA">SOBHA</a> · <a href="#stocks" class="sym" data-stock="SFL">SFL</a> · <a href="#stocks" class="sym" data-stock="DCMSHRIRAM">DCMSHRIRAM</a> · <a href="#stocks" class="sym" data-stock="TARC">TARC</a> · <a href="#stocks" class="sym" data-stock="ABLBL">ABLBL</a> · <a href="#stocks" class="sym" data-stock="DWARKESH">DWARKESH</a> · <a href="#stocks" class="sym" data-stock="TITAGARH">TITAGARH</a> · <a href="#stocks" class="sym" data-stock="RICOAUTO">RICOAUTO</a> · <a href="#stocks" class="sym" data-stock="PFOCUS">PFOCUS</a>
         </p>
       </details>
       
@@ -8251,14 +8251,14 @@ table.t tbody tr:hover{background:var(--surface2)}
       <p class="fnd-r">quality ≥ 60 but margin falling AND ROCE trend down</p>
       <p class="fnd-s">
         
-        <a href="#stocks" class="sym" data-stock="OSWALPUMPS">OSWALPUMPS</a> · <a href="#stocks" class="sym" data-stock="SUDEEPPHRM">SUDEEPPHRM</a> · <a href="#stocks" class="sym" data-stock="UNIMECH">UNIMECH</a> · <a href="#stocks" class="sym" data-stock="NMDC">NMDC</a> · <a href="#stocks" class="sym" data-stock="IGIL">IGIL</a> · <a href="#stocks" class="sym" data-stock="IRCTC">IRCTC</a> · <a href="#stocks" class="sym" data-stock="AURIONPRO">AURIONPRO</a> · <a href="#stocks" class="sym" data-stock="NATCOPHARM">NATCOPHARM</a>
+        <a href="#stocks" class="sym" data-stock="OSWALPUMPS">OSWALPUMPS</a> · <a href="#stocks" class="sym" data-stock="SUDEEPPHRM">SUDEEPPHRM</a> · <a href="#stocks" class="sym" data-stock="UNIMECH">UNIMECH</a> · <a href="#stocks" class="sym" data-stock="NMDC">NMDC</a> · <a href="#stocks" class="sym" data-stock="IGIL">IGIL</a> · <a href="#stocks" class="sym" data-stock="IRCTC">IRCTC</a> · <a href="#stocks" class="sym" data-stock="NATCOPHARM">NATCOPHARM</a> · <a href="#stocks" class="sym" data-stock="AURIONPRO">AURIONPRO</a>
       </p>
       
       
       <details class="fnd-all">
         <summary>+67 more &mdash; show all 75</summary>
         <p class="fnd-s">
-          <a href="#stocks" class="sym" data-stock="OSWALPUMPS">OSWALPUMPS</a> · <a href="#stocks" class="sym" data-stock="SUDEEPPHRM">SUDEEPPHRM</a> · <a href="#stocks" class="sym" data-stock="UNIMECH">UNIMECH</a> · <a href="#stocks" class="sym" data-stock="NMDC">NMDC</a> · <a href="#stocks" class="sym" data-stock="IGIL">IGIL</a> · <a href="#stocks" class="sym" data-stock="IRCTC">IRCTC</a> · <a href="#stocks" class="sym" data-stock="AURIONPRO">AURIONPRO</a> · <a href="#stocks" class="sym" data-stock="NATCOPHARM">NATCOPHARM</a> · <a href="#stocks" class="sym" data-stock="PRUDENT">PRUDENT</a> · <a href="#stocks" class="sym" data-stock="EIEL">EIEL</a> · <a href="#stocks" class="sym" data-stock="DHOOTTRANS">DHOOTTRANS</a> · <a href="#stocks" class="sym" data-stock="FCL">FCL</a> · <a href="#stocks" class="sym" data-stock="LLOYDSENGG">LLOYDSENGG</a> · <a href="#stocks" class="sym" data-stock="INDGN">INDGN</a> · <a href="#stocks" class="sym" data-stock="INOXINDIA">INOXINDIA</a> · <a href="#stocks" class="sym" data-stock="GHCL">GHCL</a> · <a href="#stocks" class="sym" data-stock="SONACOMS">SONACOMS</a> · <a href="#stocks" class="sym" data-stock="SHRIPISTON">SHRIPISTON</a> · <a href="#stocks" class="sym" data-stock="KPITTECH">KPITTECH</a> · <a href="#stocks" class="sym" data-stock="DOMS">DOMS</a> · <a href="#stocks" class="sym" data-stock="KRN">KRN</a> · <a href="#stocks" class="sym" data-stock="IIFLCAPS">IIFLCAPS</a> · <a href="#stocks" class="sym" data-stock="EMUDHRA">EMUDHRA</a> · <a href="#stocks" class="sym" data-stock="AFFLE">AFFLE</a> · <a href="#stocks" class="sym" data-stock="COALINDIA">COALINDIA</a> · <a href="#stocks" class="sym" data-stock="TBOTEK">TBOTEK</a> · <a href="#stocks" class="sym" data-stock="MSTCLTD">MSTCLTD</a> · <a href="#stocks" class="sym" data-stock="TANLA">TANLA</a> · <a href="#stocks" class="sym" data-stock="TEMPSENS">TEMPSENS</a> · <a href="#stocks" class="sym" data-stock="MPIMANIPAL">MPIMANIPAL</a> · <a href="#stocks" class="sym" data-stock="ANGELONE">ANGELONE</a> · <a href="#stocks" class="sym" data-stock="BLUEJET">BLUEJET</a> · <a href="#stocks" class="sym" data-stock="NETWEB">NETWEB</a> · <a href="#stocks" class="sym" data-stock="SHREEJISPG">SHREEJISPG</a> · <a href="#stocks" class="sym" data-stock="POLYMED">POLYMED</a> · <a href="#stocks" class="sym" data-stock="CELLO">CELLO</a> · <a href="#stocks" class="sym" data-stock="CGPOWER">CGPOWER</a> · <a href="#stocks" class="sym" data-stock="DRREDDY">DRREDDY</a> · <a href="#stocks" class="sym" data-stock="KSCL">KSCL</a> · <a href="#stocks" class="sym" data-stock="MSUMI">MSUMI</a> · <a href="#stocks" class="sym" data-stock="PFIZER">PFIZER</a> · <a href="#stocks" class="sym" data-stock="DELTACORP">DELTACORP</a> · <a href="#stocks" class="sym" data-stock="KMEW">KMEW</a> · <a href="#stocks" class="sym" data-stock="FINEORG">FINEORG</a> · <a href="#stocks" class="sym" data-stock="SUNTV">SUNTV</a> · <a href="#stocks" class="sym" data-stock="ROLEXRINGS">ROLEXRINGS</a> · <a href="#stocks" class="sym" data-stock="CIPLA">CIPLA</a> · <a href="#stocks" class="sym" data-stock="MGL">MGL</a> · <a href="#stocks" class="sym" data-stock="LTTS">LTTS</a> · <a href="#stocks" class="sym" data-stock="AEROFLEX">AEROFLEX</a> · <a href="#stocks" class="sym" data-stock="ELECON">ELECON</a> · <a href="#stocks" class="sym" data-stock="TATAELXSI">TATAELXSI</a> · <a href="#stocks" class="sym" data-stock="CMSINFO">CMSINFO</a> · <a href="#stocks" class="sym" data-stock="CERA">CERA</a> · <a href="#stocks" class="sym" data-stock="NAVA">NAVA</a> · <a href="#stocks" class="sym" data-stock="LTM">LTM</a> · <a href="#stocks" class="sym" data-stock="MAPMYINDIA">MAPMYINDIA</a> · <a href="#stocks" class="sym" data-stock="STYRENIX">STYRENIX</a> · <a href="#stocks" class="sym" data-stock="MANYAVAR">MANYAVAR</a> · <a href="#stocks" class="sym" data-stock="INDSWFTLAB">INDSWFTLAB</a> · <a href="#stocks" class="sym" data-stock="GUJTHEM">GUJTHEM</a> · <a href="#stocks" class="sym" data-stock="CONCORDBIO">CONCORDBIO</a> · <a href="#stocks" class="sym" data-stock="TIMKEN">TIMKEN</a> · <a href="#stocks" class="sym" data-stock="KIRLOSBROS">KIRLOSBROS</a> · <a href="#stocks" class="sym" data-stock="TIINDIA">TIINDIA</a> · <a href="#stocks" class="sym" data-stock="RITES">RITES</a> · <a href="#stocks" class="sym" data-stock="IGL">IGL</a> · <a href="#stocks" class="sym" data-stock="PIIND">PIIND</a> · <a href="#stocks" class="sym" data-stock="INDIGOPNTS">INDIGOPNTS</a> · <a href="#stocks" class="sym" data-stock="CLEAN">CLEAN</a> · <a href="#stocks" class="sym" data-stock="SUPREMEIND">SUPREMEIND</a> · <a href="#stocks" class="sym" data-stock="AVANTEL">AVANTEL</a> · <a href="#stocks" class="sym" data-stock="TATATECH">TATATECH</a> · <a href="#stocks" class="sym" data-stock="CORDELIA">CORDELIA</a> · <a href="#stocks" class="sym" data-stock="SPLPETRO">SPLPETRO</a>
+          <a href="#stocks" class="sym" data-stock="OSWALPUMPS">OSWALPUMPS</a> · <a href="#stocks" class="sym" data-stock="SUDEEPPHRM">SUDEEPPHRM</a> · <a href="#stocks" class="sym" data-stock="UNIMECH">UNIMECH</a> · <a href="#stocks" class="sym" data-stock="NMDC">NMDC</a> · <a href="#stocks" class="sym" data-stock="IGIL">IGIL</a> · <a href="#stocks" class="sym" data-stock="IRCTC">IRCTC</a> · <a href="#stocks" class="sym" data-stock="NATCOPHARM">NATCOPHARM</a> · <a href="#stocks" class="sym" data-stock="AURIONPRO">AURIONPRO</a> · <a href="#stocks" class="sym" data-stock="DHOOTTRANS">DHOOTTRANS</a> · <a href="#stocks" class="sym" data-stock="PRUDENT">PRUDENT</a> · <a href="#stocks" class="sym" data-stock="EIEL">EIEL</a> · <a href="#stocks" class="sym" data-stock="LLOYDSENGG">LLOYDSENGG</a> · <a href="#stocks" class="sym" data-stock="FCL">FCL</a> · <a href="#stocks" class="sym" data-stock="INDGN">INDGN</a> · <a href="#stocks" class="sym" data-stock="INOXINDIA">INOXINDIA</a> · <a href="#stocks" class="sym" data-stock="GHCL">GHCL</a> · <a href="#stocks" class="sym" data-stock="SONACOMS">SONACOMS</a> · <a href="#stocks" class="sym" data-stock="SHRIPISTON">SHRIPISTON</a> · <a href="#stocks" class="sym" data-stock="KPITTECH">KPITTECH</a> · <a href="#stocks" class="sym" data-stock="DOMS">DOMS</a> · <a href="#stocks" class="sym" data-stock="KRN">KRN</a> · <a href="#stocks" class="sym" data-stock="IIFLCAPS">IIFLCAPS</a> · <a href="#stocks" class="sym" data-stock="EMUDHRA">EMUDHRA</a> · <a href="#stocks" class="sym" data-stock="AFFLE">AFFLE</a> · <a href="#stocks" class="sym" data-stock="TBOTEK">TBOTEK</a> · <a href="#stocks" class="sym" data-stock="COALINDIA">COALINDIA</a> · <a href="#stocks" class="sym" data-stock="TANLA">TANLA</a> · <a href="#stocks" class="sym" data-stock="MSTCLTD">MSTCLTD</a> · <a href="#stocks" class="sym" data-stock="MPIMANIPAL">MPIMANIPAL</a> · <a href="#stocks" class="sym" data-stock="ANGELONE">ANGELONE</a> · <a href="#stocks" class="sym" data-stock="TEMPSENS">TEMPSENS</a> · <a href="#stocks" class="sym" data-stock="NETWEB">NETWEB</a> · <a href="#stocks" class="sym" data-stock="POLYMED">POLYMED</a> · <a href="#stocks" class="sym" data-stock="SHREEJISPG">SHREEJISPG</a> · <a href="#stocks" class="sym" data-stock="BLUEJET">BLUEJET</a> · <a href="#stocks" class="sym" data-stock="CELLO">CELLO</a> · <a href="#stocks" class="sym" data-stock="CGPOWER">CGPOWER</a> · <a href="#stocks" class="sym" data-stock="DRREDDY">DRREDDY</a> · <a href="#stocks" class="sym" data-stock="KSCL">KSCL</a> · <a href="#stocks" class="sym" data-stock="MSUMI">MSUMI</a> · <a href="#stocks" class="sym" data-stock="PFIZER">PFIZER</a> · <a href="#stocks" class="sym" data-stock="FINEORG">FINEORG</a> · <a href="#stocks" class="sym" data-stock="DELTACORP">DELTACORP</a> · <a href="#stocks" class="sym" data-stock="KMEW">KMEW</a> · <a href="#stocks" class="sym" data-stock="SUNTV">SUNTV</a> · <a href="#stocks" class="sym" data-stock="CIPLA">CIPLA</a> · <a href="#stocks" class="sym" data-stock="MGL">MGL</a> · <a href="#stocks" class="sym" data-stock="LTTS">LTTS</a> · <a href="#stocks" class="sym" data-stock="AEROFLEX">AEROFLEX</a> · <a href="#stocks" class="sym" data-stock="ROLEXRINGS">ROLEXRINGS</a> · <a href="#stocks" class="sym" data-stock="ELECON">ELECON</a> · <a href="#stocks" class="sym" data-stock="TATAELXSI">TATAELXSI</a> · <a href="#stocks" class="sym" data-stock="CMSINFO">CMSINFO</a> · <a href="#stocks" class="sym" data-stock="NAVA">NAVA</a> · <a href="#stocks" class="sym" data-stock="CERA">CERA</a> · <a href="#stocks" class="sym" data-stock="LTM">LTM</a> · <a href="#stocks" class="sym" data-stock="INDSWFTLAB">INDSWFTLAB</a> · <a href="#stocks" class="sym" data-stock="MAPMYINDIA">MAPMYINDIA</a> · <a href="#stocks" class="sym" data-stock="STYRENIX">STYRENIX</a> · <a href="#stocks" class="sym" data-stock="MANYAVAR">MANYAVAR</a> · <a href="#stocks" class="sym" data-stock="GUJTHEM">GUJTHEM</a> · <a href="#stocks" class="sym" data-stock="CONCORDBIO">CONCORDBIO</a> · <a href="#stocks" class="sym" data-stock="TIMKEN">TIMKEN</a> · <a href="#stocks" class="sym" data-stock="KIRLOSBROS">KIRLOSBROS</a> · <a href="#stocks" class="sym" data-stock="TIINDIA">TIINDIA</a> · <a href="#stocks" class="sym" data-stock="RITES">RITES</a> · <a href="#stocks" class="sym" data-stock="IGL">IGL</a> · <a href="#stocks" class="sym" data-stock="PIIND">PIIND</a> · <a href="#stocks" class="sym" data-stock="INDIGOPNTS">INDIGOPNTS</a> · <a href="#stocks" class="sym" data-stock="CLEAN">CLEAN</a> · <a href="#stocks" class="sym" data-stock="SUPREMEIND">SUPREMEIND</a> · <a href="#stocks" class="sym" data-stock="AVANTEL">AVANTEL</a> · <a href="#stocks" class="sym" data-stock="TATATECH">TATATECH</a> · <a href="#stocks" class="sym" data-stock="CORDELIA">CORDELIA</a> · <a href="#stocks" class="sym" data-stock="SPLPETRO">SPLPETRO</a>
         </p>
       </details>
       
@@ -8279,19 +8279,19 @@ table.t tbody tr:hover{background:var(--surface2)}
     </div>
     
     <div class="card fnd">
-      <h4 class="fnd-t">Profit up sharply, price has not followed <span class="fnd-n">241</span></h4>
+      <h4 class="fnd-t">Profit up sharply, price has not followed <span class="fnd-n">239</span></h4>
       
       <p class="fnd-r">profit growth ≥ 20% year on year and 3-month return ≤ 0%</p>
       <p class="fnd-s">
         
-        <a href="#stocks" class="sym" data-stock="OSWALPUMPS">OSWALPUMPS</a> · <a href="#stocks" class="sym" data-stock="CRIZAC">CRIZAC</a> · <a href="#stocks" class="sym" data-stock="BANCOINDIA">BANCOINDIA</a> · <a href="#stocks" class="sym" data-stock="BLS">BLS</a> · <a href="#stocks" class="sym" data-stock="WAAREERTL">WAAREERTL</a> · <a href="#stocks" class="sym" data-stock="WAAREEENER">WAAREEENER</a> · <a href="#stocks" class="sym" data-stock="SBIFUNDS">SBIFUNDS</a> · <a href="#stocks" class="sym" data-stock="JSLL">JSLL</a>
+        <a href="#stocks" class="sym" data-stock="OSWALPUMPS">OSWALPUMPS</a> · <a href="#stocks" class="sym" data-stock="CRIZAC">CRIZAC</a> · <a href="#stocks" class="sym" data-stock="BLS">BLS</a> · <a href="#stocks" class="sym" data-stock="BANCOINDIA">BANCOINDIA</a> · <a href="#stocks" class="sym" data-stock="WAAREERTL">WAAREERTL</a> · <a href="#stocks" class="sym" data-stock="WAAREEENER">WAAREEENER</a> · <a href="#stocks" class="sym" data-stock="SBIFUNDS">SBIFUNDS</a> · <a href="#stocks" class="sym" data-stock="JSLL">JSLL</a>
       </p>
       
       
       <details class="fnd-all">
-        <summary>+233 more &mdash; show all 241</summary>
+        <summary>+231 more &mdash; show all 239</summary>
         <p class="fnd-s">
-          <a href="#stocks" class="sym" data-stock="OSWALPUMPS">OSWALPUMPS</a> · <a href="#stocks" class="sym" data-stock="CRIZAC">CRIZAC</a> · <a href="#stocks" class="sym" data-stock="BANCOINDIA">BANCOINDIA</a> · <a href="#stocks" class="sym" data-stock="BLS">BLS</a> · <a href="#stocks" class="sym" data-stock="WAAREERTL">WAAREERTL</a> · <a href="#stocks" class="sym" data-stock="WAAREEENER">WAAREEENER</a> · <a href="#stocks" class="sym" data-stock="SBIFUNDS">SBIFUNDS</a> · <a href="#stocks" class="sym" data-stock="JSLL">JSLL</a> · <a href="#stocks" class="sym" data-stock="GOLDIAM">GOLDIAM</a> · <a href="#stocks" class="sym" data-stock="ICICIAMC">ICICIAMC</a> · <a href="#stocks" class="sym" data-stock="GRSE">GRSE</a> · <a href="#stocks" class="sym" data-stock="LUPIN">LUPIN</a> · <a href="#stocks" class="sym" data-stock="GOKULAGRO">GOKULAGRO</a> · <a href="#stocks" class="sym" data-stock="WEBELSOLAR">WEBELSOLAR</a> · <a href="#stocks" class="sym" data-stock="BAJAJ-AUTO">BAJAJ-AUTO</a> · <a href="#stocks" class="sym" data-stock="EMMVEE">EMMVEE</a> · <a href="#stocks" class="sym" data-stock="NEULANDLAB">NEULANDLAB</a> · <a href="#stocks" class="sym" data-stock="GVT&D">GVT&D</a> · <a href="#stocks" class="sym" data-stock="IKS">IKS</a> · <a href="#stocks" class="sym" data-stock="DATAPATTNS">DATAPATTNS</a> · <a href="#stocks" class="sym" data-stock="PNGJL">PNGJL</a> · <a href="#stocks" class="sym" data-stock="DIXON">DIXON</a> · <a href="#stocks" class="sym" data-stock="KPIGREEN">KPIGREEN</a> · <a href="#stocks" class="sym" data-stock="SJS">SJS</a> · <a href="#stocks" class="sym" data-stock="SANOFICONR">SANOFICONR</a> · <a href="#stocks" class="sym" data-stock="UTLSOLAR">UTLSOLAR</a> · <a href="#stocks" class="sym" data-stock="SAATVIKGL">SAATVIKGL</a> · <a href="#stocks" class="sym" data-stock="ATLANTAELE">ATLANTAELE</a> · <a href="#stocks" class="sym" data-stock="LLOYDSME">LLOYDSME</a> · <a href="#stocks" class="sym" data-stock="ZAGGLE">ZAGGLE</a> · <a href="#stocks" class="sym" data-stock="GODFRYPHLP">GODFRYPHLP</a> · <a href="#stocks" class="sym" data-stock="PRICOLLTD">PRICOLLTD</a> · <a href="#stocks" class="sym" data-stock="HEROMOTOCO">HEROMOTOCO</a> · <a href="#stocks" class="sym" data-stock="SUZLON">SUZLON</a> · <a href="#stocks" class="sym" data-stock="HINDZINC">HINDZINC</a> · <a href="#stocks" class="sym" data-stock="HINDCOPPER">HINDCOPPER</a> · <a href="#stocks" class="sym" data-stock="PREMIERENE">PREMIERENE</a> · <a href="#stocks" class="sym" data-stock="GILLETTE">GILLETTE</a> · <a href="#stocks" class="sym" data-stock="LLOYDSENGG">LLOYDSENGG</a> · <a href="#stocks" class="sym" data-stock="SEAMECLTD">SEAMECLTD</a> · <a href="#stocks" class="sym" data-stock="VIKRAMSOLR">VIKRAMSOLR</a> · <a href="#stocks" class="sym" data-stock="TDPOWERSYS">TDPOWERSYS</a> · <a href="#stocks" class="sym" data-stock="FIEMIND">FIEMIND</a> · <a href="#stocks" class="sym" data-stock="KERNEX">KERNEX</a> · <a href="#stocks" class="sym" data-stock="CHOLAFIN">CHOLAFIN</a> · <a href="#stocks" class="sym" data-stock="BAJAJCON">BAJAJCON</a> · <a href="#stocks" class="sym" data-stock="JAMNAAUTO">JAMNAAUTO</a> · <a href="#stocks" class="sym" data-stock="IXIGO">IXIGO</a> · <a href="#stocks" class="sym" data-stock="SANDUMA">SANDUMA</a> · <a href="#stocks" class="sym" data-stock="INDIASHLTR">INDIASHLTR</a> · <a href="#stocks" class="sym" data-stock="KIRLPNU">KIRLPNU</a> · <a href="#stocks" class="sym" data-stock="TRAVELFOOD">TRAVELFOOD</a> · <a href="#stocks" class="sym" data-stock="HOMEFIRST">HOMEFIRST</a> · <a href="#stocks" class="sym" data-stock="DYCL">DYCL</a> · <a href="#stocks" class="sym" data-stock="ASHOKA">ASHOKA</a> · <a href="#stocks" class="sym" data-stock="ADVENZYMES">ADVENZYMES</a> · <a href="#stocks" class="sym" data-stock="JSWDULUX">JSWDULUX</a> · <a href="#stocks" class="sym" data-stock="KRN">KRN</a> · <a href="#stocks" class="sym" data-stock="SHAILY">SHAILY</a> · <a href="#stocks" class="sym" data-stock="KNACK">KNACK</a> · <a href="#stocks" class="sym" data-stock="OLECTRA">OLECTRA</a> · <a href="#stocks" class="sym" data-stock="CARTRADE">CARTRADE</a> · <a href="#stocks" class="sym" data-stock="SENCO">SENCO</a> · <a href="#stocks" class="sym" data-stock="EMUDHRA">EMUDHRA</a> · <a href="#stocks" class="sym" data-stock="TSFINV">TSFINV</a> · <a href="#stocks" class="sym" data-stock="AEROENTER">AEROENTER</a> · <a href="#stocks" class="sym" data-stock="PARAS">PARAS</a> · <a href="#stocks" class="sym" data-stock="TRANSRAILL">TRANSRAILL</a> · <a href="#stocks" class="sym" data-stock="GENUSPOWER">GENUSPOWER</a> · <a href="#stocks" class="sym" data-stock="THYROCARE">THYROCARE</a> · <a href="#stocks" class="sym" data-stock="POLYCAB">POLYCAB</a> · <a href="#stocks" class="sym" data-stock="TIMETECHNO">TIMETECHNO</a> · <a href="#stocks" class="sym" data-stock="RRKABEL">RRKABEL</a> · <a href="#stocks" class="sym" data-stock="SENORES">SENORES</a> · <a href="#stocks" class="sym" data-stock="NAUKRI">NAUKRI</a> · <a href="#stocks" class="sym" data-stock="BPCL">BPCL</a> · <a href="#stocks" class="sym" data-stock="GODREJPROP">GODREJPROP</a> · <a href="#stocks" class="sym" data-stock="AETHER">AETHER</a> · <a href="#stocks" class="sym" data-stock="LODHA">LODHA</a> · <a href="#stocks" class="sym" data-stock="MRF">MRF</a> · <a href="#stocks" class="sym" data-stock="JAINREC">JAINREC</a> · <a href="#stocks" class="sym" data-stock="NETWEB">NETWEB</a> · <a href="#stocks" class="sym" data-stock="V2RETAIL">V2RETAIL</a> · <a href="#stocks" class="sym" data-stock="ERIS">ERIS</a> · <a href="#stocks" class="sym" data-stock="CANFINHOME">CANFINHOME</a> · <a href="#stocks" class="sym" data-stock="STYLAMIND">STYLAMIND</a> · <a href="#stocks" class="sym" data-stock="CGPOWER">CGPOWER</a> · <a href="#stocks" class="sym" data-stock="SMLMAH">SMLMAH</a> · <a href="#stocks" class="sym" data-stock="LLOYDSENT">LLOYDSENT</a> · <a href="#stocks" class="sym" data-stock="PRIVISCL">PRIVISCL</a> · <a href="#stocks" class="sym" data-stock="ANANTRAJ">ANANTRAJ</a> · <a href="#stocks" class="sym" data-stock="PICCADIL">PICCADIL</a> · <a href="#stocks" class="sym" data-stock="ARSSBL">ARSSBL</a> · <a href="#stocks" class="sym" data-stock="AZAD">AZAD</a> · <a href="#stocks" class="sym" data-stock="CHALET">CHALET</a> · <a href="#stocks" class="sym" data-stock="SBFC">SBFC</a> · <a href="#stocks" class="sym" data-stock="ASHAPURMIN">ASHAPURMIN</a> · <a href="#stocks" class="sym" data-stock="THANGAMAYL">THANGAMAYL</a> · <a href="#stocks" class="sym" data-stock="KEI">KEI</a> · <a href="#stocks" class="sym" data-stock="PARADEEP">PARADEEP</a> · <a href="#stocks" class="sym" data-stock="REDTAPE">REDTAPE</a> · <a href="#stocks" class="sym" data-stock="SHARDACROP">SHARDACROP</a> · <a href="#stocks" class="sym" data-stock="SKIPPER">SKIPPER</a> · <a href="#stocks" class="sym" data-stock="POCL">POCL</a> · <a href="#stocks" class="sym" data-stock="VIYASH">VIYASH</a> · <a href="#stocks" class="sym" data-stock="ASTRAMICRO">ASTRAMICRO</a> · <a href="#stocks" class="sym" data-stock="CHOICEIN">CHOICEIN</a> · <a href="#stocks" class="sym" data-stock="KAYNES">KAYNES</a> · <a href="#stocks" class="sym" data-stock="ECLERX">ECLERX</a> · <a href="#stocks" class="sym" data-stock="VIDYAWIRES">VIDYAWIRES</a> · <a href="#stocks" class="sym" data-stock="ASIANENE">ASIANENE</a> · <a href="#stocks" class="sym" data-stock="POWERINDIA">POWERINDIA</a> · <a href="#stocks" class="sym" data-stock="NBCC">NBCC</a> · <a href="#stocks" class="sym" data-stock="AGIIL">AGIIL</a> · <a href="#stocks" class="sym" data-stock="EPACKPEB">EPACKPEB</a> · <a href="#stocks" class="sym" data-stock="M&M">M&M</a> · <a href="#stocks" class="sym" data-stock="PGHH">PGHH</a> · <a href="#stocks" class="sym" data-stock="INOXGREEN">INOXGREEN</a> · <a href="#stocks" class="sym" data-stock="PARKHOSPS">PARKHOSPS</a> · <a href="#stocks" class="sym" data-stock="STARCEMENT">STARCEMENT</a> · <a href="#stocks" class="sym" data-stock="SAMHI">SAMHI</a> · <a href="#stocks" class="sym" data-stock="BAYERCROP">BAYERCROP</a> · <a href="#stocks" class="sym" data-stock="GICRE">GICRE</a> · <a href="#stocks" class="sym" data-stock="MMTC">MMTC</a> · <a href="#stocks" class="sym" data-stock="SIRCA">SIRCA</a> · <a href="#stocks" class="sym" data-stock="REFEX">REFEX</a> · <a href="#stocks" class="sym" data-stock="ORIENTCEM">ORIENTCEM</a> · <a href="#stocks" class="sym" data-stock="AGARWALEYE">AGARWALEYE</a> · <a href="#stocks" class="sym" data-stock="CCL">CCL</a> · <a href="#stocks" class="sym" data-stock="CEATLTD">CEATLTD</a> · <a href="#stocks" class="sym" data-stock="HUDCO">HUDCO</a> · <a href="#stocks" class="sym" data-stock="RPTECH">RPTECH</a> · <a href="#stocks" class="sym" data-stock="CCAVENUE">CCAVENUE</a> · <a href="#stocks" class="sym" data-stock="BAJAJHLDNG">BAJAJHLDNG</a> · <a href="#stocks" class="sym" data-stock="CMRGREEN">CMRGREEN</a> · <a href="#stocks" class="sym" data-stock="APTUS">APTUS</a> · <a href="#stocks" class="sym" data-stock="YATRA">YATRA</a> · <a href="#stocks" class="sym" data-stock="ESCORTS">ESCORTS</a> · <a href="#stocks" class="sym" data-stock="MANIPALHOS">MANIPALHOS</a> · <a href="#stocks" class="sym" data-stock="APOLLOHOSP">APOLLOHOSP</a> · <a href="#stocks" class="sym" data-stock="UNIPARTS">UNIPARTS</a> · <a href="#stocks" class="sym" data-stock="BIKAJI">BIKAJI</a> · <a href="#stocks" class="sym" data-stock="GAEL">GAEL</a> · <a href="#stocks" class="sym" data-stock="GRAVITA">GRAVITA</a> · <a href="#stocks" class="sym" data-stock="ANURAS">ANURAS</a> · <a href="#stocks" class="sym" data-stock="AEGISVOPAK">AEGISVOPAK</a> · <a href="#stocks" class="sym" data-stock="DEEDEV">DEEDEV</a> · <a href="#stocks" class="sym" data-stock="HSCL">HSCL</a> · <a href="#stocks" class="sym" data-stock="NLCINDIA">NLCINDIA</a> · <a href="#stocks" class="sym" data-stock="HINDUNILVR">HINDUNILVR</a> · <a href="#stocks" class="sym" data-stock="VAIBHAVGBL">VAIBHAVGBL</a> · <a href="#stocks" class="sym" data-stock="GALLANTT">GALLANTT</a> · <a href="#stocks" class="sym" data-stock="IFBIND">IFBIND</a> · <a href="#stocks" class="sym" data-stock="VMM">VMM</a> · <a href="#stocks" class="sym" data-stock="PIRAMALFIN">PIRAMALFIN</a> · <a href="#stocks" class="sym" data-stock="ELGIEQUIP">ELGIEQUIP</a> · <a href="#stocks" class="sym" data-stock="ELLEN">ELLEN</a> · <a href="#stocks" class="sym" data-stock="AHLUCONT">AHLUCONT</a> · <a href="#stocks" class="sym" data-stock="CAPILLARY">CAPILLARY</a> · <a href="#stocks" class="sym" data-stock="GVPIL">GVPIL</a> · <a href="#stocks" class="sym" data-stock="CLEANMAX">CLEANMAX</a> · <a href="#stocks" class="sym" data-stock="SARDAEN">SARDAEN</a> · <a href="#stocks" class="sym" data-stock="DIVGIITTS">DIVGIITTS</a> · <a href="#stocks" class="sym" data-stock="MAXHEALTH">MAXHEALTH</a> · <a href="#stocks" class="sym" data-stock="SCI">SCI</a> · <a href="#stocks" class="sym" data-stock="SCHAEFFLER">SCHAEFFLER</a> · <a href="#stocks" class="sym" data-stock="AEGISLOG">AEGISLOG</a> · <a href="#stocks" class="sym" data-stock="AADHARHFC">AADHARHFC</a> · <a href="#stocks" class="sym" data-stock="MINDACORP">MINDACORP</a> · <a href="#stocks" class="sym" data-stock="CARYSIL">CARYSIL</a> · <a href="#stocks" class="sym" data-stock="BELRISE">BELRISE</a> · <a href="#stocks" class="sym" data-stock="JAYNECOIND">JAYNECOIND</a> · <a href="#stocks" class="sym" data-stock="NRBBEARING">NRBBEARING</a> · <a href="#stocks" class="sym" data-stock="AVALON">AVALON</a> · <a href="#stocks" class="sym" data-stock="LINDEINDIA">LINDEINDIA</a> · <a href="#stocks" class="sym" data-stock="AUBANK">AUBANK</a> · <a href="#stocks" class="sym" data-stock="GMDCLTD">GMDCLTD</a> · <a href="#stocks" class="sym" data-stock="SOTL">SOTL</a> · <a href="#stocks" class="sym" data-stock="RISHABH">RISHABH</a> · <a href="#stocks" class="sym" data-stock="BIRLACORPN">BIRLACORPN</a> · <a href="#stocks" class="sym" data-stock="FRACTAL">FRACTAL</a> · <a href="#stocks" class="sym" data-stock="NUVOCO">NUVOCO</a> · <a href="#stocks" class="sym" data-stock="SIGNATURE">SIGNATURE</a> · <a href="#stocks" class="sym" data-stock="IOB">IOB</a> · <a href="#stocks" class="sym" data-stock="POLICYBZR">POLICYBZR</a> · <a href="#stocks" class="sym" data-stock="TMPV">TMPV</a> · <a href="#stocks" class="sym" data-stock="RAYMONDLSL">RAYMONDLSL</a> · <a href="#stocks" class="sym" data-stock="PREMEXPLN">PREMEXPLN</a> · <a href="#stocks" class="sym" data-stock="TATVA">TATVA</a> · <a href="#stocks" class="sym" data-stock="DBL">DBL</a> · <a href="#stocks" class="sym" data-stock="JKTYRE">JKTYRE</a> · <a href="#stocks" class="sym" data-stock="RALLIS">RALLIS</a> · <a href="#stocks" class="sym" data-stock="MAHSCOOTER">MAHSCOOTER</a> · <a href="#stocks" class="sym" data-stock="MEDPLUS">MEDPLUS</a> · <a href="#stocks" class="sym" data-stock="LASERPOWER">LASERPOWER</a> · <a href="#stocks" class="sym" data-stock="JMFINANCIL">JMFINANCIL</a> · <a href="#stocks" class="sym" data-stock="APOLLOTYRE">APOLLOTYRE</a> · <a href="#stocks" class="sym" data-stock="JSL">JSL</a> · <a href="#stocks" class="sym" data-stock="ADANIENSOL">ADANIENSOL</a> · <a href="#stocks" class="sym" data-stock="GRASIM">GRASIM</a> · <a href="#stocks" class="sym" data-stock="FORTIS">FORTIS</a> · <a href="#stocks" class="sym" data-stock="CREDITACC">CREDITACC</a> · <a href="#stocks" class="sym" data-stock="UNIVCABLES">UNIVCABLES</a> · <a href="#stocks" class="sym" data-stock="IDBI">IDBI</a> · <a href="#stocks" class="sym" data-stock="ATUL">ATUL</a> · <a href="#stocks" class="sym" data-stock="CAMPUS">CAMPUS</a> · <a href="#stocks" class="sym" data-stock="JKLAKSHMI">JKLAKSHMI</a> · <a href="#stocks" class="sym" data-stock="M&MFIN">M&MFIN</a> · <a href="#stocks" class="sym" data-stock="RAMCOCEM">RAMCOCEM</a> · <a href="#stocks" class="sym" data-stock="HFCL">HFCL</a> · <a href="#stocks" class="sym" data-stock="NIACL">NIACL</a> · <a href="#stocks" class="sym" data-stock="YESBANK">YESBANK</a> · <a href="#stocks" class="sym" data-stock="CENTURYPLY">CENTURYPLY</a> · <a href="#stocks" class="sym" data-stock="GNFC">GNFC</a> · <a href="#stocks" class="sym" data-stock="TATAINVEST">TATAINVEST</a> · <a href="#stocks" class="sym" data-stock="SAIL">SAIL</a> · <a href="#stocks" class="sym" data-stock="VARROC">VARROC</a> · <a href="#stocks" class="sym" data-stock="JUBLFOOD">JUBLFOOD</a> · <a href="#stocks" class="sym" data-stock="TATASTEEL">TATASTEEL</a> · <a href="#stocks" class="sym" data-stock="ICICIPRULI">ICICIPRULI</a> · <a href="#stocks" class="sym" data-stock="SHREECEM">SHREECEM</a> · <a href="#stocks" class="sym" data-stock="AARTIIND">AARTIIND</a> · <a href="#stocks" class="sym" data-stock="MTARTECH">MTARTECH</a> · <a href="#stocks" class="sym" data-stock="UPL">UPL</a> · <a href="#stocks" class="sym" data-stock="SRF">SRF</a> · <a href="#stocks" class="sym" data-stock="RCF">RCF</a> · <a href="#stocks" class="sym" data-stock="VMART">VMART</a> · <a href="#stocks" class="sym" data-stock="SOBHA">SOBHA</a> · <a href="#stocks" class="sym" data-stock="SFL">SFL</a> · <a href="#stocks" class="sym" data-stock="YASHO">YASHO</a> · <a href="#stocks" class="sym" data-stock="ADANIENT">ADANIENT</a> · <a href="#stocks" class="sym" data-stock="DCMSHRIRAM">DCMSHRIRAM</a> · <a href="#stocks" class="sym" data-stock="GODREJIND">GODREJIND</a> · <a href="#stocks" class="sym" data-stock="GODIGIT">GODIGIT</a> · <a href="#stocks" class="sym" data-stock="HCC">HCC</a> · <a href="#stocks" class="sym" data-stock="TITAGARH">TITAGARH</a> · <a href="#stocks" class="sym" data-stock="RBLBANK">RBLBANK</a> · <a href="#stocks" class="sym" data-stock="RHETAN">RHETAN</a> · <a href="#stocks" class="sym" data-stock="RICOAUTO">RICOAUTO</a> · <a href="#stocks" class="sym" data-stock="ASIANTILES">ASIANTILES</a> · <a href="#stocks" class="sym" data-stock="DALBHARAT">DALBHARAT</a>
+          <a href="#stocks" class="sym" data-stock="OSWALPUMPS">OSWALPUMPS</a> · <a href="#stocks" class="sym" data-stock="CRIZAC">CRIZAC</a> · <a href="#stocks" class="sym" data-stock="BLS">BLS</a> · <a href="#stocks" class="sym" data-stock="BANCOINDIA">BANCOINDIA</a> · <a href="#stocks" class="sym" data-stock="WAAREERTL">WAAREERTL</a> · <a href="#stocks" class="sym" data-stock="WAAREEENER">WAAREEENER</a> · <a href="#stocks" class="sym" data-stock="SBIFUNDS">SBIFUNDS</a> · <a href="#stocks" class="sym" data-stock="JSLL">JSLL</a> · <a href="#stocks" class="sym" data-stock="GOLDIAM">GOLDIAM</a> · <a href="#stocks" class="sym" data-stock="ICICIAMC">ICICIAMC</a> · <a href="#stocks" class="sym" data-stock="GRSE">GRSE</a> · <a href="#stocks" class="sym" data-stock="LUPIN">LUPIN</a> · <a href="#stocks" class="sym" data-stock="GOKULAGRO">GOKULAGRO</a> · <a href="#stocks" class="sym" data-stock="WEBELSOLAR">WEBELSOLAR</a> · <a href="#stocks" class="sym" data-stock="BAJAJ-AUTO">BAJAJ-AUTO</a> · <a href="#stocks" class="sym" data-stock="NEULANDLAB">NEULANDLAB</a> · <a href="#stocks" class="sym" data-stock="EMMVEE">EMMVEE</a> · <a href="#stocks" class="sym" data-stock="GVT&D">GVT&D</a> · <a href="#stocks" class="sym" data-stock="IKS">IKS</a> · <a href="#stocks" class="sym" data-stock="DATAPATTNS">DATAPATTNS</a> · <a href="#stocks" class="sym" data-stock="PNGJL">PNGJL</a> · <a href="#stocks" class="sym" data-stock="SJS">SJS</a> · <a href="#stocks" class="sym" data-stock="DIXON">DIXON</a> · <a href="#stocks" class="sym" data-stock="KPIGREEN">KPIGREEN</a> · <a href="#stocks" class="sym" data-stock="SANOFICONR">SANOFICONR</a> · <a href="#stocks" class="sym" data-stock="UTLSOLAR">UTLSOLAR</a> · <a href="#stocks" class="sym" data-stock="SAATVIKGL">SAATVIKGL</a> · <a href="#stocks" class="sym" data-stock="ZAGGLE">ZAGGLE</a> · <a href="#stocks" class="sym" data-stock="LLOYDSME">LLOYDSME</a> · <a href="#stocks" class="sym" data-stock="GODFRYPHLP">GODFRYPHLP</a> · <a href="#stocks" class="sym" data-stock="PRICOLLTD">PRICOLLTD</a> · <a href="#stocks" class="sym" data-stock="HEROMOTOCO">HEROMOTOCO</a> · <a href="#stocks" class="sym" data-stock="ATLANTAELE">ATLANTAELE</a> · <a href="#stocks" class="sym" data-stock="SUZLON">SUZLON</a> · <a href="#stocks" class="sym" data-stock="HINDZINC">HINDZINC</a> · <a href="#stocks" class="sym" data-stock="LLOYDSENGG">LLOYDSENGG</a> · <a href="#stocks" class="sym" data-stock="PREMIERENE">PREMIERENE</a> · <a href="#stocks" class="sym" data-stock="GILLETTE">GILLETTE</a> · <a href="#stocks" class="sym" data-stock="HINDCOPPER">HINDCOPPER</a> · <a href="#stocks" class="sym" data-stock="TDPOWERSYS">TDPOWERSYS</a> · <a href="#stocks" class="sym" data-stock="VIKRAMSOLR">VIKRAMSOLR</a> · <a href="#stocks" class="sym" data-stock="FIEMIND">FIEMIND</a> · <a href="#stocks" class="sym" data-stock="CHOLAFIN">CHOLAFIN</a> · <a href="#stocks" class="sym" data-stock="KERNEX">KERNEX</a> · <a href="#stocks" class="sym" data-stock="JAMNAAUTO">JAMNAAUTO</a> · <a href="#stocks" class="sym" data-stock="INDIASHLTR">INDIASHLTR</a> · <a href="#stocks" class="sym" data-stock="IXIGO">IXIGO</a> · <a href="#stocks" class="sym" data-stock="SANDUMA">SANDUMA</a> · <a href="#stocks" class="sym" data-stock="BAJAJCON">BAJAJCON</a> · <a href="#stocks" class="sym" data-stock="KIRLPNU">KIRLPNU</a> · <a href="#stocks" class="sym" data-stock="HOMEFIRST">HOMEFIRST</a> · <a href="#stocks" class="sym" data-stock="ASHOKA">ASHOKA</a> · <a href="#stocks" class="sym" data-stock="TRAVELFOOD">TRAVELFOOD</a> · <a href="#stocks" class="sym" data-stock="ADVENZYMES">ADVENZYMES</a> · <a href="#stocks" class="sym" data-stock="JSWDULUX">JSWDULUX</a> · <a href="#stocks" class="sym" data-stock="KRN">KRN</a> · <a href="#stocks" class="sym" data-stock="SHAILY">SHAILY</a> · <a href="#stocks" class="sym" data-stock="CARTRADE">CARTRADE</a> · <a href="#stocks" class="sym" data-stock="DYCL">DYCL</a> · <a href="#stocks" class="sym" data-stock="OLECTRA">OLECTRA</a> · <a href="#stocks" class="sym" data-stock="EMUDHRA">EMUDHRA</a> · <a href="#stocks" class="sym" data-stock="SENCO">SENCO</a> · <a href="#stocks" class="sym" data-stock="TSFINV">TSFINV</a> · <a href="#stocks" class="sym" data-stock="AEROENTER">AEROENTER</a> · <a href="#stocks" class="sym" data-stock="PARAS">PARAS</a> · <a href="#stocks" class="sym" data-stock="TRANSRAILL">TRANSRAILL</a> · <a href="#stocks" class="sym" data-stock="KNACK">KNACK</a> · <a href="#stocks" class="sym" data-stock="THYROCARE">THYROCARE</a> · <a href="#stocks" class="sym" data-stock="GENUSPOWER">GENUSPOWER</a> · <a href="#stocks" class="sym" data-stock="POLYCAB">POLYCAB</a> · <a href="#stocks" class="sym" data-stock="TIMETECHNO">TIMETECHNO</a> · <a href="#stocks" class="sym" data-stock="RRKABEL">RRKABEL</a> · <a href="#stocks" class="sym" data-stock="SENORES">SENORES</a> · <a href="#stocks" class="sym" data-stock="NAUKRI">NAUKRI</a> · <a href="#stocks" class="sym" data-stock="BPCL">BPCL</a> · <a href="#stocks" class="sym" data-stock="GODREJPROP">GODREJPROP</a> · <a href="#stocks" class="sym" data-stock="AETHER">AETHER</a> · <a href="#stocks" class="sym" data-stock="LODHA">LODHA</a> · <a href="#stocks" class="sym" data-stock="MRF">MRF</a> · <a href="#stocks" class="sym" data-stock="JAINREC">JAINREC</a> · <a href="#stocks" class="sym" data-stock="NETWEB">NETWEB</a> · <a href="#stocks" class="sym" data-stock="ASHAPURMIN">ASHAPURMIN</a> · <a href="#stocks" class="sym" data-stock="ERIS">ERIS</a> · <a href="#stocks" class="sym" data-stock="CANFINHOME">CANFINHOME</a> · <a href="#stocks" class="sym" data-stock="CHALET">CHALET</a> · <a href="#stocks" class="sym" data-stock="V2RETAIL">V2RETAIL</a> · <a href="#stocks" class="sym" data-stock="SMLMAH">SMLMAH</a> · <a href="#stocks" class="sym" data-stock="CGPOWER">CGPOWER</a> · <a href="#stocks" class="sym" data-stock="AZAD">AZAD</a> · <a href="#stocks" class="sym" data-stock="ANANTRAJ">ANANTRAJ</a> · <a href="#stocks" class="sym" data-stock="PICCADIL">PICCADIL</a> · <a href="#stocks" class="sym" data-stock="LLOYDSENT">LLOYDSENT</a> · <a href="#stocks" class="sym" data-stock="PRIVISCL">PRIVISCL</a> · <a href="#stocks" class="sym" data-stock="STYLAMIND">STYLAMIND</a> · <a href="#stocks" class="sym" data-stock="SBFC">SBFC</a> · <a href="#stocks" class="sym" data-stock="REDTAPE">REDTAPE</a> · <a href="#stocks" class="sym" data-stock="SHARDACROP">SHARDACROP</a> · <a href="#stocks" class="sym" data-stock="THANGAMAYL">THANGAMAYL</a> · <a href="#stocks" class="sym" data-stock="KEI">KEI</a> · <a href="#stocks" class="sym" data-stock="PARADEEP">PARADEEP</a> · <a href="#stocks" class="sym" data-stock="SKIPPER">SKIPPER</a> · <a href="#stocks" class="sym" data-stock="VIDYAWIRES">VIDYAWIRES</a> · <a href="#stocks" class="sym" data-stock="POCL">POCL</a> · <a href="#stocks" class="sym" data-stock="VIYASH">VIYASH</a> · <a href="#stocks" class="sym" data-stock="ASIANENE">ASIANENE</a> · <a href="#stocks" class="sym" data-stock="KAYNES">KAYNES</a> · <a href="#stocks" class="sym" data-stock="ECLERX">ECLERX</a> · <a href="#stocks" class="sym" data-stock="EPACKPEB">EPACKPEB</a> · <a href="#stocks" class="sym" data-stock="CHOICEIN">CHOICEIN</a> · <a href="#stocks" class="sym" data-stock="ASTRAMICRO">ASTRAMICRO</a> · <a href="#stocks" class="sym" data-stock="POWERINDIA">POWERINDIA</a> · <a href="#stocks" class="sym" data-stock="M&M">M&M</a> · <a href="#stocks" class="sym" data-stock="NBCC">NBCC</a> · <a href="#stocks" class="sym" data-stock="PGHH">PGHH</a> · <a href="#stocks" class="sym" data-stock="INOXGREEN">INOXGREEN</a> · <a href="#stocks" class="sym" data-stock="PARKHOSPS">PARKHOSPS</a> · <a href="#stocks" class="sym" data-stock="STARCEMENT">STARCEMENT</a> · <a href="#stocks" class="sym" data-stock="AGIIL">AGIIL</a> · <a href="#stocks" class="sym" data-stock="SAMHI">SAMHI</a> · <a href="#stocks" class="sym" data-stock="BAYERCROP">BAYERCROP</a> · <a href="#stocks" class="sym" data-stock="GICRE">GICRE</a> · <a href="#stocks" class="sym" data-stock="MMTC">MMTC</a> · <a href="#stocks" class="sym" data-stock="SIRCA">SIRCA</a> · <a href="#stocks" class="sym" data-stock="REFEX">REFEX</a> · <a href="#stocks" class="sym" data-stock="RPTECH">RPTECH</a> · <a href="#stocks" class="sym" data-stock="ORIENTCEM">ORIENTCEM</a> · <a href="#stocks" class="sym" data-stock="AGARWALEYE">AGARWALEYE</a> · <a href="#stocks" class="sym" data-stock="CCL">CCL</a> · <a href="#stocks" class="sym" data-stock="HUDCO">HUDCO</a> · <a href="#stocks" class="sym" data-stock="CEATLTD">CEATLTD</a> · <a href="#stocks" class="sym" data-stock="BAJAJHLDNG">BAJAJHLDNG</a> · <a href="#stocks" class="sym" data-stock="APTUS">APTUS</a> · <a href="#stocks" class="sym" data-stock="ESCORTS">ESCORTS</a> · <a href="#stocks" class="sym" data-stock="CMRGREEN">CMRGREEN</a> · <a href="#stocks" class="sym" data-stock="APOLLOHOSP">APOLLOHOSP</a> · <a href="#stocks" class="sym" data-stock="MANIPALHOS">MANIPALHOS</a> · <a href="#stocks" class="sym" data-stock="UNIPARTS">UNIPARTS</a> · <a href="#stocks" class="sym" data-stock="YATRA">YATRA</a> · <a href="#stocks" class="sym" data-stock="CCAVENUE">CCAVENUE</a> · <a href="#stocks" class="sym" data-stock="BIKAJI">BIKAJI</a> · <a href="#stocks" class="sym" data-stock="GAEL">GAEL</a> · <a href="#stocks" class="sym" data-stock="GRAVITA">GRAVITA</a> · <a href="#stocks" class="sym" data-stock="ANURAS">ANURAS</a> · <a href="#stocks" class="sym" data-stock="AEGISVOPAK">AEGISVOPAK</a> · <a href="#stocks" class="sym" data-stock="DEEDEV">DEEDEV</a> · <a href="#stocks" class="sym" data-stock="NLCINDIA">NLCINDIA</a> · <a href="#stocks" class="sym" data-stock="HSCL">HSCL</a> · <a href="#stocks" class="sym" data-stock="ELLEN">ELLEN</a> · <a href="#stocks" class="sym" data-stock="HINDUNILVR">HINDUNILVR</a> · <a href="#stocks" class="sym" data-stock="VAIBHAVGBL">VAIBHAVGBL</a> · <a href="#stocks" class="sym" data-stock="IFBIND">IFBIND</a> · <a href="#stocks" class="sym" data-stock="GALLANTT">GALLANTT</a> · <a href="#stocks" class="sym" data-stock="VMM">VMM</a> · <a href="#stocks" class="sym" data-stock="ELGIEQUIP">ELGIEQUIP</a> · <a href="#stocks" class="sym" data-stock="PIRAMALFIN">PIRAMALFIN</a> · <a href="#stocks" class="sym" data-stock="DIVGIITTS">DIVGIITTS</a> · <a href="#stocks" class="sym" data-stock="CAPILLARY">CAPILLARY</a> · <a href="#stocks" class="sym" data-stock="AHLUCONT">AHLUCONT</a> · <a href="#stocks" class="sym" data-stock="GVPIL">GVPIL</a> · <a href="#stocks" class="sym" data-stock="CLEANMAX">CLEANMAX</a> · <a href="#stocks" class="sym" data-stock="SARDAEN">SARDAEN</a> · <a href="#stocks" class="sym" data-stock="MAXHEALTH">MAXHEALTH</a> · <a href="#stocks" class="sym" data-stock="SCI">SCI</a> · <a href="#stocks" class="sym" data-stock="SCHAEFFLER">SCHAEFFLER</a> · <a href="#stocks" class="sym" data-stock="CARYSIL">CARYSIL</a> · <a href="#stocks" class="sym" data-stock="AEGISLOG">AEGISLOG</a> · <a href="#stocks" class="sym" data-stock="MINDACORP">MINDACORP</a> · <a href="#stocks" class="sym" data-stock="AADHARHFC">AADHARHFC</a> · <a href="#stocks" class="sym" data-stock="NRBBEARING">NRBBEARING</a> · <a href="#stocks" class="sym" data-stock="BELRISE">BELRISE</a> · <a href="#stocks" class="sym" data-stock="AVALON">AVALON</a> · <a href="#stocks" class="sym" data-stock="JAYNECOIND">JAYNECOIND</a> · <a href="#stocks" class="sym" data-stock="SOTL">SOTL</a> · <a href="#stocks" class="sym" data-stock="LINDEINDIA">LINDEINDIA</a> · <a href="#stocks" class="sym" data-stock="AUBANK">AUBANK</a> · <a href="#stocks" class="sym" data-stock="RISHABH">RISHABH</a> · <a href="#stocks" class="sym" data-stock="FRACTAL">FRACTAL</a> · <a href="#stocks" class="sym" data-stock="BIRLACORPN">BIRLACORPN</a> · <a href="#stocks" class="sym" data-stock="GMDCLTD">GMDCLTD</a> · <a href="#stocks" class="sym" data-stock="NUVOCO">NUVOCO</a> · <a href="#stocks" class="sym" data-stock="SIGNATURE">SIGNATURE</a> · <a href="#stocks" class="sym" data-stock="IOB">IOB</a> · <a href="#stocks" class="sym" data-stock="POLICYBZR">POLICYBZR</a> · <a href="#stocks" class="sym" data-stock="TMPV">TMPV</a> · <a href="#stocks" class="sym" data-stock="PREMEXPLN">PREMEXPLN</a> · <a href="#stocks" class="sym" data-stock="RAYMONDLSL">RAYMONDLSL</a> · <a href="#stocks" class="sym" data-stock="TATVA">TATVA</a> · <a href="#stocks" class="sym" data-stock="DBL">DBL</a> · <a href="#stocks" class="sym" data-stock="JKTYRE">JKTYRE</a> · <a href="#stocks" class="sym" data-stock="RALLIS">RALLIS</a> · <a href="#stocks" class="sym" data-stock="MAHSCOOTER">MAHSCOOTER</a> · <a href="#stocks" class="sym" data-stock="LASERPOWER">LASERPOWER</a> · <a href="#stocks" class="sym" data-stock="JMFINANCIL">JMFINANCIL</a> · <a href="#stocks" class="sym" data-stock="APOLLOTYRE">APOLLOTYRE</a> · <a href="#stocks" class="sym" data-stock="MEDPLUS">MEDPLUS</a> · <a href="#stocks" class="sym" data-stock="JSL">JSL</a> · <a href="#stocks" class="sym" data-stock="ADANIENSOL">ADANIENSOL</a> · <a href="#stocks" class="sym" data-stock="GRASIM">GRASIM</a> · <a href="#stocks" class="sym" data-stock="FORTIS">FORTIS</a> · <a href="#stocks" class="sym" data-stock="UNIVCABLES">UNIVCABLES</a> · <a href="#stocks" class="sym" data-stock="CREDITACC">CREDITACC</a> · <a href="#stocks" class="sym" data-stock="IDBI">IDBI</a> · <a href="#stocks" class="sym" data-stock="ATUL">ATUL</a> · <a href="#stocks" class="sym" data-stock="JKLAKSHMI">JKLAKSHMI</a> · <a href="#stocks" class="sym" data-stock="M&MFIN">M&MFIN</a> · <a href="#stocks" class="sym" data-stock="RAMCOCEM">RAMCOCEM</a> · <a href="#stocks" class="sym" data-stock="HFCL">HFCL</a> · <a href="#stocks" class="sym" data-stock="CAMPUS">CAMPUS</a> · <a href="#stocks" class="sym" data-stock="NIACL">NIACL</a> · <a href="#stocks" class="sym" data-stock="CENTURYPLY">CENTURYPLY</a> · <a href="#stocks" class="sym" data-stock="GNFC">GNFC</a> · <a href="#stocks" class="sym" data-stock="TATAINVEST">TATAINVEST</a> · <a href="#stocks" class="sym" data-stock="YESBANK">YESBANK</a> · <a href="#stocks" class="sym" data-stock="SAIL">SAIL</a> · <a href="#stocks" class="sym" data-stock="VARROC">VARROC</a> · <a href="#stocks" class="sym" data-stock="ICICIPRULI">ICICIPRULI</a> · <a href="#stocks" class="sym" data-stock="JUBLFOOD">JUBLFOOD</a> · <a href="#stocks" class="sym" data-stock="SHREECEM">SHREECEM</a> · <a href="#stocks" class="sym" data-stock="TATASTEEL">TATASTEEL</a> · <a href="#stocks" class="sym" data-stock="MTARTECH">MTARTECH</a> · <a href="#stocks" class="sym" data-stock="AARTIIND">AARTIIND</a> · <a href="#stocks" class="sym" data-stock="UPL">UPL</a> · <a href="#stocks" class="sym" data-stock="SRF">SRF</a> · <a href="#stocks" class="sym" data-stock="RCF">RCF</a> · <a href="#stocks" class="sym" data-stock="VMART">VMART</a> · <a href="#stocks" class="sym" data-stock="SOBHA">SOBHA</a> · <a href="#stocks" class="sym" data-stock="SFL">SFL</a> · <a href="#stocks" class="sym" data-stock="YASHO">YASHO</a> · <a href="#stocks" class="sym" data-stock="ADANIENT">ADANIENT</a> · <a href="#stocks" class="sym" data-stock="DCMSHRIRAM">DCMSHRIRAM</a> · <a href="#stocks" class="sym" data-stock="GODREJIND">GODREJIND</a> · <a href="#stocks" class="sym" data-stock="GODIGIT">GODIGIT</a> · <a href="#stocks" class="sym" data-stock="HCC">HCC</a> · <a href="#stocks" class="sym" data-stock="TITAGARH">TITAGARH</a> · <a href="#stocks" class="sym" data-stock="RBLBANK">RBLBANK</a> · <a href="#stocks" class="sym" data-stock="RHETAN">RHETAN</a> · <a href="#stocks" class="sym" data-stock="RICOAUTO">RICOAUTO</a> · <a href="#stocks" class="sym" data-stock="ASIANTILES">ASIANTILES</a> · <a href="#stocks" class="sym" data-stock="DALBHARAT">DALBHARAT</a>
         </p>
       </details>
       
@@ -8342,7 +8342,7 @@ table.t tbody tr:hover{background:var(--surface2)}
         <a href="#stocks" class="sym" data-stock="CRIZAC">CRIZAC</a>
         <span class="fnd-n">3 rules</span>
       </h4>
-      <p class="fnd-r">Crizac Ltd. &middot; Consumer Defensive &middot; composite 78</p>
+      <p class="fnd-r">Crizac Ltd. &middot; Consumer Defensive &middot; composite 77</p>
       <ul class="fnd-hits">
         <li>F-score 7+ while the price has gone nowhere</li><li>Profit up sharply, price has not followed</li><li>Strong on the accounts, weak on the tape</li>
       </ul>
@@ -8405,10 +8405,10 @@ table.t tbody tr:hover{background:var(--surface2)}
     
     <div class="card fnd fnd-multi">
       <h4 class="fnd-t">
-        <a href="#stocks" class="sym" data-stock="TRAVELFOOD">TRAVELFOOD</a>
+        <a href="#stocks" class="sym" data-stock="ASHOKA">ASHOKA</a>
         <span class="fnd-n">3 rules</span>
       </h4>
-      <p class="fnd-r">Travel Food Services Ltd. &middot; Consumer Cyclical &middot; composite 59</p>
+      <p class="fnd-r">Ashoka Buildcon Ltd. &middot; Industrials &middot; composite 58</p>
       <ul class="fnd-hits">
         <li>F-score 7+ while the price has gone nowhere</li><li>Profit up sharply, price has not followed</li><li>Strong on the accounts, weak on the tape</li>
       </ul>
@@ -8416,10 +8416,10 @@ table.t tbody tr:hover{background:var(--surface2)}
     
     <div class="card fnd fnd-multi">
       <h4 class="fnd-t">
-        <a href="#stocks" class="sym" data-stock="ASHOKA">ASHOKA</a>
+        <a href="#stocks" class="sym" data-stock="TRAVELFOOD">TRAVELFOOD</a>
         <span class="fnd-n">3 rules</span>
       </h4>
-      <p class="fnd-r">Ashoka Buildcon Ltd. &middot; Industrials &middot; composite 58</p>
+      <p class="fnd-r">Travel Food Services Ltd. &middot; Consumer Cyclical &middot; composite 58</p>
       <ul class="fnd-hits">
         <li>F-score 7+ while the price has gone nowhere</li><li>Profit up sharply, price has not followed</li><li>Strong on the accounts, weak on the tape</li>
       </ul>
@@ -8441,7 +8441,7 @@ table.t tbody tr:hover{background:var(--surface2)}
         <a href="#stocks" class="sym" data-stock="PFIZER">PFIZER</a>
         <span class="fnd-n">3 rules</span>
       </h4>
-      <p class="fnd-r">Pfizer Ltd. &middot; Healthcare &middot; composite 52</p>
+      <p class="fnd-r">Pfizer Ltd. &middot; Healthcare &middot; composite 53</p>
       <ul class="fnd-hits">
         <li>F-score 7+ while the price has gone nowhere</li><li>Previously strong, now deteriorating</li><li>Strong on the accounts, weak on the tape</li>
       </ul>
@@ -8461,12 +8461,12 @@ table.t tbody tr:hover{background:var(--surface2)}
     <p class="subdesc">The diff against the previous weekly screen: who entered, who left, who moved. This is the section that tells you whether anything is actually new this week.</p>
   </div>
   <p class="sdesc" style="max-width:70ch">
-    986 of 994 companies moved since 2026-11-07,
-    and 8 names are new to the universe.
+    986 of 988 companies moved since 2026-11-07,
+    and 2 names are new to the universe.
     Composite scores now sit at
-    <b>0</b> in 80+ · <b>148</b> in 60-79 · <b>553</b> in 40-59 · <b>291</b> in under 40.
-    Market breadth: 789 advancing against
-    201 declining, 51.4% above the 200-day.
+    <b>0</b> in 80+ · <b>143</b> in 60-79 · <b>557</b> in 40-59 · <b>286</b> in under 40.
+    Market breadth: 784 advancing against
+    200 declining, 51.3% above the 200-day.
   </p>
   
 
@@ -8504,7 +8504,7 @@ table.t tbody tr:hover{background:var(--surface2)}
     another stock, so a small cap and a large cap are comparable here. Floor of
     <b>2&times;</b> on at least <b>&#8377;5 crore</b> of turnover: a twelve-times day on a name
     that trades forty lakh is a ratio artefact, not a crowd.
-    <b>18 shown</b> of the 994 screened.
+    <b>18 shown</b> of the 988 screened.
     Bars are drawn against <b>15.2&times;</b> &mdash; today&rsquo;s highest, so
     the column compares these names to each other rather than to a fixed line.
   </p>
@@ -8918,8 +8918,8 @@ table.t tbody tr:hover{background:var(--surface2)}
   <div class="shead rv">
     <div>
       <span class="snum">07 / STOCK SCREEN</span> 
-<span class="dh dh-LIVE" title="Stock screen · 2h old.">LIVE<span class="dh-age">2h old</span></span>
-      <h2 class="stitle">Which 994, and why</h2>
+<span class="dh dh-LIVE" title="Stock screen · 3h old.">LIVE<span class="dh-age">3h old</span></span>
+      <h2 class="stitle">Which 988, and why</h2>
       
       
       <p class="screen-vintage">
@@ -8954,7 +8954,7 @@ table.t tbody tr:hover{background:var(--surface2)}
     <span class="pill pill-model">Model</span>
     Names closing above their 20-day high while above all three moving averages,
     trading more than &#8377;10 crore a day, and not yet extended.
-    <b>20 shown</b> of the 994 screened.
+    <b>20 shown</b> of the 988 screened.
     Liquidity is measured on turnover &mdash; NSE&rsquo;s delivery percentage is not in
     any feed this build reads, so it is not filtered on and not implied.
   </p>
@@ -9251,8 +9251,8 @@ table.t tbody tr:hover{background:var(--surface2)}
     <span>Built <b>2026-11-10</b> · 0.1d old</span>
     <span>Prices to <b>2026-11-09</b></span>
     
-    <span>Statements for <b>992</b> of
-      994 · ROCE for <b>936</b></span>
+    <span>Statements for <b>986</b> of
+      988 · ROCE for <b>930</b></span>
     
     
     
@@ -9272,14 +9272,14 @@ table.t tbody tr:hover{background:var(--surface2)}
     <div class="sb-k">
       <span class="sb-lab">BREADTH</span>
       <b class="sb-reg">NEUTRAL</b>
-      <span class="sb-as">across 994 companies,
+      <span class="sb-as">across 988 companies,
         2026-11-09</span>
     </div>
     <div class="sb-n">
       <span>Above 20DMA <b>65.4%</b></span>
-      <span>Above 50DMA <b>42.0%</b></span>
-      <span>Above 200DMA <b>51.4%</b></span>
-      <span>789 up / 201 down on the week</span>
+      <span>Above 50DMA <b>42.1%</b></span>
+      <span>Above 200DMA <b>51.3%</b></span>
+      <span>784 up / 200 down on the week</span>
       <span>Median 1M <b
         class="up">0.6%</b></span>
       <span><b>3</b> at a 52-week high</span>
@@ -9388,7 +9388,7 @@ table.t tbody tr:hover{background:var(--surface2)}
       <option value="mcap_cr">Market cap</option>
     </select>
     <button type="button" class="fbtn" id="scrReset">Reset</button>
-    <span class="ghost" id="scrCount">994 companies</span>
+    <span class="ghost" id="scrCount">988 companies</span>
   </div>
 
   <div class="tw tw-tall rv">
@@ -9444,7 +9444,7 @@ table.t tbody tr:hover{background:var(--surface2)}
           <td class="num"><span class="sc s-hi"><b>78.9</b></span></td>
           <td class="num">89.9</td>
           <td class="num">100.0</td>
-          <td class="num">96.8</td>
+          <td class="num">96.9</td>
           <td class="num">31.7</td>
           <td class="num">27.1%</td>
           <td class="num">22.4%</td>
@@ -9453,30 +9453,6 @@ table.t tbody tr:hover{background:var(--surface2)}
           <td class="num">0.14</td>
           <td class="num">7.9</td>
           <td class="num">46.0</td>
-          <td><span class="mono-dim">HIGH</span></td>
-          <td><span class="mono-dim">—</span></td>
-        </tr>
-        
-        
-        <tr data-sym="CRIZAC">
-          
-          <td class="wcell"></td>
-          <td><strong class="sym">CRIZAC</strong><br>
-              <span class="mono-dim">Crizac Ltd.</span></td>
-          <td class="num">152.64</td>
-          <td class="num dn">-48.4%</td>
-          <td class="num"><span class="sc s-hi"><b>78.1</b></span></td>
-          <td class="num">98.8</td>
-          <td class="num">83.0</td>
-          <td class="num">82.1</td>
-          <td class="num">41.7</td>
-          <td class="num">49.0%</td>
-          <td class="num">37.5%</td>
-          <td class="num">7/9</td>
-          <td class="num">30.1%</td>
-          <td class="num">0.0</td>
-          <td class="num">10.9</td>
-          <td class="num">51.7</td>
           <td><span class="mono-dim">HIGH</span></td>
           <td><span class="mono-dim">—</span></td>
         </tr>
@@ -9503,6 +9479,30 @@ table.t tbody tr:hover{background:var(--surface2)}
           <td class="num">70.7</td>
           <td><span class="mono-dim">LOW</span></td>
           <td><span class="mono-dim">50D BREAKOUT · RS LEADER</span></td>
+        </tr>
+        
+        
+        <tr data-sym="CRIZAC">
+          
+          <td class="wcell"></td>
+          <td><strong class="sym">CRIZAC</strong><br>
+              <span class="mono-dim">Crizac Ltd.</span></td>
+          <td class="num">152.64</td>
+          <td class="num dn">-48.4%</td>
+          <td class="num"><span class="sc s-hi"><b>77.3</b></span></td>
+          <td class="num">98.8</td>
+          <td class="num">83.0</td>
+          <td class="num">77.2</td>
+          <td class="num">41.7</td>
+          <td class="num">49.0%</td>
+          <td class="num">37.5%</td>
+          <td class="num">7/9</td>
+          <td class="num">30.1%</td>
+          <td class="num">0.0</td>
+          <td class="num">12.8</td>
+          <td class="num">51.7</td>
+          <td><span class="mono-dim">HIGH</span></td>
+          <td><span class="mono-dim">—</span></td>
         </tr>
         
         
@@ -9537,44 +9537,20 @@ table.t tbody tr:hover{background:var(--surface2)}
               <span class="mono-dim">Balu Forge Industries Ltd.</span></td>
           <td class="num">529.6</td>
           <td class="num dn">-15.7%</td>
-          <td class="num"><span class="sc s-hi"><b>76.9</b></span></td>
+          <td class="num"><span class="sc s-hi"><b>76.5</b></span></td>
           <td class="num">72.7</td>
           <td class="num">92.3</td>
-          <td class="num">81.5</td>
+          <td class="num">78.9</td>
           <td class="num">64.6</td>
           <td class="num">18.4%</td>
           <td class="num">16.2%</td>
           <td class="num">4/9</td>
           <td class="num">49.6%</td>
           <td class="num">0.1</td>
-          <td class="num">19.6</td>
+          <td class="num">22.1</td>
           <td class="num">62.7</td>
           <td><span class="mono-dim">HIGH</span></td>
           <td><span class="mono-dim">20D BREAKOUT</span></td>
-        </tr>
-        
-        
-        <tr data-sym="BANCOINDIA">
-          
-          <td class="wcell"></td>
-          <td><strong class="sym">BANCOINDIA</strong><br>
-              <span class="mono-dim">Banco Products (India) Ltd.</span></td>
-          <td class="num">659.15</td>
-          <td class="num dn">-16.7%</td>
-          <td class="num"><span class="sc s-hi"><b>75.0</b></span></td>
-          <td class="num">76.2</td>
-          <td class="num">73.2</td>
-          <td class="num">72.6</td>
-          <td class="num">76.7</td>
-          <td class="num">31.6%</td>
-          <td class="num">28.6%</td>
-          <td class="num">8/9</td>
-          <td class="num">18.9%</td>
-          <td class="num">0.36</td>
-          <td class="num">17.2</td>
-          <td class="num">67.2</td>
-          <td><span class="mono-dim">LOW</span></td>
-          <td><span class="mono-dim">50D BREAKOUT · VOLUME</span></td>
         </tr>
         
         
@@ -9588,7 +9564,7 @@ table.t tbody tr:hover{background:var(--surface2)}
           <td class="num"><span class="sc s-hi"><b>74.8</b></span></td>
           <td class="num">84.1</td>
           <td class="num">95.5</td>
-          <td class="num">84.8</td>
+          <td class="num">85.1</td>
           <td class="num">35.0</td>
           <td class="num">30.5%</td>
           <td class="num">27.9%</td>
@@ -9602,6 +9578,30 @@ table.t tbody tr:hover{background:var(--surface2)}
         </tr>
         
         
+        <tr data-sym="BANCOINDIA">
+          
+          <td class="wcell"></td>
+          <td><strong class="sym">BANCOINDIA</strong><br>
+              <span class="mono-dim">Banco Products (India) Ltd.</span></td>
+          <td class="num">659.15</td>
+          <td class="num dn">-16.7%</td>
+          <td class="num"><span class="sc s-hi"><b>74.2</b></span></td>
+          <td class="num">76.2</td>
+          <td class="num">73.2</td>
+          <td class="num">67.3</td>
+          <td class="num">76.7</td>
+          <td class="num">31.6%</td>
+          <td class="num">28.6%</td>
+          <td class="num">8/9</td>
+          <td class="num">18.9%</td>
+          <td class="num">0.36</td>
+          <td class="num">18.2</td>
+          <td class="num">67.2</td>
+          <td><span class="mono-dim">LOW</span></td>
+          <td><span class="mono-dim">50D BREAKOUT · VOLUME</span></td>
+        </tr>
+        
+        
         <tr data-sym="WAAREERTL">
           
           <td class="wcell"></td>
@@ -9609,10 +9609,10 @@ table.t tbody tr:hover{background:var(--surface2)}
               <span class="mono-dim">Waaree Renewable Technologies Ltd.</span></td>
           <td class="num">736.0</td>
           <td class="num dn">-38.8%</td>
-          <td class="num"><span class="sc s-hi"><b>73.8</b></span></td>
+          <td class="num"><span class="sc s-hi"><b>73.9</b></span></td>
           <td class="num">91.5</td>
           <td class="num">100.0</td>
-          <td class="num">66.0</td>
+          <td class="num">66.6</td>
           <td class="num">27.5</td>
           <td class="num">63.4%</td>
           <td class="num">51.2%</td>
@@ -9636,7 +9636,7 @@ table.t tbody tr:hover{background:var(--surface2)}
           <td class="num"><span class="sc s-hi"><b>73.7</b></span></td>
           <td class="num">98.5</td>
           <td class="num">75.0</td>
-          <td class="num">12.8</td>
+          <td class="num">13.1</td>
           <td class="num">74.2</td>
           <td class="num">36.2%</td>
           <td class="num">27.6%</td>
@@ -9660,7 +9660,7 @@ table.t tbody tr:hover{background:var(--surface2)}
           <td class="num"><span class="sc s-hi"><b>73.5</b></span></td>
           <td class="num">76.3</td>
           <td class="num">100.0</td>
-          <td class="num">75.8</td>
+          <td class="num">75.5</td>
           <td class="num">41.7</td>
           <td class="num">30.1%</td>
           <td class="num">25.7%</td>
@@ -9681,17 +9681,17 @@ table.t tbody tr:hover{background:var(--surface2)}
               <span class="mono-dim">SBI Funds Management Limited</span></td>
           <td class="num">497.55</td>
           <td class="num ">—</td>
-          <td class="num"><span class="sc s-hi"><b>73.5</b></span></td>
+          <td class="num"><span class="sc s-hi"><b>73.2</b></span></td>
           <td class="num">100.0</td>
           <td class="num">86.8</td>
-          <td class="num">28.2</td>
+          <td class="num">26.5</td>
           <td class="num">50.2</td>
           <td class="num">67.6%</td>
           <td class="num">51.4%</td>
           <td class="num">7/8</td>
           <td class="num">26.6%</td>
           <td class="num">—</td>
-          <td class="num">31.9</td>
+          <td class="num">33.9</td>
           <td class="num">50.5</td>
           <td><span class="mono-dim">LOW</span></td>
           <td><span class="mono-dim">—</span></td>
@@ -9722,30 +9722,6 @@ table.t tbody tr:hover{background:var(--surface2)}
         </tr>
         
         
-        <tr data-sym="RPEL">
-          
-          <td class="wcell"></td>
-          <td><strong class="sym">RPEL</strong><br>
-              <span class="mono-dim">Raghav Productivity Enhancers Limi</span></td>
-          <td class="num">1919.6</td>
-          <td class="num up">112.8%</td>
-          <td class="num"><span class="sc s-hi"><b>72.3</b></span></td>
-          <td class="num">75.6</td>
-          <td class="num">83.7</td>
-          <td class="num">3.6</td>
-          <td class="num">97.5</td>
-          <td class="num">28.1%</td>
-          <td class="num">22.4%</td>
-          <td class="num">6/9</td>
-          <td class="num">23.5%</td>
-          <td class="num">0.02</td>
-          <td class="num">108.0</td>
-          <td class="num">62.7</td>
-          <td><span class="mono-dim">HIGH</span></td>
-          <td><span class="mono-dim">50D BREAKOUT · VOLUME</span></td>
-        </tr>
-        
-        
         <tr data-sym="MCX">
           
           <td class="wcell"></td>
@@ -9753,20 +9729,44 @@ table.t tbody tr:hover{background:var(--surface2)}
               <span class="mono-dim">Multi Commodity Exchange of India </span></td>
           <td class="num">3545.0</td>
           <td class="num up">90.5%</td>
-          <td class="num"><span class="sc s-hi"><b>72.2</b></span></td>
+          <td class="num"><span class="sc s-hi"><b>72.3</b></span></td>
           <td class="num">76.0</td>
           <td class="num">100.0</td>
-          <td class="num">4.7</td>
+          <td class="num">5.5</td>
           <td class="num">79.7</td>
           <td class="num">59.4%</td>
           <td class="num">46.8%</td>
           <td class="num">7/9</td>
           <td class="num">67.9%</td>
           <td class="num">0.0</td>
-          <td class="num">67.9</td>
+          <td class="num">61.2</td>
           <td class="num">62.8</td>
           <td><span class="mono-dim">LOW</span></td>
           <td><span class="mono-dim">50D BREAKOUT · RS LEADER</span></td>
+        </tr>
+        
+        
+        <tr data-sym="RPEL">
+          
+          <td class="wcell"></td>
+          <td><strong class="sym">RPEL</strong><br>
+              <span class="mono-dim">Raghav Productivity Enhancers Limi</span></td>
+          <td class="num">1919.6</td>
+          <td class="num up">112.8%</td>
+          <td class="num"><span class="sc s-hi"><b>72.2</b></span></td>
+          <td class="num">75.6</td>
+          <td class="num">83.7</td>
+          <td class="num">2.7</td>
+          <td class="num">97.5</td>
+          <td class="num">28.1%</td>
+          <td class="num">22.4%</td>
+          <td class="num">6/9</td>
+          <td class="num">23.5%</td>
+          <td class="num">0.02</td>
+          <td class="num">125.1</td>
+          <td class="num">62.7</td>
+          <td><span class="mono-dim">HIGH</span></td>
+          <td><span class="mono-dim">50D BREAKOUT · VOLUME</span></td>
         </tr>
         
         
@@ -9787,7 +9787,7 @@ table.t tbody tr:hover{background:var(--surface2)}
           <td class="num">9/9</td>
           <td class="num">57.7%</td>
           <td class="num">0.27</td>
-          <td class="num">18.0</td>
+          <td class="num">17.9</td>
           <td class="num">30.9</td>
           <td><span class="mono-dim">HIGH</span></td>
           <td><span class="mono-dim">OVERSOLD</span></td>
@@ -9818,30 +9818,6 @@ table.t tbody tr:hover{background:var(--surface2)}
         </tr>
         
         
-        <tr data-sym="GOLDIAM">
-          
-          <td class="wcell"></td>
-          <td><strong class="sym">GOLDIAM</strong><br>
-              <span class="mono-dim">Goldiam International Limited</span></td>
-          <td class="num">319.0</td>
-          <td class="num up">16.5%</td>
-          <td class="num"><span class="sc s-hi"><b>71.8</b></span></td>
-          <td class="num">66.2</td>
-          <td class="num">79.5</td>
-          <td class="num">60.0</td>
-          <td class="num">78.9</td>
-          <td class="num">20.5%</td>
-          <td class="num">15.4%</td>
-          <td class="num">3/9</td>
-          <td class="num">22.4%</td>
-          <td class="num">0.07</td>
-          <td class="num">20.9</td>
-          <td class="num">56.0</td>
-          <td><span class="mono-dim">MEDIUM</span></td>
-          <td><span class="mono-dim">VOLUME · RS LEADER</span></td>
-        </tr>
-        
-        
         <tr data-sym="ZYDUSLIFE">
           
           <td class="wcell"></td>
@@ -9866,27 +9842,27 @@ table.t tbody tr:hover{background:var(--surface2)}
         </tr>
         
         
-        <tr data-sym="SHRINGARMS">
+        <tr data-sym="GOLDIAM">
           
           <td class="wcell"></td>
-          <td><strong class="sym">SHRINGARMS</strong><br>
-              <span class="mono-dim">Shringar House of Mangalsutra Limi</span></td>
-          <td class="num">318.75</td>
-          <td class="num up">37.3%</td>
-          <td class="num"><span class="sc s-hi"><b>71.4</b></span></td>
-          <td class="num">56.5</td>
-          <td class="num">100.0</td>
-          <td class="num">59.3</td>
-          <td class="num">70.8</td>
-          <td class="num">18.6%</td>
-          <td class="num">17.0%</td>
-          <td class="num">5/9</td>
-          <td class="num">41.4%</td>
-          <td class="num">0.28</td>
-          <td class="num">21.3</td>
-          <td class="num">67.5</td>
-          <td><span class="mono-dim">HIGH</span></td>
-          <td><span class="mono-dim">RS LEADER · TREND INTACT</span></td>
+          <td><strong class="sym">GOLDIAM</strong><br>
+              <span class="mono-dim">Goldiam International Limited</span></td>
+          <td class="num">319.0</td>
+          <td class="num up">16.5%</td>
+          <td class="num"><span class="sc s-hi"><b>71.2</b></span></td>
+          <td class="num">66.2</td>
+          <td class="num">79.5</td>
+          <td class="num">55.9</td>
+          <td class="num">78.9</td>
+          <td class="num">20.5%</td>
+          <td class="num">15.4%</td>
+          <td class="num">3/9</td>
+          <td class="num">22.4%</td>
+          <td class="num">0.07</td>
+          <td class="num">23.5</td>
+          <td class="num">56.0</td>
+          <td><span class="mono-dim">MEDIUM</span></td>
+          <td><span class="mono-dim">VOLUME · RS LEADER</span></td>
         </tr>
         
         
@@ -9945,10 +9921,10 @@ table.t tbody tr:hover{background:var(--surface2)}
               <span class="mono-dim">Caplin Point Laboratories Ltd.</span></td>
           <td class="num">2502.5</td>
           <td class="num up">25.9%</td>
-          <td class="num"><span class="sc s-hi"><b>70.4</b></span></td>
+          <td class="num"><span class="sc s-hi"><b>70.6</b></span></td>
           <td class="num">79.5</td>
           <td class="num">47.7</td>
-          <td class="num">63.9</td>
+          <td class="num">64.7</td>
           <td class="num">84.4</td>
           <td class="num">22.4%</td>
           <td class="num">17.9%</td>
@@ -9962,6 +9938,30 @@ table.t tbody tr:hover{background:var(--surface2)}
         </tr>
         
         
+        <tr data-sym="SHRINGARMS">
+          
+          <td class="wcell"></td>
+          <td><strong class="sym">SHRINGARMS</strong><br>
+              <span class="mono-dim">Shringar House of Mangalsutra Limi</span></td>
+          <td class="num">318.75</td>
+          <td class="num up">37.3%</td>
+          <td class="num"><span class="sc s-hi"><b>70.5</b></span></td>
+          <td class="num">56.5</td>
+          <td class="num">100.0</td>
+          <td class="num">53.8</td>
+          <td class="num">70.8</td>
+          <td class="num">18.6%</td>
+          <td class="num">17.0%</td>
+          <td class="num">5/9</td>
+          <td class="num">41.4%</td>
+          <td class="num">0.28</td>
+          <td class="num">24.2</td>
+          <td class="num">67.5</td>
+          <td><span class="mono-dim">HIGH</span></td>
+          <td><span class="mono-dim">RS LEADER · TREND INTACT</span></td>
+        </tr>
+        
+        
         <tr data-sym="GLASSWALL">
           
           <td class="wcell"></td>
@@ -9972,7 +9972,7 @@ table.t tbody tr:hover{background:var(--surface2)}
           <td class="num"><span class="sc s-hi"><b>70.3</b></span></td>
           <td class="num">82.7</td>
           <td class="num">91.0</td>
-          <td class="num">40.5</td>
+          <td class="num">40.9</td>
           <td class="num">50.0</td>
           <td class="num">42.5%</td>
           <td class="num">32.2%</td>
@@ -9996,7 +9996,7 @@ table.t tbody tr:hover{background:var(--surface2)}
           <td class="num"><span class="sc s-hi"><b>70.0</b></span></td>
           <td class="num">75.2</td>
           <td class="num">100.0</td>
-          <td class="num">45.2</td>
+          <td class="num">45.5</td>
           <td class="num">47.5</td>
           <td class="num">38.9%</td>
           <td class="num">28.5%</td>
@@ -10010,27 +10010,27 @@ table.t tbody tr:hover{background:var(--surface2)}
         </tr>
         
         
-        <tr data-sym="UNIMECH">
+        <tr data-sym="LUPIN">
           
           <td class="wcell"></td>
-          <td><strong class="sym">UNIMECH</strong><br>
-              <span class="mono-dim">Unimech Aerospace and Manufacturin</span></td>
-          <td class="num">1806.2</td>
-          <td class="num up">81.2%</td>
-          <td class="num"><span class="sc s-hi"><b>69.9</b></span></td>
-          <td class="num">90.6</td>
-          <td class="num">75.0</td>
-          <td class="num">11.6</td>
-          <td class="num">70.8</td>
-          <td class="num">10.1%</td>
-          <td class="num">8.6%</td>
-          <td class="num">3/9</td>
-          <td class="num">37.1%</td>
-          <td class="num">0.17</td>
-          <td class="num">91.4</td>
-          <td class="num">58.7</td>
-          <td><span class="mono-dim">HIGH</span></td>
-          <td><span class="mono-dim">RS LEADER · TREND INTACT</span></td>
+          <td><strong class="sym">LUPIN</strong><br>
+              <span class="mono-dim">Lupin Ltd.</span></td>
+          <td class="num">2025.0</td>
+          <td class="num up">2.1%</td>
+          <td class="num"><span class="sc s-hi"><b>69.7</b></span></td>
+          <td class="num">58.8</td>
+          <td class="num">88.0</td>
+          <td class="num">85.6</td>
+          <td class="num">57.0</td>
+          <td class="num">25.7%</td>
+          <td class="num">23.8%</td>
+          <td class="num">7/9</td>
+          <td class="num">19.1%</td>
+          <td class="num">0.29</td>
+          <td class="num">17.8</td>
+          <td class="num">54.2</td>
+          <td><span class="mono-dim">LOW</span></td>
+          <td><span class="mono-dim">20D BREAKOUT</span></td>
         </tr>
         
       </tbody>
@@ -10042,7 +10042,7 @@ table.t tbody tr:hover{background:var(--surface2)}
     Ratios are computed from the annual statements the data source publishes, which
     are consolidated where available and occasionally absent altogether &mdash;
     2
-    of the 994 companies
+    of the 988 companies
     priced here have no statements at all. Those carry no composite and cannot be
     ranked: they are in the table, searchable, with their chart and their caveat,
     but a company that reports nothing must not outrank one that does. Per-share
@@ -10123,7 +10123,7 @@ table.t tbody tr:hover{background:var(--surface2)}
   <div class="prov stale rv">
     <span class="pv-tag">WEEKLY</span>
     <span>Rebuilt <b>Sundays 04:00 MYT</b>, after the week&rsquo;s last NAV publish</span>
-    <span>Built <b>2026-11-07</b> · 2.1d old</span>
+    <span>Built <b>2026-11-07</b> · 2.2d old</span>
     
     <span>&#9888; This week&rsquo;s screen has not run &mdash; showing the previous build.
       NAVs below are from that date, not today.</span>
@@ -19353,7 +19353,7 @@ table.t tbody tr:hover{background:var(--surface2)}
   <div class="shead rv">
     <div>
       <span class="snum">13 / SIGNAL LOG</span> 
-<span class="dh dh-LIVE" title="Signal ledger · 2 min old.">LIVE<span class="dh-age">2 min old</span></span>
+<span class="dh dh-LIVE" title="Signal ledger · just built.">LIVE<span class="dh-age">just built</span></span>
       <h2 class="stitle">Every signal, scored</h2>
     </div>
     <div style="text-align:right">
@@ -20512,8 +20512,15 @@ table.t tbody tr:hover{background:var(--surface2)}
       
       <h2 class="stitle">
         
-        All 12 datasets current.
+        Operational.
+        
       </h2>
+      
+      <p class="dh-status">
+        <span class="dh-dot dh-dot-ok"></span>
+        11 of 12 current ·
+        1 degraded, none of them market data.
+      </p>
       
     </div>
     <p class="sdesc">Nothing on this page is allowed to look more current than the data
@@ -20523,6 +20530,34 @@ table.t tbody tr:hover{background:var(--surface2)}
   </div>
 
   <ul class="dh-list rv">
+    
+    <li class="dh-row bad">
+      <div class="dh-top">
+        <span class="dh dh-STALE">STALE</span>
+        <span class="dh-name">Podcasts</span>
+        <span class="dh-src">podcast feeds</span>
+      </div>
+      <dl class="dh-grid">
+        <div><dt>Last successful</dt>
+          <dd>2026-11-09 01:22</dd></div>
+        <div><dt>Last attempt</dt>
+          <dd>2026-11-09 01:22
+            </dd></div>
+        
+        <div><dt>Age</dt><dd>27h old
+          
+            
+              <span class="dh-over">past its daily cycle</span>
+            
+          </dd></div>
+        <div><dt>Expected</dt><dd>daily</dd></div>
+        
+        
+        
+        <div><dt>Serving</dt><dd>previous build</dd></div>
+      </dl>
+      <p class="dh-note">older than its daily refresh</p>
+    </li>
     
     <li class="dh-row">
       <div class="dh-top">
@@ -20537,7 +20572,7 @@ table.t tbody tr:hover{background:var(--surface2)}
           <dd>2026-11-09 13:34
             </dd></div>
         
-        <div><dt>Age</dt><dd>12h old
+        <div><dt>Age</dt><dd>14h old
           
             
               <span class="dh-within">within its daily cycle</span>
@@ -20615,46 +20650,18 @@ table.t tbody tr:hover{background:var(--surface2)}
     
     <li class="dh-row">
       <div class="dh-top">
-        <span class="dh dh-FRESH">FRESH</span>
-        <span class="dh-name">Podcasts</span>
-        <span class="dh-src">podcast feeds</span>
-      </div>
-      <dl class="dh-grid">
-        <div><dt>Last successful</dt>
-          <dd>2026-11-09 01:22</dd></div>
-        <div><dt>Last attempt</dt>
-          <dd>2026-11-09 01:22
-            </dd></div>
-        
-        <div><dt>Age</dt><dd>24h old
-          
-            
-              <span class="dh-within">within its daily cycle</span>
-            
-          </dd></div>
-        <div><dt>Expected</dt><dd>daily</dd></div>
-        
-        
-        
-        <div><dt>Serving</dt><dd>previous build</dd></div>
-      </dl>
-      
-    </li>
-    
-    <li class="dh-row">
-      <div class="dh-top">
         <span class="dh dh-LIVE">LIVE</span>
         <span class="dh-name">Daily Brief</span>
         <span class="dh-src">wire clustering + Groq</span>
       </div>
       <dl class="dh-grid">
         <div><dt>Last successful</dt>
-          <dd>2026-11-10 01:04</dd></div>
+          <dd>2026-11-10 01:55</dd></div>
         <div><dt>Last attempt</dt>
-          <dd>2026-11-10 01:04
+          <dd>2026-11-10 01:55
             </dd></div>
         
-        <div><dt>Age</dt><dd>just built
+        <div><dt>Age</dt><dd>2h old
           
             
               <span class="dh-within">within its daily cycle</span>
@@ -20682,7 +20689,7 @@ table.t tbody tr:hover{background:var(--surface2)}
           <dd>2026-11-09 23:06
             · success</dd></div>
         
-        <div><dt>Age</dt><dd>2h old
+        <div><dt>Age</dt><dd>5h old
           
             
               <span class="dh-within">within its daily cycle</span>
@@ -20705,12 +20712,12 @@ table.t tbody tr:hover{background:var(--surface2)}
       </div>
       <dl class="dh-grid">
         <div><dt>Last successful</dt>
-          <dd>2026-11-10 01:02</dd></div>
+          <dd>2026-11-10 03:59</dd></div>
         <div><dt>Last attempt</dt>
-          <dd>2026-11-10 01:02
+          <dd>2026-11-10 03:59
             </dd></div>
         
-        <div><dt>Age</dt><dd>2 min old
+        <div><dt>Age</dt><dd>just built
           
             
               <span class="dh-within">within its daily cycle</span>
@@ -20734,12 +20741,12 @@ table.t tbody tr:hover{background:var(--surface2)}
       </div>
       <dl class="dh-grid">
         <div><dt>Last successful</dt>
-          <dd>2026-11-10 01:02</dd></div>
+          <dd>2026-11-10 03:59</dd></div>
         <div><dt>Last attempt</dt>
-          <dd>2026-11-10 01:02
+          <dd>2026-11-10 03:59
             </dd></div>
         
-        <div><dt>Age</dt><dd>2 min old
+        <div><dt>Age</dt><dd>just built
           
             
               <span class="dh-within">within its daily cycle</span>
@@ -20763,12 +20770,12 @@ table.t tbody tr:hover{background:var(--surface2)}
       </div>
       <dl class="dh-grid">
         <div><dt>Last successful</dt>
-          <dd>2026-11-10 01:02</dd></div>
+          <dd>2026-11-10 03:59</dd></div>
         <div><dt>Last attempt</dt>
-          <dd>2026-11-10 01:02
+          <dd>2026-11-10 03:59
             </dd></div>
         
-        <div><dt>Age</dt><dd>2 min old
+        <div><dt>Age</dt><dd>just built
           
             
               <span class="dh-within">within its daily cycle</span>
@@ -20792,12 +20799,12 @@ table.t tbody tr:hover{background:var(--surface2)}
       </div>
       <dl class="dh-grid">
         <div><dt>Last successful</dt>
-          <dd>2026-11-09 23:20</dd></div>
+          <dd>2026-11-10 01:11</dd></div>
         <div><dt>Last attempt</dt>
-          <dd>2026-11-09 23:20
+          <dd>2026-11-10 01:11
             · success</dd></div>
         
-        <div><dt>Age</dt><dd>2h old
+        <div><dt>Age</dt><dd>3h old
           
             
               <span class="dh-within">within its daily cycle</span>
@@ -20806,7 +20813,7 @@ table.t tbody tr:hover{background:var(--surface2)}
         <div><dt>Expected</dt><dd>daily</dd></div>
         
         <div><dt>Published coverage</dt>
-          <dd>994/1000 · 99.4%</dd></div>
+          <dd>988/1000 · 98.8%</dd></div>
         
         
         
@@ -20822,12 +20829,12 @@ table.t tbody tr:hover{background:var(--surface2)}
       </div>
       <dl class="dh-grid">
         <div><dt>Last successful</dt>
-          <dd>2026-11-10 01:02</dd></div>
+          <dd>2026-11-10 03:59</dd></div>
         <div><dt>Last attempt</dt>
-          <dd>2026-11-10 01:02
+          <dd>2026-11-10 03:59
             </dd></div>
         
-        <div><dt>Age</dt><dd>2 min old
+        <div><dt>Age</dt><dd>just built
           
             
               <span class="dh-within">within its weekly cycle</span>
@@ -20851,12 +20858,12 @@ table.t tbody tr:hover{background:var(--surface2)}
       </div>
       <dl class="dh-grid">
         <div><dt>Last successful</dt>
-          <dd>2026-11-10 01:02</dd></div>
+          <dd>2026-11-10 03:59</dd></div>
         <div><dt>Last attempt</dt>
-          <dd>2026-11-10 01:02
+          <dd>2026-11-10 03:59
             </dd></div>
         
-        <div><dt>Age</dt><dd>2 min old
+        <div><dt>Age</dt><dd>just built
           
             
               <span class="dh-within">within its daily cycle</span>
@@ -21401,7 +21408,7 @@ table.t tbody tr:hover{background:var(--surface2)}
     </div>
     <div class="m">
       news.askakshay.com<br>
-      Tuesday, November 10 2026 · built 09:02 MYT<br>
+      Tuesday, November 10 2026 · built 11:59 MYT<br>
       <span style="color:var(--dim)">Sources: NSE · Yahoo Finance · AMFI · Chittorgarh ·
         investorgain · wire RSS</span><br>
       <a href="#datahealth" class="lnk">Data health</a> ·
@@ -21443,9 +21450,9 @@ table.t tbody tr:hover{background:var(--surface2)}
 
 <button class="fab" id="fab" aria-label="Back to top">↑</button>
 
-<script type="application/json" id="tv-aliases" nonce="w8ohtHasOK10mxs9Cy12Ew">{"AUDUSD": "FX:AUDUSD", "BANKNIFTY": "NSE:BANKNIFTY", "BNBUSD": "BINANCE:BNBUSDT", "BRENT": "TVC:UKOIL", "BRNUSD": "TVC:UKOIL", "BTCUSD": "BINANCE:BTCUSDT", "COPPER": "COMEX:HG1!", "CRUDE": "TVC:USOIL", "DOGEUSD": "BINANCE:DOGEUSDT", "DXY": "TVC:DXY", "ETHUSD": "BINANCE:ETHUSDT", "EURJPY": "FX:EURJPY", "EURUSD": "FX:EURUSD", "GBPJPY": "FX:GBPJPY", "GBPUSD": "FX:GBPUSD", "GOLD": "TVC:GOLD", "MYRINR": "FX_IDC:MYRINR", "NATGAS": "NYMEX:NG1!", "NGAS": "NYMEX:NG1!", "NIFTY": "NSE:NIFTY", "NZDUSD": "FX:NZDUSD", "SILVER": "TVC:SILVER", "SOLUSD": "BINANCE:SOLUSDT", "USDCAD": "FX:USDCAD", "USDCHF": "FX:USDCHF", "USDINR": "FX_IDC:USDINR", "USDJPY": "FX:USDJPY", "USDMYR": "FX_IDC:USDMYR", "WTI": "TVC:USOIL", "WTIUSD": "TVC:USOIL", "XAGUSD": "OANDA:XAGUSD", "XAUUSD": "OANDA:XAUUSD", "XRPUSD": "BINANCE:XRPUSDT"}</script>
+<script type="application/json" id="tv-aliases" nonce="mfBFhpFARDHoXhf5JYWK5w">{"AUDUSD": "FX:AUDUSD", "BANKNIFTY": "NSE:BANKNIFTY", "BNBUSD": "BINANCE:BNBUSDT", "BRENT": "TVC:UKOIL", "BRNUSD": "TVC:UKOIL", "BTCUSD": "BINANCE:BTCUSDT", "COPPER": "COMEX:HG1!", "CRUDE": "TVC:USOIL", "DOGEUSD": "BINANCE:DOGEUSDT", "DXY": "TVC:DXY", "ETHUSD": "BINANCE:ETHUSDT", "EURJPY": "FX:EURJPY", "EURUSD": "FX:EURUSD", "GBPJPY": "FX:GBPJPY", "GBPUSD": "FX:GBPUSD", "GOLD": "TVC:GOLD", "MYRINR": "FX_IDC:MYRINR", "NATGAS": "NYMEX:NG1!", "NGAS": "NYMEX:NG1!", "NIFTY": "NSE:NIFTY", "NZDUSD": "FX:NZDUSD", "SILVER": "TVC:SILVER", "SOLUSD": "BINANCE:SOLUSDT", "USDCAD": "FX:USDCAD", "USDCHF": "FX:USDCHF", "USDINR": "FX_IDC:USDINR", "USDJPY": "FX:USDJPY", "USDMYR": "FX_IDC:USDMYR", "WTI": "TVC:USOIL", "WTIUSD": "TVC:USOIL", "XAGUSD": "OANDA:XAGUSD", "XAUUSD": "OANDA:XAUUSD", "XRPUSD": "BINANCE:XRPUSDT"}</script>
 
-<script type="application/json" id="sector-map" nonce="w8ohtHasOK10mxs9Cy12Ew">{"360ONE": "Financial Services", "3MINDIA": "Diversified", "AADHARHFC": "Financial Services", "AARTIDRUGS": "Healthcare", "AARTIIND": "Chemicals", "AARTIPHARM": "Healthcare", "AAVAS": "Financial Services", "ABB": "Capital Goods", "ABBOTINDIA": "Healthcare", "ABCAPITAL": "Financial Services", "ABDL": "Fast Moving Consumer Goods", "ABFRL": "Consumer Services", "ABLBL": "Consumer Services", "ABREL": "Realty", "ABSLAMC": "Financial Services", "ACC": "Construction Materials", "ACE": "Capital Goods", "ACI": "Chemicals", "ACMESOLAR": "Power", "ACUTAAS": "Healthcare", "ADANIENSOL": "Power", "ADANIENT": "Metals \u0026 Mining", "ADANIGREEN": "Power", "ADANIPORTS": "Services", "ADANIPOWER": "Power", "ADVENZYMES": "Healthcare", "AEGISLOG": "Oil Gas \u0026 Consumable Fuels", "AEGISVOPAK": "Oil Gas \u0026 Consumable Fuels", "AEQUS": "Capital Goods", "AETHER": "Chemicals", "AFCONS": "Construction", "AFFLE": "Information Technology", "AGARWALEYE": "Healthcare", "AHLUCONT": "Construction", "AIAENG": "Capital Goods", "AIIL": "Financial Services", "AJANTPHARM": "Healthcare", "AKUMS": "Healthcare", "ALIVUS": "Healthcare", "ALKEM": "Healthcare", "ALKYLAMINE": "Chemicals", "ALOKINDS": "Textiles", "AMBER": "Consumer Durables", "AMBUJACEM": "Construction Materials", "ANANDRATHI": "Financial Services", "ANANTRAJ": "Realty", "ANGELONE": "Financial Services", "ANTHEM": "Healthcare", "ANUP": "Capital Goods", "ANURAS": "Chemicals", "APARINDS": "Capital Goods", "APLAPOLLO": "Capital Goods", "APLLTD": "Healthcare", "APOLLO": "Capital Goods", "APOLLOHOSP": "Healthcare", "APOLLOTYRE": "Automobile and Auto Components", "APTUS": "Financial Services", "ARE\u0026M": "Automobile and Auto Components", "ARVIND": "Textiles", "ARVINDFASN": "Consumer Services", "ASAHIINDIA": "Automobile and Auto Components", "ASHAPURMIN": "Metals \u0026 Mining", "ASHOKA": "Construction", "ASHOKLEY": "Capital Goods", "ASIANPAINT": "Consumer Durables", "ASKAUTOLTD": "Automobile and Auto Components", "ASTERDM": "Healthcare", "ASTRAL": "Capital Goods", "ASTRAMICRO": "Capital Goods", "ATGL": "Oil Gas \u0026 Consumable Fuels", "ATHERENERG": "Automobile and Auto Components", "ATLANTAELE": "Capital Goods", "ATUL": "Chemicals", "AUBANK": "Financial Services", "AURIONPRO": "Information Technology", "AUROPHARMA": "Healthcare", "AVALON": "Capital Goods", "AVANTIFEED": "Fast Moving Consumer Goods", "AVL": "Consumer Services", "AWFIS": "Services", "AWL": "Fast Moving Consumer Goods", "AXISBANK": "Financial Services", "AXISCADES": "Capital Goods", "AZAD": "Capital Goods", "BAJAJ-AUTO": "Automobile and Auto Components", "BAJAJELEC": "Consumer Durables", "BAJAJFINSV": "Financial Services", "BAJAJHFL": "Financial Services", "BAJAJHLDNG": "Financial Services", "BAJFINANCE": "Financial Services", "BALAMINES": "Chemicals", "BALKRISIND": "Automobile and Auto Components", "BALRAMCHIN": "Fast Moving Consumer Goods", "BALUFORGE": "Capital Goods", "BANCOINDIA": "Automobile and Auto Components", "BANDHANBNK": "Financial Services", "BANKBARODA": "Financial Services", "BANKINDIA": "Financial Services", "BATAINDIA": "Consumer Durables", "BAYERCROP": "Chemicals", "BBOX": "Information Technology", "BBTC": "Fast Moving Consumer Goods", "BDL": "Capital Goods", "BECTORFOOD": "Fast Moving Consumer Goods", "BEL": "Capital Goods", "BELRISE": "Automobile and Auto Components", "BEML": "Capital Goods", "BERGEPAINT": "Consumer Durables", "BHARATFORG": "Automobile and Auto Components", "BHARTIARTL": "Telecommunication", "BHARTIHEXA": "Telecommunication", "BHEL": "Capital Goods", "BIKAJI": "Fast Moving Consumer Goods", "BIOCON": "Healthcare", "BIRLACORPN": "Construction Materials", "BLACKBUCK": "Services", "BLS": "Consumer Services", "BLUEDART": "Services", "BLUEJET": "Healthcare", "BLUESTARCO": "Consumer Durables", "BLUESTONE": "Consumer Durables", "BORORENEW": "Capital Goods", "BOSCHLTD": "Automobile and Auto Components", "BPCL": "Oil Gas \u0026 Consumable Fuels", "BRIGADE": "Realty", "BRITANNIA": "Fast Moving Consumer Goods", "BSE": "Financial Services", "BSOFT": "Information Technology", "CAMPUS": "Consumer Durables", "CAMS": "Financial Services", "CANBK": "Financial Services", "CANFINHOME": "Financial Services", "CANHLIFE": "Financial Services", "CAPILLARY": "Information Technology", "CAPLIPOINT": "Healthcare", "CARBORUNIV": "Capital Goods", "CARTRADE": "Consumer Services", "CASTROLIND": "Oil Gas \u0026 Consumable Fuels", "CCAVENUE": "Financial Services", "CCL": "Fast Moving Consumer Goods", "CDSL": "Financial Services", "CEATLTD": "Automobile and Auto Components", "CELLO": "Consumer Durables", "CEMPRO": "Construction", "CENTRALBK": "Financial Services", "CENTURYPLY": "Consumer Durables", "CERA": "Consumer Durables", "CESC": "Power", "CGCL": "Financial Services", "CGPOWER": "Capital Goods", "CHALET": "Consumer Services", "CHAMBLFERT": "Chemicals", "CHENNPETRO": "Oil Gas \u0026 Consumable Fuels", "CHOICEIN": "Financial Services", "CHOLAFIN": "Financial Services", "CHOLAHLDNG": "Financial Services", "CIEINDIA": "Automobile and Auto Components", "CIPLA": "Healthcare", "CLEAN": "Chemicals", "CMSINFO": "Services", "COALINDIA": "Oil Gas \u0026 Consumable Fuels", "COCHINSHIP": "Capital Goods", "COFORGE": "Information Technology", "COHANCE": "Healthcare", "COLPAL": "Fast Moving Consumer Goods", "CONCOR": "Services", "CONCORDBIO": "Healthcare", "COROMANDEL": "Chemicals", "CORONA": "Healthcare", "CPPLUS": "Capital Goods", "CRAFTSMAN": "Automobile and Auto Components", "CRAMC": "Financial Services", "CREDITACC": "Financial Services", "CRISIL": "Financial Services", "CRIZAC": "Consumer Services", "CROMPTON": "Consumer Durables", "CSBBANK": "Financial Services", "CUB": "Financial Services", "CUMMINSIND": "Capital Goods", "CUPID": "Fast Moving Consumer Goods", "CYIENT": "Information Technology", "DABUR": "Fast Moving Consumer Goods", "DALBHARAT": "Construction Materials", "DATAMATICS": "Information Technology", "DATAPATTNS": "Capital Goods", "DBL": "Construction", "DBREALTY": "Realty", "DCBBANK": "Financial Services", "DCMSHRIRAM": "Diversified", "DEEPAKFERT": "Chemicals", "DEEPAKNTR": "Chemicals", "DELHIVERY": "Services", "DEVYANI": "Consumer Services", "DIACABS": "Capital Goods", "DIVISLAB": "Healthcare", "DIXON": "Consumer Durables", "DLF": "Realty", "DMART": "Consumer Services", "DOMS": "Fast Moving Consumer Goods", "DRREDDY": "Healthcare", "DYNAMATECH": "Capital Goods", "ECLERX": "Services", "EDELWEISS": "Financial Services", "EICHERMOT": "Automobile and Auto Components", "EIDPARRY": "Fast Moving Consumer Goods", "EIEL": "Utilities", "EIHOTEL": "Consumer Services", "ELECON": "Capital Goods", "ELECTCAST": "Capital Goods", "ELGIEQUIP": "Capital Goods", "ELLEN": "Chemicals", "EMAMILTD": "Fast Moving Consumer Goods", "EMBDL": "Realty", "EMCURE": "Healthcare", "EMIL": "Consumer Services", "EMMVEE": "Capital Goods", "ENDURANCE": "Automobile and Auto Components", "ENGINERSIN": "Construction", "ENRIN": "Capital Goods", "ENTERO": "Consumer Services", "EPL": "Capital Goods", "EQUITASBNK": "Financial Services", "ERIS": "Healthcare", "ESCORTS": "Capital Goods", "ETERNAL": "Consumer Services", "ETHOSLTD": "Consumer Durables", "EUREKAFORB": "Consumer Durables", "EXIDEIND": "Automobile and Auto Components", "FACT": "Chemicals", "FEDERALBNK": "Financial Services", "FEDFINA": "Financial Services", "FIEMIND": "Automobile and Auto Components", "FINCABLES": "Capital Goods", "FINPIPE": "Capital Goods", "FIRSTCRY": "Consumer Services", "FIVESTAR": "Financial Services", "FLUOROCHEM": "Chemicals", "FORCEMOT": "Automobile and Auto Components", "FORTIS": "Healthcare", "FSL": "Services", "GABRIEL": "Automobile and Auto Components", "GAEL": "Fast Moving Consumer Goods", "GAIL": "Oil Gas \u0026 Consumable Fuels", "GALLANTT": "Capital Goods", "GESHIP": "Services", "GHCL": "Chemicals", "GICRE": "Financial Services", "GILLETTE": "Fast Moving Consumer Goods", "GLAND": "Healthcare", "GLAXO": "Healthcare", "GLENMARK": "Healthcare", "GMDCLTD": "Metals \u0026 Mining", "GMMPFAUDLR": "Capital Goods", "GMRAIRPORT": "Services", "GMRP\u0026UI": "Power", "GNFC": "Chemicals", "GODFRYPHLP": "Fast Moving Consumer Goods", "GODIGIT": "Financial Services", "GODREJAGRO": "Fast Moving Consumer Goods", "GODREJCP": "Fast Moving Consumer Goods", "GODREJIND": "Diversified", "GODREJPROP": "Realty", "GOKEX": "Textiles", "GOKULAGRO": "Fast Moving Consumer Goods", "GPIL": "Capital Goods", "GPPL": "Services", "GRANULES": "Healthcare", "GRAPHITE": "Capital Goods", "GRASIM": "Construction Materials", "GRAVITA": "Metals \u0026 Mining", "GREAVESCOT": "Capital Goods", "GRINDWELL": "Capital Goods", "GROWW": "Financial Services", "GRSE": "Capital Goods", "GRWRHITECH": "Capital Goods", "GSFC": "Chemicals", "GVT\u0026D": "Capital Goods", "HAL": "Capital Goods", "HAPPSTMNDS": "Information Technology", "HAVELLS": "Consumer Durables", "HBLENGINE": "Capital Goods", "HCC": "Construction", "HCG": "Healthcare", "HCLTECH": "Information Technology", "HDBFS": "Financial Services", "HDFCAMC": "Financial Services", "HDFCBANK": "Financial Services", "HDFCLIFE": "Financial Services", "HEG": "Capital Goods", "HEMIPROP": "Services", "HERITGFOOD": "Fast Moving Consumer Goods", "HEROMOTOCO": "Automobile and Auto Components", "HEXT": "Information Technology", "HFCL": "Telecommunication", "HGINFRA": "Construction", "HINDALCO": "Metals \u0026 Mining", "HINDCOPPER": "Metals \u0026 Mining", "HINDPETRO": "Oil Gas \u0026 Consumable Fuels", "HINDUNILVR": "Fast Moving Consumer Goods", "HINDZINC": "Metals \u0026 Mining", "HOMEFIRST": "Financial Services", "HONASA": "Fast Moving Consumer Goods", "HONAUT": "Capital Goods", "HSCL": "Chemicals", "HUDCO": "Financial Services", "HYUNDAI": "Automobile and Auto Components", "ICICIAMC": "Financial Services", "ICICIBANK": "Financial Services", "ICICIGI": "Financial Services", "ICICIPRULI": "Financial Services", "ICIL": "Textiles", "IDBI": "Financial Services", "IDEA": "Telecommunication", "IDFCFIRSTB": "Financial Services", "IEX": "Financial Services", "IFBIND": "Consumer Durables", "IFCI": "Financial Services", "IGIL": "Services", "IGL": "Oil Gas \u0026 Consumable Fuels", "IIFL": "Financial Services", "IIFLCAPS": "Financial Services", "IKS": "Information Technology", "IMFA": "Metals \u0026 Mining", "INDGN": "Healthcare", "INDHOTEL": "Consumer Services", "INDIACEM": "Construction Materials", "INDIAGLYCO": "Fast Moving Consumer Goods", "INDIAMART": "Consumer Services", "INDIANB": "Financial Services", "INDIASHLTR": "Financial Services", "INDIGO": "Services", "INDIGOPNTS": "Consumer Durables", "INDUSINDBK": "Financial Services", "INDUSTOWER": "Telecommunication", "INFY": "Information Technology", "INOXGREEN": "Services", "INOXINDIA": "Capital Goods", "INOXWIND": "Capital Goods", "INTELLECT": "Information Technology", "IOB": "Financial Services", "IOC": "Oil Gas \u0026 Consumable Fuels", "IONEXCHANG": "Utilities", "IPCALAB": "Healthcare", "IRB": "Construction", "IRCON": "Construction", "IRCTC": "Consumer Services", "IREDA": "Financial Services", "IRFC": "Financial Services", "ITC": "Fast Moving Consumer Goods", "ITCHOTELS": "Consumer Services", "ITI": "Telecommunication", "IXIGO": "Consumer Services", "J\u0026KBANK": "Financial Services", "JAIBALAJI": "Metals \u0026 Mining", "JAINREC": "Metals \u0026 Mining", "JAMNAAUTO": "Automobile and Auto Components", "JAYNECOIND": "Capital Goods", "JBMA": "Automobile and Auto Components", "JINDALSAW": "Capital Goods", "JINDALSTEL": "Metals \u0026 Mining", "JIOFIN": "Financial Services", "JKCEMENT": "Construction Materials", "JKLAKSHMI": "Construction Materials", "JKPAPER": "Forest Materials", "JKTYRE": "Automobile and Auto Components", "JLHL": "Healthcare", "JMFINANCIL": "Financial Services", "JPPOWER": "Power", "JSFB": "Financial Services", "JSL": "Metals \u0026 Mining", "JSLL": "Consumer Services", "JSWCEMENT": "Construction Materials", "JSWDULUX": "Consumer Durables", "JSWENERGY": "Power", "JSWINFRA": "Services", "JSWSTEEL": "Metals \u0026 Mining", "JUBLFOOD": "Consumer Services", "JUBLINGREA": "Chemicals", "JUBLPHARMA": "Healthcare", "JUSTDIAL": "Consumer Services", "JWL": "Capital Goods", "JYOTHYLAB": "Fast Moving Consumer Goods", "JYOTICNC": "Capital Goods", "KAJARIACER": "Consumer Durables", "KALYANKJIL": "Consumer Durables", "KANSAINER": "Consumer Durables", "KARURVYSYA": "Financial Services", "KAYNES": "Capital Goods", "KEC": "Construction", "KEI": "Capital Goods", "KFINTECH": "Financial Services", "KIMS": "Healthcare", "KIRLOSBROS": "Capital Goods", "KIRLOSENG": "Capital Goods", "KIRLPNU": "Capital Goods", "KITEX": "Textiles", "KNRCON": "Construction", "KOTAKBANK": "Financial Services", "KPIGREEN": "Power", "KPIL": "Construction", "KPITTECH": "Information Technology", "KPRMILL": "Textiles", "KRBL": "Fast Moving Consumer Goods", "KRN": "Capital Goods", "KSB": "Capital Goods", "KSCL": "Fast Moving Consumer Goods", "KTKBANK": "Financial Services", "LALPATHLAB": "Healthcare", "LATENTVIEW": "Information Technology", "LAURUSLABS": "Healthcare", "LEMONTREE": "Consumer Services", "LENSKART": "Consumer Services", "LGEINDIA": "Consumer Durables", "LICHSGFIN": "Financial Services", "LICI": "Financial Services", "LINDEINDIA": "Chemicals", "LLOYDSENGG": "Capital Goods", "LLOYDSENT": "Metals \u0026 Mining", "LLOYDSME": "Metals \u0026 Mining", "LODHA": "Realty", "LOTUSDEV": "Realty", "LT": "Construction", "LTF": "Financial Services", "LTFOODS": "Fast Moving Consumer Goods", "LTM": "Information Technology", "LTTS": "Information Technology", "LUMAXTECH": "Automobile and Auto Components", "LUPIN": "Healthcare", "LXCHEM": "Chemicals", "M\u0026M": "Automobile and Auto Components", "M\u0026MFIN": "Financial Services", "MAHABANK": "Financial Services", "MAHSCOOTER": "Financial Services", "MAHSEAMLES": "Capital Goods", "MANAPPURAM": "Financial Services", "MANKIND": "Healthcare", "MANORAMA": "Fast Moving Consumer Goods", "MANYAVAR": "Consumer Services", "MAPMYINDIA": "Information Technology", "MARICO": "Fast Moving Consumer Goods", "MARKSANS": "Healthcare", "MARUTI": "Automobile and Auto Components", "MASTEK": "Information Technology", "MAXHEALTH": "Healthcare", "MAZDOCK": "Capital Goods", "MCX": "Financial Services", "MEDANTA": "Healthcare", "MEDPLUS": "Consumer Services", "MEESHO": "Consumer Services", "METROPOLIS": "Healthcare", "MFSL": "Financial Services", "MGL": "Oil Gas \u0026 Consumable Fuels", "MIDHANI": "Capital Goods", "MINDACORP": "Automobile and Auto Components", "MMTC": "Services", "MOIL": "Metals \u0026 Mining", "MOTHERSON": "Automobile and Auto Components", "MOTILALOFS": "Financial Services", "MPHASIS": "Information Technology", "MRF": "Automobile and Auto Components", "MRPL": "Oil Gas \u0026 Consumable Fuels", "MSTCLTD": "Services", "MSUMI": "Automobile and Auto Components", "MTARTECH": "Capital Goods", "MUTHOOTFIN": "Financial Services", "NAM-INDIA": "Financial Services", "NATCOPHARM": "Healthcare", "NATIONALUM": "Metals \u0026 Mining", "NAUKRI": "Consumer Services", "NAVA": "Power", "NAVINFLUOR": "Chemicals", "NAZARA": "Media Entertainment \u0026 Publication", "NBCC": "Construction", "NCC": "Construction", "NEOGEN": "Chemicals", "NESCO": "Services", "NESTLEIND": "Fast Moving Consumer Goods", "NETWEB": "Information Technology", "NETWORK18": "Media Entertainment \u0026 Publication", "NEULANDLAB": "Healthcare", "NEWGEN": "Information Technology", "NFL": "Chemicals", "NH": "Healthcare", "NHPC": "Power", "NIACL": "Financial Services", "NIVABUPA": "Financial Services", "NLCINDIA": "Power", "NMDC": "Metals \u0026 Mining", "NSLNISP": "Metals \u0026 Mining", "NTPC": "Power", "NTPCGREEN": "Power", "NUVAMA": "Financial Services", "NUVOCO": "Construction Materials", "NYKAA": "Consumer Services", "OBEROIRLTY": "Realty", "OFSS": "Information Technology", "OIL": "Oil Gas \u0026 Consumable Fuels", "OLAELEC": "Automobile and Auto Components", "OLECTRA": "Automobile and Auto Components", "ONESOURCE": "Healthcare", "ONGC": "Oil Gas \u0026 Consumable Fuels", "OPTIEMUS": "Telecommunication", "ORIENTCEM": "Construction Materials", "ORKLAINDIA": "Fast Moving Consumer Goods", "OSWALPUMPS": "Capital Goods", "PAGEIND": "Textiles", "PARADEEP": "Chemicals", "PARAS": "Capital Goods", "PARKHOSPS": "Healthcare", "PATANJALI": "Fast Moving Consumer Goods", "PAYTM": "Financial Services", "PCBL": "Chemicals", "PCJEWELLER": "Consumer Durables", "PERSISTENT": "Information Technology", "PETRONET": "Oil Gas \u0026 Consumable Fuels", "PFC": "Financial Services", "PFIZER": "Healthcare", "PFOCUS": "Media Entertainment \u0026 Publication", "PGEL": "Consumer Durables", "PGIL": "Textiles", "PHOENIXLTD": "Realty", "PICCADIL": "Fast Moving Consumer Goods", "PIDILITIND": "Chemicals", "PIIND": "Chemicals", "PINELABS": "Financial Services", "PIRAMALFIN": "Financial Services", "PNB": "Financial Services", "PNBHOUSING": "Financial Services", "PNCINFRA": "Construction", "PNGJL": "Consumer Durables", "POLICYBZR": "Financial Services", "POLYCAB": "Capital Goods", "POLYMED": "Healthcare", "POONAWALLA": "Financial Services", "POWERGRID": "Power", "POWERINDIA": "Capital Goods", "POWERMECH": "Construction", "PPLPHARMA": "Healthcare", "PRAJIND": "Capital Goods", "PREMIERENE": "Capital Goods", "PRESTIGE": "Realty", "PRICOLLTD": "Automobile and Auto Components", "PRIVISCL": "Chemicals", "PRSMJOHNSN": "Construction Materials", "PRUDENT": "Financial Services", "PTC": "Power", "PTCIL": "Capital Goods", "PURVA": "Realty", "PVRINOX": "Media Entertainment \u0026 Publication", "PWL": "Consumer Services", "QPOWER": "Capital Goods", "QUESS": "Services", "RADICO": "Fast Moving Consumer Goods", "RAILTEL": "Telecommunication", "RAIN": "Chemicals", "RAINBOW": "Healthcare", "RALLIS": "Chemicals", "RAMCOCEM": "Construction Materials", "RATEGAIN": "Information Technology", "RATNAMANI": "Capital Goods", "RAYMONDLSL": "Textiles", "RBA": "Consumer Services", "RBLBANK": "Financial Services", "RCF": "Chemicals", "RECLTD": "Financial Services", "REDINGTON": "Services", "REDTAPE": "Consumer Durables", "REFEX": "Utilities", "RELAXO": "Consumer Durables", "RELIANCE": "Oil Gas \u0026 Consumable Fuels", "RELIGARE": "Financial Services", "RENUKA": "Fast Moving Consumer Goods", "RHIM": "Capital Goods", "RITES": "Construction", "RKFORGE": "Automobile and Auto Components", "ROUTE": "Telecommunication", "RPOWER": "Power", "RRKABEL": "Capital Goods", "RTNINDIA": "Consumer Services", "RTNPOWER": "Power", "RUBICON": "Healthcare", "RVNL": "Construction", "SAATVIKGL": "Capital Goods", "SAFARI": "Consumer Durables", "SAGILITY": "Information Technology", "SAIL": "Metals \u0026 Mining", "SAILIFE": "Healthcare", "SAMHI": "Consumer Services", "SAMMAANCAP": "Financial Services", "SANDUMA": "Metals \u0026 Mining", "SANOFICONR": "Healthcare", "SANSERA": "Automobile and Auto Components", "SAPPHIRE": "Consumer Services", "SARDAEN": "Metals \u0026 Mining", "SAREGAMA": "Media Entertainment \u0026 Publication", "SBFC": "Financial Services", "SBICARD": "Financial Services", "SBILIFE": "Financial Services", "SBIN": "Financial Services", "SCHAEFFLER": "Automobile and Auto Components", "SCHNEIDER": "Capital Goods", "SCI": "Services", "SENCO": "Consumer Durables", "SFL": "Consumer Durables", "SHAILY": "Consumer Durables", "SHAKTIPUMP": "Capital Goods", "SHARDACROP": "Chemicals", "SHAREINDIA": "Financial Services", "SHILPAMED": "Healthcare", "SHREECEM": "Construction Materials", "SHRIPISTON": "Automobile and Auto Components", "SHRIRAMFIN": "Financial Services", "SHYAMMETL": "Capital Goods", "SIEMENS": "Capital Goods", "SIGNATURE": "Realty", "SJVN": "Power", "SKFINDIA": "Automobile and Auto Components", "SKFINDUS": "Capital Goods", "SKIPPER": "Capital Goods", "SKYGOLD": "Consumer Durables", "SMARTWORKS": "Services", "SMLMAH": "Capital Goods", "SOBHA": "Realty", "SOLARINDS": "Chemicals", "SONACOMS": "Automobile and Auto Components", "SONATSOFTW": "Information Technology", "SOUTHBANK": "Financial Services", "SPARC": "Healthcare", "SPLPETRO": "Chemicals", "SRF": "Chemicals", "STAR": "Healthcare", "STARCEMENT": "Construction Materials", "STARHEALTH": "Financial Services", "STLTECH": "Telecommunication", "STYL": "Financial Services", "STYRENIX": "Chemicals", "SUBROS": "Capital Goods", "SUDARSCHEM": "Chemicals", "SUDEEPPHRM": "Chemicals", "SUMICHEM": "Chemicals", "SUNDARMFIN": "Financial Services", "SUNPHARMA": "Healthcare", "SUNTECK": "Realty", "SUNTV": "Media Entertainment \u0026 Publication", "SUPREMEIND": "Capital Goods", "SUPRIYA": "Healthcare", "SURYAROSNI": "Capital Goods", "SUZLON": "Capital Goods", "SWANCORP": "Chemicals", "SWIGGY": "Consumer Services", "SWSOLAR": "Construction", "SYNGENE": "Healthcare", "SYRMA": "Capital Goods", "TANLA": "Information Technology", "TARC": "Realty", "TARIL": "Capital Goods", "TATACAP": "Financial Services", "TATACHEM": "Chemicals", "TATACOMM": "Telecommunication", "TATACONSUM": "Fast Moving Consumer Goods", "TATAELXSI": "Information Technology", "TATAINVEST": "Financial Services", "TATAPOWER": "Power", "TATASTEEL": "Metals \u0026 Mining", "TATATECH": "Information Technology", "TBOTEK": "Consumer Services", "TCS": "Information Technology", "TDPOWERSYS": "Capital Goods", "TECHM": "Information Technology", "TECHNOE": "Construction", "TEGA": "Capital Goods", "TEJASNET": "Telecommunication", "TENNIND": "Automobile and Auto Components", "TEXRAIL": "Capital Goods", "THANGAMAYL": "Consumer Durables", "THELEELA": "Consumer Services", "THERMAX": "Capital Goods", "THOMASCOOK": "Consumer Services", "THYROCARE": "Healthcare", "TI": "Fast Moving Consumer Goods", "TIINDIA": "Automobile and Auto Components", "TIMETECHNO": "Capital Goods", "TIMKEN": "Capital Goods", "TIPSMUSIC": "Media Entertainment \u0026 Publication", "TITAGARH": "Capital Goods", "TITAN": "Consumer Durables", "TMB": "Financial Services", "TMCV": "Capital Goods", "TMPV": "Automobile and Auto Components", "TORNTPHARM": "Healthcare", "TORNTPOWER": "Power", "TRANSRAILL": "Capital Goods", "TRAVELFOOD": "Consumer Services", "TRENT": "Consumer Services", "TRIDENT": "Textiles", "TRITURBINE": "Capital Goods", "TRIVENI": "Fast Moving Consumer Goods", "TSFINV": "Financial Services", "TTML": "Telecommunication", "TVSMOTOR": "Automobile and Auto Components", "TVSSCS": "Services", "UBL": "Fast Moving Consumer Goods", "UCOBANK": "Financial Services", "UJJIVANSFB": "Financial Services", "ULTRACEMCO": "Construction Materials", "UNIONBANK": "Financial Services", "UNITDSPR": "Fast Moving Consumer Goods", "UNOMINDA": "Automobile and Auto Components", "UPL": "Chemicals", "URBANCO": "Consumer Services", "USHAMART": "Capital Goods", "UTIAMC": "Financial Services", "UTLSOLAR": "Capital Goods", "V2RETAIL": "Consumer Services", "VAIBHAVGBL": "Consumer Durables", "VARROC": "Automobile and Auto Components", "VBL": "Fast Moving Consumer Goods", "VEDL": "Metals \u0026 Mining", "VGUARD": "Consumer Durables", "VIJAYA": "Healthcare", "VIKRAMSOLR": "Capital Goods", "VIPIND": "Consumer Durables", "VIYASH": "Healthcare", "VMART": "Consumer Services", "VMM": "Consumer Services", "VOLTAMP": "Capital Goods", "VOLTAS": "Consumer Durables", "VTL": "Textiles", "WAAREEENER": "Capital Goods", "WAAREERTL": "Capital Goods", "WABAG": "Utilities", "WAKEFIT": "Consumer Durables", "WEBELSOLAR": "Capital Goods", "WELCORP": "Capital Goods", "WELENT": "Construction", "WELSPUNLIV": "Textiles", "WESTLIFE": "Consumer Services", "WEWORK": "Services", "WHIRLPOOL": "Consumer Durables", "WIPRO": "Information Technology", "WOCKPHARMA": "Healthcare", "YATHARTH": "Healthcare", "YESBANK": "Financial Services", "ZAGGLE": "Information Technology", "ZEEL": "Media Entertainment \u0026 Publication", "ZENSARTECH": "Information Technology", "ZENTEC": "Capital Goods", "ZFCVINDIA": "Automobile and Auto Components", "ZYDUSLIFE": "Healthcare", "ZYDUSWELL": "Fast Moving Consumer Goods"}</script>
-<script nonce="w8ohtHasOK10mxs9Cy12Ew" src="/app.js?v=20261110T090236" defer></script>
+<script type="application/json" id="sector-map" nonce="mfBFhpFARDHoXhf5JYWK5w">{"360ONE": "Financial Services", "3MINDIA": "Diversified", "AADHARHFC": "Financial Services", "AARTIDRUGS": "Healthcare", "AARTIIND": "Chemicals", "AARTIPHARM": "Healthcare", "AAVAS": "Financial Services", "ABB": "Capital Goods", "ABBOTINDIA": "Healthcare", "ABCAPITAL": "Financial Services", "ABDL": "Fast Moving Consumer Goods", "ABFRL": "Consumer Services", "ABLBL": "Consumer Services", "ABREL": "Realty", "ABSLAMC": "Financial Services", "ACC": "Construction Materials", "ACE": "Capital Goods", "ACI": "Chemicals", "ACMESOLAR": "Power", "ACUTAAS": "Healthcare", "ADANIENSOL": "Power", "ADANIENT": "Metals \u0026 Mining", "ADANIGREEN": "Power", "ADANIPORTS": "Services", "ADANIPOWER": "Power", "ADVENZYMES": "Healthcare", "AEGISLOG": "Oil Gas \u0026 Consumable Fuels", "AEGISVOPAK": "Oil Gas \u0026 Consumable Fuels", "AEQUS": "Capital Goods", "AETHER": "Chemicals", "AFCONS": "Construction", "AFFLE": "Information Technology", "AGARWALEYE": "Healthcare", "AHLUCONT": "Construction", "AIAENG": "Capital Goods", "AIIL": "Financial Services", "AJANTPHARM": "Healthcare", "AKUMS": "Healthcare", "ALIVUS": "Healthcare", "ALKEM": "Healthcare", "ALKYLAMINE": "Chemicals", "ALOKINDS": "Textiles", "AMBER": "Consumer Durables", "AMBUJACEM": "Construction Materials", "ANANDRATHI": "Financial Services", "ANANTRAJ": "Realty", "ANGELONE": "Financial Services", "ANTHEM": "Healthcare", "ANUP": "Capital Goods", "ANURAS": "Chemicals", "APARINDS": "Capital Goods", "APLAPOLLO": "Capital Goods", "APLLTD": "Healthcare", "APOLLO": "Capital Goods", "APOLLOHOSP": "Healthcare", "APOLLOTYRE": "Automobile and Auto Components", "APTUS": "Financial Services", "ARE\u0026M": "Automobile and Auto Components", "ARVIND": "Textiles", "ARVINDFASN": "Consumer Services", "ASAHIINDIA": "Automobile and Auto Components", "ASHAPURMIN": "Metals \u0026 Mining", "ASHOKA": "Construction", "ASHOKLEY": "Capital Goods", "ASIANPAINT": "Consumer Durables", "ASKAUTOLTD": "Automobile and Auto Components", "ASTERDM": "Healthcare", "ASTRAL": "Capital Goods", "ASTRAMICRO": "Capital Goods", "ATGL": "Oil Gas \u0026 Consumable Fuels", "ATHERENERG": "Automobile and Auto Components", "ATLANTAELE": "Capital Goods", "ATUL": "Chemicals", "AUBANK": "Financial Services", "AURIONPRO": "Information Technology", "AUROPHARMA": "Healthcare", "AVALON": "Capital Goods", "AVANTIFEED": "Fast Moving Consumer Goods", "AVL": "Consumer Services", "AWFIS": "Services", "AWL": "Fast Moving Consumer Goods", "AXISBANK": "Financial Services", "AXISCADES": "Capital Goods", "AZAD": "Capital Goods", "BAJAJ-AUTO": "Automobile and Auto Components", "BAJAJELEC": "Consumer Durables", "BAJAJFINSV": "Financial Services", "BAJAJHFL": "Financial Services", "BAJAJHLDNG": "Financial Services", "BAJFINANCE": "Financial Services", "BALAMINES": "Chemicals", "BALKRISIND": "Automobile and Auto Components", "BALRAMCHIN": "Fast Moving Consumer Goods", "BALUFORGE": "Capital Goods", "BANCOINDIA": "Automobile and Auto Components", "BANDHANBNK": "Financial Services", "BANKBARODA": "Financial Services", "BANKINDIA": "Financial Services", "BATAINDIA": "Consumer Durables", "BAYERCROP": "Chemicals", "BBOX": "Information Technology", "BBTC": "Fast Moving Consumer Goods", "BDL": "Capital Goods", "BECTORFOOD": "Fast Moving Consumer Goods", "BEL": "Capital Goods", "BELRISE": "Automobile and Auto Components", "BEML": "Capital Goods", "BERGEPAINT": "Consumer Durables", "BHARATFORG": "Automobile and Auto Components", "BHARTIARTL": "Telecommunication", "BHARTIHEXA": "Telecommunication", "BHEL": "Capital Goods", "BIKAJI": "Fast Moving Consumer Goods", "BIOCON": "Healthcare", "BIRLACORPN": "Construction Materials", "BLACKBUCK": "Services", "BLS": "Consumer Services", "BLUEDART": "Services", "BLUEJET": "Healthcare", "BLUESTARCO": "Consumer Durables", "BLUESTONE": "Consumer Durables", "BORORENEW": "Capital Goods", "BOSCHLTD": "Automobile and Auto Components", "BPCL": "Oil Gas \u0026 Consumable Fuels", "BRIGADE": "Realty", "BRITANNIA": "Fast Moving Consumer Goods", "BSE": "Financial Services", "BSOFT": "Information Technology", "CAMPUS": "Consumer Durables", "CAMS": "Financial Services", "CANBK": "Financial Services", "CANFINHOME": "Financial Services", "CANHLIFE": "Financial Services", "CAPILLARY": "Information Technology", "CAPLIPOINT": "Healthcare", "CARBORUNIV": "Capital Goods", "CARTRADE": "Consumer Services", "CASTROLIND": "Oil Gas \u0026 Consumable Fuels", "CCAVENUE": "Financial Services", "CCL": "Fast Moving Consumer Goods", "CDSL": "Financial Services", "CEATLTD": "Automobile and Auto Components", "CELLO": "Consumer Durables", "CEMPRO": "Construction", "CENTRALBK": "Financial Services", "CENTURYPLY": "Consumer Durables", "CERA": "Consumer Durables", "CESC": "Power", "CGCL": "Financial Services", "CGPOWER": "Capital Goods", "CHALET": "Consumer Services", "CHAMBLFERT": "Chemicals", "CHENNPETRO": "Oil Gas \u0026 Consumable Fuels", "CHOICEIN": "Financial Services", "CHOLAFIN": "Financial Services", "CHOLAHLDNG": "Financial Services", "CIEINDIA": "Automobile and Auto Components", "CIPLA": "Healthcare", "CLEAN": "Chemicals", "CMSINFO": "Services", "COALINDIA": "Oil Gas \u0026 Consumable Fuels", "COCHINSHIP": "Capital Goods", "COFORGE": "Information Technology", "COHANCE": "Healthcare", "COLPAL": "Fast Moving Consumer Goods", "CONCOR": "Services", "CONCORDBIO": "Healthcare", "COROMANDEL": "Chemicals", "CORONA": "Healthcare", "CPPLUS": "Capital Goods", "CRAFTSMAN": "Automobile and Auto Components", "CRAMC": "Financial Services", "CREDITACC": "Financial Services", "CRISIL": "Financial Services", "CRIZAC": "Consumer Services", "CROMPTON": "Consumer Durables", "CSBBANK": "Financial Services", "CUB": "Financial Services", "CUMMINSIND": "Capital Goods", "CUPID": "Fast Moving Consumer Goods", "CYIENT": "Information Technology", "DABUR": "Fast Moving Consumer Goods", "DALBHARAT": "Construction Materials", "DATAMATICS": "Information Technology", "DATAPATTNS": "Capital Goods", "DBL": "Construction", "DBREALTY": "Realty", "DCBBANK": "Financial Services", "DCMSHRIRAM": "Diversified", "DEEPAKFERT": "Chemicals", "DEEPAKNTR": "Chemicals", "DELHIVERY": "Services", "DEVYANI": "Consumer Services", "DIACABS": "Capital Goods", "DIVISLAB": "Healthcare", "DIXON": "Consumer Durables", "DLF": "Realty", "DMART": "Consumer Services", "DOMS": "Fast Moving Consumer Goods", "DRREDDY": "Healthcare", "DYNAMATECH": "Capital Goods", "ECLERX": "Services", "EDELWEISS": "Financial Services", "EICHERMOT": "Automobile and Auto Components", "EIDPARRY": "Fast Moving Consumer Goods", "EIEL": "Utilities", "EIHOTEL": "Consumer Services", "ELECON": "Capital Goods", "ELECTCAST": "Capital Goods", "ELGIEQUIP": "Capital Goods", "ELLEN": "Chemicals", "EMAMILTD": "Fast Moving Consumer Goods", "EMBDL": "Realty", "EMCURE": "Healthcare", "EMIL": "Consumer Services", "EMMVEE": "Capital Goods", "ENDURANCE": "Automobile and Auto Components", "ENGINERSIN": "Construction", "ENRIN": "Capital Goods", "ENTERO": "Consumer Services", "EPL": "Capital Goods", "EQUITASBNK": "Financial Services", "ERIS": "Healthcare", "ESCORTS": "Capital Goods", "ETERNAL": "Consumer Services", "ETHOSLTD": "Consumer Durables", "EUREKAFORB": "Consumer Durables", "EXIDEIND": "Automobile and Auto Components", "FACT": "Chemicals", "FEDERALBNK": "Financial Services", "FEDFINA": "Financial Services", "FIEMIND": "Automobile and Auto Components", "FINCABLES": "Capital Goods", "FINPIPE": "Capital Goods", "FIRSTCRY": "Consumer Services", "FIVESTAR": "Financial Services", "FLUOROCHEM": "Chemicals", "FORCEMOT": "Automobile and Auto Components", "FORTIS": "Healthcare", "FSL": "Services", "GABRIEL": "Automobile and Auto Components", "GAEL": "Fast Moving Consumer Goods", "GAIL": "Oil Gas \u0026 Consumable Fuels", "GALLANTT": "Capital Goods", "GESHIP": "Services", "GHCL": "Chemicals", "GICRE": "Financial Services", "GILLETTE": "Fast Moving Consumer Goods", "GLAND": "Healthcare", "GLAXO": "Healthcare", "GLENMARK": "Healthcare", "GMDCLTD": "Metals \u0026 Mining", "GMMPFAUDLR": "Capital Goods", "GMRAIRPORT": "Services", "GMRP\u0026UI": "Power", "GNFC": "Chemicals", "GODFRYPHLP": "Fast Moving Consumer Goods", "GODIGIT": "Financial Services", "GODREJAGRO": "Fast Moving Consumer Goods", "GODREJCP": "Fast Moving Consumer Goods", "GODREJIND": "Diversified", "GODREJPROP": "Realty", "GOKEX": "Textiles", "GOKULAGRO": "Fast Moving Consumer Goods", "GPIL": "Capital Goods", "GPPL": "Services", "GRANULES": "Healthcare", "GRAPHITE": "Capital Goods", "GRASIM": "Construction Materials", "GRAVITA": "Metals \u0026 Mining", "GREAVESCOT": "Capital Goods", "GRINDWELL": "Capital Goods", "GROWW": "Financial Services", "GRSE": "Capital Goods", "GRWRHITECH": "Capital Goods", "GSFC": "Chemicals", "GVT\u0026D": "Capital Goods", "HAL": "Capital Goods", "HAPPSTMNDS": "Information Technology", "HAVELLS": "Consumer Durables", "HBLENGINE": "Capital Goods", "HCC": "Construction", "HCG": "Healthcare", "HCLTECH": "Information Technology", "HDBFS": "Financial Services", "HDFCAMC": "Financial Services", "HDFCBANK": "Financial Services", "HDFCLIFE": "Financial Services", "HEG": "Capital Goods", "HEMIPROP": "Services", "HERITGFOOD": "Fast Moving Consumer Goods", "HEROMOTOCO": "Automobile and Auto Components", "HEXT": "Information Technology", "HFCL": "Telecommunication", "HGINFRA": "Construction", "HINDALCO": "Metals \u0026 Mining", "HINDCOPPER": "Metals \u0026 Mining", "HINDPETRO": "Oil Gas \u0026 Consumable Fuels", "HINDUNILVR": "Fast Moving Consumer Goods", "HINDZINC": "Metals \u0026 Mining", "HOMEFIRST": "Financial Services", "HONASA": "Fast Moving Consumer Goods", "HONAUT": "Capital Goods", "HSCL": "Chemicals", "HUDCO": "Financial Services", "HYUNDAI": "Automobile and Auto Components", "ICICIAMC": "Financial Services", "ICICIBANK": "Financial Services", "ICICIGI": "Financial Services", "ICICIPRULI": "Financial Services", "ICIL": "Textiles", "IDBI": "Financial Services", "IDEA": "Telecommunication", "IDFCFIRSTB": "Financial Services", "IEX": "Financial Services", "IFBIND": "Consumer Durables", "IFCI": "Financial Services", "IGIL": "Services", "IGL": "Oil Gas \u0026 Consumable Fuels", "IIFL": "Financial Services", "IIFLCAPS": "Financial Services", "IKS": "Information Technology", "IMFA": "Metals \u0026 Mining", "INDGN": "Healthcare", "INDHOTEL": "Consumer Services", "INDIACEM": "Construction Materials", "INDIAGLYCO": "Fast Moving Consumer Goods", "INDIAMART": "Consumer Services", "INDIANB": "Financial Services", "INDIASHLTR": "Financial Services", "INDIGO": "Services", "INDIGOPNTS": "Consumer Durables", "INDUSINDBK": "Financial Services", "INDUSTOWER": "Telecommunication", "INFY": "Information Technology", "INOXGREEN": "Services", "INOXINDIA": "Capital Goods", "INOXWIND": "Capital Goods", "INTELLECT": "Information Technology", "IOB": "Financial Services", "IOC": "Oil Gas \u0026 Consumable Fuels", "IONEXCHANG": "Utilities", "IPCALAB": "Healthcare", "IRB": "Construction", "IRCON": "Construction", "IRCTC": "Consumer Services", "IREDA": "Financial Services", "IRFC": "Financial Services", "ITC": "Fast Moving Consumer Goods", "ITCHOTELS": "Consumer Services", "ITI": "Telecommunication", "IXIGO": "Consumer Services", "J\u0026KBANK": "Financial Services", "JAIBALAJI": "Metals \u0026 Mining", "JAINREC": "Metals \u0026 Mining", "JAMNAAUTO": "Automobile and Auto Components", "JAYNECOIND": "Capital Goods", "JBMA": "Automobile and Auto Components", "JINDALSAW": "Capital Goods", "JINDALSTEL": "Metals \u0026 Mining", "JIOFIN": "Financial Services", "JKCEMENT": "Construction Materials", "JKLAKSHMI": "Construction Materials", "JKPAPER": "Forest Materials", "JKTYRE": "Automobile and Auto Components", "JLHL": "Healthcare", "JMFINANCIL": "Financial Services", "JPPOWER": "Power", "JSFB": "Financial Services", "JSL": "Metals \u0026 Mining", "JSLL": "Consumer Services", "JSWCEMENT": "Construction Materials", "JSWDULUX": "Consumer Durables", "JSWENERGY": "Power", "JSWINFRA": "Services", "JSWSTEEL": "Metals \u0026 Mining", "JUBLFOOD": "Consumer Services", "JUBLINGREA": "Chemicals", "JUBLPHARMA": "Healthcare", "JUSTDIAL": "Consumer Services", "JWL": "Capital Goods", "JYOTHYLAB": "Fast Moving Consumer Goods", "JYOTICNC": "Capital Goods", "KAJARIACER": "Consumer Durables", "KALYANKJIL": "Consumer Durables", "KANSAINER": "Consumer Durables", "KARURVYSYA": "Financial Services", "KAYNES": "Capital Goods", "KEC": "Construction", "KEI": "Capital Goods", "KFINTECH": "Financial Services", "KIMS": "Healthcare", "KIRLOSBROS": "Capital Goods", "KIRLOSENG": "Capital Goods", "KIRLPNU": "Capital Goods", "KITEX": "Textiles", "KNRCON": "Construction", "KOTAKBANK": "Financial Services", "KPIGREEN": "Power", "KPIL": "Construction", "KPITTECH": "Information Technology", "KPRMILL": "Textiles", "KRBL": "Fast Moving Consumer Goods", "KRN": "Capital Goods", "KSB": "Capital Goods", "KSCL": "Fast Moving Consumer Goods", "KTKBANK": "Financial Services", "LALPATHLAB": "Healthcare", "LATENTVIEW": "Information Technology", "LAURUSLABS": "Healthcare", "LEMONTREE": "Consumer Services", "LENSKART": "Consumer Services", "LGEINDIA": "Consumer Durables", "LICHSGFIN": "Financial Services", "LICI": "Financial Services", "LINDEINDIA": "Chemicals", "LLOYDSENGG": "Capital Goods", "LLOYDSENT": "Metals \u0026 Mining", "LLOYDSME": "Metals \u0026 Mining", "LODHA": "Realty", "LOTUSDEV": "Realty", "LT": "Construction", "LTF": "Financial Services", "LTFOODS": "Fast Moving Consumer Goods", "LTM": "Information Technology", "LTTS": "Information Technology", "LUMAXTECH": "Automobile and Auto Components", "LUPIN": "Healthcare", "LXCHEM": "Chemicals", "M\u0026M": "Automobile and Auto Components", "M\u0026MFIN": "Financial Services", "MAHABANK": "Financial Services", "MAHSCOOTER": "Financial Services", "MAHSEAMLES": "Capital Goods", "MANAPPURAM": "Financial Services", "MANKIND": "Healthcare", "MANORAMA": "Fast Moving Consumer Goods", "MANYAVAR": "Consumer Services", "MAPMYINDIA": "Information Technology", "MARICO": "Fast Moving Consumer Goods", "MARKSANS": "Healthcare", "MARUTI": "Automobile and Auto Components", "MASTEK": "Information Technology", "MAXHEALTH": "Healthcare", "MAZDOCK": "Capital Goods", "MCX": "Financial Services", "MEDANTA": "Healthcare", "MEDPLUS": "Consumer Services", "MEESHO": "Consumer Services", "METROPOLIS": "Healthcare", "MFSL": "Financial Services", "MGL": "Oil Gas \u0026 Consumable Fuels", "MIDHANI": "Capital Goods", "MINDACORP": "Automobile and Auto Components", "MMTC": "Services", "MOIL": "Metals \u0026 Mining", "MOTHERSON": "Automobile and Auto Components", "MOTILALOFS": "Financial Services", "MPHASIS": "Information Technology", "MRF": "Automobile and Auto Components", "MRPL": "Oil Gas \u0026 Consumable Fuels", "MSTCLTD": "Services", "MSUMI": "Automobile and Auto Components", "MTARTECH": "Capital Goods", "MUTHOOTFIN": "Financial Services", "NAM-INDIA": "Financial Services", "NATCOPHARM": "Healthcare", "NATIONALUM": "Metals \u0026 Mining", "NAUKRI": "Consumer Services", "NAVA": "Power", "NAVINFLUOR": "Chemicals", "NAZARA": "Media Entertainment \u0026 Publication", "NBCC": "Construction", "NCC": "Construction", "NEOGEN": "Chemicals", "NESCO": "Services", "NESTLEIND": "Fast Moving Consumer Goods", "NETWEB": "Information Technology", "NETWORK18": "Media Entertainment \u0026 Publication", "NEULANDLAB": "Healthcare", "NEWGEN": "Information Technology", "NFL": "Chemicals", "NH": "Healthcare", "NHPC": "Power", "NIACL": "Financial Services", "NIVABUPA": "Financial Services", "NLCINDIA": "Power", "NMDC": "Metals \u0026 Mining", "NSLNISP": "Metals \u0026 Mining", "NTPC": "Power", "NTPCGREEN": "Power", "NUVAMA": "Financial Services", "NUVOCO": "Construction Materials", "NYKAA": "Consumer Services", "OBEROIRLTY": "Realty", "OFSS": "Information Technology", "OIL": "Oil Gas \u0026 Consumable Fuels", "OLAELEC": "Automobile and Auto Components", "OLECTRA": "Automobile and Auto Components", "ONESOURCE": "Healthcare", "ONGC": "Oil Gas \u0026 Consumable Fuels", "OPTIEMUS": "Telecommunication", "ORIENTCEM": "Construction Materials", "ORKLAINDIA": "Fast Moving Consumer Goods", "OSWALPUMPS": "Capital Goods", "PAGEIND": "Textiles", "PARADEEP": "Chemicals", "PARAS": "Capital Goods", "PARKHOSPS": "Healthcare", "PATANJALI": "Fast Moving Consumer Goods", "PAYTM": "Financial Services", "PCBL": "Chemicals", "PCJEWELLER": "Consumer Durables", "PERSISTENT": "Information Technology", "PETRONET": "Oil Gas \u0026 Consumable Fuels", "PFC": "Financial Services", "PFIZER": "Healthcare", "PFOCUS": "Media Entertainment \u0026 Publication", "PGEL": "Consumer Durables", "PGIL": "Textiles", "PHOENIXLTD": "Realty", "PICCADIL": "Fast Moving Consumer Goods", "PIDILITIND": "Chemicals", "PIIND": "Chemicals", "PINELABS": "Financial Services", "PIRAMALFIN": "Financial Services", "PNB": "Financial Services", "PNBHOUSING": "Financial Services", "PNCINFRA": "Construction", "PNGJL": "Consumer Durables", "POLICYBZR": "Financial Services", "POLYCAB": "Capital Goods", "POLYMED": "Healthcare", "POONAWALLA": "Financial Services", "POWERGRID": "Power", "POWERINDIA": "Capital Goods", "POWERMECH": "Construction", "PPLPHARMA": "Healthcare", "PRAJIND": "Capital Goods", "PREMIERENE": "Capital Goods", "PRESTIGE": "Realty", "PRICOLLTD": "Automobile and Auto Components", "PRIVISCL": "Chemicals", "PRSMJOHNSN": "Construction Materials", "PRUDENT": "Financial Services", "PTC": "Power", "PTCIL": "Capital Goods", "PURVA": "Realty", "PVRINOX": "Media Entertainment \u0026 Publication", "PWL": "Consumer Services", "QPOWER": "Capital Goods", "QUESS": "Services", "RADICO": "Fast Moving Consumer Goods", "RAILTEL": "Telecommunication", "RAIN": "Chemicals", "RAINBOW": "Healthcare", "RALLIS": "Chemicals", "RAMCOCEM": "Construction Materials", "RATEGAIN": "Information Technology", "RATNAMANI": "Capital Goods", "RAYMONDLSL": "Textiles", "RBA": "Consumer Services", "RBLBANK": "Financial Services", "RCF": "Chemicals", "RECLTD": "Financial Services", "REDINGTON": "Services", "REDTAPE": "Consumer Durables", "REFEX": "Utilities", "RELAXO": "Consumer Durables", "RELIANCE": "Oil Gas \u0026 Consumable Fuels", "RELIGARE": "Financial Services", "RENUKA": "Fast Moving Consumer Goods", "RHIM": "Capital Goods", "RITES": "Construction", "RKFORGE": "Automobile and Auto Components", "ROUTE": "Telecommunication", "RPOWER": "Power", "RRKABEL": "Capital Goods", "RTNINDIA": "Consumer Services", "RTNPOWER": "Power", "RUBICON": "Healthcare", "RVNL": "Construction", "SAATVIKGL": "Capital Goods", "SAFARI": "Consumer Durables", "SAGILITY": "Information Technology", "SAIL": "Metals \u0026 Mining", "SAILIFE": "Healthcare", "SAMHI": "Consumer Services", "SAMMAANCAP": "Financial Services", "SANDUMA": "Metals \u0026 Mining", "SANOFICONR": "Healthcare", "SANSERA": "Automobile and Auto Components", "SAPPHIRE": "Consumer Services", "SARDAEN": "Metals \u0026 Mining", "SAREGAMA": "Media Entertainment \u0026 Publication", "SBFC": "Financial Services", "SBICARD": "Financial Services", "SBILIFE": "Financial Services", "SBIN": "Financial Services", "SCHAEFFLER": "Automobile and Auto Components", "SCHNEIDER": "Capital Goods", "SCI": "Services", "SENCO": "Consumer Durables", "SFL": "Consumer Durables", "SHAILY": "Consumer Durables", "SHAKTIPUMP": "Capital Goods", "SHARDACROP": "Chemicals", "SHAREINDIA": "Financial Services", "SHILPAMED": "Healthcare", "SHREECEM": "Construction Materials", "SHRIPISTON": "Automobile and Auto Components", "SHRIRAMFIN": "Financial Services", "SHYAMMETL": "Capital Goods", "SIEMENS": "Capital Goods", "SIGNATURE": "Realty", "SJVN": "Power", "SKFINDIA": "Automobile and Auto Components", "SKFINDUS": "Capital Goods", "SKIPPER": "Capital Goods", "SKYGOLD": "Consumer Durables", "SMARTWORKS": "Services", "SMLMAH": "Capital Goods", "SOBHA": "Realty", "SOLARINDS": "Chemicals", "SONACOMS": "Automobile and Auto Components", "SONATSOFTW": "Information Technology", "SOUTHBANK": "Financial Services", "SPARC": "Healthcare", "SPLPETRO": "Chemicals", "SRF": "Chemicals", "STAR": "Healthcare", "STARCEMENT": "Construction Materials", "STARHEALTH": "Financial Services", "STLTECH": "Telecommunication", "STYL": "Financial Services", "STYRENIX": "Chemicals", "SUBROS": "Capital Goods", "SUDARSCHEM": "Chemicals", "SUDEEPPHRM": "Chemicals", "SUMICHEM": "Chemicals", "SUNDARMFIN": "Financial Services", "SUNPHARMA": "Healthcare", "SUNTECK": "Realty", "SUNTV": "Media Entertainment \u0026 Publication", "SUPREMEIND": "Capital Goods", "SUPRIYA": "Healthcare", "SURYAROSNI": "Capital Goods", "SUZLON": "Capital Goods", "SWANCORP": "Chemicals", "SWIGGY": "Consumer Services", "SWSOLAR": "Construction", "SYNGENE": "Healthcare", "SYRMA": "Capital Goods", "TANLA": "Information Technology", "TARC": "Realty", "TARIL": "Capital Goods", "TATACAP": "Financial Services", "TATACHEM": "Chemicals", "TATACOMM": "Telecommunication", "TATACONSUM": "Fast Moving Consumer Goods", "TATAELXSI": "Information Technology", "TATAINVEST": "Financial Services", "TATAPOWER": "Power", "TATASTEEL": "Metals \u0026 Mining", "TATATECH": "Information Technology", "TBOTEK": "Consumer Services", "TCS": "Information Technology", "TDPOWERSYS": "Capital Goods", "TECHM": "Information Technology", "TECHNOE": "Construction", "TEGA": "Capital Goods", "TEJASNET": "Telecommunication", "TENNIND": "Automobile and Auto Components", "TEXRAIL": "Capital Goods", "THANGAMAYL": "Consumer Durables", "THELEELA": "Consumer Services", "THERMAX": "Capital Goods", "THOMASCOOK": "Consumer Services", "THYROCARE": "Healthcare", "TI": "Fast Moving Consumer Goods", "TIINDIA": "Automobile and Auto Components", "TIMETECHNO": "Capital Goods", "TIMKEN": "Capital Goods", "TIPSMUSIC": "Media Entertainment \u0026 Publication", "TITAGARH": "Capital Goods", "TITAN": "Consumer Durables", "TMB": "Financial Services", "TMCV": "Capital Goods", "TMPV": "Automobile and Auto Components", "TORNTPHARM": "Healthcare", "TORNTPOWER": "Power", "TRANSRAILL": "Capital Goods", "TRAVELFOOD": "Consumer Services", "TRENT": "Consumer Services", "TRIDENT": "Textiles", "TRITURBINE": "Capital Goods", "TRIVENI": "Fast Moving Consumer Goods", "TSFINV": "Financial Services", "TTML": "Telecommunication", "TVSMOTOR": "Automobile and Auto Components", "TVSSCS": "Services", "UBL": "Fast Moving Consumer Goods", "UCOBANK": "Financial Services", "UJJIVANSFB": "Financial Services", "ULTRACEMCO": "Construction Materials", "UNIONBANK": "Financial Services", "UNITDSPR": "Fast Moving Consumer Goods", "UNOMINDA": "Automobile and Auto Components", "UPL": "Chemicals", "URBANCO": "Consumer Services", "USHAMART": "Capital Goods", "UTIAMC": "Financial Services", "UTLSOLAR": "Capital Goods", "V2RETAIL": "Consumer Services", "VAIBHAVGBL": "Consumer Durables", "VARROC": "Automobile and Auto Components", "VBL": "Fast Moving Consumer Goods", "VEDL": "Metals \u0026 Mining", "VGUARD": "Consumer Durables", "VIJAYA": "Healthcare", "VIKRAMSOLR": "Capital Goods", "VIPIND": "Consumer Durables", "VIYASH": "Healthcare", "VMART": "Consumer Services", "VMM": "Consumer Services", "VOLTAMP": "Capital Goods", "VOLTAS": "Consumer Durables", "VTL": "Textiles", "WAAREEENER": "Capital Goods", "WAAREERTL": "Capital Goods", "WABAG": "Utilities", "WAKEFIT": "Consumer Durables", "WEBELSOLAR": "Capital Goods", "WELCORP": "Capital Goods", "WELENT": "Construction", "WELSPUNLIV": "Textiles", "WESTLIFE": "Consumer Services", "WEWORK": "Services", "WHIRLPOOL": "Consumer Durables", "WIPRO": "Information Technology", "WOCKPHARMA": "Healthcare", "YATHARTH": "Healthcare", "YESBANK": "Financial Services", "ZAGGLE": "Information Technology", "ZEEL": "Media Entertainment \u0026 Publication", "ZENSARTECH": "Information Technology", "ZENTEC": "Capital Goods", "ZFCVINDIA": "Automobile and Auto Components", "ZYDUSLIFE": "Healthcare", "ZYDUSWELL": "Fast Moving Consumer Goods"}</script>
+<script nonce="mfBFhpFARDHoXhf5JYWK5w" src="/app.js?v=20261110T115902" defer></script>
 </body>
 </html>

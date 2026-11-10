@@ -1,5 +1,5 @@
 {
- "build_id": "20261110T090236",
+ "build_id": "20261110T115902",
  "date": "2026-11-10",
  "date_str": "Tuesday, November 10 2026",
  "picks": [
@@ -531,10 +531,17 @@
   ]
  },
  "data_health": {
-  "worst": "FRESH",
-  "current": 12,
+  "worst": "STALE",
+  "current": 11,
   "total": 12,
-  "degraded": []
+  "degraded": [
+   {
+    "dataset": "Podcasts",
+    "status": "STALE",
+    "age": "27h old",
+    "note": "older than its daily refresh"
+   }
+  ]
  },
  "desk": {
   "chess": {
@@ -845,26 +852,26 @@
    "shows": 1,
    "source": "each channel's public Atom feed",
    "built_on": "2026-11-09",
-   "age_days": 1.0,
+   "age_days": 1.1,
    "is_fallback": true
   },
   "smart_reads": [
    {
     "source": "Livemint",
     "cat": "money",
-    "title": "Senior citizen FD rates: Suryoday Bank offers 8.6% on five-year deposits; compare rates at SBI, HDFC Bank and others",
-    "link": "https://www.livemint.com/money/personal-finance/senior-citizen-fd-rates-suryoday-bank-offers-8-6-on-five-year-deposits-compare-rates-at-sbi-hdfc-bank-and-others-11794246408961.html",
-    "summary": "Senior citizens can earn up to 8.6% on five-year FDs. Suryoday Small Finance Bank offers the highest rate, followed by Jana and DCB Bank at 8%. Here is a comparison of FD rates across small finance, private and public sector banks.",
-    "date": "Nov 09, 2026",
-    "_sort": "2026-11-09T18:14:17+00:00",
+    "title": "Gold, silver prices today, 10 Nov Tuesday: Check retail rates of 24K, 22K gold, 999 silver in Delhi, Mumbai and Kolkata",
+    "link": "https://www.livemint.com/money/personal-finance/gold-silver-prices-today-10-nov-tuesday-check-retail-rates-of-24k-22k-gold-999-silver-in-delhi-mumbai-and-kolkata-11794279668430.html",
+    "summary": "Gold and silver prices declined on 10 November amid global inflation concerns. Check the latest 24K and 22K gold rates and silver prices across major Indian cities and key factors influencing international bullion prices.",
+    "date": "Nov 10, 2026",
+    "_sort": "2026-11-10T03:55:18+00:00",
     "smart": {
      "what_happened": [
-      "Suryoday Small Finance Bank announced a senior citizen fixed deposit rate of 8.6% for a five-year term.",
-      "Jana and DCB Bank each offered a senior citizen five-year FD rate of 8%."
+      "Gold prices fell in Delhi, Mumbai and Kolkata on 10 November.",
+      "Silver prices also dropped as global inflation worries weighed on bullion markets."
      ],
-     "why_it_matters": "The higher rate from Suryoday provides senior investors with a comparatively better return on long\u2011term deposits, influencing decisions on where to park savings and potentially prompting other banks to adjust their senior citizen FD offerings to remain competitive.",
-     "what_to_watch": "Monitor the senior citizen FD rates published by SBI, HDFC Bank and other major banks in their next quarterly updates for any changes.",
-     "headline": "Suryoday Bank offers 8.6% senior citizen FD for five years",
+     "why_it_matters": "The decline in gold and silver rates signals that rising global inflation concerns are dampening demand for safe\u2011haven assets, which can affect investor sentiment, retail buying behavior, and the profitability of jewellery and bullion traders in India.",
+     "what_to_watch": "Track the retail gold rates released for Delhi, Mumbai and Kolkata on 11 November to see if the downward trend continues.",
+     "headline": "Gold and silver prices fall on Nov 10 amid inflation concerns",
      "read_seconds": 20
     }
    },
@@ -875,17 +882,7 @@
     "link": "https://www.themarginalian.org/2026/11/09/carl-sagan-jonathan-cott-rolling-stone-interview/",
     "summary": "\u201cWe are bathing in mystery and confusion\u2026 That will always be our destiny. The universe will always be much richer than our ability to understand it.\u201d",
     "date": "Nov 09, 2026",
-    "_sort": "2026-11-09T17:55:59+00:00",
-    "smart": {
-     "what_happened": [
-      "Carl Sagan said we are bathing in mystery and confusion.",
-      "He stated the universe will always be richer than our ability to understand it."
-     ],
-     "why_it_matters": "The remarks underscore that uncertainty and limited understanding are fundamental aspects of reality, reminding readers that unpredictability is an inherent condition that can affect decision\u2011making and risk assessment.",
-     "what_to_watch": "No specific upcoming event or statement was mentioned in the article.",
-     "headline": "Carl Sagan discusses living with the unknown",
-     "read_seconds": 20
-    }
+    "_sort": "2026-11-09T17:55:59+00:00"
    },
    {
     "source": "ET Opinion",
@@ -897,23 +894,14 @@
     "_sort": "2026-11-09T17:39:05+00:00",
     "smart": {
      "what_happened": [
-      "Nvidia accounts for roughly 8% of the S&P 500 and is held in many pension and index funds.",
-      "The company's board has opened an investigation into CEO Jensen Huang following a reported honey\u2011trap incident."
+      "Nvidia, which makes up roughly 8% of the S&P 500, is being investigated by its board over a scandal involving CEO Jensen Huang.",
+      "The investigation focuses on an alleged honeytrap incident and the difficulty of replacing Huang, who founded the company in 1993."
      ],
-     "why_it_matters": "With Nvidia representing a sizable portion of major equity indices, any uncertainty about its leadership could affect fund performance and market perception. The investigation signals potential governance challenges at a firm whose founder and CEO has no clear successor, raising concerns for shareholders about continuity and risk management.",
-     "what_to_watch": "The outcome of the board's investigation, likely disclosed in the next scheduled board meeting or related SEC filing.",
-     "headline": "Nvidia directors launch investigation into CEO amid scandal",
+     "why_it_matters": "Nvidia's outsized weight in the S&P 500 means any governance turmoil could affect a broad range of pension and index funds worldwide, potentially influencing market sentiment and the valuation of a key technology driver.",
+     "what_to_watch": "The next public statement or filing from Nvidia's board regarding the outcome of the investigation.",
+     "headline": "Nvidia directors launch probe into CEO Jensen Huang scandal",
      "read_seconds": 26
     }
-   },
-   {
-    "source": "Livemint Opinion",
-    "cat": "money",
-    "title": "AI boom: Precautions are needed to prevent another financial crisis",
-    "link": "https://www.livemint.com/opinion/online-views/how-the-ai-boom-may-sow-the-seeds-for-a-new-financial-crisis-11793803892517.html",
-    "summary": "Forewarned is forearmed. Given the magnitude of investments chasing artificial intelligence (AI), investors need better information to properly assess and price for risk. Regulators must step up and facilitate this.",
-    "date": "Nov 09, 2026",
-    "_sort": "2026-11-09T09:30:15+00:00"
    },
    {
     "source": "Peter Attia",
@@ -925,13 +913,32 @@
     "_sort": "2026-11-09T05:15:00+00:00",
     "smart": {
      "what_happened": [
-      "Peter Attia told patients that even comprehensive lab tests only capture roughly 25-30% of the information needed for a full risk assessment.",
-      "He emphasized that this limited coverage means labs cannot alone create a complete picture of health risk."
+      "Peter Attia stated that even comprehensive lab tests deliver roughly 25-30% of the information needed for a full risk assessment.",
+      "He emphasized that the remaining data required to create a comprehensive health picture must come from other sources."
      ],
-     "why_it_matters": "Understanding that standard laboratory panels capture only a fraction of the data needed for comprehensive risk evaluation highlights the need for clinicians to supplement lab results with other diagnostic tools, patient history, and risk factor analysis to make informed health decisions.",
-     "what_to_watch": "The next AMA episode where Peter Attia discusses lab testing and risk assessment",
-     "headline": "Peter Attia says labs provide about 25-30% of health risk information",
+     "why_it_matters": "The limited scope of standard laboratory testing means clinicians and patients may miss critical factors influencing disease risk and management, underscoring the need for additional diagnostic tools and holistic evaluation approaches to achieve more accurate health assessments.",
+     "what_to_watch": "Monitor announcements of expanded diagnostic panels or integrated health assessment platforms that aim to capture a larger portion of the needed risk information.",
+     "headline": "Peter Attia says labs provide only 25-30% of health risk information",
      "read_seconds": 26
+    }
+   },
+   {
+    "source": "Economic Times",
+    "cat": "money",
+    "title": "Stop your SIP too early or start your SWP too soon? Here\u2019s how to get the timing right",
+    "link": "https://economictimes.indiatimes.com/wealth/save/sip-vs-swp-how-to-pace-your-investments-and-time-your-withdrawals/slideshow/135670556.cms",
+    "summary": "Learn how to pace SIPs during your earning years and when to start an SWP in retirement, with simple rules to keep your money growing and your corpus safe.",
+    "date": "Nov 09, 2026",
+    "_sort": "2026-11-09T04:07:20+00:00",
+    "smart": {
+     "what_happened": [
+      "The article explains how to pace systematic investment plans during earning years.",
+      "It advises when to begin systematic withdrawal plans in retirement to protect the corpus."
+     ],
+     "why_it_matters": "Proper timing of SIP reductions and SWP initiations helps investors maintain growth while safeguarding their retirement corpus, ensuring that cash flow needs are met without eroding long\u2011term wealth.",
+     "what_to_watch": "Monitor personal cash flow changes that signal when to pause SIP contributions or commence an SWP.",
+     "headline": "Timing SIP pauses and SWP starts in retirement",
+     "read_seconds": 20
     }
    },
    {
@@ -989,7 +996,7 @@
     "moves": 29,
     "termination": "Resignation",
     "speed": "Blitz",
-    "analysis": "Focus on early queen\u2011side pawn structure: avoid 9\u2026c5? and 12\u2026Bf5?; instead play \u2026e5 or \u2026c6, keeping tension and preventing white\u2019s decisive Qb3\u2011Qb7 attack. This alone would cut blunders by ~2 and raise accuracy above 85%.",
+    "analysis": "Strengthen your opening preparation: study D31 Semi\u2011Slav lines, memorize key move orders, and avoid early queen\u2011side pawn pushes that led to 3 blunders.",
     "is_upset": false,
     "is_collapse": false,
     "is_long": false,
@@ -1097,7 +1104,7 @@
     "moves": 36,
     "termination": "Checkmate",
     "speed": "Blitz",
-    "analysis": "Focus on early king safety: avoid 6.Qh5? and 9.Bc4?; instead develop knights, castle by move\u202f12, and keep pawn structure solid (e.g., play\u202f\u2026\u202fc3,\u202fd4). This prevents quick attacks and reduces check\u2011mate threats.",
+    "analysis": "Focus on early king safety: after 12\u2026Qh4+, you should have played\u202fKg1\u202finstead of\u202fKf1, preventing the forced mate sequence that followed.",
     "is_upset": false,
     "is_collapse": false,
     "is_long": false,
@@ -1186,14 +1193,14 @@
    "upsets": 0,
    "collapses": 0,
    "long_games": 0,
-   "session_summary": "Your 0\u20110\u20112 record shows a complete collapse against even modest opposition\u2014your opening repertoire is either nonexistent or fundamentally unsound, and you never transition into a playable middlegame. Stop relying on \u201ctrendy\u201d lines; adopt a rock\u2011solid, low\u2011theory system (e.g., Caro\u2011Kann for Black, London System for White) and drill the critical pawn structures and typical tactical motifs until they become automatic. Spend the next 10\u202fhours reviewing every loss move\u2011by\u2011move, annotate every mistake, and then play 30 blitz games focusing solely on executing the first ten moves flawlessly before moving on to deeper analysis.",
+   "session_summary": "AKK_010, your 2\u2011move \u201cwins\u201d are nothing but blunders\u20140% success shows you\u2019re not even beating club\u2011level opponents, let alone any higher\u2011rated player. Your opening choice (the unnamed \u201c.\u201d line) is a non\u2011existent, unsound opening; switch immediately to a solid, theory\u2011backed system like the London System (White) or the Caro\u2011Kann (Black) and memorize the first 10\u201312 moves. Stop playing on impulse, log every game, and spend 30\u202fminutes daily reviewing each loss with a engine to identify the exact tactical errors before you ever open the board again.",
    "session_date": "2026-11-09",
    "is_yesterday": true,
    "token_missing": false
   },
   "lichess_puzzle": {
    "pid": "f3CVY",
-   "rating": 1889,
+   "rating": 1839,
    "level": "\ud83d\udd34 stretch",
    "themes": "Middlegame \u00b7 Crushing \u00b7 Short",
    "tip": "Calculate 3 moves deep before touching a piece.",
