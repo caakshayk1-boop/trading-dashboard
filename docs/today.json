@@ -1,5 +1,5 @@
 {
- "build_id": "20261115T090217",
+ "build_id": "20261115T092907",
  "date": "2026-11-15",
  "date_str": "Sunday, November 15 2026",
  "picks": [
@@ -532,9 +532,15 @@
  },
  "data_health": {
   "worst": "STALE",
-  "current": 10,
+  "current": 9,
   "total": 12,
   "degraded": [
+   {
+    "dataset": "New listings",
+    "status": "STALE",
+    "age": "7 days old",
+    "note": "older than its weekly refresh"
+   },
    {
     "dataset": "Podcasts",
     "status": "STALE",
@@ -1097,21 +1103,11 @@
    {
     "source": "Livemint",
     "cat": "money",
-    "title": "JioBlackRock Flexi Cap Fund: 13 new stocks added, including Hindustan Zinc &amp; IIFL Finance; 21 exits in October",
-    "link": "https://www.livemint.com/money/personal-finance/jioblackrock-flexi-cap-fund-13-new-stocks-added-including-hindustan-zinc-iifl-finance-21-exits-in-october-11794678075651.html",
-    "summary": "JioBlackRock Flexi Cap Fund increased holdings in 27 stocks in October, led by PNB, Bank of India and GAIL. It added Hindustan Zinc and 12 other stocks, exited TCS, ITC and 19 others, and trimmed HDFC Bank and Adani Energy Solutions.",
-    "date": "Nov 14, 2026",
-    "_sort": "2026-11-14T18:15:19+00:00",
-    "smart": {
-     "what_happened": [
-      "The fund added Hindustan Zinc and 12 other stocks, increasing holdings in 27 stocks in October.",
-      "It exited TCS, ITC and 19 other stocks, and trimmed positions in HDFC Bank and Adani Energy Solutions."
-     ],
-     "why_it_matters": "The portfolio changes reflect the fund manager's strategic shift toward certain sectors and away from others, impacting the fund's risk profile and potential returns for investors. Large additions like Hindustan Zinc and the exits of major names such as TCS and ITC could alter the fund's exposure to mining and technology segments, respectively, while trimming of HDFC Bank and Adani Energy Solutions signals a rebalancing of financial and energy holdings.",
-     "what_to_watch": "Monitor the fund's net asset value and sector weightings in its next quarterly report.",
-     "headline": "JioBlackRock Flexi Cap Fund adds 13 stocks, exits 21 in October",
-     "read_seconds": 20
-    }
+    "title": "SCSS investment rules: 5 mistakes retirees must avoid before investing the maximum  \u20b930 lakh in the scheme",
+    "link": "https://www.livemint.com/money/personal-finance/scss-investment-rules-5-mistakes-retirees-must-avoid-before-investing-the-maximum-30-lakh-in-the-scheme-11794680496752.html",
+    "summary": "SCSS offers an 8.2% interest rate for October\u2013December 2026, with a maximum investment limit of  \u20b930 lakh. Retirees should understand five important rules covering eligibility, quarterly interest payments, premature withdrawals, taxation and liquidity before investing.",
+    "date": "Nov 15, 2026",
+    "_sort": "2026-11-15T01:00:34+00:00"
    },
    {
     "source": "The Marginalian",
@@ -1120,17 +1116,7 @@
     "link": "https://www.themarginalian.org/2026/11/14/susan-orlean-orchid-thief/",
     "summary": "Every great book, whatever its subject or genre or style, is about one thing only: the eternal question of what gives meaning to our tiny, transient lives. And every answer given, however faintly whispered, points to one thing only: the quality of attention we pay to those lives. If attention is the lever of love, the ",
     "date": "Nov 14, 2026",
-    "_sort": "2026-11-14T14:31:26+00:00",
-    "smart": {
-     "what_happened": [
-      "Orlean states every great book is about the question of what gives meaning to life",
-      "She says the answer points to the quality of attention we pay to lives, describing attention as the lever of love"
-     ],
-     "why_it_matters": "The piece highlights a philosophical perspective that frames attention as central to finding meaning, a theme that resonates with readers seeking deeper purpose and may influence how cultural commentary is framed in future literary discussions.",
-     "what_to_watch": "Observe reactions to Orlean's essay on social media and literary forums for further discussion of her ideas",
-     "headline": "Susan Orlean discusses meaning and attention in new essay",
-     "read_seconds": 26
-    }
+    "_sort": "2026-11-14T14:31:26+00:00"
    },
    {
     "source": "Peter Attia",
@@ -1151,12 +1137,12 @@
     "_sort": "2026-11-13T18:20:21+00:00",
     "smart": {
      "what_happened": [
-      "India's startup exit market has been dominated by IPOs, with M&A activity remaining limited.",
-      "Private secondary transactions have expanded over the past three to four years, giving VC investors an additional way to exit and return capital."
+      "India's startup exit market has been dominated by IPOs while M&A activity remains limited.",
+      "Growth of private secondary transactions over the past three to four years is giving VC investors another way to exit and return money to their backers."
      ],
-     "why_it_matters": "The rise of secondary market activity provides venture capital firms with a liquidity option beyond the traditional IPO route, helping them recycle capital into new investments and reducing reliance on scarce M&A exits. This can improve fund performance, attract more capital to Indian startups, and support the overall growth of the ecosystem.",
-     "what_to_watch": "Monitor the total value of private secondary transactions reported in India for the upcoming quarter.",
-     "headline": "Private secondary transactions grow, offering new exit route for Indian VC investors",
+     "why_it_matters": "The emergence of a robust secondary market expands liquidity options for venture capital firms, allowing them to realize returns without relying solely on public listings or strategic sales. This can improve fund performance, attract more capital to Indian startups, and potentially accelerate the ecosystem's growth by providing earlier cash returns to investors.",
+     "what_to_watch": "The total dollar volume of private secondary transactions in India reported in the next quarterly venture capital market report.",
+     "headline": "Private secondary market provides new exit route for Indian venture capital",
      "read_seconds": 24
     }
    },
@@ -1170,12 +1156,12 @@
     "_sort": "2026-11-13T10:40:07+00:00",
     "smart": {
      "what_happened": [
-      "The Reserve Bank of India and SEBI have started the Demat 2.0 pilot program using blockchain for corporate bonds.",
-      "The initiative aims to speed settlement and expand investor access, with major financial institutions participating."
+      "The Reserve Bank of India and SEBI have launched the Demat 2.0 pilot, using blockchain technology for corporate bond settlement.",
+      "Key financial institutions will take part in the program to demonstrate tokenised bond issuance and expand investor access."
      ],
-     "why_it_matters": "By applying blockchain to corporate bond settlement, the pilot could reduce settlement times, lower operational risk, and open the market to a broader set of investors, potentially increasing liquidity and efficiency in India's bond market.",
-     "what_to_watch": "The completion and public reporting of the pilot's first blockchain\u2011based bond settlement.",
-     "headline": "India launches Demat 2.0 pilot for blockchain corporate bond settlement",
+     "why_it_matters": "The pilot aims to streamline settlement processes, reduce costs, and widen participation in the corporate bond market by leveraging blockchain. If successful, it could set a regulatory precedent for digital asset infrastructure in India and improve liquidity for issuers and investors.",
+     "what_to_watch": "The next public update from the RBI or SEBI on the Demat 2.0 pilot results and any timeline for broader implementation.",
+     "headline": "India launches Demat 2.0 pilot for tokenised corporate bonds",
      "read_seconds": 26
     }
    },
@@ -1234,7 +1220,7 @@
     "moves": 42,
     "termination": "Resignation",
     "speed": "Blitz",
-    "analysis": "Focus on early pawn structure: after 1.e4 e6 2.d4 d5, you mishandled the exchange on d5, leaving an isolated queen\u2011pawn. Strengthen your central control and avoid isolating pawns; aim for solid piece development before trading.",
+    "analysis": "Focus on early pawn structure: after 1.e4 e6\u202f2.d4 d5\u202f3.Nc3, play 3\u2026Bb4 (Winawer) or 3\u2026Nf6, not 3\u2026c5. Your 3\u2026c5 allowed White\u2019s strong dxc5 and central dominance, costing you ~0.6\u202f% accuracy. Strengthen opening theory and avoid premature pawn breaks.",
     "is_upset": false,
     "is_collapse": false,
     "is_long": true,
@@ -1340,7 +1326,7 @@
     "moves": 11,
     "termination": "Resignation",
     "speed": "Blitz",
-    "analysis": "Focus on early piece development: after 1\u2026d5\u202f2.c4\u202fc6, avoid 3\u2026Nf6?\u202f4.Nc3\u202fBb4? and instead play 3\u2026Nf6\u202f4.Nc3\u202fdxc4\u202f5.e3\u202fb5, completing development before queen moves; this reduces unnecessary queen excursions and saves ~0.5\u202fpawns in material value.",
+    "analysis": "Focus on early queen development: after 1\u2026d5\u202f2.c4\u202fc6\u202f3.Nc3\u202fNf6\u202f4.Nf3\u202fBf5, avoid 5.Qb3?; instead play 5.e3, develop bishops, then castle\u2014reduces tactical vulnerabilities and improves piece coordination.",
     "is_upset": false,
     "is_collapse": false,
     "is_long": false,
@@ -1373,7 +1359,7 @@
     "moves": 62,
     "termination": "Resignation",
     "speed": "Blitz",
-    "analysis": "Focus on early piece activity: develop knights before moving the queen\u202f\u2014\u202favoid 4\u2026Qb6 and 6\u2026Qb4; aim for Nf6, Be7, O\u2011O by move\u202f10, keeping the center solid and preventing BunkerDown\u2019s rapid attack.",
+    "analysis": "Focus on early piece activity: develop knights before moving the d\u2011pawn; in the first 10 moves, aim for \u22642 pawn pushes and \u22653 piece placements.",
     "is_upset": false,
     "is_collapse": false,
     "is_long": true,
@@ -1463,14 +1449,14 @@
    "upsets": 0,
    "collapses": 0,
    "long_games": 2,
-   "session_summary": "Your 33\u202f% win rate tells us you\u2019re barely scraping by \u2013 you\u2019re either winning by accident or losing by habit.\u202fThe only opening that ever gave you a foothold was the London System, where you kept the position solid and avoided early tactical skirmishes; every other line you tried (especially the Sicilian\u2011type defenses you\u2019ve been experimenting with) has been a disaster, leaving you passive and vulnerable to simple refutations.\u202fStop chasing \u201cexciting\u201d sidelines, stick to the London System for the next 20 games, drill the key pawn\u2011breaks (c3\u2013c4, Bf4\u2013e5) until they\u2019re second nature, and add a single, well\u2011studied counter\u2011attack (the Classical French \u2026e6\u2011d5) to give you a reliable weapon when the London isn\u2019t an option.",
+   "session_summary": "Your 33\u202f% win rate shows you\u2019re barely scraping past mediocrity; you\u2019re either playing too passively or over\u2011committing without a clear plan. Identify the opening that yields the highest win percentage and drill it until you can execute the first ten moves without hesitation\u2014any deviation is a ticket to defeat. From now on, log every loss, pinpoint the exact move where you first deviated from objective play, and rehearse the correct continuation until it becomes second nature, or you\u2019ll continue spiralling downward.",
    "session_date": "2026-11-14",
    "is_yesterday": true,
    "token_missing": false
   },
   "lichess_puzzle": {
    "pid": "f9Xve",
-   "rating": 1797,
+   "rating": 1968,
    "level": "\ud83d\udd34 stretch",
    "themes": "Deflection \u00b7 Mate In2 \u00b7 Middlegame",
    "tip": "Lure the key defender away from its post with a forcing move.",
