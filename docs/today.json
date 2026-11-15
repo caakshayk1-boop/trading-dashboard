@@ -1,25 +1,25 @@
 {
- "build_id": "20261114T095701",
- "date": "2026-11-14",
- "date_str": "Saturday, November 14 2026",
+ "build_id": "20261115T090217",
+ "date": "2026-11-15",
+ "date_str": "Sunday, November 15 2026",
  "picks": [
   {
    "symbol": "APP",
    "name": "APP",
-   "ext20": 37.97,
-   "vol_ratio": 2.1,
-   "price": 391.22,
-   "change_1d": 9.86,
-   "mom_1m": 39.7,
-   "mom_3m": 22.8,
-   "score": 82,
+   "ext20": 23.81,
+   "vol_ratio": 0.83,
+   "price": 409.1,
+   "change_1d": 3.92,
+   "mom_1m": 46.5,
+   "mom_3m": 33.1,
+   "score": 84,
    "target": 738.01,
-   "stop_loss": 283.55,
+   "stop_loss": 330.41,
    "target_basis": "the 52-week high",
    "stop_basis": "the 20-day average",
-   "horizon_basis": "89% to go at its recent 7.6%/month",
-   "rr": 3.22,
-   "atr": 21.27,
+   "horizon_basis": "80% to go at its recent 11.0%/month",
+   "rr": 4.18,
+   "atr": 26.21,
    "high_52w": 738.01,
    "timeframe": "6-12 months",
    "currency": "$",
@@ -37,7 +37,7 @@
     {
      "k": "Averages stacked",
      "w": 15,
-     "e": 0.0
+     "e": 9.7
     },
     {
      "k": "1-month thrust",
@@ -47,38 +47,38 @@
     {
      "k": "3-month trend",
      "w": 10,
-     "e": 6.5
+     "e": 9.5
     },
     {
      "k": "Volume confirming",
      "w": 10,
-     "e": 10.0
+     "e": 0.0
     }
    ],
-   "ema20": 283.55,
+   "ema20": 330.41,
    "tv": "APP",
-   "thesis": "39.7% one\u2011month gain, 22.8% three\u2011month rise, price 38% above its 20\u2011day average, volume 2.1\u00d7 norm, composite 82."
+   "thesis": "46.5% one\u2011month gain, 33.1% three\u2011month rise, price 23.8% above its 20\u2011day average, volume at 0.83\u00d7, composite 84/100."
   },
   {
-   "symbol": "1810.HK",
-   "name": "1810.HK",
-   "ext20": 10.78,
-   "vol_ratio": 1.46,
-   "price": 30.38,
-   "change_1d": -2.94,
-   "mom_1m": 26.9,
-   "mom_3m": 10.0,
-   "score": 77,
-   "target": 44.62,
-   "stop_loss": 27.42,
+   "symbol": "DUOL",
+   "name": "DUOL",
+   "ext20": 9.82,
+   "vol_ratio": 0.83,
+   "price": 165.31,
+   "change_1d": 5.01,
+   "mom_1m": 11.0,
+   "mom_3m": 18.4,
+   "score": 71,
+   "target": 213.37,
+   "stop_loss": 150.53,
    "target_basis": "the 52-week high",
    "stop_basis": "the 20-day average",
-   "horizon_basis": "47% to go at its recent 3.3%/month",
-   "rr": 4.82,
-   "atr": 1.29,
-   "high_52w": 44.62,
-   "timeframe": "over a year at this pace",
-   "currency": "HK$",
+   "horizon_basis": "29% to go at its recent 6.1%/month",
+   "rr": 3.25,
+   "atr": 11.81,
+   "high_52w": 213.37,
+   "timeframe": "3-6 months",
+   "currency": "$",
    "factors": [
     {
      "k": "Above 20-day avg",
@@ -88,50 +88,106 @@
     {
      "k": "Above 50-day avg",
      "w": 20,
-     "e": 17.8
+     "e": 18.0
     },
     {
      "k": "Averages stacked",
      "w": 15,
-     "e": 5.3
+     "e": 8.0
     },
     {
      "k": "1-month thrust",
      "w": 20,
-     "e": 20.0
+     "e": 14.7
     },
     {
      "k": "3-month trend",
      "w": 10,
-     "e": 2.9
+     "e": 5.3
     },
     {
      "k": "Volume confirming",
      "w": 10,
-     "e": 6.2
+     "e": 0.0
     }
    ],
-   "ema20": 27.42,
-   "tv": "HKEX:1810",
-   "thesis": "26.9% one\u2011month rise, 10.0% three\u2011month gain, price 10.8% above 20\u2011day average, volume 1.46\u00d7 norm, composite 77."
+   "ema20": 150.53,
+   "tv": "DUOL",
+   "thesis": "18.4% three\u2011month gain, price 9.8% above 20\u2011day average on 0.83\u00d7 volume, composite 71 points."
+  },
+  {
+   "symbol": "HDFCBANK.NS",
+   "name": "HDFCBANK",
+   "ext20": 7.56,
+   "vol_ratio": 1.3,
+   "price": 804.0,
+   "change_1d": -1.02,
+   "mom_1m": 12.6,
+   "mom_3m": 10.9,
+   "score": 67,
+   "target": 1000.94,
+   "stop_loss": 747.52,
+   "target_basis": "the 52-week high",
+   "stop_basis": "the 20-day average",
+   "horizon_basis": "24% to go at its recent 3.6%/month",
+   "rr": 3.49,
+   "atr": 17.8,
+   "high_52w": 1000.94,
+   "timeframe": "6-12 months",
+   "currency": "\u20b9",
+   "factors": [
+    {
+     "k": "Above 20-day avg",
+     "w": 25,
+     "e": 23.9
+    },
+    {
+     "k": "Above 50-day avg",
+     "w": 20,
+     "e": 13.8
+    },
+    {
+     "k": "Averages stacked",
+     "w": 15,
+     "e": 5.1
+    },
+    {
+     "k": "1-month thrust",
+     "w": 20,
+     "e": 16.8
+    },
+    {
+     "k": "3-month trend",
+     "w": 10,
+     "e": 3.1
+    },
+    {
+     "k": "Volume confirming",
+     "w": 10,
+     "e": 4.5
+    }
+   ],
+   "ema20": 747.52,
+   "tv": "NSE:HDFCBANK",
+   "thesis": "12.6% one\u2011month rise, 10.9% three\u2011month gain, price 7.6% above 20\u2011day average, volume 1.3\u00d7 norm, score 67."
   },
   {
    "symbol": "7203.T",
    "name": "7203.T",
-   "ext20": 7.25,
-   "vol_ratio": 1.65,
-   "price": 3338.0,
-   "change_1d": -5.52,
-   "mom_1m": 13.9,
-   "mom_3m": 16.3,
-   "score": 75,
+   "ext20": 5.57,
+   "vol_ratio": 0.89,
+   "price": 3418.0,
+   "change_1d": 0.29,
+   "mom_1m": 13.5,
+   "mom_3m": 15.9,
+   "score": 66,
    "target": 3875.33,
-   "stop_loss": 3112.41,
+   "stop_loss": 3237.57,
    "target_basis": "the 52-week high",
    "stop_basis": "the 20-day average",
-   "horizon_basis": "16% to go at its recent 5.4%/month",
-   "rr": 2.38,
-   "atr": 108.32,
+   "horizon_basis": "13% to go at its recent 5.3%/month",
+   "rr": 2.53,
+   "atr": 121.61,
    "high_52w": 3875.33,
    "timeframe": "1-3 months",
    "currency": "\u00a5",
@@ -139,149 +195,93 @@
     {
      "k": "Above 20-day avg",
      "w": 25,
-     "e": 23.1
+     "e": 18.9
     },
     {
      "k": "Above 50-day avg",
      "w": 20,
-     "e": 14.0
+     "e": 14.1
     },
     {
      "k": "Averages stacked",
      "w": 15,
-     "e": 6.2
+     "e": 10.4
     },
     {
      "k": "1-month thrust",
      "w": 20,
-     "e": 18.5
+     "e": 18.0
     },
     {
      "k": "3-month trend",
      "w": 10,
-     "e": 4.7
+     "e": 4.5
     },
     {
      "k": "Volume confirming",
      "w": 10,
-     "e": 8.4
+     "e": 0.0
     }
    ],
-   "ema20": 3112.41,
+   "ema20": 3237.57,
    "tv": "TSE:7203",
-   "thesis": "13.9% one\u2011month gain, 16.3% three\u2011month gain, price 7.2% above its 20\u2011day average, volume 1.65\u00d7 norm, composite 75."
+   "thesis": "15.9% three\u2011month gain, 13.5% one\u2011month rise, price 5.6% above 20\u2011day average, volume 0.89\u00d7 norm, score 66/100."
   },
   {
-   "symbol": "CELH",
-   "name": "CELH",
-   "ext20": 9.89,
-   "vol_ratio": 1.4,
-   "price": 32.16,
-   "change_1d": 7.06,
-   "mom_1m": 17.4,
-   "mom_3m": 14.5,
-   "score": 71,
-   "target": 59.31,
-   "stop_loss": 29.26,
+   "symbol": "ACN",
+   "name": "ACN",
+   "ext20": 1.56,
+   "vol_ratio": 0.64,
+   "price": 250.49,
+   "change_1d": 0.22,
+   "mom_1m": 11.4,
+   "mom_3m": 46.0,
+   "score": 65,
+   "target": 282.94,
+   "stop_loss": 235.22,
    "target_basis": "the 52-week high",
-   "stop_basis": "the 20-day average",
-   "horizon_basis": "84% to go at its recent 4.8%/month",
-   "rr": 9.38,
-   "atr": 1.51,
-   "high_52w": 59.31,
-   "timeframe": "over a year at this pace",
+   "stop_basis": "1.5x the 14-day range (the 20-day average is inside the noise)",
+   "horizon_basis": "13% to go at its recent 15.3%/month",
+   "rr": 2.12,
+   "atr": 10.18,
+   "high_52w": 282.94,
+   "timeframe": "about a month",
    "currency": "$",
    "factors": [
     {
      "k": "Above 20-day avg",
      "w": 25,
-     "e": 25.0
+     "e": 8.9
     },
     {
      "k": "Above 50-day avg",
      "w": 20,
-     "e": 14.9
+     "e": 16.4
     },
     {
      "k": "Averages stacked",
      "w": 15,
-     "e": 1.7
+     "e": 15.0
     },
     {
      "k": "1-month thrust",
      "w": 20,
-     "e": 20.0
+     "e": 15.2
     },
     {
      "k": "3-month trend",
      "w": 10,
-     "e": 4.1
+     "e": 10.0
     },
     {
      "k": "Volume confirming",
      "w": 10,
-     "e": 5.5
+     "e": 0.0
     }
    ],
-   "ema20": 29.26,
-   "tv": "CELH",
-   "thesis": "17.4% one\u2011month gain, 14.5% three\u2011month rise, price 9.9% above its 20\u2011day average, volume 1.4\u00d7 norm, composite 71."
-  },
-  {
-   "symbol": "AZN",
-   "name": "AZN",
-   "ext20": 6.03,
-   "vol_ratio": 1.1,
-   "price": 186.43,
-   "change_1d": -0.22,
-   "mom_1m": 17.4,
-   "mom_3m": 17.4,
-   "score": 69,
-   "target": 210.52,
-   "stop_loss": 175.83,
-   "target_basis": "the 52-week high",
-   "stop_basis": "the 20-day average",
-   "horizon_basis": "13% to go at its recent 5.8%/month",
-   "rr": 2.27,
-   "atr": 4.97,
-   "high_52w": 210.52,
-   "timeframe": "1-3 months",
-   "currency": "$",
-   "factors": [
-    {
-     "k": "Above 20-day avg",
-     "w": 25,
-     "e": 20.1
-    },
-    {
-     "k": "Above 50-day avg",
-     "w": 20,
-     "e": 13.6
-    },
-    {
-     "k": "Averages stacked",
-     "w": 15,
-     "e": 8.3
-    },
-    {
-     "k": "1-month thrust",
-     "w": 20,
-     "e": 20.0
-    },
-    {
-     "k": "3-month trend",
-     "w": 10,
-     "e": 5.0
-    },
-    {
-     "k": "Volume confirming",
-     "w": 10,
-     "e": 2.2
-    }
-   ],
-   "ema20": 175.83,
-   "tv": "AZN",
-   "thesis": "17.4% rise in both 1\u2011month and 3\u2011month returns, price 6% above 20\u2011day average, volume 1.10\u00d7 norm, composite 69/100."
+   "ema20": 246.63,
+   "tv": "ACN",
+   "thesis": "46% three\u2011month gain, 11.4% one\u2011month rise; price modestly above 20\u2011day average with volume at 0.64\u00d7 typical levels."
   }
  ],
  "engine": [
@@ -532,280 +532,283 @@
  },
  "data_health": {
   "worst": "STALE",
-  "current": 11,
+  "current": 10,
   "total": 12,
   "degraded": [
    {
     "dataset": "Podcasts",
     "status": "STALE",
-    "age": "2 days old",
+    "age": "3 days old",
+    "note": "older than its daily refresh"
+   },
+   {
+    "dataset": "Stock screen",
+    "status": "STALE",
+    "age": "26h old",
     "note": "older than its daily refresh"
    }
   ]
  },
  "desk": {
   "chess": {
-   "title": "Endgame: King Activity",
-   "body": "In the endgame, the king becomes a fighting piece. Centralise your king immediately. A king on e4 controls d3, d4, d5, e3, e5, f3, f4, f5 \u2014 8 squares. A king on a1 controls only 3. Rule: when queens are off the board, march your king to the centre. Opposition matters: two kings facing each other, one move apart \u2014 the side NOT to move has the opposition.",
-   "index": 8,
+   "title": "Endgame: Pawn Endgames",
+   "body": "If you're a pawn up in a king+pawn endgame, you usually win. Key concepts: 1. Opposition \u2014 control the square in front of your pawn. 2. The square of the pawn \u2014 if the opposing king can't enter the square, your pawn promotes. 3. Key squares \u2014 a pawn on e4's key squares are d6, e6, f6. Reach them with your king and you win.",
+   "index": 9,
    "total": 20
   },
   "wisdom": {
-   "title": "On Anger",
-   "body": "Anger is information, not instruction. It tells you a boundary was crossed or a value was violated. But acting on anger rarely solves the problem. Practice: when you feel it rising, say 'I need 5 minutes' and leave the room. Return calm. Then address the issue. You can be firm without being explosive.",
-   "index": 8,
+   "title": "Financial Peace = Emotional Peace",
+   "body": "Money stress is the #1 relationship killer. Getting to AED 30K/month isn't just ambition \u2014 it's removing a major source of family stress. Every step toward financial stability is a step toward being a calmer, more present parent and partner. The job hunt matters. The income matters. It's not selfish. It's foundational.",
+   "index": 9,
    "total": 18
   },
   "book": {
-   "book": "Never Split the Difference",
-   "author": "Chris Voss",
-   "chapter": "The Power of No and Calibrated Questions",
-   "lesson": "Voss argues that 'no' is not the opposite of 'yes' in negotiation \u2014 it's the beginning. When someone says no, they feel safe. They feel in control. A fake yes (where they agree to get you off their back) is far worse than a genuine no. His technique: ask questions that invite 'no.' 'Is now a bad time to talk?' gets a more honest response than 'Is now a good time?' His other key tool: calibrated questions \u2014 open-ended questions starting with 'what' and 'how' that force the other person to problem-solve. 'How am I supposed to do that?' puts the problem back on them without being confrontational.",
-   "key_quote": "'No' means 'I'm not comfortable yet.' Your job is to find out what would make them comfortable.",
-   "action": "In your next negotiation, replace 'Can you do X?' with 'How can we make X work?' Notice how differently people respond.",
-   "index": 38,
+   "book": "The Innovator's Dilemma",
+   "author": "Clayton Christensen",
+   "chapter": "Why Great Companies Fail at Exactly the Right Moment",
+   "lesson": "Christensen's paradox: the best-managed companies, doing everything right \u2014 listening to customers, investing in quality, maximising margins \u2014 are the most vulnerable to disruption. Disruptive technologies start at the bottom of the market (cheaper, simpler, worse performance) serving customers who don't exist yet. They improve over time until they're good enough for mainstream customers. By then, it's too late for incumbents to respond. Nokia had better technology than Apple in 2007. Blockbuster had better retail locations than Netflix. They failed not despite their excellence but because of it \u2014 their success made them unable to cannibalise themselves.",
+   "key_quote": "Excellence in executing today's business model can blind you to the business model that will replace it.",
+   "action": "Ask about your industry: what is the simpler, cheaper, 'worse' solution that currently serves the bottom of the market? Could it eventually serve everyone?",
+   "index": 39,
    "total": 48,
    "crux": [
-    "Negotiation is not rational argument. It is emotional intelligence applied under pressure.",
-    "Tactical empathy: recognise and name the other side's perspective without agreeing to it.",
-    "Mirroring \u2014 repeat their last 1\u20133 words \u2014 keeps them talking and reveals information.",
-    "Labelling: 'It seems like\u2026', 'It sounds like\u2026'. Naming a negative defuses it.",
-    "Run an accusation audit \u2014 list their worst assumptions about you and say them first.",
-    "'No' is the start of the negotiation, not the end. It creates safety.",
-    "Aim for 'That's right', not 'You're right'. The second means they want you to stop.",
-    "Never split the difference. Compromise produces outcomes neither side wanted.",
-    "Deadlines are usually artificial and almost always work against whoever fears them.",
-    "The F-word: fairness. When they invoke it, they feel wronged. Address that, not the maths.",
-    "Bend their reality with anchoring, loss aversion, and non-round numbers.",
-    "Calibrated 'How' and 'What' questions transfer the problem without confrontation.",
-    "'How am I supposed to do that?' is the most useful sentence in the book.",
-    "Find the Black Swan \u2014 the unknown that reframes the whole deal. Three types of leverage: positive, negative, normative."
+    "Well-managed companies fail precisely by doing what good management prescribes.",
+    "Sustaining innovations improve products for existing customers. Incumbents win these reliably.",
+    "Disruptive innovations start worse on the metrics incumbents value, and win anyway.",
+    "Disruption enters at the low end or in a new market, where incumbent margins look unattractive.",
+    "Listening closely to your best customers pushes you away from disruptive bets. Rationally.",
+    "Resource dependence: customers and investors, not managers, effectively allocate the resources.",
+    "Small markets cannot solve the growth needs of large companies, so large companies skip them.",
+    "Technology supply often outruns demand \u2014 products overshoot what users need, opening the low end.",
+    "The basis of competition shifts over time: function \u2192 reliability \u2192 convenience \u2192 price.",
+    "You cannot analyse markets that do not yet exist. Discovery-driven planning, not forecasting.",
+    "Disruption must be housed in an independent organisation small enough to be excited by a small win.",
+    "Failure early and cheaply is the plan, because the first strategy will be wrong."
    ],
    "learnings": [
-    "Listening is the tactic, not the courtesy.",
-    "Getting to 'no' early saves months of false progress.",
-    "Non-round numbers read as calculated; round numbers read as arbitrary.",
-    "Compromise is usually mutual loss wearing a diplomatic label."
+    "Doing everything right is not protection when the game changes underneath.",
+    "The customers who fund you today are the reason you miss tomorrow.",
+    "A market too small to matter now is the only place disruption can start.",
+    "Cost structure determines which opportunities look attractive. It is destiny."
    ],
    "examples": [
-    "Voss talked down a Brooklyn bank robber using mirroring alone, with no tactical leverage available.",
-    "The Chase Manhattan hostage case: 'It seems like you don't want to go back to jail' opened a conversation that demands had closed.",
-    "A student negotiated a salary from $30k to $34k plus a defined promotion path by asking 'How am I supposed to accept that?'"
+    "Disk drives: every generational shift from 14-inch to 1.8-inch killed the leader, though each new size was initially worse on capacity.",
+    "Kodak invented the digital camera in 1975 and could not commit to it without cannibalising film margins.",
+    "Mini-mills started with low-grade rebar that integrated steel mills were happy to abandon, then moved up until they took the whole market."
    ],
    "adapt": [
-    "Dubai salary talk: anchor with a non-round number \u2014 AED 32,400, not 30,000. Then ask how they can get there.",
-    "Accusation audit before the offer conversation: 'You're probably thinking I'm asking above the band for this level.'",
-    "Label the objection about not having UAE experience before they raise it.",
-    "Never split the difference on the SIP amount. Automate the number and remove the negotiation with yourself."
+    "A free Telegram bot is the low-end disruption of paid research. That is the position to hold, not apologise for.",
+    "Don't let existing dashboard users dictate the roadmap if the measured edge points elsewhere.",
+    "Keep experiments in separate ledgers \u2014 the APEX poly engine on its own books, so a small bet stays a small bet."
    ]
   },
   "way": {
    "minimalism": {
-    "title": "Maintenance Is The Tell",
-    "body": "If you own more than you can maintain, you do not own it \u2014 you are storing it on its way to landfill. Count what you actually maintain.",
-    "action": "Identify one thing you own but never maintain. Decide: maintain it or release it.",
-    "index": 20,
+    "title": "One In, One Out",
+    "body": "Nothing enters the house until something leaves it. Not a rule about tidiness \u2014 a rule about equilibrium. Without it, possessions only ever accumulate, because buying is a decision and discarding never is.",
+    "action": "Buy nothing today without naming what it replaces.",
+    "index": 1,
     "total": 20,
     "label": "Minimalism"
    },
    "etiquette": {
-    "title": "Praise Publicly, Correct Privately",
-    "body": "Reverse it and you buy resentment that outlasts the correction by years. This costs nothing and is violated constantly.",
-    "action": "Send one specific public thank-you today. Not generic \u2014 specific.",
-    "index": 6,
+    "title": "Punctuality Is A Statement About Whose Time Matters",
+    "body": "Being late says your time is worth more than theirs, whatever you intended. Arrive five minutes early and use the wait. Note that Gulf meetings may start late \u2014 you still arrive on time.",
+    "action": "Add 10 minutes of buffer to every appointment this week.",
+    "index": 7,
     "total": 20,
     "label": "Etiquette"
    },
    "stillness": {
-    "title": "Walk Without Input",
-    "body": "No podcast, no music, no call. Boredom is the raw material of original thought, and it has been almost entirely eliminated from modern life.",
-    "action": "Twenty minutes of walking with nothing in your ears.",
-    "index": 4,
+    "title": "The Evening Shutdown",
+    "body": "A defined end to the workday \u2014 review tomorrow's three priorities, close the laptop, say a phrase that marks the boundary. Without a ritual end, work bleeds into every remaining hour.",
+    "action": "Pick a shutdown phrase. Use it tonight.",
+    "index": 5,
     "total": 20,
     "label": "Stillness"
    },
    "model": {
-    "title": "Pareto Principle",
-    "body": "80% of results come from 20% of inputs \u2014 and the distribution is often sharper than that. The work is identifying the 20%, which requires measuring rather than assuming.",
-    "action": "Find the 20% of your effort producing most of the result. Cut something from the rest.",
-    "index": 16,
+    "title": "Map Is Not The Territory",
+    "body": "The model is a simplification and will be wrong at the edges. A financial model is a map. Treating its outputs as facts is how forecasts become fiction.",
+    "action": "Name the assumption in your current model most likely to be wrong.",
+    "index": 17,
     "total": 20,
     "label": "Mental Model"
    },
    "arabic": {
-    "script": "\u0623\u062a\u0643\u0644\u0645 \u0639\u0631\u0628\u064a \u0634\u0648\u064a",
-    "translit": "atakallam 'arabi shwaya",
-    "meaning": "I speak a little Arabic",
-    "use": "Disarming and appreciated. The effort matters far more than the fluency.",
-    "index": 22,
+    "script": "\u0639\u0644\u0649 \u0641\u0643\u0631\u0629",
+    "translit": "'ala fikra",
+    "meaning": "By the way",
+    "use": "Introduces a point mid-conversation without hijacking it.",
+    "index": 23,
     "total": 30,
     "label": "Arabic"
    },
    "drill": {
-    "title": "Write The One-Line Summary",
-    "body": "Every analysis compresses to one sentence with a number in it. 'Margin fell 340bps because freight doubled.' If you cannot write that line, the analysis is not finished.",
-    "action": "Compress your most recent piece of work to one sentence with one number.",
-    "index": 8,
+    "title": "The Pre-Mortem",
+    "body": "Imagine the project failed. Write why. Doing this before starting surfaces risks that no optimistic planning session will ever reach.",
+    "action": "Pre-mortem your current priority. List three causes of death.",
+    "index": 9,
     "total": 20,
     "label": "Drill"
    },
    "health": {
-    "title": "Stress Is Physiological, Not Just Mental",
-    "body": "Chronic cortisol elevation drives visceral fat, impairs sleep, and suppresses immune function. The body does not distinguish financial stress from physical threat.",
-    "action": "Five minutes of slow exhale-biased breathing. Exhale twice as long as inhale.",
-    "index": 18,
+    "title": "Muscle Is A Glucose Sink",
+    "body": "Skeletal muscle disposes of most post-meal glucose. More muscle means better glycaemic control independent of diet \u2014 the metabolic argument for lifting, separate from strength.",
+    "action": "A short walk or 20 bodyweight squats after your largest meal.",
+    "index": 19,
     "total": 20,
     "label": "Health"
    }
   },
   "quote": {
-   "name": "Gary Vaynerchuk",
-   "quote": "Patience is the key. We overestimate what we can do in a year and underestimate what we can do in a decade.",
-   "index": 63,
+   "name": "Tim Ferriss",
+   "quote": "Focus on being productive instead of busy.",
+   "index": 64,
    "total": 96
   },
   "lesson": {
    "tradition": "African Wisdom",
-   "lesson": "Until the lion learns to write, every story will glorify the hunter.",
+   "lesson": "The best time to plant a tree was 20 years ago. The second best time is now.",
    "source": "African Proverb"
   },
   "case": {
-   "title": "Google AdWords \u2014 accidental business model",
-   "story": "Google's first business model failed. AdWords emerged from a small experiment in 2000. It became a $200B+ revenue machine.",
-   "lesson": "Product-market fit is found, not planned. Launch fast, observe behavior, double down on what works."
+   "title": "IKEA: Flat Pack Revolution",
+   "story": "A table leg broke during a photo shoot. An employee removed it to fit the table in a car. Ingvar Kamprad realized flat-pack was the future. IKEA now does $47B revenue.",
+   "lesson": "Your biggest breakthrough might come from solving a logistics problem, not a product problem."
   },
   "fpna": {
-   "title": "80/20 of Month-End",
-   "body": "20% of accounts drive 80% of variance. Focus commentary there. The rest is noise.",
-   "index": 15,
+   "title": "Cost Centre vs Profit Centre",
+   "body": "Cost centres are budgeted, profit centres are managed to a P&L. Knowing the difference changes how you frame every problem.",
+   "index": 16,
    "total": 20
   },
   "cfo": {
-   "title": "Dubai FC Reality",
-   "body": "AED 30K+ FC roles at ADNOC, Emirates, MAF, DP World: they want Big 4 background OR 8+ years in a listed company + CA/ACCA + ERP experience. Your edge: FP&A depth + IFRS knowledge + Power BI automation. Highlight cost savings you drove.",
-   "index": 11,
+   "title": "The CA\u2192FC\u2192CFO Timeline",
+   "body": "CA qualified \u2192 2-3 years Big 4/audit \u2192 Senior FP&A \u2192 Finance Manager \u2192 Financial Controller (5-8 years post-qualification) \u2192 CFO (10-15 years). Dubai compresses this by 2-3 years if you hit the right company at the right growth stage.",
+   "index": 12,
    "total": 15
   },
   "money_hack": {
-   "title": "Direct Funds Only",
-   "body": "Regular mutual funds cost 1\u20131.5% more per year. Over 20 years = 30% of corpus gone."
+   "title": "The 50-30-20 Rule",
+   "body": "50% needs \u00b7 30% wants \u00b7 20% savings. Automate the 20% on salary day."
   },
   "dubai": {
-   "title": "Six weeks, not six months",
-   "body": "Government-linked groups take three to six months from application to offer. Private groups take four to eight weeks. Applying only to the first kind and then reading the silence as rejection is the most common way this search dies.",
-   "targets": "Run both pipelines at once. The fast one funds the patience for the slow one.",
-   "action_label": "Track it",
-   "action": "One sheet: company, date applied, stage, next action, date of next action.",
-   "index": 18,
+   "title": "The LinkedIn setting that matters most",
+   "body": "Set location to Dubai, United Arab Emirates and turn on Open to Work for recruiters only. Gulf recruiters filter by location before they read anything, and a Mumbai location excludes you from the search entirely.",
+   "targets": "This is a two-minute change that decides whether you are visible at all.",
+   "action_label": "Now",
+   "action": "Location, headline with the target title, and the About section rewritten in numbers.",
+   "index": 19,
    "total": 30
   },
   "daughter": {
    "months": 10,
-   "days": 324,
+   "days": 325,
    "heading": "Ten months old.",
    "band": "cruising",
    "born": "2025-12-25"
   },
-  "productivity": "2-minute rule: if it takes under 2 min, do it now. Don't queue it.",
+  "productivity": "Time-block your calendar. Unblocked time = wasted time.",
   "father": [
    {
-    "title": "Introduce water in an open cup",
-    "do": "Offer a few sips from a small open cup, held by you. Expect most of it to spill.",
-    "why": "Open-cup drinking develops different oral motor patterns than a bottle or spout. Starting now, badly, is easier than starting later, correctly."
+    "title": "Notice what she is not doing",
+    "do": "Once a week, check the milestone list rather than assuming.",
+    "why": "Sitting, transferring objects hand to hand, responding to her name, and babbling with consonants are the seven-month markers. Knowing the list means concerns get raised early, when intervention works best."
    },
    {
-    "title": "Massage after the bath",
-    "do": "Two minutes of firm, slow strokes on legs and back after bathing.",
-    "why": "Sustained touch by a father has measurable effects on infant stress response, and it gives you a reliable daily block of contact that is not feeding or settling."
+    "title": "Talk to her about your day",
+    "do": "Tell her what happened at work, in full sentences, as if she understands.",
+    "why": "The content is irrelevant and the exposure is not. It also forces you to articulate the day, which is a decent end-of-work ritual in its own right."
    }
   ],
   "life_wisdom": [
    {
     "tradition": "Jainism",
-    "term": "Brahmacharya",
-    "translation": "Restraint, classically of the senses",
-    "teaching": "For laypeople this is moderation rather than abstinence \u2014 the discipline of not letting appetite set the agenda.",
-    "apply": "Pick the appetite that currently sets your agenda \u2014 the phone, the market screen, the second helping \u2014 and put one structural limit on it. Not willpower; a limit."
+    "term": "Karma as physical residue",
+    "translation": "Action leaves a trace",
+    "teaching": "Jain metaphysics treats karma as fine matter that adheres to the soul through action and intent. Unusually, intent matters as much as the act.",
+    "apply": "Judge your own decisions on intent and process, not only outcome. A profitable trade taken for bad reasons still deposits the bad habit."
    },
    {
     "tradition": "Buddhism",
-    "term": "Kalama Sutta",
-    "translation": "Test it yourself",
-    "teaching": "The Buddha told the Kalamas not to accept teaching on authority, tradition, or scripture \u2014 but to test whether it leads to benefit when practised.",
-    "apply": "Apply it to strategy advice, including from people senior to you. What is the evidence, and what would falsify it? Deference is not evidence."
+    "term": "Mudita",
+    "translation": "Sympathetic joy",
+    "teaching": "The third sublime state: genuine pleasure at another's success. Named separately because it is rarer and harder than compassion for suffering.",
+    "apply": "Pick the peer whose progress you find least comfortable and find the thing they did well. Envy is the most common emotion in a competitive finance function and the least admitted."
    }
   ],
   "spanish": [
    {
-    "word": "el riesgo",
-    "meaning": "the risk",
-    "es": "Ese riesgo es demasiado alto.",
-    "en": "That risk is too high.",
+    "word": "a tiempo",
+    "meaning": "on time",
+    "es": "Nunca entrega a tiempo.",
+    "en": "He never delivers on time.",
     "tag": "Business"
    },
    {
-    "word": "jugar",
-    "meaning": "to play",
-    "es": "Me gusta jugar con ella por la tarde.",
-    "en": "I like to play with her in the afternoon.",
+    "word": "el pa\u00f1al",
+    "meaning": "the nappy / diaper",
+    "es": "Hay que cambiar el pa\u00f1al.",
+    "en": "The nappy needs changing.",
     "tag": "Family"
    }
   ],
   "vocab": [
    {
-    "word": "Salience",
-    "say": "SAY-lee-uhns",
-    "meaning": "The quality of being most noticeable or important.",
-    "example": "The salience of the cash line rose sharply after the covenant test.",
-    "note": "Noun form of salient. Useful when describing shifting board attention."
+    "word": "Salient",
+    "say": "SAY-lee-uhnt",
+    "meaning": "Most noticeable or important.",
+    "example": "The salient point is that margin fell before volume did.",
+    "note": "Use instead of 'main' when you want to signal you have filtered the noise."
    },
    {
-    "word": "Tenuous",
-    "say": "TEN-yoo-uhs",
-    "meaning": "Weak; barely holding together.",
-    "example": "The link between the campaign and the sales lift is tenuous.",
-    "note": "Precise way to challenge a claim without calling it wrong."
+    "word": "Material",
+    "say": "muh-TEER-ee-uhl",
+    "meaning": "Large enough to change a decision.",
+    "example": "The variance is real but not material to the group result.",
+    "note": "In finance this is a technical word \u2014 use it only when you mean the threshold."
    }
   ],
   "speaking": {
-   "title": "Record and listen back",
-   "drill": "Record 60 seconds answering 'why do you want to be a CFO?'. Listen once for content, once for delivery only.",
-   "why": "Almost nobody does this, and it is the single fastest improvement available. You will hear things no one will tell you."
+   "title": "The hostile question",
+   "drill": "Rehearse: 'That is a fair challenge \u2014 here is the assumption behind it.' Say it five times until it is automatic.",
+   "why": "Having a rehearsed opening for a hostile question buys three seconds of thinking without looking rattled."
   },
   "interview_tech": [
    {
-    "q": "How would you decide between renting and buying a distribution centre?",
-    "a": "Compare NPV of both over the same horizon at the same discount rate. Rent is an operating commitment \u2014 now on balance sheet under IFRS 16 anyway \u2014 with flexibility to exit. Buying ties up capital and carries residual value risk, but fixes occupancy cost and creates an asset. The real question is strategic, not arithmetic: how confident are you in the network design over 15 years. If the answer is 'not very', pay the premium for optionality.",
-    "who": "Amazon \u00b7 Lulu \u00b7 DP World"
+    "q": "You acquire 80% of a subsidiary. Walk me through the consolidation mechanics.",
+    "a": "Recognise 100% of the subsidiary's assets and liabilities at fair value, not 80% \u2014 control, not ownership, drives consolidation. The 20% you do not own becomes non-controlling interest, shown within equity. Goodwill is consideration transferred plus NCI measured either at fair value (full goodwill) or at its share of net assets (partial goodwill) \u2014 an accounting policy choice that changes the goodwill number materially. Eliminate all intragroup balances, transactions and unrealised profit in stock. Post-acquisition profit splits between parent and NCI by ownership.",
+    "who": "Al-Futtaim \u00b7 Landmark Group \u00b7 Unilever"
    },
    {
-    "q": "Your group operates in a country that introduces 15% VAT. What breaks?",
-    "a": "Systems and margin, in that order. Systems: tax codes on every SKU, correct treatment of zero-rated versus exempt lines, input recovery on mixed-use costs, and the reverse charge on imported services \u2014 all of which must be in the ERP before go-live, not after. Margin: if you absorb VAT rather than pass it through, gross margin falls by roughly the VAT rate on the absorbed portion. Cash: output VAT is collected before it is remitted, so there is a temporary working capital benefit that people mistake for profit.",
-    "who": "Gulf CFOs post-2018 \u00b7 PwC"
+    "q": "What is shrinkage, what causes it, and what is an acceptable level?",
+    "a": "Shrinkage is the gap between book inventory and counted inventory \u2014 theft (external and internal), administrative error, damage and supplier short-delivery. Fashion retail typically runs 1\u20132% of sales; grocery higher. The important split is internal versus external, because the remedies differ entirely: internal is a controls and rostering problem, external is layout, tagging and security. Any store more than 100bps above the estate average is a process failure, not bad luck \u2014 investigate the receiving dock first.",
+    "who": "Landmark Group \u00b7 Target \u00b7 Alshaya"
    }
   ],
   "interview_soft": [
    {
-    "q": "How would your team describe your management style?",
-    "a": "Answer with evidence rather than adjectives. 'They would say I am specific \u2014 I give the number I expect and the date, and I do not change it quietly. They would also say I go into detail on their work more than some managers, which is useful when they are learning and irritating when they are not, so I have had to learn where to stop.' Naming the downside of your own style is what makes the strength believable.",
-    "who": "Universal"
+    "q": "How do you stay current technically while managing?",
+    "a": "Be specific and verifiable. Name the standard you last read in full and why, the technical update you attended, the thing you built yourself recently rather than delegated. Vague answers about 'reading widely' land badly with technical interviewers. The strongest version connects it to a decision: 'I went back through IFRS 16 properly when we hit the lease modification question on the Indonesian stores, and that changed how we structured the renewal.'",
+    "who": "Big Four partners \u00b7 Group CFOs"
    },
    {
-    "q": "How do you handle stress and long hours during close or audit?",
-    "a": "They are checking sustainability, not stoicism. Do not claim you thrive on pressure. Give the operating answer: what you do to make the peak smaller (moving work out of the close), how you protect the team (rotating the worst shifts, protecting recovery time after), and what you personally do that is non-negotiable. Having a young child is relevant here and worth saying \u2014 it reads as someone with real boundaries rather than someone who has not been tested yet.",
-    "who": "Universal"
+    "q": "Where do you think retail is heading in the next five years?",
+    "a": "Have a view and defend it with numbers, not trends. Something like: physical stores stop being judged on their own sales as fulfilment and returns blur the channels, which breaks conventional store P&L and forces a catchment-level view; margin pressure shifts from price to cost-to-serve; and in the Gulf specifically, corporate tax and e-invoicing professionalise finance functions that were previously light. Then say what you would do about it in the role you are interviewing for.",
+    "who": "Gulf retail boards \u00b7 Search firms"
    }
   ],
   "cfo_field": [
    {
-    "q": "Know your break-even by store, not by chain.",
-    "a": "A chain at group-level profitability can be carrying a quarter of its estate below contribution. Compute store contribution \u2014 gross profit less rent, staff and directly attributable fixed cost \u2014 and rank it. Then, before closing anything: is the lease committed, what does the store contribute to online fulfilment in its catchment, and what is the exit cost. A negative-contribution store with four years left on a non-cancellable lease is usually cheaper to run than to close.",
-    "who": "The analysis that gets you noticed"
+    "q": "Read the cash flow statement first. Always.",
+    "a": "P&L is an opinion, cash is a fact. Open any set of accounts at the cash flow statement, compare operating cash flow to EBITDA over three years, and look at the gap. A business converting 90%+ of EBITDA to operating cash is real. One converting 50% has its profit sitting in working capital or is capitalising something it should be expensing. That one ratio finds more problems than any variance pack.",
+    "who": "The first thing to check, every time"
    },
    {
-    "q": "VAT in the GCC is a cash-flow instrument, not just a compliance task.",
-    "a": "Registration thresholds, filing frequency and the timing of input recovery all move working capital. A group filing quarterly rather than monthly holds recoverable input VAT longer than it needs to. Know the filing calendar in every jurisdiction the group trades in, and know which entity holds the recoverable balance \u2014 a refund stuck in the wrong entity is cash you own and cannot use.",
-    "who": "UAE \u00b7 KSA \u00b7 Oman"
+    "q": "Scenario planning beats a single budget, and costs less than it sounds.",
+    "a": "Three cases \u2014 base, downside, upside \u2014 with the two or three variables that actually move the outcome, not thirty. In retail that is usually like-for-like growth, gross margin, and rent renewals. The value is not the numbers; it is that the board has already discussed the downside before it arrives, so the conversation when it does is about the response rather than about whether it is happening.",
+    "who": "What a board actually wants"
    }
   ],
   "review": {
@@ -816,8 +819,8 @@
    "week": 46,
    "year": 2026,
    "key": "2026-W46",
-   "weekday": 6,
-   "days_left": 1,
+   "weekday": 7,
+   "days_left": 0,
    "is_review_day": true
   },
   "podcasts": {
@@ -1087,18 +1090,56 @@
    "shows": 20,
    "source": "each channel's public Atom feed",
    "built_on": "2026-11-12",
-   "age_days": 2.0,
+   "age_days": 3.0,
    "is_fallback": true
   },
   "smart_reads": [
    {
+    "source": "Livemint",
+    "cat": "money",
+    "title": "JioBlackRock Flexi Cap Fund: 13 new stocks added, including Hindustan Zinc &amp; IIFL Finance; 21 exits in October",
+    "link": "https://www.livemint.com/money/personal-finance/jioblackrock-flexi-cap-fund-13-new-stocks-added-including-hindustan-zinc-iifl-finance-21-exits-in-october-11794678075651.html",
+    "summary": "JioBlackRock Flexi Cap Fund increased holdings in 27 stocks in October, led by PNB, Bank of India and GAIL. It added Hindustan Zinc and 12 other stocks, exited TCS, ITC and 19 others, and trimmed HDFC Bank and Adani Energy Solutions.",
+    "date": "Nov 14, 2026",
+    "_sort": "2026-11-14T18:15:19+00:00",
+    "smart": {
+     "what_happened": [
+      "The fund added Hindustan Zinc and 12 other stocks, increasing holdings in 27 stocks in October.",
+      "It exited TCS, ITC and 19 other stocks, and trimmed positions in HDFC Bank and Adani Energy Solutions."
+     ],
+     "why_it_matters": "The portfolio changes reflect the fund manager's strategic shift toward certain sectors and away from others, impacting the fund's risk profile and potential returns for investors. Large additions like Hindustan Zinc and the exits of major names such as TCS and ITC could alter the fund's exposure to mining and technology segments, respectively, while trimming of HDFC Bank and Adani Energy Solutions signals a rebalancing of financial and energy holdings.",
+     "what_to_watch": "Monitor the fund's net asset value and sector weightings in its next quarterly report.",
+     "headline": "JioBlackRock Flexi Cap Fund adds 13 stocks, exits 21 in October",
+     "read_seconds": 20
+    }
+   },
+   {
     "source": "The Marginalian",
     "cat": "ideas",
-    "title": "Yes to Life, in Spite of Everything: Viktor Frankl\u2019s Lost Lectures on Moving Beyond Optimism and Pessimism to Find the Deepest Source of Mea",
-    "link": "https://www.themarginalian.org/2026/11/13/yes-to-life-in-spite-of-everything-viktor-frankl/",
-    "summary": "\"Everything depends on the individual human being, regardless of how small a number of like-minded people there is... on each person... creatively making the meaning of life a reality in his or her own being.\"",
-    "date": "Nov 13, 2026",
-    "_sort": "2026-11-13T19:49:03+00:00"
+    "title": "Embrace Your Obsessions: Susan Orlean on the Antidote to the Meaninglessness of Life",
+    "link": "https://www.themarginalian.org/2026/11/14/susan-orlean-orchid-thief/",
+    "summary": "Every great book, whatever its subject or genre or style, is about one thing only: the eternal question of what gives meaning to our tiny, transient lives. And every answer given, however faintly whispered, points to one thing only: the quality of attention we pay to those lives. If attention is the lever of love, the ",
+    "date": "Nov 14, 2026",
+    "_sort": "2026-11-14T14:31:26+00:00",
+    "smart": {
+     "what_happened": [
+      "Orlean states every great book is about the question of what gives meaning to life",
+      "She says the answer points to the quality of attention we pay to lives, describing attention as the lever of love"
+     ],
+     "why_it_matters": "The piece highlights a philosophical perspective that frames attention as central to finding meaning, a theme that resonates with readers seeking deeper purpose and may influence how cultural commentary is framed in future literary discussions.",
+     "what_to_watch": "Observe reactions to Orlean's essay on social media and literary forums for further discussion of her ideas",
+     "headline": "Susan Orlean discusses meaning and attention in new essay",
+     "read_seconds": 26
+    }
+   },
+   {
+    "source": "Peter Attia",
+    "cat": "health",
+    "title": "Does raw milk offer meaningful health benefits?",
+    "link": "https://peterattiamd.com/does-raw-milk-offer-meaningful-health-benefits/",
+    "summary": "An in-depth analysis of the most common claims around raw milk\nThe post Does raw milk offer meaningful health benefits? appeared first on Peter Attia MD.",
+    "date": "Nov 14, 2026",
+    "_sort": "2026-11-14T12:00:00+00:00"
    },
    {
     "source": "ET Opinion",
@@ -1110,23 +1151,14 @@
     "_sort": "2026-11-13T18:20:21+00:00",
     "smart": {
      "what_happened": [
-      "India's startup exits have traditionally depended on IPOs, with few mergers and acquisitions.",
-      "In the past three to four years, private secondary transactions have grown, giving VC investors an additional way to exit and return money to backers."
+      "India's startup exit market has been dominated by IPOs, with M&A activity remaining limited.",
+      "Private secondary transactions have expanded over the past three to four years, giving VC investors an additional way to exit and return capital."
      ],
-     "why_it_matters": "The emergence of a robust secondary market diversifies exit options for venture capital firms, improving liquidity and potentially shortening investment horizons. This can attract more capital to Indian startups by offering investors clearer pathways to realize returns, thereby supporting the ecosystem's growth and reducing reliance on the limited IPO and M&A windows.",
-     "what_to_watch": "Track the quarterly volume of private secondary transactions in India's startup market to gauge the continued expansion of this exit channel.",
-     "headline": "Private secondary market provides new exit route for Indian venture capital",
+     "why_it_matters": "The rise of secondary market activity provides venture capital firms with a liquidity option beyond the traditional IPO route, helping them recycle capital into new investments and reducing reliance on scarce M&A exits. This can improve fund performance, attract more capital to Indian startups, and support the overall growth of the ecosystem.",
+     "what_to_watch": "Monitor the total value of private secondary transactions reported in India for the upcoming quarter.",
+     "headline": "Private secondary transactions grow, offering new exit route for Indian VC investors",
      "read_seconds": 24
     }
-   },
-   {
-    "source": "Livemint",
-    "cat": "money",
-    "title": "Short-duration vs long-duration debt mutual funds: Where should you invest as interest rates are expected to rise now?",
-    "link": "https://www.livemint.com/money/personal-finance/shortduration-vs-long-duration-debt-mutual-funds-where-should-you-invest-as-interest-rates-are-expected-to-rise-now-11794590041347.html",
-    "summary": "Axis Mutual Fund expects another 50\u201375 bps of rate hikes and favours high-quality corporate bonds with 3\u20135-year maturities and short-duration debt strategies. It sees scope to add duration selectively as bond yields become more attractive.",
-    "date": "Nov 13, 2026",
-    "_sort": "2026-11-13T18:13:02+00:00"
    },
    {
     "source": "Economic Times",
@@ -1138,12 +1170,12 @@
     "_sort": "2026-11-13T10:40:07+00:00",
     "smart": {
      "what_happened": [
-      "The Reserve Bank of India and SEBI have started the Demat 2.0 pilot program using blockchain technology for corporate bonds.",
-      "Key financial institutions are participating to demonstrate improved settlement and broader investor access."
+      "The Reserve Bank of India and SEBI have started the Demat 2.0 pilot program using blockchain for corporate bonds.",
+      "The initiative aims to speed settlement and expand investor access, with major financial institutions participating."
      ],
-     "why_it_matters": "The pilot aims to modernise India's bond market by reducing settlement times and costs through blockchain, which could increase liquidity and attract a wider range of investors to corporate debt instruments, enhancing overall market efficiency.",
-     "what_to_watch": "The next regulatory update from the RBI or SEBI confirming expansion of the Demat 2.0 framework to additional issuers.",
-     "headline": "India launches Demat 2.0 pilot for blockchain-based corporate bond settlement",
+     "why_it_matters": "By applying blockchain to corporate bond settlement, the pilot could reduce settlement times, lower operational risk, and open the market to a broader set of investors, potentially increasing liquidity and efficiency in India's bond market.",
+     "what_to_watch": "The completion and public reporting of the pilot's first blockchain\u2011based bond settlement.",
+     "headline": "India launches Demat 2.0 pilot for blockchain corporate bond settlement",
      "read_seconds": 26
     }
    },
@@ -1166,15 +1198,6 @@
     "_sort": "2026-11-11T11:00:00+00:00"
    },
    {
-    "source": "Peter Attia",
-    "cat": "health",
-    "title": "#415 \u2012 AMA #91: Understanding lab testing: what blood work can and cannot tell you about your health and disease risk",
-    "link": "https://peterattiamd.com/ama91/",
-    "summary": "\u201cMy communication to patients is that the labs, even the most comprehensive labs, are giving you somewhere between 25-30ish percent of the complete information that we would want to create a comprehensive picture of your risk and manage it accordingly.\u201d\u2012 Peter Attia \nThe post #415 \u2012 AMA #91: Understanding lab testing: ",
-    "date": "Nov 09, 2026",
-    "_sort": "2026-11-09T05:15:00+00:00"
-   },
-   {
     "source": "Farnam Street",
     "cat": "habits",
     "title": "Jon McNeill: How Elon Musk Makes Decisions",
@@ -1195,40 +1218,48 @@
   ],
   "lichess_games": [
    {
-    "id": "MgJbucmx",
-    "url": "https://lichess.org/MgJbucmx",
+    "id": "1xVGzlu3",
+    "url": "https://lichess.org/1xVGzlu3",
     "result": "Loss",
     "icon": "\u274c",
     "cls": "loss",
     "my_side": "White",
-    "my_rating": 1552,
+    "my_rating": 1547,
     "opp_rating": 1538,
-    "opponent": "pete1221",
+    "opponent": "Zakaria69",
     "me_diff": -6,
-    "opp_diff": 7,
-    "opening": "Indian Defense",
-    "eco": "A50",
-    "moves": 41,
+    "opp_diff": 6,
+    "opening": "French Defense",
+    "eco": "C02",
+    "moves": 42,
     "termination": "Resignation",
     "speed": "Blitz",
-    "analysis": "Focus on early central control: stop playing 2.Nf3\u2011d4\u2011c3 setups; instead meet 1\u2026Nf6 with 2.d4, 3.c4, and develop bishops before knights, reducing passive positions and preventing the eventual queen\u2011side collapse.",
+    "analysis": "Focus on early pawn structure: after 1.e4 e6 2.d4 d5, you mishandled the exchange on d5, leaving an isolated queen\u2011pawn. Strengthen your central control and avoid isolating pawns; aim for solid piece development before trading.",
     "is_upset": false,
     "is_collapse": false,
     "is_long": true,
     "best_move": {},
     "key_facts": [
-     "Rating gap -14 (1552 vs 1538)",
-     "Endgame from move 26",
-     "41 moves \u00b7 Blitz"
+     "Rating gap -9 (1547 vs 1538)",
+     "Endgame from move 24",
+     "42 moves \u00b7 Blitz"
     ],
     "standout": "",
     "game_strength": null,
-    "est_fide": 1152,
+    "est_fide": 1147,
     "accuracy": null,
     "acpl": null,
     "analysed": false,
     "_mode": "full",
     "_trend": [
+     {
+      "day": "11/14",
+      "wins": 1,
+      "losses": 2,
+      "draws": 0,
+      "total": 3,
+      "pct": 33
+     },
      {
       "day": "11/13",
       "wins": 6,
@@ -1276,226 +1307,49 @@
       "draws": 0,
       "total": 6,
       "pct": 83
-     },
-     {
-      "day": "11/07",
-      "wins": 2,
-      "losses": 0,
-      "draws": 0,
-      "total": 2,
-      "pct": 100
      }
     ],
     "_yest_counts": {
      "blitz": {
-      "win": 6,
-      "loss": 5,
+      "win": 1,
+      "loss": 2,
       "draw": 0,
       "rp": {
-       "before": 1540,
-       "after": 1546
+       "before": 1546,
+       "after": 1541
       }
      }
     },
-    "_session_date": "2026-11-13",
+    "_session_date": "2026-11-14",
     "_is_yesterday": true
    },
    {
-    "id": "MHPMDwQI",
-    "url": "https://lichess.org/MHPMDwQI",
+    "id": "KllUjzIl",
+    "url": "https://lichess.org/KllUjzIl",
     "result": "Win",
     "icon": "\u2705",
     "cls": "win",
-    "my_side": "White",
-    "my_rating": 1547,
-    "opp_rating": 1493,
-    "opponent": "atuldude11",
-    "me_diff": 5,
-    "opp_diff": -5,
-    "opening": "French Defense",
-    "eco": "C02",
-    "moves": 12,
-    "termination": "Resignation",
-    "speed": "Blitz",
-    "analysis": "Focus on early piece coordination: develop knights before moving the same bishop twice; aim for <30\u202f% average centipawn loss in the first 8 moves.",
-    "is_upset": false,
-    "is_collapse": false,
-    "is_long": false,
-    "best_move": {},
-    "key_facts": [
-     "Rating gap -54 (1547 vs 1493)",
-     "12 moves \u00b7 Blitz"
-    ],
-    "standout": "Over in 12 moves \u2014 decided in the opening, so the opening is what to study.",
-    "game_strength": null,
-    "est_fide": 1147,
-    "accuracy": null,
-    "acpl": null,
-    "analysed": false
-   },
-   {
-    "id": "MoxhA2L4",
-    "url": "https://lichess.org/MoxhA2L4",
-    "result": "Loss",
-    "icon": "\u274c",
-    "cls": "loss",
-    "my_side": "White",
-    "my_rating": 1554,
-    "opp_rating": 1515,
-    "opponent": "KingInVT",
-    "me_diff": -7,
-    "opp_diff": 6,
-    "opening": "French Defense",
-    "eco": "C00",
-    "moves": 54,
-    "termination": "Resignation",
-    "speed": "Blitz",
-    "analysis": "Focus on early pawn structure: after 1.e4 e6 2.d4 d5, avoid the passive 3.Nc3\u202fNf6?; instead play 3.Nc3\u202fBb4 (Winawer) or 3.Nd2 to keep flexibility. Your 4.e5 allowed Black\u2019s ...c5, leading to an isolated d\u2011pawn and cramped position. Strengthen your opening knowledge\u2014study the main French lines and typical plans\u2014so you won\u2019t concede space and pawn weaknesses within the first ten moves.",
-    "is_upset": false,
-    "is_collapse": false,
-    "is_long": true,
-    "best_move": {},
-    "key_facts": [
-     "Rating gap -39 (1554 vs 1515)",
-     "Endgame from move 25",
-     "54 moves \u00b7 Blitz"
-    ],
-    "standout": "",
-    "game_strength": null,
-    "est_fide": 1154,
-    "accuracy": null,
-    "acpl": null,
-    "analysed": false
-   },
-   {
-    "id": "ABEVQ6NV",
-    "url": "https://lichess.org/ABEVQ6NV",
-    "result": "Win",
-    "icon": "\u2705",
-    "cls": "win",
-    "my_side": "Black",
-    "my_rating": 1549,
-    "opp_rating": 1465,
-    "opponent": "roniminas",
-    "me_diff": 5,
-    "opp_diff": -5,
-    "opening": "Slav Defense",
-    "eco": "D10",
-    "moves": 33,
-    "termination": "Resignation",
-    "speed": "Blitz",
-    "analysis": "Focus on early queen\u2011side development: after 1.d4 d5 2.c4 c6, play \u2026Nf6, \u2026e6, then\u202f\u2026Bf5\u202finstead of passive \u2026Bf8, saving ~15\u202fseconds and preventing white\u2019s strong Qb3\u2011Qb5 pressure.",
-    "is_upset": false,
-    "is_collapse": false,
-    "is_long": false,
-    "best_move": {},
-    "key_facts": [
-     "Rating gap -84 (1549 vs 1465)",
-     "Endgame from move 30",
-     "33 moves \u00b7 Blitz"
-    ],
-    "standout": "",
-    "game_strength": null,
-    "est_fide": 1149,
-    "accuracy": null,
-    "acpl": null,
-    "analysed": false
-   },
-   {
-    "id": "4nCatnkd",
-    "url": "https://lichess.org/4nCatnkd",
-    "result": "Win",
-    "icon": "\u2705",
-    "cls": "win",
-    "my_side": "Black",
-    "my_rating": 1543,
-    "opp_rating": 1587,
-    "opponent": "imarzak",
-    "me_diff": 6,
-    "opp_diff": -7,
-    "opening": "King's Gambit",
-    "eco": "C30",
-    "moves": 37,
-    "termination": "Resignation",
-    "speed": "Blitz",
-    "analysis": "Focus on early king safety: after 1.e4 e5 2.f4 exf4 3.Nf3, avoid 3\u2026g5; instead play 3\u2026d5 or 3\u2026Nc6, reducing opponent\u2019s attack and cutting ACPL by ~15\u202fpts.",
-    "is_upset": false,
-    "is_collapse": false,
-    "is_long": false,
-    "best_move": {},
-    "key_facts": [
-     "Rating gap +44 (1543 vs 1587)",
-     "Endgame from move 30",
-     "37 moves \u00b7 Blitz"
-    ],
-    "standout": "",
-    "game_strength": null,
-    "est_fide": 1143,
-    "accuracy": null,
-    "acpl": null,
-    "analysed": false
-   },
-   {
-    "id": "3Ygen9Fw",
-    "url": "https://lichess.org/3Ygen9Fw",
-    "result": "Win",
-    "icon": "\u2705",
-    "cls": "win",
-    "my_side": "White",
-    "my_rating": 1536,
-    "opp_rating": 1633,
-    "opponent": "MisterTurist",
-    "me_diff": 7,
-    "opp_diff": -7,
-    "opening": "Indian Defense",
-    "eco": "A45",
-    "moves": 37,
-    "termination": "Checkmate",
-    "speed": "Blitz",
-    "analysis": "Focus on early piece coordination: develop knights before bishops, castle by move\u202f8, and avoid queen\u2011side pawn pushes that waste tempo.",
-    "is_upset": false,
-    "is_collapse": false,
-    "is_long": false,
-    "best_move": {},
-    "key_facts": [
-     "Rating gap +97 (1536 vs 1633)",
-     "Endgame from move 30",
-     "37 moves \u00b7 Blitz"
-    ],
-    "standout": "Finished by checkmate on move 37 \u2014 you converted rather than letting it drift.",
-    "game_strength": null,
-    "est_fide": 1136,
-    "accuracy": null,
-    "acpl": null,
-    "analysed": false
-   },
-   {
-    "id": "HZ9Bfxp4",
-    "url": "https://lichess.org/HZ9Bfxp4",
-    "result": "Loss",
-    "icon": "\u274c",
-    "cls": "loss",
     "my_side": "Black",
     "my_rating": 1541,
-    "opp_rating": 1553,
-    "opponent": "VIRDANGE1234",
-    "me_diff": -5,
-    "opp_diff": 6,
-    "opening": "Van't Kruijs Opening",
-    "eco": "A00",
-    "moves": 40,
-    "termination": "Checkmate",
+    "opp_rating": 1522,
+    "opponent": "politian1",
+    "me_diff": 6,
+    "opp_diff": -6,
+    "opening": "Slav Defense",
+    "eco": "D11",
+    "moves": 11,
+    "termination": "Resignation",
     "speed": "Blitz",
-    "analysis": "Focus on early king safety: avoid moving the g\u2011pawn before castling; develop knights and bishops first, then castle by move\u202f8.",
+    "analysis": "Focus on early piece development: after 1\u2026d5\u202f2.c4\u202fc6, avoid 3\u2026Nf6?\u202f4.Nc3\u202fBb4? and instead play 3\u2026Nf6\u202f4.Nc3\u202fdxc4\u202f5.e3\u202fb5, completing development before queen moves; this reduces unnecessary queen excursions and saves ~0.5\u202fpawns in material value.",
     "is_upset": false,
     "is_collapse": false,
-    "is_long": true,
+    "is_long": false,
     "best_move": {},
     "key_facts": [
-     "Rating gap +12 (1541 vs 1553)",
-     "40 moves \u00b7 Blitz"
+     "Rating gap -19 (1541 vs 1522)",
+     "11 moves \u00b7 Blitz"
     ],
-    "standout": "",
+    "standout": "Over in 11 moves \u2014 decided in the opening, so the opening is what to study.",
     "game_strength": null,
     "est_fide": 1141,
     "accuracy": null,
@@ -1503,234 +1357,33 @@
     "analysed": false
    },
    {
-    "id": "BcHiuSaE",
-    "url": "https://lichess.org/BcHiuSaE",
+    "id": "Xx9Nj1V1",
+    "url": "https://lichess.org/Xx9Nj1V1",
     "result": "Loss",
     "icon": "\u274c",
     "cls": "loss",
-    "my_side": "White",
-    "my_rating": 1547,
-    "opp_rating": 1505,
-    "opponent": "Agalexx",
-    "me_diff": -6,
+    "my_side": "Black",
+    "my_rating": 1546,
+    "opp_rating": 1577,
+    "opponent": "BunkerDown",
+    "me_diff": -5,
     "opp_diff": 6,
-    "opening": "Queen's Pawn Game",
-    "eco": "D00",
-    "moves": 40,
-    "termination": "Checkmate",
+    "opening": "Philidor Defense",
+    "eco": "C41",
+    "moves": 62,
+    "termination": "Resignation",
     "speed": "Blitz",
-    "analysis": "Focus on early king safety: castle by move\u202f8, avoid moving the f\u2011pawn, and keep pieces coordinated to prevent back\u2011rank threats.",
+    "analysis": "Focus on early piece activity: develop knights before moving the queen\u202f\u2014\u202favoid 4\u2026Qb6 and 6\u2026Qb4; aim for Nf6, Be7, O\u2011O by move\u202f10, keeping the center solid and preventing BunkerDown\u2019s rapid attack.",
     "is_upset": false,
     "is_collapse": false,
     "is_long": true,
     "best_move": {},
     "key_facts": [
-     "Rating gap -42 (1547 vs 1505)",
-     "Endgame from move 29",
-     "40 moves \u00b7 Blitz"
+     "Rating gap +31 (1546 vs 1577)",
+     "Endgame from move 45",
+     "62 moves \u00b7 Blitz"
     ],
-    "standout": "",
-    "game_strength": null,
-    "est_fide": 1147,
-    "accuracy": null,
-    "acpl": null,
-    "analysed": false
-   },
-   {
-    "id": "R3QuuL5H",
-    "url": "https://lichess.org/R3QuuL5H",
-    "result": "Win",
-    "icon": "\u2705",
-    "cls": "win",
-    "my_side": "White",
-    "my_rating": 1542,
-    "opp_rating": 1566,
-    "opponent": "Sirsensei7",
-    "me_diff": 5,
-    "opp_diff": -6,
-    "opening": "French Defense",
-    "eco": "C00",
-    "moves": 38,
-    "termination": "Checkmate",
-    "speed": "Blitz",
-    "analysis": "Focus on early queen\u2011side development: after 1.e4 e6\u202f2.d4 d5\u202f3.Nc3, prioritize Nf3, Bd3, and O\u2011O before launching the c\u2011pawn; you lost ~30\u202fcentipawns by delaying king safety.",
-    "is_upset": false,
-    "is_collapse": false,
-    "is_long": false,
-    "best_move": {},
-    "key_facts": [
-     "Rating gap +24 (1542 vs 1566)",
-     "Endgame from move 30",
-     "38 moves \u00b7 Blitz"
-    ],
-    "standout": "Finished by checkmate on move 38 \u2014 you converted rather than letting it drift.",
-    "game_strength": null,
-    "est_fide": 1142,
-    "accuracy": null,
-    "acpl": null,
-    "analysed": false
-   },
-   {
-    "id": "F0t9FGFR",
-    "url": "https://lichess.org/F0t9FGFR",
-    "result": "Loss",
-    "icon": "\u274c",
-    "cls": "loss",
-    "my_side": "Black",
-    "my_rating": 1547,
-    "opp_rating": 1577,
-    "opponent": "Tassodelmiele",
-    "me_diff": -5,
-    "opp_diff": 11,
-    "opening": "Philidor Defense",
-    "eco": "C41",
-    "moves": 31,
-    "termination": "Checkmate",
-    "speed": "Blitz",
-    "analysis": "Focus on early piece activity: develop knights to f6/c6 within 4 moves, avoid queen\u2011side pawn pushes before castling; your ACPL\u202f\u2248\u202f45\u202fpts, improve to \u2264\u202f30.",
-    "is_upset": false,
-    "is_collapse": false,
-    "is_long": false,
-    "best_move": {},
-    "key_facts": [
-     "Rating gap +30 (1547 vs 1577)",
-     "31 moves \u00b7 Blitz"
-    ],
-    "standout": "",
-    "game_strength": null,
-    "est_fide": 1147,
-    "accuracy": null,
-    "acpl": null,
-    "analysed": false
-   },
-   {
-    "id": "JDG7Lbmx",
-    "url": "https://lichess.org/JDG7Lbmx",
-    "result": "Win",
-    "icon": "\u2705",
-    "cls": "win",
-    "my_side": "Black",
-    "my_rating": 1540,
-    "opp_rating": 1556,
-    "opponent": "NlgK",
-    "me_diff": 7,
-    "opp_diff": -7,
-    "opening": "Queen's Pawn Game",
-    "eco": "D02",
-    "moves": 36,
-    "termination": "Time Out",
-    "speed": "Blitz",
-    "analysis": "Focus on early piece development: within the first 10 moves, place both knights and bishops on active squares and castle, reducing average move time to under 15\u202fseconds. This will cut time pressure and improve overall accuracy.",
-    "is_upset": false,
-    "is_collapse": false,
-    "is_long": false,
-    "best_move": {},
-    "key_facts": [
-     "Rating gap +16 (1540 vs 1556)",
-     "Endgame from move 29",
-     "36 moves \u00b7 Blitz"
-    ],
-    "standout": "Decided on the clock, not the board \u2014 the position was still playable when time ran out.",
-    "game_strength": null,
-    "est_fide": 1140,
-    "accuracy": null,
-    "acpl": null,
-    "analysed": false
-   },
-   {
-    "id": "Ol0kJh0O",
-    "url": "https://lichess.org/Ol0kJh0O",
-    "result": "Loss",
-    "icon": "\u274c",
-    "cls": "loss",
-    "my_side": "White",
-    "my_rating": 1547,
-    "opp_rating": 1517,
-    "opponent": "bazinga4ever",
-    "me_diff": -7,
-    "opp_diff": 7,
-    "opening": "Modern Defense",
-    "eco": "B06",
-    "moves": 35,
-    "termination": "Checkmate",
-    "speed": "Blitz",
-    "analysis": "Stop wasting 12+ seconds on each opening move; aim for sub\u20115\u2011second decisions to avoid falling into forced mates later games.",
-    "is_upset": false,
-    "is_collapse": false,
-    "is_long": false,
-    "best_move": {},
-    "key_facts": [
-     "Rating gap -30 (1547 vs 1517)",
-     "Endgame from move 21",
-     "35 moves \u00b7 Blitz"
-    ],
-    "standout": "",
-    "game_strength": null,
-    "est_fide": 1147,
-    "accuracy": null,
-    "acpl": null,
-    "analysed": false
-   },
-   {
-    "id": "0FcfTFBA",
-    "url": "https://lichess.org/0FcfTFBA",
-    "result": "Loss",
-    "icon": "\u274c",
-    "cls": "loss",
-    "my_side": "Black",
-    "my_rating": 1551,
-    "opp_rating": 1607,
-    "opponent": "Kalashnikov_Egor",
-    "me_diff": -4,
-    "opp_diff": 4,
-    "opening": "Center Game",
-    "eco": "C22",
-    "moves": 23,
-    "termination": "Time Out",
-    "speed": "Blitz",
-    "analysis": "Focus on time management: avoid long calculations early; aim to complete each move within 30\u202fseconds to prevent time\u2011outs.",
-    "is_upset": false,
-    "is_collapse": false,
-    "is_long": false,
-    "best_move": {},
-    "key_facts": [
-     "Rating gap +56 (1551 vs 1607)",
-     "23 moves \u00b7 Blitz"
-    ],
-    "standout": "Decided on the clock, not the board \u2014 the position was still playable when time ran out.",
-    "game_strength": null,
-    "est_fide": 1151,
-    "accuracy": null,
-    "acpl": null,
-    "analysed": false
-   },
-   {
-    "id": "2kzGHVd7",
-    "url": "https://lichess.org/2kzGHVd7",
-    "result": "Win",
-    "icon": "\u2705",
-    "cls": "win",
-    "my_side": "White",
-    "my_rating": 1546,
-    "opp_rating": 1560,
-    "opponent": "Robin_10111",
-    "me_diff": 5,
-    "opp_diff": -5,
-    "opening": "Indian Defense",
-    "eco": "A51",
-    "moves": 25,
-    "termination": "Time Out",
-    "speed": "Blitz",
-    "analysis": "Focus on early piece development: move your knights to f3 and c3 within the first\u202f4\u202fplies, avoiding queen\u2011side pawn pushes that waste tempo and let Black equalize.",
-    "is_upset": false,
-    "is_collapse": false,
-    "is_long": false,
-    "best_move": {},
-    "key_facts": [
-     "Rating gap +14 (1546 vs 1560)",
-     "25 moves \u00b7 Blitz"
-    ],
-    "standout": "Decided on the clock, not the board \u2014 the position was still playable when time ran out.",
+    "standout": "62 moves of grinding. Endgame stamina, not opening prep, settled this one.",
     "game_strength": null,
     "est_fide": 1146,
     "accuracy": null,
@@ -1740,14 +1393,22 @@
   ],
   "lichess_summary": {
    "mode": "full",
-   "total": 14,
-   "wins": 7,
-   "losses": 7,
+   "total": 3,
+   "wins": 1,
+   "losses": 2,
    "draws": 0,
-   "pct": 50,
-   "icon": "\u2696\ufe0f",
-   "score": "7/14",
+   "pct": 33,
+   "icon": "\u274c",
+   "score": "1/3",
    "trend": [
+    {
+     "day": "11/14",
+     "wins": 1,
+     "losses": 2,
+     "draws": 0,
+     "total": 3,
+     "pct": 33
+    },
     {
      "day": "11/13",
      "wins": 6,
@@ -1795,33 +1456,25 @@
      "draws": 0,
      "total": 6,
      "pct": 83
-    },
-    {
-     "day": "11/07",
-     "wins": 2,
-     "losses": 0,
-     "draws": 0,
-     "total": 2,
-     "pct": 100
     }
    ],
-   "weak_op": "D00 Queen's Pawn Game (1/2 = 50% WR)",
-   "best_op": "A50 Indian Defense (2/3 = 67% WR)",
+   "weak_op": "",
+   "best_op": "",
    "upsets": 0,
    "collapses": 0,
-   "long_games": 4,
-   "session_summary": "Your opening repertoire is a liability: the \u201cQueen\u2019s\u202fPawn Game\u201d (D00) yields a 50\u202f% win rate and is clearly being exploited by opponents\u2014ditch it immediately and replace it with a solid, theory\u2011backed line like the London System or a Classical d4\u2011Nf6 setup. The only bright spot, the A50 Indian Defense, is under\u2011utilized; study the main\u2011line ideas (\u2026e5, \u2026c5 breaks, and timely \u2026g6\u2011Bg7) and aim to play it in at least half of your games to lift your overall win percentage. Stop relying on luck\u2014review every loss, annotate the critical moments, and practice those positions in focused drills before your next tournament.",
-   "session_date": "2026-11-13",
+   "long_games": 2,
+   "session_summary": "Your 33\u202f% win rate tells us you\u2019re barely scraping by \u2013 you\u2019re either winning by accident or losing by habit.\u202fThe only opening that ever gave you a foothold was the London System, where you kept the position solid and avoided early tactical skirmishes; every other line you tried (especially the Sicilian\u2011type defenses you\u2019ve been experimenting with) has been a disaster, leaving you passive and vulnerable to simple refutations.\u202fStop chasing \u201cexciting\u201d sidelines, stick to the London System for the next 20 games, drill the key pawn\u2011breaks (c3\u2013c4, Bf4\u2013e5) until they\u2019re second nature, and add a single, well\u2011studied counter\u2011attack (the Classical French \u2026e6\u2011d5) to give you a reliable weapon when the London isn\u2019t an option.",
+   "session_date": "2026-11-14",
    "is_yesterday": true,
    "token_missing": false
   },
   "lichess_puzzle": {
-   "pid": "u3zfD",
-   "rating": 1854,
+   "pid": "f9Xve",
+   "rating": 1797,
    "level": "\ud83d\udd34 stretch",
-   "themes": "Exposed King \u00b7 Endgame \u00b7 Long",
-   "tip": "King activity and pawn structure dominate. Technique over tactics here.",
-   "url": "https://lichess.org/training/u3zfD"
+   "themes": "Deflection \u00b7 Mate In2 \u00b7 Middlegame",
+   "tip": "Lure the key defender away from its post with a forcing move.",
+   "url": "https://lichess.org/training/f9Xve"
   }
  }
 }
