@@ -1,7 +1,7 @@
 {
- "build_id": "20261115T092907",
- "date": "2026-11-15",
- "date_str": "Sunday, November 15 2026",
+ "build_id": "20261116T090224",
+ "date": "2026-11-16",
+ "date_str": "Monday, November 16 2026",
  "picks": [
   {
    "symbol": "APP",
@@ -411,423 +411,419 @@
  "picks_week": null,
  "open_context": {},
  "ipos": {
-  "count": 20,
+  "count": 16,
   "months": 12,
-  "built_on": "2026-11-08",
+  "built_on": "2026-11-15",
   "summary": {
-   "count": 20,
-   "up": 12,
+   "count": 16,
+   "up": 8,
    "down": 8,
-   "up_pct": 60.0,
-   "median_pct": 21.9
+   "up_pct": 50.0,
+   "median_pct": 5.5
   },
   "rows": [
    {
-    "sym": "LENSKART",
-    "months_listed": 11.9,
-    "first_close": 403.1,
-    "last_close": 724.75,
-    "since_listing_pct": 79.8,
-    "high": 724.75,
-    "low": 400.15,
-    "from_high_pct": 0.0,
-    "below_first_ever": true,
-    "sessions": 247,
-    "listed_on": "2025-11-10"
-   },
-   {
     "sym": "PARKHOSPS",
-    "months_listed": 10.7,
+    "months_listed": 10.9,
     "first_close": 147.95,
-    "last_close": 251.39,
-    "since_listing_pct": 69.9,
+    "last_close": 255.58,
+    "since_listing_pct": 72.7,
     "high": 299.3,
     "low": 143.92,
-    "from_high_pct": -16.0,
+    "from_high_pct": -14.6,
     "below_first_ever": true,
-    "sessions": 220,
+    "sessions": 224,
     "listed_on": "2025-12-17"
    },
    {
-    "sym": "CORONA",
-    "months_listed": 10.7,
-    "first_close": 1438.4,
-    "last_close": 2441.1,
-    "since_listing_pct": 69.7,
-    "high": 2441.1,
-    "low": 1347.7,
-    "from_high_pct": 0.0,
-    "below_first_ever": true,
-    "sessions": 222,
-    "listed_on": "2025-12-15"
-   },
-   {
     "sym": "UTLSOLAR",
-    "months_listed": 11.6,
+    "months_listed": 11.8,
     "first_close": 208.44,
-    "last_close": 351.8,
-    "since_listing_pct": 68.8,
+    "last_close": 347.05,
+    "since_listing_pct": 66.5,
     "high": 483.95,
     "low": 174.83,
-    "from_high_pct": -27.3,
+    "from_high_pct": -28.3,
     "below_first_ever": true,
-    "sessions": 239,
+    "sessions": 243,
     "listed_on": "2025-11-20"
    },
    {
-    "sym": "GROWW",
-    "months_listed": 11.8,
-    "first_close": 131.33,
-    "last_close": 215.08,
-    "since_listing_pct": 63.8,
-    "high": 223.89,
-    "low": 131.33,
-    "from_high_pct": -3.9,
-    "below_first_ever": false,
-    "sessions": 245,
-    "listed_on": "2025-11-12"
+    "sym": "CORONA",
+    "months_listed": 11.0,
+    "first_close": 1438.4,
+    "last_close": 2329.7,
+    "since_listing_pct": 62.0,
+    "high": 2539.4,
+    "low": 1347.7,
+    "from_high_pct": -8.3,
+    "below_first_ever": true,
+    "sessions": 226,
+    "listed_on": "2025-12-15"
+   },
+   {
+    "sym": "AEQUS",
+    "months_listed": 11.1,
+    "first_close": 151.29,
+    "last_close": 243.62,
+    "since_listing_pct": 61.0,
+    "high": 288.15,
+    "low": 115.11,
+    "from_high_pct": -15.5,
+    "below_first_ever": true,
+    "sessions": 229,
+    "listed_on": "2025-12-10"
+   },
+   {
+    "sym": "SUDEEPPHRM",
+    "months_listed": 11.5,
+    "first_close": 774.15,
+    "last_close": 1199.2,
+    "since_listing_pct": 54.9,
+    "high": 1344.2,
+    "low": 530.0,
+    "from_high_pct": -10.8,
+    "below_first_ever": true,
+    "sessions": 237,
+    "listed_on": "2025-11-28"
    }
   ],
   "worst": [
    {
     "sym": "HEG",
-    "months_listed": 3.7,
+    "months_listed": 3.9,
     "first_close": 587.35,
-    "last_close": 293.87,
-    "since_listing_pct": -50.0,
+    "last_close": 277.85,
+    "since_listing_pct": -52.7,
     "high": 739.25,
     "low": 198.78,
-    "from_high_pct": -60.2,
+    "from_high_pct": -62.4,
     "below_first_ever": true,
-    "sessions": 78,
+    "sessions": 82,
     "listed_on": "2026-07-17"
    },
    {
-    "sym": "PINELABS",
-    "months_listed": 11.8,
-    "first_close": 250.89,
-    "last_close": 162.45,
-    "since_listing_pct": -35.3,
-    "high": 250.89,
-    "low": 137.94,
-    "from_high_pct": -35.3,
-    "below_first_ever": true,
-    "sessions": 243,
-    "listed_on": "2025-11-14"
-   },
-   {
     "sym": "WAKEFIT",
-    "months_listed": 10.7,
+    "months_listed": 11.0,
     "first_close": 192.29,
-    "last_close": 137.91,
-    "since_listing_pct": -28.3,
+    "last_close": 134.92,
+    "since_listing_pct": -29.8,
     "high": 215.8,
     "low": 113.04,
-    "from_high_pct": -36.1,
+    "from_high_pct": -37.5,
     "below_first_ever": true,
-    "sessions": 221,
+    "sessions": 225,
     "listed_on": "2025-12-15"
+   },
+   {
+    "sym": "PINELABS",
+    "months_listed": 12.0,
+    "first_close": 250.89,
+    "last_close": 176.44,
+    "since_listing_pct": -29.7,
+    "high": 250.89,
+    "low": 137.94,
+    "from_high_pct": -29.7,
+    "below_first_ever": true,
+    "sessions": 247,
+    "listed_on": "2025-11-14"
    }
   ]
  },
  "data_health": {
   "worst": "STALE",
-  "current": 9,
+  "current": 10,
   "total": 12,
   "degraded": [
    {
-    "dataset": "New listings",
-    "status": "STALE",
-    "age": "7 days old",
-    "note": "older than its weekly refresh"
-   },
-   {
     "dataset": "Podcasts",
     "status": "STALE",
-    "age": "3 days old",
+    "age": "4 days old",
     "note": "older than its daily refresh"
    },
    {
     "dataset": "Stock screen",
     "status": "STALE",
-    "age": "26h old",
+    "age": "2 days old",
     "note": "older than its daily refresh"
    }
   ]
  },
  "desk": {
   "chess": {
-   "title": "Endgame: Pawn Endgames",
-   "body": "If you're a pawn up in a king+pawn endgame, you usually win. Key concepts: 1. Opposition \u2014 control the square in front of your pawn. 2. The square of the pawn \u2014 if the opposing king can't enter the square, your pawn promotes. 3. Key squares \u2014 a pawn on e4's key squares are d6, e6, f6. Reach them with your king and you win.",
-   "index": 9,
+   "title": "Strategy: Weak Squares",
+   "body": "A weak square is one that cannot be defended by a pawn. d5 is weak for Black if the c6 and e6 pawns are gone or never played. Plant a knight on a weak square \u2014 it becomes an 'outpost.' From d5, a knight controls 8 squares and cannot be chased. Outpost knight + weak squares = long-term advantage.",
+   "index": 10,
    "total": 20
   },
   "wisdom": {
-   "title": "Financial Peace = Emotional Peace",
-   "body": "Money stress is the #1 relationship killer. Getting to AED 30K/month isn't just ambition \u2014 it's removing a major source of family stress. Every step toward financial stability is a step toward being a calmer, more present parent and partner. The job hunt matters. The income matters. It's not selfish. It's foundational.",
-   "index": 9,
+   "title": "The Long Game of Parenting",
+   "body": "You won't remember 2026 as a year. You'll remember it as the year your daughter started talking, your first steps in Dubai, the grind that changed everything. Keep a journal. Even one line per day. In 10 years, you'll read it and understand why it was worth it.",
+   "index": 10,
    "total": 18
   },
   "book": {
-   "book": "The Innovator's Dilemma",
-   "author": "Clayton Christensen",
-   "chapter": "Why Great Companies Fail at Exactly the Right Moment",
-   "lesson": "Christensen's paradox: the best-managed companies, doing everything right \u2014 listening to customers, investing in quality, maximising margins \u2014 are the most vulnerable to disruption. Disruptive technologies start at the bottom of the market (cheaper, simpler, worse performance) serving customers who don't exist yet. They improve over time until they're good enough for mainstream customers. By then, it's too late for incumbents to respond. Nokia had better technology than Apple in 2007. Blockbuster had better retail locations than Netflix. They failed not despite their excellence but because of it \u2014 their success made them unable to cannibalise themselves.",
-   "key_quote": "Excellence in executing today's business model can blind you to the business model that will replace it.",
-   "action": "Ask about your industry: what is the simpler, cheaper, 'worse' solution that currently serves the bottom of the market? Could it eventually serve everyone?",
-   "index": 39,
+   "book": "Made in America",
+   "author": "Sam Walton",
+   "chapter": "The 10 Rules That Built Walmart",
+   "lesson": "Sam Walton built the world's largest retailer from a small Arkansas five-and-dime store. His rules: commit to your business; share profits with employees; energise your associates; communicate everything; appreciate associates; celebrate successes; listen to everyone in your company; exceed customers' expectations; control expenses; swim upstream (do the opposite of what everyone else does). The most counterintuitive: Walmart succeeded by treating employees as partners and sharing information and profits broadly, while competitors treated labour as a cost to minimise. Also: Walton flew his own plane to personally visit stores until he was 70.",
+   "key_quote": "The best business intelligence comes from people closest to the customer. Go there yourself and listen.",
+   "action": "Identify someone in your team or organisation who is closest to the customer/problem. Ask them what they're seeing that leadership doesn't know about.",
+   "index": 40,
    "total": 48,
    "crux": [
-    "Well-managed companies fail precisely by doing what good management prescribes.",
-    "Sustaining innovations improve products for existing customers. Incumbents win these reliably.",
-    "Disruptive innovations start worse on the metrics incumbents value, and win anyway.",
-    "Disruption enters at the low end or in a new market, where incumbent margins look unattractive.",
-    "Listening closely to your best customers pushes you away from disruptive bets. Rationally.",
-    "Resource dependence: customers and investors, not managers, effectively allocate the resources.",
-    "Small markets cannot solve the growth needs of large companies, so large companies skip them.",
-    "Technology supply often outruns demand \u2014 products overshoot what users need, opening the low end.",
-    "The basis of competition shifts over time: function \u2192 reliability \u2192 convenience \u2192 price.",
-    "You cannot analyse markets that do not yet exist. Discovery-driven planning, not forecasting.",
-    "Disruption must be housed in an independent organisation small enough to be excited by a small win.",
-    "Failure early and cheaply is the plan, because the first strategy will be wrong."
+    "Walton's obsession was the customer's price, and everything else followed from it.",
+    "Buy low, stack it high, sell it cheap. Volume compensates for margin.",
+    "Rural small towns were dismissed by competitors. That was the opening.",
+    "Control costs better than anyone. Cost advantage forgives many mistakes.",
+    "Distribution centres came before the stores they served. Logistics was the real business.",
+    "Invest early in information systems. Walmart's data infrastructure preceded everyone's.",
+    "Share profits with associates and they behave like owners.",
+    "Listen to the people on the floor. They talk to customers; you don't.",
+    "Swim upstream. Go the other way when everyone agrees.",
+    "Every store must be visited. Management by walking around, constantly.",
+    "Copy shamelessly from competitors. Walton toured rivals' stores relentlessly.",
+    "Exceed expectations, celebrate success, and keep the culture unembarrassed.",
+    "Frugality is cultural, not cosmetic \u2014 shared hotel rooms while running a Fortune 500 company."
    ],
    "learnings": [
-    "Doing everything right is not protection when the game changes underneath.",
-    "The customers who fund you today are the reason you miss tomorrow.",
-    "A market too small to matter now is the only place disruption can start.",
-    "Cost structure determines which opportunities look attractive. It is destiny."
+    "A cost advantage is a strategy, not an accounting detail.",
+    "Infrastructure before expansion, or expansion breaks you.",
+    "Frontline staff hold the information leadership needs.",
+    "Copying well is faster than inventing badly."
    ],
    "examples": [
-    "Disk drives: every generational shift from 14-inch to 1.8-inch killed the leader, though each new size was initially worse on capacity.",
-    "Kodak invented the digital camera in 1975 and could not commit to it without cannibalising film margins.",
-    "Mini-mills started with low-grade rebar that integrated steel mills were happy to abandon, then moved up until they took the whole market."
+    "Walmart's hub-and-spoke DCs let it saturate regions competitors couldn't serve profitably.",
+    "Walton flew his own plane over towns scouting sites, personally, for years.",
+    "Profit-sharing from 1971 turned shelf-stackers into shareholders and cut shrinkage."
    ],
    "adapt": [
-    "A free Telegram bot is the low-end disruption of paid research. That is the position to hold, not apologise for.",
-    "Don't let existing dashboard users dictate the roadmap if the measured edge points elsewhere.",
-    "Keep experiments in separate ledgers \u2014 the APEX poly engine on its own books, so a small bet stays a small bet."
+    "Your cost advantage is the whole stack running on GitHub Actions and Vercel free tiers. Protect it.",
+    "Infrastructure before features: fix the position lifecycle before adding another scanner.",
+    "Copy shamelessly \u2014 study what the good finance pages do, then do it in your voice.",
+    "Swim upstream: everyone posts motivational finance. Post the actual numbers, including the losses."
    ]
   },
   "way": {
    "minimalism": {
-    "title": "One In, One Out",
-    "body": "Nothing enters the house until something leaves it. Not a rule about tidiness \u2014 a rule about equilibrium. Without it, possessions only ever accumulate, because buying is a decision and discarding never is.",
-    "action": "Buy nothing today without naming what it replaces.",
-    "index": 1,
+    "title": "The 90/90 Rule",
+    "body": "Have you used it in the last 90 days? Will you in the next 90? If both answers are no, it is storage, not ownership. You are paying rent on it in square feet and attention.",
+    "action": "Pick one drawer. Apply 90/90 to every item in it.",
+    "index": 2,
     "total": 20,
     "label": "Minimalism"
    },
    "etiquette": {
-    "title": "Punctuality Is A Statement About Whose Time Matters",
-    "body": "Being late says your time is worth more than theirs, whatever you intended. Arrive five minutes early and use the wait. Note that Gulf meetings may start late \u2014 you still arrive on time.",
-    "action": "Add 10 minutes of buffer to every appointment this week.",
-    "index": 7,
+    "title": "Phone Face Down, Or Away",
+    "body": "A visible phone halves the perceived quality of a conversation \u2014 measurably, in studies. Face down is the minimum. Out of sight is the standard.",
+    "action": "Phone in your bag, not on the table, for every conversation today.",
+    "index": 8,
     "total": 20,
     "label": "Etiquette"
    },
    "stillness": {
-    "title": "The Evening Shutdown",
-    "body": "A defined end to the workday \u2014 review tomorrow's three priorities, close the laptop, say a phrase that marks the boundary. Without a ritual end, work bleeds into every remaining hour.",
-    "action": "Pick a shutdown phrase. Use it tonight.",
-    "index": 5,
+    "title": "Memento Mori",
+    "body": "You will die. Marcus Aurelius wrote it to himself daily while running an empire. Not morbid \u2014 clarifying. It sorts the urgent from the important in about four seconds.",
+    "action": "Ask of one commitment: would this matter if I had a year left?",
+    "index": 6,
     "total": 20,
     "label": "Stillness"
    },
    "model": {
-    "title": "Map Is Not The Territory",
-    "body": "The model is a simplification and will be wrong at the edges. A financial model is a map. Treating its outputs as facts is how forecasts become fiction.",
-    "action": "Name the assumption in your current model most likely to be wrong.",
-    "index": 17,
+    "title": "Via Negativa",
+    "body": "Improvement by removal. Subtracting a bad habit, a bad client, or a bad process is more reliable than adding a good one, and the effect is immediate.",
+    "action": "Remove one thing today rather than adding an improvement.",
+    "index": 18,
     "total": 20,
     "label": "Mental Model"
    },
    "arabic": {
-    "script": "\u0639\u0644\u0649 \u0641\u0643\u0631\u0629",
-    "translit": "'ala fikra",
-    "meaning": "By the way",
-    "use": "Introduces a point mid-conversation without hijacking it.",
-    "index": 23,
+    "script": "\u0625\u0646 \u0634\u0627\u0621 \u0627\u0644\u0644\u0647 \u062e\u064a\u0631",
+    "translit": "in shaa Allah khayr",
+    "meaning": "God willing, it will be good",
+    "use": "Said when an outcome is uncertain. Graceful and appropriate almost anywhere.",
+    "index": 24,
     "total": 30,
     "label": "Arabic"
    },
    "drill": {
-    "title": "The Pre-Mortem",
-    "body": "Imagine the project failed. Write why. Doing this before starting surfaces risks that no optimistic planning session will ever reach.",
-    "action": "Pre-mortem your current priority. List three causes of death.",
-    "index": 9,
+    "title": "Steelman The Other Side",
+    "body": "Argue the opposing position better than its advocates do. Until you can, you do not understand your own position \u2014 you just prefer it.",
+    "action": "Write the strongest case against a view you hold firmly.",
+    "index": 10,
     "total": 20,
     "label": "Drill"
    },
    "health": {
-    "title": "Muscle Is A Glucose Sink",
-    "body": "Skeletal muscle disposes of most post-meal glucose. More muscle means better glycaemic control independent of diet \u2014 the metabolic argument for lifting, separate from strength.",
-    "action": "A short walk or 20 bodyweight squats after your largest meal.",
-    "index": 19,
+    "title": "Consistency Beats Optimisation",
+    "body": "The perfect protocol you follow 30% of the time loses to the adequate one you follow 90% of the time. Every fitness argument online is about the last 5% and ignores the first 95%.",
+    "action": "Pick the minimum session you would do on your worst week. That is your floor.",
+    "index": 20,
     "total": 20,
     "label": "Health"
    }
   },
   "quote": {
-   "name": "Tim Ferriss",
-   "quote": "Focus on being productive instead of busy.",
-   "index": 64,
+   "name": "Elon Musk",
+   "quote": "I think it is possible for ordinary people to choose to be extraordinary.",
+   "index": 65,
    "total": 96
   },
   "lesson": {
-   "tradition": "African Wisdom",
-   "lesson": "The best time to plant a tree was 20 years ago. The second best time is now.",
-   "source": "African Proverb"
+   "tradition": "Chinese Wisdom",
+   "lesson": "The man who moves a mountain begins by carrying away small stones.",
+   "source": "Confucius"
   },
   "case": {
-   "title": "IKEA: Flat Pack Revolution",
-   "story": "A table leg broke during a photo shoot. An employee removed it to fit the table in a car. Ingvar Kamprad realized flat-pack was the future. IKEA now does $47B revenue.",
-   "lesson": "Your biggest breakthrough might come from solving a logistics problem, not a product problem."
+   "title": "Airbnb: From Cereal Boxes to $75B",
+   "story": "Airbnb founders were broke. They bought cereals, repackaged as 'Obama O's' and 'Cap'n McCain's' to fund the company. First investors said the idea would never work.",
+   "lesson": "Survive first. Every startup has a near-death moment. Resourcefulness separates those who make it."
   },
   "fpna": {
-   "title": "Cost Centre vs Profit Centre",
-   "body": "Cost centres are budgeted, profit centres are managed to a P&L. Knowing the difference changes how you frame every problem.",
-   "index": 16,
+   "title": "Dubai FP&A Stack",
+   "body": "AED 30K+ roles: CA/ACCA + Power BI + SAP or Oracle + IFRS 9/16. Targets: ADNOC, Emirates, MAF, DP World.",
+   "index": 17,
    "total": 20
   },
   "cfo": {
-   "title": "The CA\u2192FC\u2192CFO Timeline",
-   "body": "CA qualified \u2192 2-3 years Big 4/audit \u2192 Senior FP&A \u2192 Finance Manager \u2192 Financial Controller (5-8 years post-qualification) \u2192 CFO (10-15 years). Dubai compresses this by 2-3 years if you hit the right company at the right growth stage.",
-   "index": 12,
+   "title": "FC Interview: Top 5 Questions",
+   "body": "1. Walk me through month-end close. 2. How do you handle a material variance? 3. What internal controls have you implemented? 4. Describe your IFRS 16 experience. 5. How do you present bad news to management? Prepare 2-min answers for all five.",
+   "index": 13,
    "total": 15
   },
   "money_hack": {
-   "title": "The 50-30-20 Rule",
-   "body": "50% needs \u00b7 30% wants \u00b7 20% savings. Automate the 20% on salary day."
+   "title": "SIP on Salary Day",
+   "body": "Set SIP date = salary day + 1. Invest before you spend. Pay yourself first."
   },
   "dubai": {
-   "title": "The LinkedIn setting that matters most",
-   "body": "Set location to Dubai, United Arab Emirates and turn on Open to Work for recruiters only. Gulf recruiters filter by location before they read anything, and a Mumbai location excludes you from the search entirely.",
-   "targets": "This is a two-minute change that decides whether you are visible at all.",
-   "action_label": "Now",
-   "action": "Location, headline with the target title, and the About section rewritten in numbers.",
-   "index": 19,
+   "title": "Month-end close is the first question",
+   "body": "Not 'walk me through your CV' \u2014 'walk me through your close'. They want the day count, what runs on which day, where it breaks, and what you did about it.",
+   "targets": "A close you shortened from 10 days to 6 is a better answer than any certificate.",
+   "action_label": "Prep",
+   "action": "Write your close calendar as a day-by-day list. Learn it.",
+   "index": 20,
    "total": 30
   },
   "daughter": {
    "months": 10,
-   "days": 325,
+   "days": 326,
    "heading": "Ten months old.",
    "band": "cruising",
    "born": "2025-12-25"
   },
-  "productivity": "Time-block your calendar. Unblocked time = wasted time.",
+  "productivity": "90-min deep work sprints. No phone. Door closed. Results compound.",
   "father": [
    {
-    "title": "Notice what she is not doing",
-    "do": "Once a week, check the milestone list rather than assuming.",
-    "why": "Sitting, transferring objects hand to hand, responding to her name, and babbling with consonants are the seven-month markers. Knowing the list means concerns get raised early, when intervention works best."
+    "title": "Sing the same song at the same moment",
+    "do": "Attach one song to one transition \u2014 nappy change, bath, car seat.",
+    "why": "Predictable audio cues reduce transition resistance because she knows what comes next. It is the cheapest behavioural tool available at this age."
    },
    {
-    "title": "Talk to her about your day",
-    "do": "Tell her what happened at work, in full sentences, as if she understands.",
-    "why": "The content is irrelevant and the exposure is not. It also forces you to articulate the day, which is a decent end-of-work ritual in its own right."
+    "title": "Give her something to solve",
+    "do": "Put a favourite toy just inside an open container so she has to reach in.",
+    "why": "Means-end reasoning \u2014 using one action to achieve a separate goal \u2014 is developing now. Small solvable problems build it; unsolvable ones just frustrate."
    }
   ],
   "life_wisdom": [
    {
     "tradition": "Jainism",
-    "term": "Karma as physical residue",
-    "translation": "Action leaves a trace",
-    "teaching": "Jain metaphysics treats karma as fine matter that adheres to the soul through action and intent. Unusually, intent matters as much as the act.",
-    "apply": "Judge your own decisions on intent and process, not only outcome. A profitable trade taken for bad reasons still deposits the bad habit."
+    "term": "Aparigraha for time",
+    "translation": "Non-possessiveness applied to hours",
+    "teaching": "The vow limits accumulation. Applied beyond property, hoarding commitments is a form of grasping \u2014 saying yes to everything is acquisitiveness in a respectable costume.",
+    "apply": "Say no to one thing this week that you would normally accept out of reflex rather than interest."
    },
    {
     "tradition": "Buddhism",
-    "term": "Mudita",
-    "translation": "Sympathetic joy",
-    "teaching": "The third sublime state: genuine pleasure at another's success. Named separately because it is rarer and harder than compassion for suffering.",
-    "apply": "Pick the peer whose progress you find least comfortable and find the thing they did well. Envy is the most common emotion in a competitive finance function and the least admitted."
+    "term": "Papa\u00f1ca",
+    "translation": "Mental proliferation",
+    "teaching": "The mind's tendency to spin a single perception into an elaborate narrative \u2014 one ambiguous email becoming a theory about your standing at work.",
+    "apply": "When you notice the story running, return to what actually happened, stated in one sentence with no interpretation. The gap is usually startling."
    }
   ],
   "spanish": [
    {
-    "word": "a tiempo",
-    "meaning": "on time",
-    "es": "Nunca entrega a tiempo.",
-    "en": "He never delivers on time.",
+    "word": "me parece que",
+    "meaning": "it seems to me that",
+    "es": "Me parece que el plan es muy optimista.",
+    "en": "It seems to me the plan is very optimistic.",
     "tag": "Business"
    },
    {
-    "word": "el pa\u00f1al",
-    "meaning": "the nappy / diaper",
-    "es": "Hay que cambiar el pa\u00f1al.",
-    "en": "The nappy needs changing.",
+    "word": "tener hambre",
+    "meaning": "to be hungry",
+    "es": "Creo que tiene hambre.",
+    "en": "I think she is hungry.",
     "tag": "Family"
    }
   ],
   "vocab": [
    {
-    "word": "Salient",
-    "say": "SAY-lee-uhnt",
-    "meaning": "Most noticeable or important.",
-    "example": "The salient point is that margin fell before volume did.",
-    "note": "Use instead of 'main' when you want to signal you have filtered the noise."
+    "word": "Prudent",
+    "say": "PROO-duhnt",
+    "meaning": "Sensibly cautious about risk.",
+    "example": "A prudent provision here protects the full-year number.",
+    "note": "Standard in audit and board language \u2014 signals judgement, not fear."
    },
    {
-    "word": "Material",
-    "say": "muh-TEER-ee-uhl",
-    "meaning": "Large enough to change a decision.",
-    "example": "The variance is real but not material to the group result.",
-    "note": "In finance this is a technical word \u2014 use it only when you mean the threshold."
+    "word": "Discretionary",
+    "say": "dis-KRESH-uh-nair-ee",
+    "meaning": "Spent at one's own choosing; not committed.",
+    "example": "Only 18% of the cost base is genuinely discretionary.",
+    "note": "The word that separates costs you can cut from costs you cannot."
    }
   ],
   "speaking": {
-   "title": "The hostile question",
-   "drill": "Rehearse: 'That is a fair challenge \u2014 here is the assumption behind it.' Say it five times until it is automatic.",
-   "why": "Having a rehearsed opening for a hostile question buys three seconds of thinking without looking rattled."
+   "title": "Shorten your sentences",
+   "drill": "Take a written paragraph of your own and read it aloud, splitting every sentence longer than 15 words.",
+   "why": "Your written voice is already short. Spoken sentences drift longer under pressure \u2014 this recalibrates it."
   },
   "interview_tech": [
    {
-    "q": "You acquire 80% of a subsidiary. Walk me through the consolidation mechanics.",
-    "a": "Recognise 100% of the subsidiary's assets and liabilities at fair value, not 80% \u2014 control, not ownership, drives consolidation. The 20% you do not own becomes non-controlling interest, shown within equity. Goodwill is consideration transferred plus NCI measured either at fair value (full goodwill) or at its share of net assets (partial goodwill) \u2014 an accounting policy choice that changes the goodwill number materially. Eliminate all intragroup balances, transactions and unrealised profit in stock. Post-acquisition profit splits between parent and NCI by ownership.",
-    "who": "Al-Futtaim \u00b7 Landmark Group \u00b7 Unilever"
+    "q": "What is the difference between an associate and a subsidiary in your accounts?",
+    "a": "Control versus significant influence. A subsidiary is controlled \u2014 you consolidate line by line and recognise NCI. An associate is significant influence, presumed at 20\u201350%, accounted for using the equity method: one line on the balance sheet at cost plus your share of post-acquisition reserves, and one line in P&L for your share of profit. Nothing of the associate's revenue or EBITDA enters your group numbers \u2014 a point that catches people out when a joint-venture-heavy group reports headline growth.",
+    "who": "Emaar \u00b7 Chalhoub \u00b7 Nestl\u00e9"
    },
    {
-    "q": "What is shrinkage, what causes it, and what is an acceptable level?",
-    "a": "Shrinkage is the gap between book inventory and counted inventory \u2014 theft (external and internal), administrative error, damage and supplier short-delivery. Fashion retail typically runs 1\u20132% of sales; grocery higher. The important split is internal versus external, because the remedies differ entirely: internal is a controls and rostering problem, external is layout, tagging and security. Any store more than 100bps above the estate average is a process failure, not bad luck \u2014 investigate the receiving dock first.",
-    "who": "Landmark Group \u00b7 Target \u00b7 Alshaya"
+    "q": "Compare owned retail, franchise, and concession from a finance perspective.",
+    "a": "Owned: full revenue, full margin, full capex, full lease and staffing risk. Franchise: you book a royalty and wholesale margin \u2014 far lower revenue, far lower risk, and no control over the customer experience. Concession: you occupy space inside a host retailer, pay a percentage of sales rather than fixed rent, so occupancy cost flexes with trading and downside is capped. In the Gulf, franchise is the dominant international-brand model, which is why groups like Alshaya and Al-Futtaim report differently from the brands they carry.",
+    "who": "Alshaya \u00b7 Al-Futtaim \u00b7 Chalhoub"
    }
   ],
   "interview_soft": [
    {
-    "q": "How do you stay current technically while managing?",
-    "a": "Be specific and verifiable. Name the standard you last read in full and why, the technical update you attended, the thing you built yourself recently rather than delegated. Vague answers about 'reading widely' land badly with technical interviewers. The strongest version connects it to a decision: 'I went back through IFRS 16 properly when we hit the lease modification question on the Indonesian stores, and that changed how we structured the renewal.'",
-    "who": "Big Four partners \u00b7 Group CFOs"
+    "q": "What do you know about our company?",
+    "a": "The disqualifying answer is anything from the homepage. Come with: their last reported results and one number from them, their format or brand mix and how it differs from peers, one strategic move in the last 18 months, and one question you genuinely cannot answer from outside. For a Gulf retail group that means knowing their franchise portfolio, which markets they operate directly versus through partners, and their exposure to mall footfall.",
+    "who": "Every interview, every time"
    },
    {
-    "q": "Where do you think retail is heading in the next five years?",
-    "a": "Have a view and defend it with numbers, not trends. Something like: physical stores stop being judged on their own sales as fulfilment and returns blur the channels, which breaks conventional store P&L and forces a catchment-level view; margin pressure shifts from price to cost-to-serve; and in the Gulf specifically, corporate tax and e-invoicing professionalise finance functions that were previously light. Then say what you would do about it in the role you are interviewing for.",
-    "who": "Gulf retail boards \u00b7 Search firms"
+    "q": "How do you build credibility in the first 90 days in a new company?",
+    "a": "Deliver one visible thing early and be accurate about everything. Concretely: get the close done cleanly, learn the actual business by walking the stores rather than reading the reports, and find the one number everyone argues about and fix its definition. Do not restructure anything in the first quarter. Credibility in finance is cumulative and fragile \u2014 it comes from being right repeatedly, not from an early bold move.",
+    "who": "Every incoming CFO"
    }
   ],
   "cfo_field": [
    {
-    "q": "Read the cash flow statement first. Always.",
-    "a": "P&L is an opinion, cash is a fact. Open any set of accounts at the cash flow statement, compare operating cash flow to EBITDA over three years, and look at the gap. A business converting 90%+ of EBITDA to operating cash is real. One converting 50% has its profit sitting in working capital or is capitalising something it should be expensing. That one ratio finds more problems than any variance pack.",
-    "who": "The first thing to check, every time"
+    "q": "Explain a variance in one sentence or you do not understand it yet.",
+    "a": "'Margin is down 180bps: 120 from promotional depth in electronics, 40 from freight, 20 mix.' That is a CFO answer. A table of forty lines is a controller answer. The discipline is to decompose until the drivers are additive and then name the largest two. If you cannot make the bridge add up, you have a data problem, not a communication problem.",
+    "who": "The board-meeting test"
    },
    {
-    "q": "Scenario planning beats a single budget, and costs less than it sounds.",
-    "a": "Three cases \u2014 base, downside, upside \u2014 with the two or three variables that actually move the outcome, not thirty. In retail that is usually like-for-like growth, gross margin, and rent renewals. The value is not the numbers; it is that the board has already discussed the downside before it arrives, so the conversation when it does is about the response rather than about whether it is happening.",
-    "who": "What a board actually wants"
+    "q": "Working capital is where a retail CFO is actually judged.",
+    "a": "EBITDA gets the headline; the cash conversion cycle gets the board's attention. DIO + DSO \u2212 DPO. Retail is inventory-heavy and often near-zero DSO, so the fight is DIO against DPO. Cutting DIO from 95 to 80 days on AED 400M COGS releases roughly AED 16.4M of cash \u2014 permanently, without selling a single extra unit. That is a bigger number than most cost programmes deliver, and it does not need a headcount conversation.",
+    "who": "Landmark \u00b7 Alshaya \u00b7 GMG"
    }
   ],
   "review": {
-   "prompt": "Who did you help with no expectation of return?",
-   "why": "If the answer is nobody, the week was narrower than it needed to be.",
-   "index": 5,
+   "prompt": "What would you do differently with the same information?",
+   "why": "Separates decision quality from outcome. Only the first is yours.",
+   "index": 6,
    "total": 20,
-   "week": 46,
+   "week": 47,
    "year": 2026,
-   "key": "2026-W46",
-   "weekday": 7,
-   "days_left": 0,
-   "is_review_day": true
+   "key": "2026-W47",
+   "weekday": 1,
+   "days_left": 6,
+   "is_review_day": false
   },
   "podcasts": {
    "ok": true,
@@ -1096,27 +1092,46 @@
    "shows": 20,
    "source": "each channel's public Atom feed",
    "built_on": "2026-11-12",
-   "age_days": 3.0,
+   "age_days": 4.0,
    "is_fallback": true
   },
   "smart_reads": [
    {
     "source": "Livemint",
     "cat": "money",
-    "title": "SCSS investment rules: 5 mistakes retirees must avoid before investing the maximum  \u20b930 lakh in the scheme",
-    "link": "https://www.livemint.com/money/personal-finance/scss-investment-rules-5-mistakes-retirees-must-avoid-before-investing-the-maximum-30-lakh-in-the-scheme-11794680496752.html",
-    "summary": "SCSS offers an 8.2% interest rate for October\u2013December 2026, with a maximum investment limit of  \u20b930 lakh. Retirees should understand five important rules covering eligibility, quarterly interest payments, premature withdrawals, taxation and liquidity before investing.",
+    "title": "Small-cap mutual funds: Should you continue your SIP? 10-year rolling returns reveal risks investors may be missing",
+    "link": "https://www.livemint.com/money/personal-finance/smallcap-mutual-funds-should-you-continue-your-sip-10-year-rolling-returns-reveal-risks-investors-may-be-missing-11794758823173.html",
+    "summary": "Small-cap mutual funds delivered 15.02% average 10-year SIP returns, beating large-cap funds. But the worst 10-year outcome was negative. Here's what rolling returns reveal about small-cap risks and whether investors should continue their SIPs.",
     "date": "Nov 15, 2026",
-    "_sort": "2026-11-15T01:00:34+00:00"
+    "_sort": "2026-11-15T16:14:09+00:00",
+    "smart": {
+     "what_happened": [
+      "Small-cap mutual funds posted an average 10-year SIP return of 15.02%, outpacing large-cap funds.",
+      "The worst 10-year rolling return for a small-cap fund was negative, indicating potential risk."
+     ],
+     "why_it_matters": "The strong average return suggests small-cap funds can deliver higher growth than large-cap funds over a decade, but the negative worst-case outcome highlights the volatility and downside risk inherent in this segment, which investors must consider when deciding whether to keep their systematic investment plans active.",
+     "what_to_watch": "Track the upcoming quarter's rolling 10-year SIP return for the lowest\u2011performing small-cap fund to gauge whether the negative tail risk is widening.",
+     "headline": "Small-cap mutual funds average 15.02% 10-year SIP return, worst outcome negative",
+     "read_seconds": 20
+    }
    },
    {
     "source": "The Marginalian",
     "cat": "ideas",
-    "title": "Embrace Your Obsessions: Susan Orlean on the Antidote to the Meaninglessness of Life",
-    "link": "https://www.themarginalian.org/2026/11/14/susan-orlean-orchid-thief/",
-    "summary": "Every great book, whatever its subject or genre or style, is about one thing only: the eternal question of what gives meaning to our tiny, transient lives. And every answer given, however faintly whispered, points to one thing only: the quality of attention we pay to those lives. If attention is the lever of love, the ",
-    "date": "Nov 14, 2026",
-    "_sort": "2026-11-14T14:31:26+00:00"
+    "title": "How to Have Enough: Wendell Berry on Creativity and Love",
+    "link": "https://www.themarginalian.org/2026/11/15/wendell-berry-sabbath/",
+    "summary": "&#8220;Enough is so vast a sweetness, I suppose it never occurs, only pathetic counterfeits,&#8221; Emily Dickinson sighed in one of her love letters to Susan an epoch before Kurt Vonnegut, in a short and lovely poem, distilled happiness to the knowledge that you have enough. It is not an easy knowledge to live with am",
+    "date": "Nov 15, 2026",
+    "_sort": "2026-11-15T15:29:14+00:00"
+   },
+   {
+    "source": "Livemint Opinion",
+    "cat": "money",
+    "title": "RBI's 'jinx' rate has dogged it for 10 years\u2014What's causing it?",
+    "link": "https://www.livemint.com/opinion/online-views/rbis-jinx-rate-has-dogged-it-for-10-years-whats-causing-it-11794682421388.html",
+    "summary": "Three RBI governors have exited at the 6.5% rate. This may be a coincidence, but it also hides confusion over what the natural interest rate is, where monetary policy is neither expansionary nor contracting, inflation is stable near the targeted rate and output is near potential.",
+    "date": "Nov 15, 2026",
+    "_sort": "2026-11-15T14:30:31+00:00"
    },
    {
     "source": "Peter Attia",
@@ -1125,7 +1140,17 @@
     "link": "https://peterattiamd.com/does-raw-milk-offer-meaningful-health-benefits/",
     "summary": "An in-depth analysis of the most common claims around raw milk\nThe post Does raw milk offer meaningful health benefits? appeared first on Peter Attia MD.",
     "date": "Nov 14, 2026",
-    "_sort": "2026-11-14T12:00:00+00:00"
+    "_sort": "2026-11-14T12:00:00+00:00",
+    "smart": {
+     "what_happened": [
+      "The article provides an in\u2011depth analysis of the most common claims around raw milk",
+      "It evaluates whether raw milk offers meaningful health benefits"
+     ],
+     "why_it_matters": "Understanding the evidence behind raw milk claims is important for consumers and health professionals making dietary decisions, as it clarifies potential risks and benefits associated with consuming unpasteurized dairy products.",
+     "what_to_watch": "Future peer\u2011reviewed studies that directly compare health outcomes of raw versus pasteurized milk consumption",
+     "headline": "Raw milk health benefit claims examined in analysis",
+     "read_seconds": 20
+    }
    },
    {
     "source": "ET Opinion",
@@ -1137,32 +1162,13 @@
     "_sort": "2026-11-13T18:20:21+00:00",
     "smart": {
      "what_happened": [
-      "India's startup exit market has been dominated by IPOs while M&A activity remains limited.",
-      "Growth of private secondary transactions over the past three to four years is giving VC investors another way to exit and return money to their backers."
+      "India's startup exits have been dominated by IPOs, with few mergers and acquisitions.",
+      "Growth of private secondary transactions over the past three to four years gives VC investors an additional way to exit and return capital."
      ],
-     "why_it_matters": "The emergence of a robust secondary market expands liquidity options for venture capital firms, allowing them to realize returns without relying solely on public listings or strategic sales. This can improve fund performance, attract more capital to Indian startups, and potentially accelerate the ecosystem's growth by providing earlier cash returns to investors.",
-     "what_to_watch": "The total dollar volume of private secondary transactions in India reported in the next quarterly venture capital market report.",
-     "headline": "Private secondary market provides new exit route for Indian venture capital",
+     "why_it_matters": "The emergence of a secondary market addresses the funding gap that limited exit options created for venture capital firms, allowing them to recycle capital more quickly and potentially increase investment in new startups. By providing an alternative to IPOs, it may also reduce pressure on companies to go public prematurely and improve overall liquidity in the Indian startup ecosystem.",
+     "what_to_watch": "Monitor the quarterly volume of private secondary transactions reported in India's venture capital data releases.",
+     "headline": "Private secondary market adds new exit route for Indian VC investors",
      "read_seconds": 24
-    }
-   },
-   {
-    "source": "Economic Times",
-    "cat": "money",
-    "title": "The infrastructure shift: Why tokenised bonds matter now",
-    "link": "https://economictimes.indiatimes.com/wealth/invest/the-infrastructure-shift-why-tokenised-bonds-matter-now/articleshow/135798716.cms",
-    "summary": "Demat 2.0 is an innovative pilot program initiated by India's Reserve Bank and SEBI, focusing on blockchain technology for corporate bonds. This venture strives to improve the settlement process and broaden investor access to various financial instruments. Key financial institutions are involved in showcasing a signifi",
-    "date": "Nov 13, 2026",
-    "_sort": "2026-11-13T10:40:07+00:00",
-    "smart": {
-     "what_happened": [
-      "The Reserve Bank of India and SEBI have launched the Demat 2.0 pilot, using blockchain technology for corporate bond settlement.",
-      "Key financial institutions will take part in the program to demonstrate tokenised bond issuance and expand investor access."
-     ],
-     "why_it_matters": "The pilot aims to streamline settlement processes, reduce costs, and widen participation in the corporate bond market by leveraging blockchain. If successful, it could set a regulatory precedent for digital asset infrastructure in India and improve liquidity for issuers and investors.",
-     "what_to_watch": "The next public update from the RBI or SEBI on the Demat 2.0 pilot results and any timeline for broader implementation.",
-     "headline": "India launches Demat 2.0 pilot for tokenised corporate bonds",
-     "read_seconds": 26
     }
    },
    {
@@ -1204,40 +1210,48 @@
   ],
   "lichess_games": [
    {
-    "id": "1xVGzlu3",
-    "url": "https://lichess.org/1xVGzlu3",
-    "result": "Loss",
-    "icon": "\u274c",
-    "cls": "loss",
+    "id": "HxpdknfX",
+    "url": "https://lichess.org/HxpdknfX",
+    "result": "Draw",
+    "icon": "\u00bd",
+    "cls": "draw",
     "my_side": "White",
-    "my_rating": 1547,
-    "opp_rating": 1538,
-    "opponent": "Zakaria69",
-    "me_diff": -6,
-    "opp_diff": 6,
-    "opening": "French Defense",
-    "eco": "C02",
-    "moves": 42,
-    "termination": "Resignation",
+    "my_rating": 1535,
+    "opp_rating": 1604,
+    "opponent": "alperdurgn",
+    "me_diff": 1,
+    "opp_diff": -1,
+    "opening": "Queen's Pawn Game",
+    "eco": "D00",
+    "moves": 94,
+    "termination": "Stalemate",
     "speed": "Blitz",
-    "analysis": "Focus on early pawn structure: after 1.e4 e6\u202f2.d4 d5\u202f3.Nc3, play 3\u2026Bb4 (Winawer) or 3\u2026Nf6, not 3\u2026c5. Your 3\u2026c5 allowed White\u2019s strong dxc5 and central dominance, costing you ~0.6\u202f% accuracy. Strengthen opening theory and avoid premature pawn breaks.",
+    "analysis": "Focus on early piece activity: develop knights before queen (Nf3, Nc3) and avoid queen moves before move\u202f8; you wasted ~15\u202fseconds per turn.",
     "is_upset": false,
     "is_collapse": false,
     "is_long": true,
     "best_move": {},
     "key_facts": [
-     "Rating gap -9 (1547 vs 1538)",
-     "Endgame from move 24",
-     "42 moves \u00b7 Blitz"
+     "Rating gap +69 (1535 vs 1604)",
+     "Endgame from move 25",
+     "94 moves \u00b7 Blitz"
     ],
-    "standout": "",
+    "standout": "94 moves of grinding. Endgame stamina, not opening prep, settled this one.",
     "game_strength": null,
-    "est_fide": 1147,
+    "est_fide": 1135,
     "accuracy": null,
     "acpl": null,
     "analysed": false,
     "_mode": "full",
     "_trend": [
+     {
+      "day": "11/15",
+      "wins": 0,
+      "losses": 1,
+      "draws": 1,
+      "total": 2,
+      "pct": 0
+     },
      {
       "day": "11/14",
       "wins": 1,
@@ -1285,93 +1299,52 @@
       "draws": 0,
       "total": 4,
       "pct": 25
-     },
-     {
-      "day": "11/08",
-      "wins": 5,
-      "losses": 1,
-      "draws": 0,
-      "total": 6,
-      "pct": 83
      }
     ],
     "_yest_counts": {
      "blitz": {
-      "win": 1,
-      "loss": 2,
-      "draw": 0,
+      "win": 0,
+      "loss": 1,
+      "draw": 1,
       "rp": {
-       "before": 1546,
-       "after": 1541
+       "before": 1541,
+       "after": 1536
       }
      }
     },
-    "_session_date": "2026-11-14",
+    "_session_date": "2026-11-15",
     "_is_yesterday": true
    },
    {
-    "id": "KllUjzIl",
-    "url": "https://lichess.org/KllUjzIl",
-    "result": "Win",
-    "icon": "\u2705",
-    "cls": "win",
+    "id": "8z7SiqX8",
+    "url": "https://lichess.org/8z7SiqX8",
+    "result": "Loss",
+    "icon": "\u274c",
+    "cls": "loss",
     "my_side": "Black",
     "my_rating": 1541,
-    "opp_rating": 1522,
-    "opponent": "politian1",
-    "me_diff": 6,
-    "opp_diff": -6,
-    "opening": "Slav Defense",
-    "eco": "D11",
-    "moves": 11,
+    "opp_rating": 1568,
+    "opponent": "dorzheevv",
+    "me_diff": -6,
+    "opp_diff": 8,
+    "opening": "Philidor Defense",
+    "eco": "C41",
+    "moves": 33,
     "termination": "Resignation",
     "speed": "Blitz",
-    "analysis": "Focus on early queen development: after 1\u2026d5\u202f2.c4\u202fc6\u202f3.Nc3\u202fNf6\u202f4.Nf3\u202fBf5, avoid 5.Qb3?; instead play 5.e3, develop bishops, then castle\u2014reduces tactical vulnerabilities and improves piece coordination.",
+    "analysis": "Focus on early piece activity: develop knights before moving the queen (e.g., 4\u2026Nf6 instead of 4\u2026Qb6), avoiding unnecessary queen sorties that waste tempo and invite tactics.",
     "is_upset": false,
     "is_collapse": false,
     "is_long": false,
     "best_move": {},
     "key_facts": [
-     "Rating gap -19 (1541 vs 1522)",
-     "11 moves \u00b7 Blitz"
+     "Rating gap +27 (1541 vs 1568)",
+     "Endgame from move 27",
+     "33 moves \u00b7 Blitz"
     ],
-    "standout": "Over in 11 moves \u2014 decided in the opening, so the opening is what to study.",
+    "standout": "",
     "game_strength": null,
     "est_fide": 1141,
-    "accuracy": null,
-    "acpl": null,
-    "analysed": false
-   },
-   {
-    "id": "Xx9Nj1V1",
-    "url": "https://lichess.org/Xx9Nj1V1",
-    "result": "Loss",
-    "icon": "\u274c",
-    "cls": "loss",
-    "my_side": "Black",
-    "my_rating": 1546,
-    "opp_rating": 1577,
-    "opponent": "BunkerDown",
-    "me_diff": -5,
-    "opp_diff": 6,
-    "opening": "Philidor Defense",
-    "eco": "C41",
-    "moves": 62,
-    "termination": "Resignation",
-    "speed": "Blitz",
-    "analysis": "Focus on early piece activity: develop knights before moving the d\u2011pawn; in the first 10 moves, aim for \u22642 pawn pushes and \u22653 piece placements.",
-    "is_upset": false,
-    "is_collapse": false,
-    "is_long": true,
-    "best_move": {},
-    "key_facts": [
-     "Rating gap +31 (1546 vs 1577)",
-     "Endgame from move 45",
-     "62 moves \u00b7 Blitz"
-    ],
-    "standout": "62 moves of grinding. Endgame stamina, not opening prep, settled this one.",
-    "game_strength": null,
-    "est_fide": 1146,
     "accuracy": null,
     "acpl": null,
     "analysed": false
@@ -1379,14 +1352,22 @@
   ],
   "lichess_summary": {
    "mode": "full",
-   "total": 3,
-   "wins": 1,
-   "losses": 2,
-   "draws": 0,
-   "pct": 33,
+   "total": 2,
+   "wins": 0,
+   "losses": 1,
+   "draws": 1,
+   "pct": 0,
    "icon": "\u274c",
-   "score": "1/3",
+   "score": "0/2",
    "trend": [
+    {
+     "day": "11/15",
+     "wins": 0,
+     "losses": 1,
+     "draws": 1,
+     "total": 2,
+     "pct": 0
+    },
     {
      "day": "11/14",
      "wins": 1,
@@ -1434,33 +1415,25 @@
      "draws": 0,
      "total": 4,
      "pct": 25
-    },
-    {
-     "day": "11/08",
-     "wins": 5,
-     "losses": 1,
-     "draws": 0,
-     "total": 6,
-     "pct": 83
     }
    ],
    "weak_op": "",
    "best_op": "",
    "upsets": 0,
    "collapses": 0,
-   "long_games": 2,
-   "session_summary": "Your 33\u202f% win rate shows you\u2019re barely scraping past mediocrity; you\u2019re either playing too passively or over\u2011committing without a clear plan. Identify the opening that yields the highest win percentage and drill it until you can execute the first ten moves without hesitation\u2014any deviation is a ticket to defeat. From now on, log every loss, pinpoint the exact move where you first deviated from objective play, and rehearse the correct continuation until it becomes second nature, or you\u2019ll continue spiralling downward.",
-   "session_date": "2026-11-14",
+   "long_games": 1,
+   "session_summary": "Your 0% win rate shows you\u2019re barely scraping draws against equal\u2011strength opponents; you\u2019re not exploiting any advantage and are likely slipping into passive, symmetrical lines that let the opponent dictate the game. The fact that you have no identifiable \u201cbest\u201d or \u201cweakest\u201d opening indicates you\u2019re rotating through openings without a coherent repertoire\u2014stop the roulette and adopt a single, sound system (e.g., a solid King\u2019s Indian Defense or a classical French) and master its typical middlegame plans. Immediately start a focused study routine: 30 minutes of opening theory, 30 minutes of annotated game review (your losses only), and 30 minutes of tactical drills, tracking progress each week; if you don\u2019t see a 10% increase in win\u2011rate after two weeks, abandon the current repertoire and rebuild from the ground up.",
+   "session_date": "2026-11-15",
    "is_yesterday": true,
    "token_missing": false
   },
   "lichess_puzzle": {
-   "pid": "f9Xve",
-   "rating": 1968,
+   "pid": "Lw4qG",
+   "rating": 1806,
    "level": "\ud83d\udd34 stretch",
-   "themes": "Deflection \u00b7 Mate In2 \u00b7 Middlegame",
-   "tip": "Lure the key defender away from its post with a forcing move.",
-   "url": "https://lichess.org/training/f9Xve"
+   "themes": "Endgame \u00b7 Defensive Move \u00b7 Crushing",
+   "tip": "King activity and pawn structure dominate. Technique over tactics here.",
+   "url": "https://lichess.org/training/Lw4qG"
   }
  }
 }
