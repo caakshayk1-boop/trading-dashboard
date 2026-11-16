@@ -1,5 +1,5 @@
 {
- "build_id": "20261116T090224",
+ "build_id": "20261116T093115",
  "date": "2026-11-16",
  "date_str": "Monday, November 16 2026",
  "picks": [
@@ -532,15 +532,9 @@
  },
  "data_health": {
   "worst": "STALE",
-  "current": 10,
+  "current": 11,
   "total": 12,
   "degraded": [
-   {
-    "dataset": "Podcasts",
-    "status": "STALE",
-    "age": "4 days old",
-    "note": "older than its daily refresh"
-   },
    {
     "dataset": "Stock screen",
     "status": "STALE",
@@ -827,51 +821,26 @@
   },
   "podcasts": {
    "ok": true,
-   "generated_at": "2026-11-12T01:03:30.453918+00:00",
+   "generated_at": "2026-11-16T01:31:48.328866+00:00",
    "episodes": [
     {
-     "show": "Ankur Warikoo",
-     "author": "warikoo",
-     "category": "Career",
-     "title": "Fix Your Finances Before 2027: 7 Money Moves to Make Now",
+     "show": "Drishti IAS",
+     "author": "Drishti IAS",
+     "category": "Education",
+     "title": "PIB Weekly Current Affairs | 8\u201314 November 2026 | UPSC CSE | Drishti IAS",
      "guest": "",
-     "published": "2026-11-11",
-     "link": "https://www.youtube.com/watch?v=Psl-Erz5jCI",
+     "published": "2026-11-15",
+     "link": "https://www.youtube.com/watch?v=eXumKBdZqVc",
      "takeaways": [
-      "Update your emergency fund before 2027.",
-      "Invest in skills that can grow your income."
-     ]
-    },
-    {
-     "show": "The Wire",
-     "author": "The Wire",
-     "category": "Politics",
-     "title": "Gokul Dairy Election 'Stolen': Why You Should Care",
-     "guest": "",
-     "published": "2026-11-11",
-     "link": "https://www.youtube.com/watch?v=1mGa-oZHyas",
-     "takeaways": [
-      "In this video senior journalist Kunal Purohit explains why Kolhapur's Gokul Dairy elections are being 'stolen' by the Mahayuti Led Panel and why it is important for us to care?",
-      "You can read Kunal Purohit's text story here:"
-     ]
-    },
-    {
-     "show": "ANI Podcast (clips)",
-     "author": "ANI Podcast with Smita Prakash Clips",
-     "category": "Politics",
-     "title": "\u201cMarkets Decide That\u201d: Samir Saran on India\u2019s Economic Approach to China",
-     "guest": "",
-     "published": "2026-11-11",
-     "link": "https://www.youtube.com/watch?v=EqT9QY3A-BQ",
-     "takeaways": [
-      "\u201cMarkets Decide That\u201d: Samir Saran on India\u2019s Economic Approach to China #SmitaPrakash #SamirSaran #IshaanPrakash #China #India #Modi #XiJinping Tune in here: linktr.ee/podcastwithsmitaprakash"
+      "The session provides an exam\u2011oriented analysis of key updates released by the Press Information Bureau (PIB).",
+      "It covers important government policies, flagship schemes, ministry\u2011wise developments, science and technology, defence, environment, international relations and other significant national developments."
      ]
     },
     {
      "show": "Sadhguru",
      "author": "Sadhguru",
      "category": "Philosophy",
-     "title": "Getting Drunk on Moonbeams: Ancient Yogic Secrets | Sadhguru",
+     "title": "Does Spirituality Choose You? | Sadhguru",
      "guest": "",
      "published": "2026-11-11",
      "link": "https://www.youtube.com/watch?v=jEu_CGP0qZ0",
@@ -884,216 +853,21 @@
      "show": "Drishti IAS",
      "author": "Drishti IAS",
      "category": "Education",
-     "title": "Neolithic Age: First Farmers and Herders | Class 11 History, Chapter 6 | Drishti IAS",
+     "title": "Before You Choose Your UPSC Optional, Watch This Video! | Drishti IAS",
      "guest": "",
-     "published": "2026-11-11",
-     "link": "https://www.youtube.com/watch?v=q1WPdIoTFvI",
+     "published": "2026-11-14",
+     "link": "https://www.youtube.com/watch?v=e_pCoE_NJhc",
      "takeaways": [
-      "In this video, we explore Class 11 History (Old NCERT), Chapter 6 \u2013 \"Neolithic Age: First Farmers and Herders\" and understand the emergence of agriculture and animal domestication in human history.",
-      "We examine how prehistoric communities gradually shifted from hunting and gathering to food production, developed settled lifestyles and established early agricultural settlements."
-     ]
-    },
-    {
-     "show": "Figuring Out",
-     "author": "Raj Shamani",
-     "category": "Business",
-     "title": "Psychology Of Billionaires, Extreme Ambition & Secrets Of Success | Joe Hudson | FO586 Raj Shamani",
-     "guest": "",
-     "published": "2026-11-10",
-     "link": "https://www.youtube.com/watch?v=g9zGQdrAlMw",
-     "takeaways": [
-      "The Figuring Out Podcast features raw conversations with members of the top\u202f1% in India.",
-      "It aims to break down how experts win in money, business, mindset, relationships, and life."
-     ]
-    },
-    {
-     "show": "CA Rachana Ranade",
-     "author": "CA Rachana Phadke Ranade",
-     "category": "Investing",
-     "title": "The Stock You Refuse to Sell | CA Rachana Ranade",
-     "guest": "",
-     "published": "2026-11-10",
-     "link": "https://www.youtube.com/watch?v=i3jscSFmIxM",
-     "takeaways": [
-      "Investors often hold losing stocks while selling winners, a common mistake highlighted.",
-      "Ignoring tax\u2011loss harvesting means missing a legal way to save on taxes."
-     ]
-    },
-    {
-     "show": "Labour Law Advisor",
-     "author": "Labour Law Advisor",
-     "category": "Money",
-     "title": "We Created Something Special for You | Jagruk Journal 2027",
-     "guest": "",
-     "published": "2026-11-10",
-     "link": "https://www.youtube.com/watch?v=1V7axMQrATQ",
-     "takeaways": [
-      "This year, we have built something completely unique.",
-      "Join us as we unveil the highly anticipated secret theme for JJ27, open the brand-new box, and show you how to build discipline, track your goals, and reflect on who you are becoming in just 5 minutes a day."
-     ]
-    },
-    {
-     "show": "The Deshbhakt",
-     "author": "The Deshbhakt",
-     "category": "Society",
-     "title": "Jensen Huang To Quit As Nvidia CEO? | Cost Of Sleeping With A Chinese Spy - A Security Nightmare!!",
-     "guest": "",
-     "published": "2026-11-10",
-     "link": "https://www.youtube.com/watch?v=06Wjimg1rEE",
-     "takeaways": [
-      "It\u2019s risk free with Nord\u2019s 30 day money-back guarantee!\u270c The explosive secret affair between Nvidia CEO Jensen Huang and alleged Chinese spy Alice Huang has sent shockwaves around the world and crashed Nvidia\u2019s stocks - the most valuable company in the world.",
-      "But Huang cheating on his wife of four decades is not even the start of the story - it gets much more dirty."
-     ]
-    },
-    {
-     "show": "Abhijit Chavda",
-     "author": "Abhijit Chavda",
-     "category": "Geopolitics",
-     "title": "#AskAbhijit 384: Ask Me Anything - Any Topic",
-     "guest": "",
-     "published": "2026-11-09",
-     "link": "https://www.youtube.com/watch?v=RccqEOcIEYA",
-     "takeaways": [
-      "Episode 384 of the #AskAbhijit show: Ask me your best questions in the live chat and superchat, and I shall answer them.",
-      "Dark Stars to Black Holes: The 250-Year Journey from Impossible Idea to Nobel Prize (The Black Hole Chronicles Book 1) 2."
-     ]
-    },
-    {
-     "show": "Sid Warrier",
-     "author": "Dr Sid Warrier",
-     "category": "Health",
-     "title": "The Brain Hack Every Couple Needs | Neurologist Dr Sid explains",
-     "guest": "",
-     "published": "2026-11-09",
-     "link": "https://www.youtube.com/watch?v=xa_1Izi9Esg",
-     "takeaways": [
-      "Why do minor disagreements quickly spiral into shouting matches or silent treatment?",
-      "In this video, Dr Sid Warrier breaks down the neuroscience of what happens in your brain when you fight with a partner, parent, or friend."
-     ]
-    },
-    {
-     "show": "Groww",
-     "author": "Groww",
-     "category": "Investing",
-     "title": "5 US Growth Stocks Down Over 25% | Opportunity or Trap?",
-     "guest": "",
-     "published": "2026-11-07",
-     "link": "https://www.youtube.com/watch?v=O3mlKDZK-_I",
-     "takeaways": [
-      "Can a company deliver strong revenue and profit growth while its stock falls 40%\u201370% from the highs?",
-      "In this video, we analyse five US companies where business performance remains strong, but the market has sharply reset expectations."
-     ]
-    },
-    {
-     "show": "Pranjal Kamra",
-     "author": "Pranjal Kamra",
-     "category": "Investing",
-     "title": "Confusing Mutual Fund Schemes explained | Finology Academy of Mutual Funds Ep 3",
-     "guest": "",
-     "published": "2026-11-06",
-     "link": "https://www.youtube.com/watch?v=37QfSHokop4",
-     "takeaways": [
-      "Decoding any fund\u2019s full name involves separating it into four parts: the AMC brand, the scheme category, the plan (Direct vs. Regular), and the option (Growth vs. IDCW).",
-      "The regular plan\u2019s annual commission fee compounds over time, creating a massive wealth gap."
-     ]
-    },
-    {
-     "show": "Think School",
-     "author": "Think School",
-     "category": "Business",
-     "title": "50 Minute BOND Investing MASTERCLASS | How to Earn 10%+ Fixed Returns When Stocks Fall!",
-     "guest": "",
-     "published": "2026-11-05",
-     "link": "https://www.youtube.com/watch?v=hjxaqZmvVPA",
-     "takeaways": [
-      "Why earning 6% from an FD could actually mean losing money after taxes and inflation.",
-      "The CAMEL framework helps you identify risky companies before investing in their bonds."
-     ]
-    },
-    {
-     "show": "Akshat Shrivastava",
-     "author": "Akshat Shrivastava",
-     "category": "Investing",
-     "title": "Great time for Indian Markets? (after Trump's loss) | Akshat Shrivastava",
-     "guest": "",
-     "published": "2026-11-05",
-     "link": "https://www.youtube.com/watch?v=oq5odXfokrM",
-     "takeaways": [
-      "The episode discusses the consequences of the US Mid\u2011term Elections.",
-      "It emphasizes that the content is not investment advice and urges listeners to do their own due diligence."
-     ]
-    },
-    {
-     "show": "Finance With Sharan",
-     "author": "Finance With Sharan",
-     "category": "Money",
-     "title": "Microsoft Job Cuts, MF Tax Relief, AI Selloff & Why Global Money Could Return to India |1% Club News",
-     "guest": "",
-     "published": "2026-11-05",
-     "link": "https://www.youtube.com/watch?v=luT5Rva91XM",
-     "takeaways": [
-      "The episode opens with SEBI\u2019s pre-budget recommendation to scrap the 12.5% long-term capital gains (LTCG) tax for foreign portfolio investors, along with a proposal to exempt domestic investors from LTCG when they switch between mutual fund schemes after holding units for more than a year.",
-      "Shashank explains how the proposal would work, why it resembles the reinvestment relief real estate investors already enjoy, why the final decision rests with the Union Budget, and why bringing foreign capital back matters for the rupee and Indian equities."
-     ]
-    },
-    {
-     "show": "Dhruv Rathee",
-     "author": "Dhruv Rathee",
-     "category": "Society",
-     "title": "Am I CLOSING My Startup? | Dhruv Rathee",
-     "guest": "",
-     "published": "2026-11-04",
-     "link": "https://www.youtube.com/watch?v=Y7xBrVl82rA",
-     "takeaways": [
-      "4x everything on the yearly plan, plus a free custom domain for 1 year.",
-      "Compare Mode: Compare responses across different AI Models and generate a consensus - one powerful, well-rounded answer from multiple models."
-     ]
-    },
-    {
-     "show": "WTF is (clips)",
-     "author": "Nikhil Kamath Clips",
-     "category": "Business",
-     "title": "How REAL INDIA Actually Transacts (This Clip Will Surprise You)",
-     "guest": "",
-     "published": "2026-11-02",
-     "link": "https://www.youtube.com/watch?v=KP6JFI0x-po",
-     "takeaways": [
-      "Full data and references used in the episode are provided for listeners.",
-      "The episode features Sameer\u202fNigam, founder and CEO of PhonePE, and Harshil\u202fMathur, co\u2011founder and CEO of Razorpay."
-     ]
-    },
-    {
-     "show": "Unfiltered by Samdish",
-     "author": "Unfiltered by Samdish (and a fantastic team)",
-     "category": "Society",
-     "title": "What's Happening at SRFTI?",
-     "guest": "",
-     "published": "2026-11-02",
-     "link": "https://www.youtube.com/watch?v=2hiwvg4ccZg",
-     "takeaways": [
-      "The two days we spent around the campus impacted us in more ways than one.",
-      "They offered us a glimpse of what student solidarity truly looks like, if one person gets hit, 300 others will stand behind them."
-     ]
-    },
-    {
-     "show": "Zero1 by Zerodha",
-     "author": "Zero1 by Zerodha",
-     "category": "Money",
-     "title": "Are FDs really back?",
-     "guest": "",
-     "published": "2026-10-31",
-     "link": "https://www.youtube.com/watch?v=rCe7kNgkwA4",
-     "takeaways": [
-      "Please Note: An Arbitrage Mutual Fund is a type of mutual fund that seeks to generate returns by exploiting price differences in different markets, such as different exchanges (as our example), or in the cash and futures market.",
-      "These funds capitalise on temporary mismatches in prices across these markets to create low risk profit opportunities."
+      "Evaluate optional subjects using factors such as your interest, academic background, syllabus, study material, past papers, overlap with General Studies, and mentor guidance.",
+      "The video helps aspirants avoid common mistakes when choosing their UPSC optional subject."
      ]
     }
    ],
-   "shows": 20,
+   "shows": 2,
    "source": "each channel's public Atom feed",
-   "built_on": "2026-11-12",
-   "age_days": 4.0,
-   "is_fallback": true
+   "built_on": "2026-11-16",
+   "age_days": 0.0,
+   "is_fallback": false
   },
   "smart_reads": [
    {
@@ -1106,11 +880,11 @@
     "_sort": "2026-11-15T16:14:09+00:00",
     "smart": {
      "what_happened": [
-      "Small-cap mutual funds posted an average 10-year SIP return of 15.02%, outpacing large-cap funds.",
-      "The worst 10-year rolling return for a small-cap fund was negative, indicating potential risk."
+      "Small-cap funds posted a 15.02% average 10-year SIP return, outperforming large-cap funds.",
+      "Rolling-return analysis shows the worst 10-year period for small-cap funds was a negative return."
      ],
-     "why_it_matters": "The strong average return suggests small-cap funds can deliver higher growth than large-cap funds over a decade, but the negative worst-case outcome highlights the volatility and downside risk inherent in this segment, which investors must consider when deciding whether to keep their systematic investment plans active.",
-     "what_to_watch": "Track the upcoming quarter's rolling 10-year SIP return for the lowest\u2011performing small-cap fund to gauge whether the negative tail risk is widening.",
+     "why_it_matters": "The strong average return highlights the potential reward of small-cap exposure, but the negative worst-case outcome reveals significant downside risk that can erode long-term SIP performance, making it crucial for investors to assess risk tolerance before maintaining or adjusting their small-cap SIP allocations.",
+     "what_to_watch": "Track the next 12-month rolling return for small-cap mutual funds to see if the recent negative trend reappears.",
      "headline": "Small-cap mutual funds average 15.02% 10-year SIP return, worst outcome negative",
      "read_seconds": 20
     }
@@ -1143,12 +917,12 @@
     "_sort": "2026-11-14T12:00:00+00:00",
     "smart": {
      "what_happened": [
-      "The article provides an in\u2011depth analysis of the most common claims around raw milk",
-      "It evaluates whether raw milk offers meaningful health benefits"
+      "The article reviews the most common health claims about raw milk.",
+      "It evaluates the scientific evidence supporting those claims."
      ],
-     "why_it_matters": "Understanding the evidence behind raw milk claims is important for consumers and health professionals making dietary decisions, as it clarifies potential risks and benefits associated with consuming unpasteurized dairy products.",
-     "what_to_watch": "Future peer\u2011reviewed studies that directly compare health outcomes of raw versus pasteurized milk consumption",
-     "headline": "Raw milk health benefit claims examined in analysis",
+     "why_it_matters": "Understanding whether raw milk provides genuine health benefits is important for consumers, healthcare professionals, and regulators, as it influences dietary choices, public health guidance, and policy decisions regarding the sale and consumption of unpasteurized dairy products.",
+     "what_to_watch": "Watch for upcoming peer\u2011reviewed studies that test raw milk's health effects and safety outcomes.",
+     "headline": "Raw milk health benefit claims examined",
      "read_seconds": 20
     }
    },
@@ -1162,12 +936,12 @@
     "_sort": "2026-11-13T18:20:21+00:00",
     "smart": {
      "what_happened": [
-      "India's startup exits have been dominated by IPOs, with few mergers and acquisitions.",
-      "Growth of private secondary transactions over the past three to four years gives VC investors an additional way to exit and return capital."
+      "Private secondary transactions in India have expanded over the past three to four years.",
+      "The growth provides venture capital investors an additional way to exit besides IPOs and limited M&A activity."
      ],
-     "why_it_matters": "The emergence of a secondary market addresses the funding gap that limited exit options created for venture capital firms, allowing them to recycle capital more quickly and potentially increase investment in new startups. By providing an alternative to IPOs, it may also reduce pressure on companies to go public prematurely and improve overall liquidity in the Indian startup ecosystem.",
-     "what_to_watch": "Monitor the quarterly volume of private secondary transactions reported in India's venture capital data releases.",
-     "headline": "Private secondary market adds new exit route for Indian VC investors",
+     "why_it_matters": "The rise of secondary market activity helps fill a funding gap by allowing VC firms to return capital to limited partners without waiting for an IPO or a rare acquisition. This improves liquidity for investors, supports continued funding for startups, and could encourage more venture capital inflows into the Indian ecosystem.",
+     "what_to_watch": "Monitor the quarterly volume of Indian private secondary deals reported in market data releases.",
+     "headline": "Private secondary transactions grow, giving Indian VCs new exit route",
      "read_seconds": 24
     }
    },
@@ -1226,7 +1000,7 @@
     "moves": 94,
     "termination": "Stalemate",
     "speed": "Blitz",
-    "analysis": "Focus on early piece activity: develop knights before queen (Nf3, Nc3) and avoid queen moves before move\u202f8; you wasted ~15\u202fseconds per turn.",
+    "analysis": "Focus on early piece activity: develop knights before bishops, castle by move\u202f8, and avoid queen\u2011side pawn pushes that create stalemate\u2011prone opposite\u2011wing attacks.",
     "is_upset": false,
     "is_collapse": false,
     "is_long": true,
@@ -1332,7 +1106,7 @@
     "moves": 33,
     "termination": "Resignation",
     "speed": "Blitz",
-    "analysis": "Focus on early piece activity: develop knights before moving the queen (e.g., 4\u2026Nf6 instead of 4\u2026Qb6), avoiding unnecessary queen sorties that waste tempo and invite tactics.",
+    "analysis": "Focus on early piece development: after 1.e4 e5 2.Nf3 d6, play 3...Nf6 instead of 3...Nd7 to contest the centre and avoid cramped positions.",
     "is_upset": false,
     "is_collapse": false,
     "is_long": false,
@@ -1422,14 +1196,14 @@
    "upsets": 0,
    "collapses": 0,
    "long_games": 1,
-   "session_summary": "Your 0% win rate shows you\u2019re barely scraping draws against equal\u2011strength opponents; you\u2019re not exploiting any advantage and are likely slipping into passive, symmetrical lines that let the opponent dictate the game. The fact that you have no identifiable \u201cbest\u201d or \u201cweakest\u201d opening indicates you\u2019re rotating through openings without a coherent repertoire\u2014stop the roulette and adopt a single, sound system (e.g., a solid King\u2019s Indian Defense or a classical French) and master its typical middlegame plans. Immediately start a focused study routine: 30 minutes of opening theory, 30 minutes of annotated game review (your losses only), and 30 minutes of tactical drills, tracking progress each week; if you don\u2019t see a 10% increase in win\u2011rate after two weeks, abandon the current repertoire and rebuild from the ground up.",
+   "session_summary": "**Verdict:** You\u2019re barely scraping points, with a 0\u202f% win rate and no discernible opening strengths\u2014your play is essentially random. Stop relying on any \u201cfavorite\u201d line; instead, drill the fundamental pawn structures and basic king\u2011safety motifs in the first 10 moves, then practice forced\u2011mate puzzles until you can spot tactical wins in under 5 seconds. If you can convert a single 5\u2011move tactical sequence into a win this week, you\u2019ll finally break out of the zero\u2011win black hole.",
    "session_date": "2026-11-15",
    "is_yesterday": true,
    "token_missing": false
   },
   "lichess_puzzle": {
    "pid": "Lw4qG",
-   "rating": 1806,
+   "rating": 1858,
    "level": "\ud83d\udd34 stretch",
    "themes": "Endgame \u00b7 Defensive Move \u00b7 Crushing",
    "tip": "King activity and pawn structure dominate. Technique over tactics here.",
