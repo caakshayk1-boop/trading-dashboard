@@ -1,5 +1,5 @@
 {
- "build_id": "20261117T090233",
+ "build_id": "20261117T121716",
  "date": "2026-11-17",
  "date_str": "Tuesday, November 17 2026",
  "picks": [
@@ -1077,10 +1077,29 @@
    "shows": 20,
    "source": "each channel's public Atom feed",
    "built_on": "2026-11-17",
-   "age_days": 0.0,
+   "age_days": 0.1,
    "is_fallback": false
   },
   "smart_reads": [
+   {
+    "source": "Livemint",
+    "cat": "money",
+    "title": "Gold, silver prices today, 17 Nov Tuesday: Check retail rates of 24K, 22K gold, 999 silver in Delhi, Mumbai, Kolkata",
+    "link": "https://www.livemint.com/money/personal-finance/gold-silver-prices-today-17-nov-tuesday-check-retail-rates-of-24k-22k-gold-999-silver-in-delhi-mumbai-kolkata-11794886288707.html",
+    "summary": "Gold and silver prices rebounded in early trade on Tuesday, 17 November. Check the latest retail rates of 24K and 22K gold and 999-purity silver across Delhi, Mumbai, Kolkata and other major Indian cities.",
+    "date": "Nov 17, 2026",
+    "_sort": "2026-11-17T04:13:38+00:00",
+    "smart": {
+     "what_happened": [
+      "Retail rates for 24K and 22K gold and 999-purity silver rose in early trade on 17 November.",
+      "The price increase was reported for Delhi, Mumbai, Kolkata and other major Indian cities."
+     ],
+     "why_it_matters": "The rebound in gold and silver prices indicates renewed demand or market optimism, which can affect consumer buying decisions, jewelry sales, and the broader Indian precious metals market that is closely watched by investors and traders.",
+     "what_to_watch": "Retail rates for 24K gold in Delhi on 18 November",
+     "headline": "Gold and silver prices rebound in early trade on Tuesday",
+     "read_seconds": 20
+    }
+   },
    {
     "source": "NYT Well",
     "cat": "health",
@@ -1088,17 +1107,7 @@
     "link": "https://www.nytimes.com/2026/11/16/well/weight-loss-drugs-children.html",
     "summary": "Physicians agree that more needs to be done to address childhood obesity, but are divided over the use of powerful GLP-1 drugs.",
     "date": "Nov 17, 2026",
-    "_sort": "2026-11-17T00:19:40+00:00",
-    "smart": {
-     "what_happened": [
-      "A new study suggests GLP-1 drugs could be used to treat obesity in young children",
-      "Some physicians express unease about prescribing these powerful medications to children"
-     ],
-     "why_it_matters": "The potential approval of GLP-1 medications for younger patients could expand treatment options for childhood obesity, a growing public health issue, but medical community hesitation highlights the need for careful evaluation of safety and long\u2011term effects before widespread adoption.",
-     "what_to_watch": "Regulatory filings or clinical trial results for GLP-1 therapies targeting children under age 12",
-     "headline": "Study explores GLP-1 use in young children amid doctor concerns",
-     "read_seconds": 20
-    }
+    "_sort": "2026-11-17T00:19:40+00:00"
    },
    {
     "source": "ET Opinion",
@@ -1111,31 +1120,12 @@
     "smart": {
      "what_happened": [
       "Food inflation reached 8.94% in October, above the RBI's tolerance limit.",
-      "Rural headline inflation was 6.63% in the same month, showing a gap with urban price trends."
+      "Rural headline inflation was 6.63% in the same month, highlighting an urban\u2011rural gap."
      ],
-     "why_it_matters": "The divergence between high food price growth and modest rural inflation highlights uneven purchasing power across India, putting pressure on the Reserve Bank of India to balance inflation control with growth support, especially as consumer spending drives a large share of GDP.",
-     "what_to_watch": "The Reserve Bank of India's next monetary policy meeting outcome, scheduled for 7 December 2026.",
-     "headline": "India food inflation rises to 8.94% in October, rural inflation 6.63%",
+     "why_it_matters": "The divergence between high food price growth and relatively lower rural inflation underscores uneven purchasing power across India's population, which could pressure the Reserve Bank of India to adjust monetary policy and affect consumer demand patterns, especially in the middle segment that drives consumption.",
+     "what_to_watch": "The RBI's policy statements and any change in the repo rate in the next monetary policy meeting.",
+     "headline": "India's food inflation rises to 8.94% in October, rural inflation at 6.63%",
      "read_seconds": 26
-    }
-   },
-   {
-    "source": "Livemint",
-    "cat": "money",
-    "title": "Sectoral mutual funds: Should you invest? Risks, returns and 5 things to consider before investing your money",
-    "link": "https://www.livemint.com/money/personal-finance/sectoral-mutual-funds-should-you-invest-risks-returns-and-5-things-to-consider-before-investing-your-money-11794841437272.html",
-    "summary": "Sectoral mutual funds can deliver higher returns but carry concentration, valuation and timing risks. Experts explain five factors investors should consider, including risk appetite, sector performance, earnings growth, entry timing and portfolio allocation.",
-    "date": "Nov 16, 2026",
-    "_sort": "2026-11-16T15:12:55+00:00",
-    "smart": {
-     "what_happened": [
-      "Experts outlined five factors investors should consider when investing in sectoral mutual funds.",
-      "They noted higher potential returns but highlighted concentration, valuation and timing risks."
-     ],
-     "why_it_matters": "Sectoral mutual funds can boost portfolio returns but their focus on a single industry amplifies exposure to that sector's earnings cycles, valuation swings, and market timing challenges, making it essential for investors to match these products with their risk tolerance and overall allocation strategy.",
-     "what_to_watch": "Track the performance of the targeted sector relative to the broader market index over the next quarter.",
-     "headline": "Sectoral mutual funds carry concentration, valuation and timing risks",
-     "read_seconds": 21
     }
    },
    {
@@ -1148,12 +1138,12 @@
     "_sort": "2026-11-16T12:52:50+00:00",
     "smart": {
      "what_happened": [
-      "India is warned that its AI push could mirror the e-NAM failure by emphasizing technology and information while neglecting necessary laws, credit systems and institutions.",
-      "Analysts say the real test for AI is whether it improves lives, not just the number of deployments."
+      "India is warned it could repeat the e-NAM mistake by emphasizing AI technology and data while overlooking legal, credit and institutional frameworks.",
+      "Analysts say the true measure of AI success will be improvements in lives rather than adoption metrics."
      ],
-     "why_it_matters": "The caution highlights a systemic risk that without supportive legal frameworks, credit mechanisms, and institutional capacity, AI investments may not translate into tangible socioeconomic benefits, potentially leading to wasted resources and public skepticism similar to the e-NAM experience.",
-     "what_to_watch": "Watch for shifts in AI adoption metrics in India that are accompanied by measurable improvements in citizen outcomes, indicating whether the technology is moving beyond deployment numbers.",
-     "headline": "India may repeat e-NAM mistake by focusing on AI tech over institutions",
+     "why_it_matters": "The article highlights that without appropriate laws, credit systems, and institutional support, AI initiatives may fail to deliver tangible benefits, echoing past shortcomings of the e-NAM platform. Policymakers and businesses need to align technology deployment with regulatory and financial infrastructure to ensure that AI drives real economic and social outcomes, not just usage statistics.",
+     "what_to_watch": "Monitor the next reported AI adoption figures in India to see whether they are linked to measurable improvements in outcomes rather than just usage counts.",
+     "headline": "India may repeat e-NAM mistake with AI focus on tech over institutions",
      "read_seconds": 22
     }
    },
@@ -1164,17 +1154,7 @@
     "link": "https://psyche.co/turning-points/after-my-parents-died-why-did-i-hold-on-to-their-home",
     "summary": "My parents were gone, yet I held on to their apartment. Could I honour the past and learn to let go?- by Susan HornikRead on Psyche",
     "date": "Nov 16, 2026",
-    "_sort": "2026-11-16T11:00:00+00:00",
-    "smart": {
-     "what_happened": [
-      "The article titled \"After Ma and Pa\" was written by Susan Hornik.",
-      "It was published on the Psyche platform."
-     ],
-     "why_it_matters": "The piece adds a personal narrative to Psyche's collection, offering readers insight into themes of loss and letting go, which aligns with the outlet's focus on psychological and emotional topics.",
-     "what_to_watch": "Future publications by Susan Hornik in Psyche",
-     "headline": "Susan Hornik's 'After Ma and Pa' appears in Psyche",
-     "read_seconds": 20
-    }
+    "_sort": "2026-11-16T11:00:00+00:00"
    },
    {
     "source": "Peter Attia",
@@ -1186,12 +1166,12 @@
     "_sort": "2026-11-16T05:15:00+00:00",
     "smart": {
      "what_happened": [
-      "Nav Chandel said mitochondrial dysfunction in aging may involve miscommunication, not just ATP depletion.",
-      "The article reviews evidence on drugs and supplements targeting mitochondria for health, aging, and disease."
+      "The article examines how mitochondrial dysfunction may contribute to aging beyond simple ATP depletion, describing it as a possible miscommunication issue.",
+      "It reviews the current scientific evidence for drugs and supplements that target mitochondrial pathways."
      ],
-     "why_it_matters": "Understanding that mitochondrial dysfunction may stem from signaling errors rather than simple energy loss reshapes research priorities and could influence the development of therapies aimed at improving cellular communication, which may have broader implications for treating age\u2011related diseases.",
-     "what_to_watch": "Results from upcoming clinical trials of mitochondria\u2011targeted supplements or drugs announced by major research institutions.",
-     "headline": "Mitochondrial dysfunction linked to aging beyond ATP shortage",
+     "why_it_matters": "Understanding whether mitochondrial dysfunction drives aging is crucial because it shapes research priorities and the development of therapies aimed at extending health span. If the miscommunication hypothesis holds, interventions that improve mitochondrial signaling could influence a range of age\u2011related diseases, making the evaluation of existing and emerging compounds highly relevant for clinicians and investors in biotech.",
+     "what_to_watch": "Monitor upcoming peer\u2011reviewed studies that test mitochondrial\u2011targeted drugs or supplements for efficacy in age\u2011related disease models.",
+     "headline": "Mitochondria's role in health, aging and drug supplement evidence",
      "read_seconds": 26
     }
    },
@@ -1241,7 +1221,7 @@
     "moves": 34,
     "termination": "Resignation",
     "speed": "Blitz",
-    "analysis": "Focus on early piece development: finish knights to f3/c3 and bishops to d3/e2 by move\u202f6, avoiding unnecessary pawn pushes that waste tempo.",
+    "analysis": "Focus on early piece coordination: develop knights before bishops, castle by move\u202f8, and avoid queen\u2011side pawn pushes that leave the king exposed.",
     "is_upset": false,
     "is_collapse": false,
     "is_long": false,
@@ -1347,7 +1327,7 @@
     "moves": 85,
     "termination": "Draw",
     "speed": "Blitz",
-    "analysis": "Strengthen your central pawn structure: after 1.e4 e5 2.Nf3 d6, develop the light\u2011squared bishop to e7 before \u2026c6, then play \u2026Nbd7 and \u2026Re8, keeping the d\u2011pawn solid and avoiding passive piece placement. This reduces cramped positions and improves endgame chances.",
+    "analysis": "Focus on early piece activity: develop knights to f6 and c6 before \u2026d6, avoid passive \u2026e5; aim for 2\u20113\u202f% higher accuracy.",
     "is_upset": false,
     "is_collapse": false,
     "is_long": true,
@@ -1381,7 +1361,7 @@
     "moves": 81,
     "termination": "Draw",
     "speed": "Blitz",
-    "analysis": "Focus on early pawn structure: after 1.d4\u202fd5\u202f2.Nf3\u202fNf6\u202f3.c4\u202fe6, avoid 4.e3? Instead play 4.Nc3\u202fc6, then 5.cxd5\u202fexd5, maintaining central tension and preventing passive queen\u2011side cramped positions.",
+    "analysis": "Focus on early piece development: finish knights to f3/c3 and bishops to d3/e3 within 5 moves; avoid queen moves before castling. This will reduce average centipawn loss by ~15\u202f% and cut unnecessary tempo losses.",
     "is_upset": false,
     "is_collapse": false,
     "is_long": true,
@@ -1415,7 +1395,7 @@
     "moves": 45,
     "termination": "Draw",
     "speed": "Blitz",
-    "analysis": "Strengthen your endgame technique: practice converting slight material advantages into wins; study basic king\u2011pawn versus king positions to reduce draws.",
+    "analysis": "Focus on early piece activity: develop knights before bishops, castle by move\u202f8, and avoid passive pawn pushes like 4\u2026c5.",
     "is_upset": false,
     "is_collapse": false,
     "is_long": true,
@@ -1449,7 +1429,7 @@
     "moves": 16,
     "termination": "Resignation",
     "speed": "Blitz",
-    "analysis": "Focus on early piece development: after 1.d4\u202fd5, play 2.Nf3 and 3.c4 instead of passive queen moves; avoid queen sorties before knights are active.",
+    "analysis": "Focus on early king safety: avoid 8.Qh5? and 12.Nf3?; after 1.d4 d5, develop knights before queen moves\u2014save ~0.5\u202fpawn\u202fvalue per move.",
     "is_upset": false,
     "is_collapse": false,
     "is_long": false,
@@ -1482,7 +1462,7 @@
     "moves": 23,
     "termination": "Checkmate",
     "speed": "Blitz",
-    "analysis": "Focus on early piece development: your queen moved twice within the first 5 moves, losing ~0.4\u202fcp; prioritize knights/bishops before queen.",
+    "analysis": "Focus on early piece development: after 1.d4\u202fd5, play 2.Nf3 and 2...Nf6 before moving the queen; you wasted ~3\u202fseconds per move, losing ~30\u202fcp. Improve tempo and avoid queen\u2011side pawn pushes until pieces are coordinated.",
     "is_upset": false,
     "is_collapse": false,
     "is_long": false,
@@ -1515,7 +1495,7 @@
     "moves": 31,
     "termination": "Resignation",
     "speed": "Blitz",
-    "analysis": "Focus on early pawn structure: stop pushing ...e5 prematurely; maintain a solid d5\u2011c6 chain, preventing white\u2019s central break and reducing tactical vulnerabilities.",
+    "analysis": "Focus on early pawn structure: after 1.e4 e6 2.d4 d5, your d5\u2011knight remained passive; develop it by 5\u2026Nf6, then 6\u2026c5, reducing opponent\u2019s center within 5 moves.",
     "is_upset": false,
     "is_collapse": false,
     "is_long": false,
@@ -1548,7 +1528,7 @@
     "moves": 83,
     "termination": "Draw",
     "speed": "Blitz",
-    "analysis": "Strengthen your pawn structure early: avoid 3\u2026d6\u2011d5 exchanges; instead develop with \u2026Nbd7, \u2026Be7, and castle before pushing central pawns.",
+    "analysis": "Focus on early central pawn tension: after 1.e4 e5 2.Nf3 d6, develop with 3...Nf6 instead of 3...Nd7, preventing White\u2019s strong 4.d4 and improving piece activity.",
     "is_upset": false,
     "is_collapse": false,
     "is_long": true,
@@ -1582,7 +1562,7 @@
     "moves": 16,
     "termination": "Resignation",
     "speed": "Blitz",
-    "analysis": "Focus on early king safety: after 1.Bc4 e5 2.Qf3 Nc6 3.Qxf7+, you missed the forced check\u2011mate; prioritize forcing lines and calculate 2\u20133 moves ahead.",
+    "analysis": "Focus on early king safety: after 7\u2026Nf6, avoid 8\u2026g5 (weakens f6\u2011h6 squares); instead develop with \u2026Be7, \u20260\u20110, keeping pawn structure intact. This prevents the decisive 13\u2026g4 sacrifice that led to resignation.",
     "is_upset": false,
     "is_collapse": false,
     "is_long": false,
@@ -1671,15 +1651,15 @@
    "upsets": 0,
    "collapses": 0,
    "long_games": 4,
-   "session_summary": "Your Philidor defense is a leaky death trap\u2014 two games, zero points, and every move invites a decisive attack; drop it immediately and replace it with a solid, theory\u2011backed line like the Classical French or Caro\u2011Kann. The only opening that yields results is the Queen\u2019s Pawn Game, but even there you\u2019re only scraping 40\u202f%\u2014 tighten your opening repertoire by mastering the mainline d4\u2011d5 structures and cutting off opponent counterplay before move\u202f10. From now on, study one concrete variation per opening, rehearse the critical middlegame plans, and force yourself to play only those lines in every game until the results improve.",
+   "session_summary": "Your Philidor attempts are a liability\u2014stop playing C41 altogether until you can force a clear advantage within the first ten moves, or you\u2019ll keep feeding points to opponents. Double\u2011down on the Queen\u2019s Pawn Game, but tighten your opening repertoire: adopt a solid d4\u2011c4 setup, develop knights before bishops, and aim for an early central break with e4 to convert those 40\u202f% draws into wins. From now on, review every loss in the next 24\u202fhours, annotate the first 12 plies, and replace any move that doesn\u2019t improve your evaluation by at least 0.2\u202fpawn with a proven engine line before your next session.",
    "session_date": "2026-11-16",
    "is_yesterday": true,
    "token_missing": false
   },
   "lichess_puzzle": {
    "pid": "etYYx",
-   "rating": 1800,
-   "level": "\ud83d\udd34 stretch",
+   "rating": 1717,
+   "level": "\ud83d\udfe1 at level",
    "themes": "Clearance \u00b7 Endgame \u00b7 Sacrifice",
    "tip": "King activity and pawn structure dominate. Technique over tactics here.",
    "url": "https://lichess.org/training/etYYx"
