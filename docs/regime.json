@@ -1,22 +1,22 @@
 {
   "ok": true,
-  "generated_at": "2026-11-18T21:38:41+00:00",
+  "generated_at": "2026-11-20T16:30:24+00:00",
   "today": {
-    "regime": "highvol_trend",
-    "close": 25387.4,
-    "vol_ann_pct": 14.3,
-    "vol_pctile": 76.6,
-    "drawdown_pct": 3.57,
+    "regime": "calm_range",
+    "close": 25800.6,
+    "vol_ann_pct": 13.0,
+    "vol_pctile": 66.5,
+    "drawdown_pct": 2.01,
     "above_200dma": true,
-    "date": "2026-11-17",
-    "t": "Volatile but still trending",
-    "d": "Wide ranges with the long trend intact. Stops set for a calm market get hit by noise in this one."
+    "date": "2026-11-20",
+    "t": "Calm and going nowhere",
+    "d": "Quiet, but with no trend to follow. Breakouts fail most often here, because there is nothing behind them."
   },
-  "run_days": 8,
+  "run_days": 1,
   "last_year": {
-    "calm_trend": 67,
-    "calm_range": 105,
-    "highvol_trend": 23,
+    "calm_trend": 64,
+    "calm_range": 106,
+    "highvol_trend": 25,
     "highvol_mr": 64,
     "crisis": 1
   },
@@ -145,18 +145,6 @@
     "A cell needs 8 closed trades before any figure is shown, and the site's actual bar for trusting one is 30 closed at t >= 2.0. Most cells will not clear either, and the page says so rather than printing a multiplier nothing supports."
   ],
   "history": [
-    {
-      "date": "2024-11-07",
-      "regime": "calm_trend"
-    },
-    {
-      "date": "2024-11-08",
-      "regime": "highvol_trend"
-    },
-    {
-      "date": "2024-11-11",
-      "regime": "calm_trend"
-    },
     {
       "date": "2024-11-12",
       "regime": "highvol_trend"
@@ -2144,6 +2132,18 @@
     {
       "date": "2026-11-17",
       "regime": "highvol_trend"
+    },
+    {
+      "date": "2026-11-18",
+      "regime": "highvol_trend"
+    },
+    {
+      "date": "2026-11-19",
+      "regime": "highvol_trend"
+    },
+    {
+      "date": "2026-11-20",
+      "regime": "calm_range"
     }
   ]
 }
