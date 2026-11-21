@@ -1,5 +1,5 @@
 {
- "build_id": "20261121T090217",
+ "build_id": "20261121T105927",
  "date": "2026-11-21",
  "date_str": "Saturday, November 21 2026",
  "picks": [
@@ -538,7 +538,7 @@
    {
     "dataset": "Careers feed",
     "status": "STALE",
-    "age": "2 days old",
+    "age": "3 days old",
     "note": "older than its daily refresh"
    }
   ]
@@ -1086,37 +1086,66 @@
    "shows": 20,
    "source": "each channel's public Atom feed",
    "built_on": "2026-11-21",
-   "age_days": 0.0,
+   "age_days": 0.1,
    "is_fallback": false
   },
   "smart_reads": [
    {
-    "source": "ET Opinion",
+    "source": "Livemint",
     "cat": "money",
-    "title": "With Anthropic\u2019s seminal IPO, Wall St now has a handle on pricing AI, and how the chips will fall",
-    "link": "https://economictimes.indiatimes.com/opinion/et-commentary/with-anthropics-seminal-ipo-wall-st-now-has-a-handle-on-pricing-ai-and-how-the-chips-will-fall/articleshow/136036974.cms",
-    "summary": "Anthropic's initial public offering has provided some transparency amid uncertainties in the AI market. Although the IPO raised significant capital, concerns about profitability and costs remain prevalent among investors. The company's rapid revenue growth has been accompanied by increased net losses, raising questions",
-    "date": "Nov 20, 2026",
-    "_sort": "2026-11-20T18:12:08+00:00",
+    "title": "Pension, gratuity and more: Govt clarifies family benefits after employee death or going missing; payment within 15 days",
+    "link": "https://www.livemint.com/money/personal-finance/pension-gratuity-and-more-govt-clarifies-family-benefits-after-employee-death-or-going-missing-payment-within-15-days-11795226241903.html",
+    "summary": "The government has clarified the pension, gratuity, provident fund, and other benefits payable to families after the death or disappearance of a serving central government employee. It has also specified that provisional family pension must be sanctioned within 15 days.&amp;nbsp;",
+    "date": "Nov 21, 2026",
+    "_sort": "2026-11-21T02:56:02+00:00",
     "smart": {
      "what_happened": [
-      "Anthropic's initial public offering provided transparency and raised significant capital.",
-      "The company reported rapid revenue growth but also increased net losses, prompting investor concerns about profitability and costs."
+      "The government issued guidance on pension, gratuity, provident fund and other benefits payable to families after a serving central employee dies or goes missing.",
+      "It also stipulated that provisional family pension must be sanctioned within 15 days."
      ],
-     "why_it_matters": "The IPO gives the market a clearer view of how AI firms are valued and financed, highlighting the tension between fast top\u2011line growth and mounting losses. Investors and analysts will watch whether Anthropic can convert its revenue expansion into sustainable profitability, which will influence valuations across the broader AI sector.",
-     "what_to_watch": "Anthropic's upcoming quarterly earnings release, which will detail revenue and loss figures.",
-     "headline": "Anthropic IPO raises capital amid profitability concerns",
+     "why_it_matters": "The clarification provides certainty to the families of central government employees regarding their entitlement to post\u2011mortem or missing\u2011person benefits, and the 15\u2011day deadline for provisional pension aims to reduce delays in financial support, which can affect household cash flow and morale during crises.",
+     "what_to_watch": "Whether ministries and departments begin processing provisional family pensions within the mandated 15\u2011day window.",
+     "headline": "Government clarifies family benefits for deceased or missing central employees",
+     "read_seconds": 23
+    }
+   },
+   {
+    "source": "ET Opinion",
+    "cat": "money",
+    "title": "50 crore out of poverty: How India laid the foundation of Viksit Bharat",
+    "link": "https://economictimes.indiatimes.com/opinion/et-commentary/50-crore-out-of-poverty-how-india-laid-the-foundation-of-viksit-bharat/articleshow/136033862.cms",
+    "summary": "Between 2011 and 2023, India saw a significant decrease in poverty levels as the government implemented various welfare programs. The World Bank reports that nearly 496 million people moved out of poverty during this time period. Women\u2019s employment has notably risen, contributing to economic growth and poverty alleviat",
+    "date": "Nov 21, 2026",
+    "_sort": "2026-11-21T02:30:00+00:00",
+    "smart": {
+     "what_happened": [
+      "Between 2011 and 2023 India saw a significant decrease in poverty levels as the government implemented various welfare programs.",
+      "During the same period women's employment rose, contributing to economic growth and further poverty alleviation."
+     ],
+     "why_it_matters": "The reduction of 496 million people from poverty represents a major shift in India's socioeconomic landscape, expanding the consumer base, increasing labor force participation, and improving fiscal health, which together can boost domestic demand and attract investment. The rise in women's employment amplifies these effects by enhancing household incomes and fostering more inclusive growth.",
+     "what_to_watch": "World Bank's next release of India\u2019s poverty headcount ratio for 2024",
+     "headline": "India lifts 496 million people out of poverty between 2011 and 2023",
      "read_seconds": 26
     }
    },
    {
-    "source": "Livemint",
+    "source": "Livemint Opinion",
     "cat": "money",
-    "title": "Should you wait for a market fall before starting a mutual fund SIP? What 30 years of Sensex data reveal",
-    "link": "https://www.livemint.com/money/personal-finance/should-you-wait-for-a-market-fall-before-starting-a-mutual-fund-sip-what-30-years-of-sensex-data-reveal-11795197339793.html",
-    "summary": "Waiting for a market correction before starting a mutual fund SIP may cost investors valuable investment time. A WhiteOak Capital analysis of nine market cycles found that starting earlier often led to a higher final corpus, despite marginally lower returns.",
-    "date": "Nov 20, 2026",
-    "_sort": "2026-11-20T18:05:57+00:00"
+    "title": "Arun Jaitley: the quintessential Delhi <i>bhadralok</i> who left his stamp on the Indian economy",
+    "link": "https://www.livemint.com/opinion/arun-jaitley-the-quintessential-delhi-bhadralok-who-left-his-stamp-on-the-indian-economy-11795075261222.html",
+    "summary": "Arun Jaitley combined political pragmatism with an old-school courtesy, steering major economic reforms as finance minister while building consensus across political and institutional divides.",
+    "date": "Nov 21, 2026",
+    "_sort": "2026-11-21T01:31:08+00:00",
+    "smart": {
+     "what_happened": [
+      "He combined political pragmatism with old\u2011school courtesy.",
+      "He built consensus across political and institutional divides while steering reforms."
+     ],
+     "why_it_matters": "Jaitley's ability to blend pragmatism and courtesy helped pass significant economic reforms, shaping the trajectory of the Indian economy and demonstrating how consensus can be achieved in a fragmented political environment.",
+     "what_to_watch": "Monitor commentary on how his consensus\u2011building approach influences future policy debates.",
+     "headline": "Arun Jaitley steered major economic reforms as finance minister",
+     "read_seconds": 20
+    }
    },
    {
     "source": "The Marginalian",
@@ -1137,12 +1166,12 @@
     "_sort": "2026-11-19T10:55:00+00:00",
     "smart": {
      "what_happened": [
-      "Bing Gordon, former EA chief creative officer and Kleiner Perkins partner, served on Amazon\u2019s board for more than a decade.",
-      "He earned the board seat after presenting Jeff Bezos with five ideas, the first of which became Amazon Prime."
+      "Bing Gordon, former Chief Creative Officer of Electronic Arts and partner at Kleiner Perkins, served on Amazon's board for more than a decade.",
+      "He earned his board seat after giving Jeff Bezos five ideas, the first of which was Amazon Prime."
      ],
-     "why_it_matters": "Gordon\u2019s transition from gaming and venture capital to a long tenure on Amazon\u2019s board highlights the cross\u2011industry value of creative and strategic thinking, illustrating how ideas like Amazon Prime can originate from external advisors and shape a company\u2019s core consumer offerings.",
-     "what_to_watch": "Monitor any new Amazon initiatives announced by the board that reference or build upon the original Prime concept.",
-     "headline": "Bing Gordon joins Amazon board after offering five ideas including Prime",
+     "why_it_matters": "Gordon's influence on Amazon's strategic direction highlights how external creative talent can shape major corporate initiatives, as evidenced by the launch of Amazon Prime, a service that has become central to the company's subscription ecosystem and revenue growth.",
+     "what_to_watch": "Monitor Amazon's announcements of new subscription features or services that may trace back to Gordon's strategic input.",
+     "headline": "Bing Gordon joins Amazon board after proposing Amazon Prime",
      "read_seconds": 26
     }
    },
@@ -1153,7 +1182,17 @@
     "link": "https://www.nytimes.com/2026/11/18/well/mind/uncertainty-anxiety-jama-study.html",
     "summary": "At a moment when technical glitches are stirring confusion and fear, a new analysis examines just how distressing uncertainty can feel.",
     "date": "Nov 18, 2026",
-    "_sort": "2026-11-18T21:18:59+00:00"
+    "_sort": "2026-11-18T21:18:59+00:00",
+    "smart": {
+     "what_happened": [
+      "A new analysis studies intolerance of uncertainty in young adults.",
+      "The study highlights rising levels of distress related to uncertainty."
+     ],
+     "why_it_matters": "The findings underscore the growing distress associated with uncertainty for young adults, indicating a potential increase in mental\u2011health challenges within this demographic.",
+     "what_to_watch": "Upcoming research reports that track changes in intolerance of uncertainty among young adults.",
+     "headline": "Intolerance of Uncertainty Is Rising in Young Adults",
+     "read_seconds": 20
+    }
    },
    {
     "source": "Scott Young",
@@ -1162,17 +1201,7 @@
     "link": "https://www.scotthyoung.com/blog/2026/11/18/make-learning-permanent/",
     "summary": "How much can you remember from your high school classes? If I gave you one of your final exams today, could you still pass it? In their now-famous study, Harry Bahrick and Lynda Hall asked this question of nearly two thousand people. Unsurprisingly, they found what most of us expect: a few years out from [&#8230;]\nThe ",
     "date": "Nov 18, 2026",
-    "_sort": "2026-11-18T17:31:51+00:00",
-    "smart": {
-     "what_happened": [
-      "Harry Bahrick and Lynda Hall surveyed nearly two thousand former high\u2011school students about their ability to recall course content years later.",
-      "The study showed that most participants could not pass a final\u2011exam\u2011type test on material learned in high school after a few years."
-     ],
-     "why_it_matters": "The findings highlight the challenges of long\u2011term knowledge retention, suggesting that information learned in formal education may fade without reinforcement, which has implications for workforce training, continuing education programs, and the design of corporate learning initiatives that aim to preserve critical skills over time.",
-     "what_to_watch": "Future research or corporate training programs that cite the Bahrick and Hall study to implement spaced\u2011repetition or refresher modules and report measurable improvements in employee skill retention.",
-     "headline": "Bahrick and Hall study finds limited long\u2011term retention of high school material",
-     "read_seconds": 26
-    }
+    "_sort": "2026-11-18T17:31:51+00:00"
    },
    {
     "source": "Psyche",
@@ -1191,15 +1220,6 @@
     "summary": "\u201cIf mitochondrial dysfunction is related to aging, it isn't simply about running out of ATP or running out of metabolites. It could be this miscommunication.\u201d\u2012 Nav Chandel\nThe post #416 \u2012 The science of mitochondria: their role in health, aging, and disease, and what the evidence says about drugs and supplements aimed ",
     "date": "Nov 16, 2026",
     "_sort": "2026-11-16T05:15:00+00:00"
-   },
-   {
-    "source": "Zerodha",
-    "cat": "money",
-    "title": "Brace for impact",
-    "link": "https://zerodha.com/z-connect/general/brace-for-impact",
-    "summary": "Things are looking bad for Indian markets. As I write this, the Nifty 50 is about 14% below its January high, and the Nifty 500 is about 12% below its September 2024 peak. Weirdly, smallcaps are up about 5% since the day before the war began. Gold, the thing everybody runs to when the world [&#8230;]\nThe post Brace for",
-    "date": "Oct 27, 2026",
-    "_sort": "2026-10-27T12:39:24+00:00"
    }
   ],
   "lichess_games": [
@@ -1220,7 +1240,7 @@
     "moves": 14,
     "termination": "Checkmate",
     "speed": "Blitz",
-    "analysis": "Focus on king safety: after 7\u2026Nf6, avoid 9\u2026g5\u2011g4; instead play 9\u2026Be7, castle, and limit opponent\u2019s queen\u2011side attack\u2014prevent mate at move\u202f14.",
+    "analysis": "Strengthen your king safety: stop castling queenside early; develop knights before moving the queen; avoid leaving g\u2011file open\u2014prevents fast mates like 14\u2011move checkmate.",
     "is_upset": false,
     "is_collapse": false,
     "is_long": false,
@@ -1325,7 +1345,7 @@
     "moves": 68,
     "termination": "Checkmate",
     "speed": "Blitz",
-    "analysis": "Focus on early piece development: move your knights to f3/c3 and bishops to d3/e2 within the first\u202f5\u202fmoves, avoiding queen\u2011side pawn pushes that leave your king exposed. This alone cuts checkmate risk dramatically.",
+    "analysis": "Focus on early king safety: after 1.d4\u202f\u2026\u202fe5, avoid 4.Qh5?; instead develop knights (Nf3, Nc3) and castle by move\u202f12 to prevent the 68\u2011move mate.",
     "is_upset": false,
     "is_collapse": false,
     "is_long": true,
@@ -1359,7 +1379,7 @@
     "moves": 30,
     "termination": "Checkmate",
     "speed": "Blitz",
-    "analysis": "Strengthen your king safety early: after 1.e4 e5 2.Nf3 d6, develop the dark\u2011square bishop (\u2026Bb4+ or \u2026Be7) before pushing \u2026c5; avoid leaving the f\u2011pawn unprotected\u2014your opponent forced a quick attack that led to mate.",
+    "analysis": "Focus on early king safety: after 1.e4 e5 2.Nf3 d6, avoid passive moves like \u2026Be7; develop knights first, castle by move\u202f8, and prevent opponent\u2019s queen infiltration on d5\u2011h5 diagonal. This alone should cut mate\u2011risk by >50\u202f%.",
     "is_upset": false,
     "is_collapse": false,
     "is_long": false,
@@ -1392,7 +1412,7 @@
     "moves": 27,
     "termination": "Resignation",
     "speed": "Blitz",
-    "analysis": "Focus on early central pawn tension: after 1.e4 e5\u202f2.Nf3 d6, avoid passive 3.d3; instead play 3.Nc3 or 4\u2026Nf6, then challenge with \u2026c5 or \u2026exd4 to equalize. This will reduce cramped positions and improve win\u2011rate.",
+    "analysis": "Focus on early piece activity: after 1.e4 e5 2.Nf3 d6, develop the bishop to\u202fc5\u202finstead of\u202fBe7, castle promptly, and avoid passive pawn pushes like \u2026c5 until you\u2019ve secured king safety. This cuts opponent\u2019s central pressure and prevents the quick attack that cost you the game.",
     "is_upset": false,
     "is_collapse": false,
     "is_long": false,
@@ -1425,7 +1445,7 @@
     "moves": 43,
     "termination": "Checkmate",
     "speed": "Blitz",
-    "analysis": "Focus on early piece development: within the first\u202f10\u202fmoves place both knights and bishops on active squares, avoid unnecessary pawn pushes, and castle by move\u202f12\u202fto prevent the queen\u2011side collapse that led to the mate.",
+    "analysis": "Focus on early piece development: move knights to f3/c3 and bishops to d3/e2 within first\u202f5\u202fmoves, avoiding queen\u2011side pawn pushes that waste tempo.",
     "is_upset": false,
     "is_collapse": false,
     "is_long": true,
@@ -1515,14 +1535,14 @@
    "upsets": 0,
    "collapses": 0,
    "long_games": 2,
-   "session_summary": "Your Philidor is a death trap\u2014three losses out of three shows you\u2019re either playing it without understanding the critical ...d5 break or you simply lack the tactical vision to survive the inevitable counter\u2011play. Stop forcing the Philidor; study the mainline 1.e4 e5 2.Nf3 d6 3.d4 Nf6 4.Nc3 and the thematic ...exd4 and ...Nbd7 ideas, then switch to a more reliable system like the Ruy\u202fLopez or Italian Game to rebuild a solid repertoire. Immediately review every Philidor game move\u2011by\u2011move, annotate every mistake, and replace the opening in your next ten games with a tested, theory\u2011backed line before you ever sit down at the board again.",
+   "session_summary": "Your play is a disaster: you lose every game, and you can\u2019t even scrape a point out of the Philidor despite it being your most\u2011played opening. Stop treating the Philidor as a \u201csafe\u201d line and study a solid, well\u2011tested system (e.g., the Caro\u2011Kann or the London) to at least give yourself a reliable structure. Immediately drill basic tactics and endgame fundamentals for 30\u202fminutes a day, then replay each loss move\u2011by\u2011move to pinpoint the exact moment you blundered and fix that pattern before you touch the board again.",
    "session_date": "2026-11-20",
    "is_yesterday": true,
    "token_missing": false
   },
   "lichess_puzzle": {
    "pid": "GjqO9",
-   "rating": 1904,
+   "rating": 1836,
    "level": "\ud83d\udd34 stretch",
    "themes": "Endgame \u00b7 Advanced Pawn \u00b7 Crushing",
    "tip": "King activity and pawn structure dominate. Technique over tactics here.",
