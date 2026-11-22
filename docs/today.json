@@ -1,5 +1,5 @@
 {
- "build_id": "20261122T090220",
+ "build_id": "20261122T095444",
  "date": "2026-11-22",
  "date_str": "Sunday, November 22 2026",
  "picks": [
@@ -411,15 +411,15 @@
  "picks_week": null,
  "open_context": {},
  "ipos": {
-  "count": 12,
+  "count": 11,
   "months": 12,
-  "built_on": "2026-11-20",
+  "built_on": "2026-11-22",
   "summary": {
-   "count": 12,
-   "up": 7,
+   "count": 11,
+   "up": 6,
    "down": 5,
-   "up_pct": 58.3,
-   "median_pct": 28.9
+   "up_pct": 54.5,
+   "median_pct": 14.5
   },
   "rows": [
    {
@@ -450,7 +450,7 @@
    },
    {
     "sym": "SUDEEPPHRM",
-    "months_listed": 11.7,
+    "months_listed": 11.8,
     "first_close": 774.15,
     "last_close": 1191.5,
     "since_listing_pct": 53.9,
@@ -463,7 +463,7 @@
    },
    {
     "sym": "MEESHO",
-    "months_listed": 11.3,
+    "months_listed": 11.4,
     "first_close": 170.09,
     "last_close": 259.92,
     "since_listing_pct": 52.8,
@@ -476,7 +476,7 @@
    },
    {
     "sym": "AEQUS",
-    "months_listed": 11.3,
+    "months_listed": 11.4,
     "first_close": 151.29,
     "last_close": 224.0,
     "since_listing_pct": 48.1,
@@ -491,15 +491,15 @@
   "worst": [
    {
     "sym": "HEG",
-    "months_listed": 4.1,
+    "months_listed": 4.2,
     "first_close": 587.35,
-    "last_close": 264.46,
-    "since_listing_pct": -55.0,
+    "last_close": 257.39,
+    "since_listing_pct": -56.2,
     "high": 739.25,
     "low": 198.78,
-    "from_high_pct": -64.2,
+    "from_high_pct": -65.2,
     "below_first_ever": true,
-    "sessions": 86,
+    "sessions": 87,
     "listed_on": "2026-07-17"
    },
    {
@@ -538,7 +538,7 @@
    {
     "dataset": "Careers feed",
     "status": "STALE",
-    "age": "3 days old",
+    "age": "4 days old",
     "note": "older than its daily refresh"
    },
    {
@@ -1105,12 +1105,12 @@
     "_sort": "2026-11-21T12:00:00+00:00",
     "smart": {
      "what_happened": [
-      "A new trial was launched to examine the relationship between vitamin D and cardiovascular disease.",
-      "The trial seeks to address previous research shortcomings but introduces new issues."
+      "A new trial was launched to examine vitamin D's effect on cardiovascular disease.",
+      "The trial has introduced additional issues beyond the original questions."
      ],
-     "why_it_matters": "Understanding whether vitamin D influences cardiovascular outcomes could reshape prevention strategies and inform clinical guidelines, given the widespread use of supplements and the high prevalence of heart disease.",
-     "what_to_watch": "The publication of the trial's primary results, including any peer\u2011reviewed findings, in the upcoming scientific journals.",
-     "headline": "New trial studies vitamin D's effect on cardiovascular disease",
+     "why_it_matters": "Understanding whether vitamin D supplementation influences cardiovascular outcomes could reshape clinical guidelines and public health recommendations, given the widespread use of vitamin D supplements and the high prevalence of heart disease. The emergence of new methodological or safety concerns in the trial may affect how future research is designed and how clinicians interpret existing evidence.",
+     "what_to_watch": "The release of the trial's primary results in the next peer\u2011reviewed publication",
+     "headline": "New trial on vitamin D and heart disease raises new concerns",
      "read_seconds": 20
     }
    },
@@ -1124,12 +1124,12 @@
     "_sort": "2026-11-21T09:35:01+00:00",
     "smart": {
      "what_happened": [
-      "The Delhi Bench of the Income Tax Appellate Tribunal held that capital gains on the transfer of a US entity in the FireEye Ireland case are not taxable in India.",
-      "An expert provided an explanation of the legal reasoning behind the tribunal's decision."
+      "The Delhi Bench of the Income Tax Appellate Tribunal held that capital gains on the transfer of a US entity are not taxable in India.",
+      "The decision concerned the FireEye Ireland case and an expert explained the reasoning."
      ],
-     "why_it_matters": "The ruling clarifies how Indian tax law treats capital gains arising from the transfer of foreign entities, potentially affecting multinational corporations and investors who consider structuring transactions involving US subsidiaries, as it establishes that such gains may fall outside India's tax jurisdiction.",
-     "what_to_watch": "Monitor any follow\u2011up rulings or guidance from Indian tax authorities on similar cross\u2011border entity transfers.",
-     "headline": "Delhi ITAT rules US entity transfer gains not taxable in India",
+     "why_it_matters": "The ruling clarifies that capital gains arising from the transfer of foreign entities, such as a US company, may fall outside Indian tax jurisdiction, affecting how multinational corporations and investors structure cross\u2011border transactions and assess their Indian tax liabilities.",
+     "what_to_watch": "Watch for any subsequent ITAT rulings or guidance from Indian tax authorities on similar transfers of foreign entities.",
+     "headline": "Delhi ITAT rules US entity capital gains not taxable in India",
      "read_seconds": 20
     }
    },
@@ -1143,12 +1143,12 @@
     "_sort": "2026-11-21T02:30:00+00:00",
     "smart": {
      "what_happened": [
-      "Between 2011 and 2023, 496 million Indians moved out of poverty, according to the World Bank.",
-      "During the same period, women's employment increased, supporting economic growth and further poverty reduction."
+      "The World Bank reports that about 496 million Indians moved out of poverty from 2011 through 2023.",
+      "During the same period, women's employment rose, supporting overall economic growth."
      ],
-     "why_it_matters": "The large-scale reduction in poverty signals a substantial improvement in living standards for a significant portion of India's population, which can boost domestic consumption, expand the tax base, and enhance social stability. Increased women's participation in the labor force also diversifies the economy and can lead to higher productivity and inclusive growth.",
-     "what_to_watch": "The World Bank's upcoming 2024 poverty assessment for India, scheduled for release in Q2 2024.",
-     "headline": "India lifts 496 million people out of poverty between 2011 and 2023",
+     "why_it_matters": "The reduction of poverty for almost half a billion people signals a substantial improvement in living standards and expands the domestic consumer base, which can drive further economic activity and increase fiscal revenues. The rise in women's employment also enhances labor force participation, potentially boosting productivity and inclusive growth.",
+     "what_to_watch": "The World Bank's next poverty assessment for India, scheduled for release in 2025, to see if the downward trend continues.",
+     "headline": "India lifts nearly 496 million people out of poverty between 2011 and 2023",
      "read_seconds": 26
     }
    },
@@ -1162,12 +1162,12 @@
     "_sort": "2026-11-21T01:31:08+00:00",
     "smart": {
      "what_happened": [
-      "He steered major economic reforms while serving as finance minister.",
-      "He built consensus across political and institutional divides using pragmatism and courtesy."
+      "Arun Jaitley combined political pragmatism with old\u2011school courtesy.",
+      "He steered major economic reforms as finance minister and built consensus across political and institutional divides."
      ],
-     "why_it_matters": "Jaitley's blend of political pragmatism and old\u2011school courtesy enabled the passage of key reforms that restructured India's fiscal and regulatory framework, influencing growth trajectories and institutional confidence in the economy.",
-     "what_to_watch": "The ongoing performance and impact assessments of the major reforms he championed, such as tax and regulatory changes, will indicate the lasting effect of his policy agenda.",
-     "headline": "Arun Jaitley shaped Indian economy as finance minister",
+     "why_it_matters": "Jaitley's approach to economic policy blended practical politics with respectful engagement, enabling the passage of significant reforms that have had lasting effects on India's fiscal framework and growth trajectory. His ability to bridge partisan and institutional gaps helped stabilize and advance the Indian economy during his tenure.",
+     "what_to_watch": "The article does not mention any specific future event or development to monitor.",
+     "headline": "Arun Jaitley shaped Indian economy through pragmatic reforms",
      "read_seconds": 20
     }
    },
@@ -1190,12 +1190,12 @@
     "_sort": "2026-11-19T10:55:00+00:00",
     "smart": {
      "what_happened": [
-      "Bing Gordon, former EA chief creative officer and Kleiner Perkins partner, served on Amazon\u2019s board for more than a decade after giving Jeff Bezos five ideas, the first being Amazon Prime.",
-      "He recounted a week when two Amazon directors announced their intention to resign."
+      "Bing Gordon, former EA chief creative officer and Kleiner Perkins partner, served on Amazon\u2019s board for more than a decade.",
+      "He secured his board seat by presenting Jeff Bezos with five ideas, including the concept that became Amazon Prime, and recounted a week when two directors considered resigning."
      ],
-     "why_it_matters": "Gordon\u2019s experience bridging video games, venture capital, and e\u2011commerce offers a rare perspective on how ideas from diverse industries can shape major corporate strategies, exemplified by the creation of Amazon Prime and governance challenges at a leading tech retailer.",
-     "what_to_watch": "Track any future changes to Amazon\u2019s board composition or new initiatives announced by Kleiner Perkins that cite Gordon\u2019s influence.",
-     "headline": "Bing Gordon shares lessons from Bezos, Jobs, Spielberg",
+     "why_it_matters": "Gordon\u2019s track record of creative leadership at Electronic Arts, venture investing at Kleiner Perkins, and direct influence on Amazon\u2019s strategic direction\u2014highlighted by his role in conceiving Amazon Prime\u2014offers investors insight into the mindset behind major tech and entertainment innovations and the governance perspective he brings to a leading e\u2011commerce company.",
+     "what_to_watch": "Monitor upcoming Amazon board disclosures for new initiatives or strategic shifts that reference Gordon\u2019s past ideas or his influence on product development.",
+     "headline": "Bing Gordon shares lessons from Bezos, Jobs, and Spielberg",
      "read_seconds": 26
     }
    },
@@ -1245,7 +1245,7 @@
     "moves": 33,
     "termination": "Resignation",
     "speed": "Blitz",
-    "analysis": "Focus on early central control: stop playing 2\u2026c5\u202f\u2192\u202fd4\u202f\u2192\u202fe5 without reinforcing d5; instead, develop knights, castle, and maintain a solid pawn chain (e.g., c3\u2011d4\u2011e5) to avoid getting cramped and forced into passive defense.",
+    "analysis": "Focus on early pawn structure: stop exchanging on d5 too quickly; maintain central tension and develop knights before pushing c\u2011pawn. This will reduce unnecessary material loss and improve accuracy.",
     "is_upset": false,
     "is_collapse": false,
     "is_long": false,
@@ -1351,7 +1351,7 @@
     "moves": 33,
     "termination": "Resignation",
     "speed": "Blitz",
-    "analysis": "Focus on early king safety: after 9.Nc3, avoid 10...Qxd5; instead play 10.Qe2, preventing queen infiltration and reducing opponent\u2019s tactical threats.",
+    "analysis": "Focus on early king safety: after 1.e4 e5 2.Nf3 d5, avoid 3.exd5 Qxd5 and instead play 3.Nc3, keeping the center closed and preventing Black\u2019s rapid queen attacks. This reduces tactical threats and improves overall accuracy.",
     "is_upset": false,
     "is_collapse": false,
     "is_long": false,
@@ -1384,7 +1384,7 @@
     "moves": 22,
     "termination": "Resignation",
     "speed": "Blitz",
-    "analysis": "Focus on early piece development: stop moving the queen before\u202f...Nf6\u202fand\u202f...Be7; instead finish\u202f...Nbd7,\u202f...c6,\u202f...Bd6\u202fand castle by move\u202f10 to avoid losing tempo and material.",
+    "analysis": "Focus on early piece activity: avoid passive 2\u2026Nf6\u2011e4 ideas; develop bishop to c5 or e7 and castle before pushing \u2026d5, reducing opponent\u2019s central pressure.",
     "is_upset": false,
     "is_collapse": false,
     "is_long": false,
@@ -1417,7 +1417,7 @@
     "moves": 32,
     "termination": "Resignation",
     "speed": "Blitz",
-    "analysis": "Focus on early piece activity: develop knights before moving the queen (e.g., avoid 4\u2026Qd8); aim for \u226412\u202f% pawn\u2011structure weaknesses and keep king safety under 30\u202f% risk.",
+    "analysis": "Focus on early piece development: after 1.e4 e5\u202f2.Nf3 d6, play\u202f3...Nf6\u202finstead of 3...Nd7; avoid passive setups and reduce opponent\u2019s central control. This alone cuts average centipawn loss by ~15\u201120\u202fpts.",
     "is_upset": false,
     "is_collapse": false,
     "is_long": false,
@@ -1451,7 +1451,7 @@
     "moves": 41,
     "termination": "Checkmate",
     "speed": "Blitz",
-    "analysis": "Strengthen your endgame technique: practice converting material advantages into wins, focusing on king activity and pawn promotion timing.",
+    "analysis": "Focus on endgame technique: reduce average move count from 41 to \u226430 by converting material advantage into faster checkmates; practice forced\u2011mate patterns and pawn\u2011promotion fundamentals.",
     "is_upset": false,
     "is_collapse": false,
     "is_long": true,
@@ -1485,7 +1485,7 @@
     "moves": 29,
     "termination": "Resignation",
     "speed": "Blitz",
-    "analysis": "Focus on early king\u2011side safety: after 1.e4 e5 2.f4 exf4 3.Nf3, avoid 3...g5; instead play 3...d5 (or 3...Nf6) to neutralize White\u2019s attack and reduce pawn\u2011storm risk. This alone cuts your average centipawn loss by ~30\u202fcp.",
+    "analysis": "Focus on defending the vulnerable f\u2011pawn after 4\u2026exf4; aim for a solid ...d6\u2011...Be6 setup within 8 moves, reducing opponent\u2019s attack chances.",
     "is_upset": false,
     "is_collapse": false,
     "is_long": false,
@@ -1518,7 +1518,7 @@
     "moves": 11,
     "termination": "Resignation",
     "speed": "Blitz",
-    "analysis": "Focus on early piece development: stop moving the same minor piece twice (e.g., 5.Nc3\u2011e4\u2011c5). Aim for \u22643 moves before castling, targeting \u226415\u202f% pawn\u2011structure weaknesses.",
+    "analysis": "Focus on early piece coordination: develop knights before queen (e.g., Nf3, Nc3) and castle by move\u202f7 to avoid queen\u2011side vulnerabilities.",
     "is_upset": false,
     "is_collapse": false,
     "is_long": false,
@@ -1551,7 +1551,7 @@
     "moves": 25,
     "termination": "Time Out",
     "speed": "Blitz",
-    "analysis": "Cut your opening blunders: study A45 lines, memorize the first three accurate moves, and always verify threats before each 1\u2011move.",
+    "analysis": "Focus on reducing blunders: spend \u22642\u202fseconds on each critical move; review candidate moves, especially after 12\u2026Nf6, to raise accuracy above 85%.",
     "is_upset": false,
     "is_collapse": false,
     "is_long": false,
@@ -1587,7 +1587,7 @@
     "moves": 20,
     "termination": "Resignation",
     "speed": "Blitz",
-    "analysis": "Focus on early king safety: after 1.e4 g6 2.d4 Bg7 3.Nc3 d6, avoid 4.Bd3?; instead develop knights (Nf3, Be2) and castle by move\u202f8, reducing opponent\u2019s attack chances.",
+    "analysis": "Focus on early king safety: after 1.e4\u202fg6, develop knights before pushing \u2026f5; avoid leaving the king in the center past move\u202f10.",
     "is_upset": false,
     "is_collapse": false,
     "is_long": false,
@@ -1676,15 +1676,15 @@
    "upsets": 0,
    "collapses": 0,
    "long_games": 1,
-   "session_summary": "Your Philidor play is a joke\u2014winning two out of three games at 67\u202f% only proves you\u2019re lucky, not skilled, and the 0\u20110\u20110 losses expose a complete lack of fundamental pawn structure awareness. Stop treating the opening as a \u201cbest\u201d and dump it entirely; instead drill the classical 1.e4\u202fe5\u202f2.Nf3\u202fNc6 lines until you can execute basic tactics without blundering a piece. Immediate action: spend the next 48\u202fhours analyzing every Philidor loss move\u2011by\u2011move, annotate every mistake, and replace the entire repertoire with a solid, theory\u2011backed system before your next game.",
+   "session_summary": "Your Philidor play is a joke\u2014winning two out of three games doesn\u2019t excuse the sloppy pawn structure and king\u2011exposure that let opponents equalize instantly. Stop treating the Philidor as a \u201csecret weapon\u201d; either master the critical lines (\u2026d6, \u2026Nd7, \u2026c6, \u2026Be7, and a timely \u2026f5 break) or dump it for a sounder 1.e4 opening where you can dictate the pace. Immediately review every Philidor loss, annotate each mistake, and drill the exact move orders that keep the center closed and your king safe before you waste another game on this weak fa\u00e7ade.",
    "session_date": "2026-11-21",
    "is_yesterday": true,
    "token_missing": false
   },
   "lichess_puzzle": {
    "pid": "xrteQ",
-   "rating": 1790,
-   "level": "\ud83d\udfe1 at level",
+   "rating": 2050,
+   "level": "\ud83d\udd34 stretch",
    "themes": "Endgame \u00b7 Long \u00b7 Mate In3",
    "tip": "King activity and pawn structure dominate. Technique over tactics here.",
    "url": "https://lichess.org/training/xrteQ"
