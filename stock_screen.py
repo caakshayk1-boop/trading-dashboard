@@ -594,6 +594,7 @@ def fetch_prices(symbols: list[str], period: str = "4y") -> dict[str, dict]:
                     raw = {f: df[f] for f in _FIELDS if f in df.columns}
                 else:
                     raw = {f: df[(f, tk)] for f in _FIELDS if (f, tk) in df.columns}
+                raw = _drop_open_session(raw, datetime.now(IST))
                 series = _adjusted(raw)
                 if "Close" not in series or series["Close"].empty:
                     continue
@@ -744,6 +745,32 @@ def _adjusted(raw: dict) -> dict:
 # closes at the session close, the same rebuild the private engine performs.
 # A bar series that does not reach 15:15, or a close outside the day's own
 # range, rebuilds nothing — the day stays out and the log says how many.
+# ── A SESSION STILL TRADING IS NOT A CLOSE ───────────────────────────────
+#
+# 23 Nov 2026, 09:58 IST: a manual run during the session published
+# price_date 2026-11-23 with Yahoo's in-progress bar as the day's close. Volume
+# read 17% to 40% of the 20-day average for the large caps, breadth was 381 up
+# and 602 down, and every downstream consumer (the Rulebook feed, the hub, the
+# breakout and volume tests) treated a half-finished day as a finished one.
+# _missing_close() already knew the session is not over before 15:40 IST, but
+# only for a row WITHOUT a close; a row with a partial close sailed through.
+# While the session is open, today's bar is dropped from every field, so the
+# screen is built on closed days only, which is what every other reader here
+# (barometer.complete_bars) already does.
+SESSION_DONE = (15, 40)
+
+
+def _drop_open_session(raw: dict, now: datetime) -> dict:
+    if (now.hour, now.minute) >= SESSION_DONE:
+        return raw
+    today = now.date()
+    out = {}
+    for field, ser in raw.items():
+        keep = [(t.date() if hasattr(t, "date") else t) != today for t in ser.index]
+        out[field] = ser[keep]
+    return out
+
+
 def _missing_close(raw: dict, now: datetime):
     """The last traded row when it has a range but no close, and its session
     is over; else None. Returns (date, open, high, low, volume)."""
