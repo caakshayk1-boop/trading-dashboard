@@ -1315,7 +1315,14 @@ def generate() -> None:
     # THREE places or it 404s: written here, named in .vercelignore, and copied
     # in vercel-news/build.js. today.json had two of the three and silently
     # served nothing for days.
-    if stock_screen.get("rows"):
+    import publish_screen as _pub
+    if stock_screen.get("rows") and _pub.superseded(stock_screen, out_dir):
+        # The published screen is this build or a newer one (publish_screen.py
+        # wrote it directly). Rewriting it from the newspaper's cache would only
+        # downgrade it: on a new ISO week this cache is served as a "fallback",
+        # and that flag landed on identical data. See publish_screen.superseded.
+        print("[generate] screen.json kept — the published screen is this build or newer")
+    elif stock_screen.get("rows"):
         # SPLIT into table + detail. 74% of the payload is fields only the detail
         # sheet reads, and at 750 rows the combined file reached 4.3MB raw /
         # 860KB gzipped — everyone who scrolled to the section downloaded the

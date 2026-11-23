@@ -3,7 +3,7 @@ import json
 import tempfile
 import unittest
 from pathlib import Path
-from publish_screen import publish, projections, FILES
+from publish_screen import publish, projections, superseded, FILES
 
 class PublishTest(unittest.TestCase):
     def setUp(self):
@@ -25,6 +25,24 @@ class PublishTest(unittest.TestCase):
             older=copy.deepcopy(self.data); older['price_date']='2026-11-05'; older['breadth']['as_of']='2026-11-05'
             with self.assertRaises(ValueError): publish(older,d)
             self.assertEqual(before,{f: (Path(d)/f).read_bytes() for f in FILES})
+    def test_newspaper_fallback_of_the_same_build_never_replaces_the_clean_file(self):
+        # 23 Nov 2026: the newspaper served last week's cache as a fallback and
+        # wrote it over the published screen; same data, is_fallback=true, so
+        # Rulebook's feed gate refused it until the next publish.
+        with tempfile.TemporaryDirectory() as d:
+            self.assertTrue(publish(self.data, d))
+            fb = dict(self.data, is_fallback=True)
+            self.assertTrue(superseded(fb, d), 'same build and same price date: keep the published file')
+            newer = dict(self.data, generated_at='2026-11-07T17:00:00+05:30')
+            self.assertFalse(superseded(newer, d), 'a genuinely newer build must still be written')
+            later_day = dict(self.data, price_date='2026-11-09')
+            self.assertFalse(superseded(later_day, d))
+            older_day = dict(self.data, price_date='2026-11-05')
+            self.assertTrue(superseded(older_day, d), 'prices never move backwards')
+            self.assertFalse(superseded(fb, d + '/missing'), 'nothing published yet: write it')
+            (Path(d) / 'screen.json').write_text('{not json')
+            self.assertFalse(superseded(fb, d), 'an unreadable file is replaced, not trusted')
+
     def test_invalid_payload_never_changes_files(self):
         for key,value in [('rows',[]),('coverage',{'statements_pct':60}),('breadth',{'as_of':'2026-11-05'})]:
             with tempfile.TemporaryDirectory() as d:

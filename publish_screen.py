@@ -22,6 +22,28 @@ def projections(data):
     return dict(zip(FILES, (table, detail, stock_screen.lite_payload(table),
                            {'built_on': detail.get('built_on'), 'swot': swot})))
 
+def superseded(data, directory):
+    """True when the published screen is already this build or a newer one.
+
+    The newspaper job (generate.py) rebuilds from its own cache and, on the first
+    run of a new ISO week, serves the previous week's key as a "fallback" build.
+    Writing that over the directly published screen replaced a clean file with
+    the same data stamped is_fallback=true, and every consumer that refuses a
+    fallback (Rulebook's feed gate, the hub) stopped building until the next
+    21:00 IST publish. The same two rules as publish() apply, in one place.
+    """
+    old_path = Path(directory) / 'screen.json'
+    if not old_path.exists():
+        return False
+    try:
+        old = json.loads(old_path.read_text())
+    except ValueError:
+        return False
+    day, built = data.get('price_date') or '', data.get('generated_at') or ''
+    if (old.get('price_date') or '') > day:
+        return True
+    return (old.get('price_date') or '') == day and (old.get('generated_at') or '') >= built
+
 def publish(data, directory):
     outputs = projections(data)  # Validate all before touching published files.
     directory = Path(directory)
