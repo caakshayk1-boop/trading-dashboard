@@ -170,6 +170,19 @@ def _():
     assert S._missing_close(raw, at(21, 0))[0].isoformat() == "2026-10-05"
 
 
+@check("a session still trading is dropped from the price frame; a finished one is kept")
+def _():
+    idx = pd.DatetimeIndex([pd.Timestamp("2026-11-20"), pd.Timestamp("2026-11-23")])
+    raw = {f: pd.Series([100.0, 90.0], idx) for f in ("Open", "High", "Low", "Close", "Volume")}
+    at = lambda h, m: S.datetime(2026, 11, 23, h, m, tzinfo=S.IST)
+    mid = S._drop_open_session(raw, at(9, 58))
+    assert all(len(v) == 1 and v.index[0] == pd.Timestamp("2026-11-20") for v in mid.values()), "09:58 IST: today's partial bar must go"
+    assert all(len(v) == 1 for v in S._drop_open_session(raw, at(15, 39)).values()), "still open at 15:39"
+    done = S._drop_open_session(raw, at(15, 40))
+    assert all(len(v) == 2 for v in done.values()), "after 15:40 the day is finished and stays"
+    assert all(len(v) == 2 for v in S._drop_open_session(raw, S.datetime(2026, 11, 24, 8, 0, tzinfo=S.IST)).values()), "next morning: yesterday's bar is a closed day"
+
+
 @check("coverage counts names a session behind and closes left unrepaired")
 def _():
     S.FETCH_REPORT.clear(); S.FETCH_REPORT.update(missing_close=5, rebuilt=3)
