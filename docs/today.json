@@ -1,5 +1,5 @@
 {
- "build_id": "20261124T090245",
+ "build_id": "20261124T134956",
  "date": "2026-11-24",
  "date_str": "Tuesday, November 24 2026",
  "picks": [
@@ -538,7 +538,7 @@
    {
     "dataset": "Careers feed",
     "status": "STALE",
-    "age": "5 days old",
+    "age": "6 days old",
     "note": "older than its daily refresh"
    }
   ]
@@ -1086,10 +1086,28 @@
    "shows": 20,
    "source": "each channel's public Atom feed",
    "built_on": "2026-11-24",
-   "age_days": 0.0,
+   "age_days": 0.2,
    "is_fallback": false
   },
   "smart_reads": [
+   {
+    "source": "Livemint",
+    "cat": "money",
+    "title": "Gold price in Bangalore today, 24 November Tuesday: Check latest 24K, 22K and 20K gold rates in Silicon Valley of India",
+    "link": "https://www.livemint.com/money/personal-finance/gold-price-in-bangalore-today-24-november-tuesday-check-latest-24k-22k-and-20k-gold-rates-in-silicon-valley-of-india-11795494486201.html",
+    "summary": "Gold prices in Bangalore: Gold rates rise marginally on Tuesday, 24 November. Check the latest 24K, 22K, 20K and 18K gold rates in Bangalore, recent price movements over the past week and month, and how current rates compare with prices a year ago.",
+    "date": "Nov 24, 2026",
+    "_sort": "2026-11-24T04:53:04+00:00"
+   },
+   {
+    "source": "Livemint Opinion",
+    "cat": "money",
+    "title": "Mint Quick Edit | AI's impact on the economy: Time will tell how it impacts productivity and jobs",
+    "link": "https://www.livemint.com/opinion/online-views/mint-quick-edit-economics-of-ai-where-are-the-productivity-gains-11795446980334.html",
+    "summary": "Studies show that US firms aren't adopting artificial intelligence (AI) intensively, the impact of the technology on employment thus far has been low, and productivity hasn't been boosted much either on an economy-wide scale. How AI will ultimately affect the labour market remains to be seen.",
+    "date": "Nov 24, 2026",
+    "_sort": "2026-11-24T01:30:57+00:00"
+   },
    {
     "source": "Scott Young",
     "cat": "habits",
@@ -1106,26 +1124,7 @@
     "link": "https://economictimes.indiatimes.com/opinion/et-commentary/indias-anti-fdi-mindset-persists-despite-economic-growth/articleshow/136111816.cms",
     "summary": "The backlash against Fairfax's acquisition of IDBI Bank reflects India's lingering suspicion of private and foreign capital. Despite strong economic fundamentals and the need for FDI, protectionist attitudes persist.",
     "date": "Nov 23, 2026",
-    "_sort": "2026-11-23T18:23:51+00:00",
-    "smart": {
-     "what_happened": [
-      "Fairfax's attempt to acquire IDBI Bank sparked a backlash in India.",
-      "The reaction reflects lingering suspicion of private and foreign capital despite strong economic fundamentals."
-     ],
-     "why_it_matters": "The episode underscores persistent protectionist attitudes in India, which could deter foreign direct investment and limit the inflow of capital needed for economic expansion, potentially affecting the banking sector and broader growth prospects.",
-     "what_to_watch": "Watch for any official regulatory decision or policy announcement regarding the Fairfax\u2011IDBI Bank deal in the coming weeks.",
-     "headline": "India backlash against Fairfax's IDBI Bank acquisition highlights anti-FDI sentiment",
-     "read_seconds": 20
-    }
-   },
-   {
-    "source": "Livemint",
-    "cat": "money",
-    "title": "REIT, InvIT dividend income tax-free? ITAT Ahmedabad rules in favour of taxpayer in  \u20b949.64 lakh tax dispute",
-    "link": "https://www.livemint.com/money/personal-finance/reit-invit-dividend-income-tax-free-itat-ahmedabad-rules-in-favour-of-taxpayer-over-rs-49-64-lakh-tax-dispute-11795448922456.html",
-    "summary": "The ruling provides clarity on the pass-through taxation mechanism applicable to business trusts and the circumstances in which dividend distributions remain exempt in the hands of investors.",
-    "date": "Nov 23, 2026",
-    "_sort": "2026-11-23T16:54:12+00:00"
+    "_sort": "2026-11-23T18:23:51+00:00"
    },
    {
     "source": "Aeon",
@@ -1146,23 +1145,14 @@
     "_sort": "2026-11-23T11:00:00+00:00",
     "smart": {
      "what_happened": [
-      "The author\u2019s dog suffered from separation anxiety, which kept the author housebound.",
-      "To help the dog, the author had to face their own fear of leaving the house."
+      "The author recounts her dog's separation anxiety that kept her housebound.",
+      "She explains confronting her own fear of leaving to help her dog."
      ],
-     "why_it_matters": "The piece illustrates how a pet\u2019s emotional condition can directly affect an owner\u2019s daily routine and mental well\u2011being, highlighting the broader link between animal behavior issues and human lifestyle constraints.",
-     "what_to_watch": "Future articles by Tracy Strauss on Psyche that discuss coping strategies for pet\u2011related anxiety.",
-     "headline": "Author confronts personal fear due to dog\u2019s separation anxiety",
+     "why_it_matters": "The piece highlights how personal anxieties can mirror pet behavior, illustrating the psychological interplay between owners and their animals and underscoring the importance of addressing both human and animal mental health for improved well\u2011being.",
+     "what_to_watch": "Future articles or studies on the impact of owner anxiety on pet behavior and effective coping strategies.",
+     "headline": "Author describes dog separation anxiety and personal fear of leaving",
      "read_seconds": 20
     }
-   },
-   {
-    "source": "Livemint Opinion",
-    "cat": "money",
-    "title": "US monetary policy: Why aggressive rate hikes are a bad idea in this economy",
-    "link": "https://www.livemint.com/opinion/online-views/us-monetary-policy-why-aggressive-rate-hikes-are-a-bad-idea-in-this-economy-11795365605075.html",
-    "summary": "Increasing rates is the right strategy, but a monetary policy broadside would be the wrong move when wage growth is not keeping pace with rising living costs, credit market conditions have tightened and shares of AI firms risk dragging the broader S&amp;amp;P 500 Index into a correction.",
-    "date": "Nov 23, 2026",
-    "_sort": "2026-11-23T09:30:40+00:00"
    },
    {
     "source": "Peter Attia",
@@ -1210,7 +1200,7 @@
     "moves": 35,
     "termination": "Checkmate",
     "speed": "Blitz",
-    "analysis": "Focus on early queen development: avoid moving Qd1\u2013h5/h3 before completing minor\u2011piece coordination; it cost ~30\u202fcp loss in the first 12 moves.",
+    "analysis": "Focus on early piece coordination: develop knights and bishops before moving the queen; aim for \u22642\u202fmoves per piece in the opening to reduce tempo loss and avoid unnecessary queen sorties.",
     "is_upset": false,
     "is_collapse": false,
     "is_long": false,
@@ -1316,7 +1306,7 @@
     "moves": 14,
     "termination": "Resignation",
     "speed": "Blitz",
-    "analysis": "Focus on early king safety: after 1.e4 e5 2.Nf3 d5, avoid 3.exd5 Qxd5 and instead play 3.Nc3 (or 3.d4) to keep central control; your queen\u2011side development lagged 3 moves, leading to a forced resignation at move\u202f14.",
+    "analysis": "Focus on early king safety: after 1.e4 e5 2.Nf3 d5, avoid 3.exd5 Qxd5 4.Nc3 Qe6?; instead play 3.Nc3, develop pieces, and castle by move\u202f7 to prevent rapid attacks that forced your resignation.",
     "is_upset": false,
     "is_collapse": false,
     "is_long": false,
@@ -1349,7 +1339,7 @@
     "moves": 16,
     "termination": "Checkmate",
     "speed": "Blitz",
-    "analysis": "Focus on early king safety: after 9\u2026Qxe5? you allowed 10.Qxe5 Nxe5 11.Nf3, exposing the king; instead prioritize ...Be7, ...0\u20110, and avoid queen trades that open lines. Reduce unnecessary queen moves; keep pieces coordinated to prevent the swift mating net.",
+    "analysis": "Focus on early king safety: after 5\u2026Nf6, avoid 6\u2026g5\u2011g4 pushes; instead develop 6\u2026Bc5, castle promptly, and prevent the queen\u2011side attack that led to mate at move\u202f16.",
     "is_upset": false,
     "is_collapse": false,
     "is_long": false,
@@ -1382,7 +1372,7 @@
     "moves": 19,
     "termination": "Draw",
     "speed": "Blitz",
-    "analysis": "Focus on early piece development: after 1.d4 Nf6 2.Nf3, play 3.c4\u202finstead of 3.Nc3 to control the center and avoid passive setups. This reduces wasted tempo and improves opening accuracy.",
+    "analysis": "Focus on early piece coordination: after 1.d4 Nf6 2.c4 e6 3.Nf3, develop the dark\u2011square bishop before playing ...c5; aim for 4.Bg5 or 4.e3, then castle by move\u202f7 to avoid passive setups that led to the early draw.",
     "is_upset": false,
     "is_collapse": false,
     "is_long": false,
@@ -1415,7 +1405,7 @@
     "moves": 21,
     "termination": "Resignation",
     "speed": "Blitz",
-    "analysis": "Focus on early piece activity: develop knights before moving the queen; avoid 5\u2026Qb6, instead play 5\u2026Nd7, saving 2\u2011move tempo and preventing opponent\u2019s rapid attack.",
+    "analysis": "Focus on early piece activity: develop knights before moving the queen (avoid 4\u2026Qb6); aim for Nf6\u2011e5 by move\u202f7 to contest the center.",
     "is_upset": false,
     "is_collapse": false,
     "is_long": false,
@@ -1448,7 +1438,7 @@
     "moves": 26,
     "termination": "Checkmate",
     "speed": "Blitz",
-    "analysis": "Focus on early piece coordination: develop knights before moving the queen (e.g., Nf3, Nc3) to reduce unnecessary queen moves and improve time\u2011efficiency.",
+    "analysis": "Focus on early piece coordination: develop knights before queen (e.g., Nf3, Nc3 by move\u202f4) to avoid queen\u2011side tempo losses; aim \u2264\u202f15\u202f% opening inaccuracies.",
     "is_upset": false,
     "is_collapse": false,
     "is_long": false,
@@ -1481,7 +1471,7 @@
     "moves": 40,
     "termination": "Time Out",
     "speed": "Blitz",
-    "analysis": "Focus on early queen development: stop bringing the queen out before move\u202f6; instead complete minor\u2011piece development and castle to reduce time loss.",
+    "analysis": "Focus on early piece development: within the first 8 moves, get both knights and bishops off the back rank and castle; you wasted ~12 seconds per move.",
     "is_upset": false,
     "is_collapse": false,
     "is_long": true,
@@ -1571,14 +1561,14 @@
    "upsets": 0,
    "collapses": 0,
    "long_games": 1,
-   "session_summary": "Your 57\u202f% win rate looks decent on paper, but the fact that both of your \u201cbest\u201d and \u201cworst\u201d openings are the same D00 Queen\u2019s Pawn Game shows you\u2019re not experimenting\u2014you're winning by luck, not by preparation. Stop opening with the generic 1.d4 and adopt a solid, theory\u2011backed line (e.g., the Queen\u2019s Gambit Declined or a Nimzo\u2011Indian) to force opponents out of their comfort zone. From now on, study the critical middlegame plans of that chosen opening and rehearse them in at least three training games before you play another rated match.",
+   "session_summary": "Your 57\u202f% win rate masks a fatal over\u2011reliance on the D00 Queen\u2019s\u202fPawn Game\u2014two wins, two draws, and you\u2019ve never tested it against any real opposition, so you\u2019re building a house of cards on a single, low\u2011quality opening. Stop playing \u201cQueen\u2019s Pawn\u201d as a default and expand your repertoire with at least one solid, theory\u2011backed line (e.g., the London System or a classical d4\u2011c4 setup) to force opponents out of their comfort zones. Immediately review every D00 game, catalog the positions where you felt uncertain, and replace each with a prepared variation before your next session.",
    "session_date": "2026-11-23",
    "is_yesterday": true,
    "token_missing": false
   },
   "lichess_puzzle": {
    "pid": "LvbY6",
-   "rating": 2007,
+   "rating": 2005,
    "level": "\ud83d\udd34 stretch",
    "themes": "Very Long \u00b7 Endgame \u00b7 Crushing",
    "tip": "King activity and pawn structure dominate. Technique over tactics here.",
