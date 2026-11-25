@@ -1,6 +1,6 @@
 {
   "ok": true,
-  "generated_at": "2026-11-24T23:16:59+00:00",
+  "generated_at": "2026-11-25T22:48:12+00:00",
   "weights": {
     "trend": 30,
     "breadth": 30,
@@ -33,9 +33,9 @@
       {
         "key": "participation",
         "label": "Advancing today",
-        "score": 34.3,
+        "score": 34.6,
         "weight": 15,
-        "detail": "341 of 994 advanced"
+        "detail": "344 of 994 advanced"
       },
       {
         "key": "volatility",
@@ -715,6 +715,21 @@
     },
     {
       "date": "2026-11-24",
+      "score": 49,
+      "band": "mixed",
+      "stage": {
+        "k": "none",
+        "t": "Nothing on sale",
+        "c": ""
+      },
+      "nifty": 25349.650390625,
+      "nifty_date": "2026-11-23",
+      "drawdown_pct": 3.88,
+      "above_200dma_pct": 45.2,
+      "vix": 17.700000762939453
+    },
+    {
+      "date": "2026-11-25",
       "score": 49,
       "band": "mixed",
       "stage": {
