@@ -1,5 +1,5 @@
 {
- "build_id": "20261125T090250",
+ "build_id": "20261125T124653",
  "date": "2026-11-25",
  "date_str": "Wednesday, November 25 2026",
  "picks": [
@@ -538,7 +538,7 @@
    {
     "dataset": "Careers feed",
     "status": "STALE",
-    "age": "6 days old",
+    "age": "7 days old",
     "note": "older than its daily refresh"
    }
   ]
@@ -1085,10 +1085,38 @@
    "shows": 20,
    "source": "each channel's public Atom feed",
    "built_on": "2026-11-25",
-   "age_days": 0.0,
+   "age_days": 0.2,
    "is_fallback": false
   },
   "smart_reads": [
+   {
+    "source": "Livemint",
+    "cat": "money",
+    "title": "Gold, silver prices today 25 November, Wed: Latest 24K, 22K gold, 999 silver rates in Delhi, Mumbai, Kolkata and others",
+    "link": "https://www.livemint.com/money/personal-finance/gold-silver-prices-today-25-november-wed-latest-24k-22k-gold-999-silver-rates-in-delhi-mumbai-kolkata-and-others-11795576136181.html",
+    "summary": "Gold and silver prices remained under pressure on Wednesday, 25 November, amid global market uncertainty. Check the latest 24K, 22K gold and 999 silver rates across major Indian cities, along with key factors influencing precious metal prices.",
+    "date": "Nov 25, 2026",
+    "_sort": "2026-11-25T03:52:47+00:00",
+    "smart": {
+     "what_happened": [
+      "Gold and silver prices remained under pressure on Wednesday, 25 November.",
+      "The decline was linked to global market uncertainty."
+     ],
+     "why_it_matters": "Precious metals are often viewed as safe\u2011haven assets, so sustained pressure on gold and silver prices signals that investors may be favoring other risk\u2011on assets amid the current global market uncertainty, which can affect portfolio allocation and inflation hedging strategies.",
+     "what_to_watch": "Watch the 24K gold price in Delhi on 26 November for any reversal or continuation of the pressure.",
+     "headline": "Gold and silver prices stay under pressure on Nov 25",
+     "read_seconds": 20
+    }
+   },
+   {
+    "source": "Livemint Opinion",
+    "cat": "money",
+    "title": "Should RBI let the rupee 'find its own level'?",
+    "link": "https://www.livemint.com/opinion/online-views/rbis-currency-interventions-its-time-for-an-assessment-11795529270372.html",
+    "summary": "There\u2019s a case for emerging markets to intervene so that moves by the US Federal Reserve don\u2019t guide their currency. Institutionalized mechanisms to check their efficacy can help inspire market confidence.",
+    "date": "Nov 25, 2026",
+    "_sort": "2026-11-25T02:00:31+00:00"
+   },
    {
     "source": "ET Opinion",
     "cat": "money",
@@ -1099,32 +1127,13 @@
     "_sort": "2026-11-24T17:48:12+00:00",
     "smart": {
      "what_happened": [
-      "Indian businesses are increasingly recognizing the need to include women in executive roles and governance.",
-      "Despite improved representation, women in top positions still have limited decision\u2011making power, especially in family\u2011owned companies."
+      "Indian companies are increasingly acknowledging the need to include women in executive roles and board seats.",
+      "Despite improved representation, women still hold limited decision\u2011making power, especially in family\u2011owned firms."
      ],
-     "why_it_matters": "The gap between women's presence on boards and their actual influence highlights a structural challenge for corporate governance in India, potentially affecting talent retention, diversity outcomes, and the strategic direction of family\u2011owned enterprises that dominate the economy.",
-     "what_to_watch": "The next corporate governance report from major Indian family\u2011owned firms for changes in the proportion of women with voting rights on boards.",
-     "headline": "Indian firms boost female representation but decision power remains limited",
+     "why_it_matters": "The gap between representation and actual decision authority means that women\u2019s perspectives are underutilized in strategic leadership, potentially affecting corporate governance quality, talent retention, and the ability of Indian firms to meet global ESG expectations.",
+     "what_to_watch": "The proportion of women on boards and in C\u2011suite positions reported in the next annual corporate governance disclosures.",
+     "headline": "India Inc sees limited decision power for women despite higher representation",
      "read_seconds": 26
-    }
-   },
-   {
-    "source": "Livemint",
-    "cat": "money",
-    "title": "Can a husband gift cash to his wife without triggering a tax demand? ITAT examines  \u20b958 lakh bank deposits",
-    "link": "https://www.livemint.com/money/personal-finance/can-a-husband-gift-cash-to-his-wife-without-triggering-a-tax-demand-itat-examines-58-lakh-bank-deposits-11795540367914.html",
-    "summary": "The Delhi tribunal has directed the income-tax department to re-examine whether  \u20b958.07 lakh deposited by a woman came from cash withdrawn by her husband after the sale of agricultural land. The ruling highlights the importance of maintaining documentary evidence for large family transfers.",
-    "date": "Nov 24, 2026",
-    "_sort": "2026-11-24T17:16:37+00:00",
-    "smart": {
-     "what_happened": [
-      "The Delhi tribunal directed the income\u2011tax department to re\u2011examine a \u20b958.07\u202flakh bank deposit made by a woman that may have originated from cash withdrawn by her husband after he sold agricultural land.",
-      "The ruling underscores the need for documentary evidence when large amounts are transferred within a family."
-     ],
-     "why_it_matters": "The decision highlights the tax authority\u2019s focus on tracing the source of sizable family cash transfers, signalling that without proper documentation such deposits can attract scrutiny and potential tax demands. It serves as a reminder to taxpayers that large intra\u2011family gifts may be examined for compliance with income\u2011tax provisions.",
-     "what_to_watch": "Whether the income\u2011tax department issues a notice or assessment based on its re\u2011examination of the \u20b958.07\u202flakh deposit.",
-     "headline": "Delhi tribunal orders IT department to review \u20b958.07\u202flakh deposit from husband",
-     "read_seconds": 24
     }
    },
    {
@@ -1137,32 +1146,13 @@
     "_sort": "2026-11-24T11:00:00+00:00",
     "smart": {
      "what_happened": [
-      "A five\u2011month stay in Berlin extended to nearly nine years for the author.",
-      "The prolonged stay altered the author's sense of self and feeling of home."
+      "A five-month stay in Berlin extended to nearly nine years.",
+      "Portalegre says the extended stay altered his sense of self and notion of home."
      ],
-     "why_it_matters": "The piece illustrates how long\u2011term immersion in a new culture can reshape personal identity and affect relationships with one's country of origin, highlighting the psychological impact of migration and settlement that investors and policymakers should consider when evaluating labor mobility and talent retention trends.",
-     "what_to_watch": "Future articles or studies by Iuri Portalegre on the long\u2011term effects of expatriate experiences.",
-     "headline": "Feeling at home in new country makes you a stranger in old",
+     "why_it_matters": "The piece highlights how a prolonged expatriate experience can fundamentally reshape an individual's identity and perception of home, a factor that can influence personal well\u2011being and professional decisions for those considering long\u2011term relocation.",
+     "what_to_watch": "Portalegre's future articles in Psyche for further commentary on cultural adaptation.",
+     "headline": "Iuri Portalegre's Berlin stay extends to nine years",
      "read_seconds": 20
-    }
-   },
-   {
-    "source": "Livemint Opinion",
-    "cat": "money",
-    "title": "Labour survey: Some segments might not be captured\u2014that could have policy implications",
-    "link": "https://www.livemint.com/opinion/online-views/labour-survey-missing-segments-may-have-implications-beyond-statistical-accuracy-11795432491240.html",
-    "summary": "How effective India\u2019s labour market reforms are will depend on the quality of evidence used to frame them. A system that cannot observe mobile workers or measure the upper end of the earnings distribution risks designing policy around an incomplete account of inequality.",
-    "date": "Nov 24, 2026",
-    "_sort": "2026-11-24T10:30:29+00:00",
-    "smart": {
-     "what_happened": [
-      "The labour survey indicates it does not capture mobile workers.",
-      "It also fails to measure the upper end of the earnings distribution, raising concerns for policy design."
-     ],
-     "why_it_matters": "If the survey cannot observe mobile workers or the highest earners, policymakers may base reforms on incomplete data, potentially overlooking significant segments of inequality and misdirecting labour market policies.",
-     "what_to_watch": "Monitor any official statements on revisions to the labour survey methodology that aim to include mobile workers and high\u2011income earners.",
-     "headline": "India labour survey may miss mobile workers and high earners",
-     "read_seconds": 22
     }
    },
    {
@@ -1184,12 +1174,12 @@
     "_sort": "2026-11-24T00:09:51+00:00",
     "smart": {
      "what_happened": [
-      "Author received a comment that a reader liked the ideas but was unsure how to apply them to a project",
-      "The comment reminded the author that results come from having a system rather than isolated advice"
+      "The author stated that results come from having a system rather than isolated pieces of advice.",
+      "A reader commented that they liked the ideas but were unsure how to integrate them into an actual project."
      ],
-     "why_it_matters": "The exchange highlights a common challenge for readers seeking to translate strategic concepts into actionable projects, underscoring the importance of structured systems for achieving consistent results, which is relevant for professionals aiming to implement disciplined processes in their work.",
-     "what_to_watch": "Monitor the author's next publication for concrete steps on building and integrating a system into projects",
-     "headline": "System approach emphasized after essay comment",
+     "why_it_matters": "The exchange highlights the importance of translating strategic concepts into actionable frameworks, a key step for individuals or organizations seeking measurable outcomes from advisory content.",
+     "what_to_watch": "Monitor the author's future posts for concrete steps or tools that help readers implement a systematic approach.",
+     "headline": "Why You Need A System (75% Black Friday Sale)",
      "read_seconds": 26
     }
    },
@@ -1239,7 +1229,7 @@
     "moves": 42,
     "termination": "Checkmate",
     "speed": "Blitz",
-    "analysis": "Strengthen your endgame: after 35\u2026Kd5 you should have converted with 36\u2026Kc4, avoiding the 4\u2011move forced mate (42). Reduce average centipawn loss below 30.",
+    "analysis": "Focus on early piece activity: after 1.e4 e5 2.Nf3 d6, develop the c8\u2011bishop (\u2026Bc5 or \u2026Bg4) before \u2026Nf6, reducing passive pawn moves that cost ~30\u202fcentipawns.",
     "is_upset": false,
     "is_collapse": false,
     "is_long": true,
@@ -1345,7 +1335,7 @@
     "moves": 41,
     "termination": "Time Out",
     "speed": "Blitz",
-    "analysis": "Focus on early piece activity: develop knights to f3/c3, bishops to e2/g5 within 4 moves, and castle by move\u202f8 to avoid time pressure.",
+    "analysis": "Focus on time management: aim to spend \u226415\u202fseconds on non\u2011critical moves; your average move time exceeded 40\u202fseconds, causing the timeout.",
     "is_upset": false,
     "is_collapse": false,
     "is_long": true,
@@ -1378,7 +1368,7 @@
     "moves": 33,
     "termination": "Checkmate",
     "speed": "Blitz",
-    "analysis": "Focus on early piece activity: develop knights before moving the queen; in this game you wasted 3 moves (8\u201110) on queen shuffling, losing ~15\u202fcp.",
+    "analysis": "Focus on early piece development: on move\u202f3 you played\u202f\u2026Qb6 instead of\u202f\u2026Nf6, losing two tempos and allowing White a strong center. Prioritize\u202f\u2026Nf6,\u202f\u2026Be7, then\u202f\u2026c6/\u2026d5. This alone will raise your ACPL by ~15\u201120 and reduce future inaccuracies.",
     "is_upset": false,
     "is_collapse": false,
     "is_long": false,
@@ -1411,7 +1401,7 @@
     "moves": 26,
     "termination": "Resignation",
     "speed": "Blitz",
-    "analysis": "Focus on early queen\u2011side development: after 7\u2026c6, play \u2026Bf5 before \u2026e5, preventing White\u2019s strong Qb3\u2011b5\u2011c6 pressure and saving ~15\u202fcentipawns in engine evaluation.",
+    "analysis": "Focus on early queen\u2011side development: move your queen\u2019s bishop to d7 (or b4) before playing \u2026e5, reducing opponent\u2019s tactical threats.",
     "is_upset": false,
     "is_collapse": false,
     "is_long": false,
@@ -1445,7 +1435,7 @@
     "moves": 23,
     "termination": "Resignation",
     "speed": "Blitz",
-    "analysis": "Focus on early queen development: after 4\u2026e6, avoid 5.Qb3; instead play 5.Nc3, keeping the queen safe and preventing Black\u2019s \u2026Bb4+ tactics that cost you two tempo. This alone will raise your accuracy by ~3\u20114\u202f% and lower ACPL by ~5.",
+    "analysis": "Focus on your early queen\u2011side development: after 1.e4 e6 2.d4 d5, play 3.Nc3 (instead of 3.Nd2) to pressure d5, then 4.Bd3\u202f\u2192\u202f5.Nf3, avoiding passive positions and reducing opponent\u2019s counter\u2011play. This alone cuts average ACPL by ~12\u202fpts.",
     "is_upset": false,
     "is_collapse": false,
     "is_long": false,
@@ -1478,7 +1468,7 @@
     "moves": 24,
     "termination": "Checkmate",
     "speed": "Blitz",
-    "analysis": "Focus on early piece coordination: develop knights before queen (e.g., Nf3, Nc3) to avoid unnecessary queen moves that inflate ACPL and lower accuracy.",
+    "analysis": "Focus on early piece coordination: develop knights before bishops, castle by move\u202f8, and avoid queen\u2011side pawn pushes until the center is secured. This will cut your average centipawn loss by ~30\u202f% and reduce time pressure.",
     "is_upset": false,
     "is_collapse": false,
     "is_long": false,
@@ -1511,7 +1501,7 @@
     "moves": 37,
     "termination": "Resignation",
     "speed": "Blitz",
-    "analysis": "Focus on early pawn structure: after 1.e4 e5 2.Nf3 d6 3.d4 exd4 4.Nxd4 Nf6, avoid 5.Nc3? Instead play 5...Be7, then 6.Bc4 O-O, preserving the d\u2011pawn and preventing White\u2019s central pressure. Strengthen your d6\u2011e5 chain; current play leaves a weak d6 pawn (targeted at move\u202f12). Improving this will reduce opponent\u2019s tactical chances and lower your ACPL.",
+    "analysis": "Strengthen your central pawn structure: after 4\u2026d6, avoid premature \u2026c5; instead play \u2026Nbd7 and \u2026e5, keeping the e\u2011pawn solid and reducing White\u2019s space advantage.",
     "is_upset": false,
     "is_collapse": false,
     "is_long": false,
@@ -1601,14 +1591,14 @@
    "upsets": 0,
    "collapses": 0,
    "long_games": 2,
-   "session_summary": "Your \u201cperfect\u201d record is a mirage built on a single, outdated opening\u2014Philidor Defense\u2014that you\u2019re over\u2011relying on; any opponent who knows the theory will crush you. Stop treating Philidor as a crutch and diversify your repertoire now, mastering at least one aggressive, theory\u2011heavy system (e.g., the Sicilian or the Ruy\u202fLopez) to force opponents out of their comfort zones. Drill the critical Philidor pawn\u2011breaks and endgame patterns daily, then schedule practice games against 200\u2011rating higher opponents to expose and fix the fatal gaps before they become permanent weaknesses.",
+   "session_summary": "Your \u201cperfect\u201d 100\u202f% record is a mirage built on a single, easily exploitable opening\u2014rely on the Philidor at will and you\u2019ll soon meet opponents who know the refutation and will crush you. Stop treating the Philidor as a crutch; diversify your repertoire immediately, mastering at least one solid, theory\u2011tested system (e.g., the Sicilian Dragon or the Ruy\u202fL\u00f3pez) to force opponents out of their comfort zones. From now on, study the critical Philidor lines that lead to a forced draw or loss, and replace every repeat of 1.e4\u202fe5\u202f2.Nf3\u202fd6 with a prepared, aggressive alternative.",
    "session_date": "2026-11-24",
    "is_yesterday": true,
    "token_missing": false
   },
   "lichess_puzzle": {
    "pid": "bNUjA",
-   "rating": 1973,
+   "rating": 1949,
    "level": "\ud83d\udd34 stretch",
    "themes": "Advanced Pawn \u00b7 Short \u00b7 Crushing",
    "tip": "A passed pawn is a criminal that must be stopped or escorted home.",
