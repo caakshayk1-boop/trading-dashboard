@@ -1,5 +1,5 @@
 {
- "build_id": "20261126T090213",
+ "build_id": "20261126T115703",
  "date": "2026-11-26",
  "date_str": "Thursday, November 26 2026",
  "picks": [
@@ -538,7 +538,7 @@
    {
     "dataset": "Careers feed",
     "status": "STALE",
-    "age": "7 days old",
+    "age": "8 days old",
     "note": "older than its daily refresh"
    }
   ]
@@ -1084,10 +1084,48 @@
    "shows": 20,
    "source": "each channel's public Atom feed",
    "built_on": "2026-11-26",
-   "age_days": 0.0,
+   "age_days": 0.1,
    "is_fallback": false
   },
   "smart_reads": [
+   {
+    "source": "Livemint",
+    "cat": "money",
+    "title": "Credit card spending rises 20% to  \u20b92.45 lakh crore in October as festive shopping boosts consumer demand across India",
+    "link": "https://www.livemint.com/money/personal-finance/credit-card-spending-rises-20-to-2-45-lakh-crore-in-october-as-festive-shopping-boosts-consumer-demand-across-india-11795656778132.html",
+    "summary": "Credit card spending in India rose nearly 20% month-on-month to  \u20b92.45 lakh crore in October 2026, driven by festive shopping. RBI data reveals online spending trends, leading card issuers, rising transaction volumes and changing consumer payment habits.",
+    "date": "Nov 26, 2026",
+    "_sort": "2026-11-26T02:11:51+00:00",
+    "smart": {
+     "what_happened": [
+      "Credit card spending in India rose nearly 20% month\u2011on\u2011month to \u20b92.45 lakh crore in October 2026.",
+      "The increase was driven by festive shopping and higher online transaction volumes."
+     ],
+     "why_it_matters": "The jump in credit card usage indicates stronger consumer demand during the festive season, which can boost retail sales and affect banks' fee income and credit risk profiles as more households rely on revolving credit for purchases.",
+     "what_to_watch": "Next month's RBI report on credit card transaction volume growth for November 2026.",
+     "headline": "Credit card spending up 20% to \u20b92.45 lakh crore in October",
+     "read_seconds": 21
+    }
+   },
+   {
+    "source": "Livemint Opinion",
+    "cat": "money",
+    "title": "Mint Quick Edit | What does Jensen Huang's return mean for the AI industry\u2014and Indian stocks?",
+    "link": "https://www.livemint.com/opinion/online-views/mint-quick-edit-what-does-jensen-huangs-return-mean-for-the-ai-industry-and-indian-stocks-11795633366348.html",
+    "summary": "While the Nvidia founder's reinstatement suggests that some firms are more equal than others, Huang may not be able to influence AI policy the way he did before. That could mean a mixed outlook for the AI industry, and non-AI markets like India too.",
+    "date": "Nov 26, 2026",
+    "_sort": "2026-11-26T01:31:08+00:00",
+    "smart": {
+     "what_happened": [
+      "Jensen Huang was reinstated as Nvidia's founder.",
+      "Analysts say his return may limit his ability to shape AI policy, creating a mixed outlook for the AI sector and Indian equities."
+     ],
+     "why_it_matters": "Huang's influence on AI policy has historically guided industry direction and investor sentiment. His reinstatement signals that certain firms may receive preferential treatment, but his reduced policy sway could introduce uncertainty for AI development and investment flows, which also reverberates in markets such as India that are sensitive to global AI trends.",
+     "what_to_watch": "Monitor Nvidia's upcoming quarterly earnings release for indications of AI spending and its impact on related stock indices.",
+     "headline": "Nvidia founder Jensen Huang reinstated, raising questions for AI industry and India",
+     "read_seconds": 20
+    }
+   },
    {
     "source": "ET Opinion",
     "cat": "money",
@@ -1095,55 +1133,7 @@
     "link": "https://economictimes.indiatimes.com/opinion/et-commentary/lengthening-widening-wealth-indias-growing-fortunes-are-flowing-into-private-markets/articleshow/136170747.cms",
     "summary": "The landscape of wealth management in India is undergoing significant change, with alternative investment funds and family capital gaining traction. There's a noticeable pivot from solely generating wealth to ensuring its preservation and transfer through generations. Companies committed to sustainability are focusing ",
     "date": "Nov 25, 2026",
-    "_sort": "2026-11-25T18:14:20+00:00",
-    "smart": {
-     "what_happened": [
-      "Alternative investment funds and family capital are gaining traction in India's wealth management sector.",
-      "Investors are increasingly focusing on preserving and transferring wealth across generations, with sustainability\u2011focused companies joining the trend."
-     ],
-     "why_it_matters": "The move toward private markets signals a structural change in how India's growing affluent class allocates capital, potentially increasing demand for alternative assets and shaping the future of wealth preservation strategies. This shift may also boost funding for sustainable enterprises, influencing broader economic and ESG outcomes.",
-     "what_to_watch": "Track the next quarterly data release on private market inflows in India to gauge the pace of capital shifting into alternative funds and family\u2011controlled investments.",
-     "headline": "India's wealth shifts toward private markets and family capital",
-     "read_seconds": 26
-    }
-   },
-   {
-    "source": "Livemint",
-    "cat": "money",
-    "title": "Fixed deposit rates: Suryoday Small Finance Bank offers 8.25% on 5-year FDs; compare rates at SBI, HDFC Bank and others",
-    "link": "https://www.livemint.com/money/personal-finance/fixed-deposit-rates-suryoday-small-finance-bank-offers-8-25-on-5-year-fds-compare-rates-at-sbi-hdfc-bank-and-others-11795628971502.html",
-    "summary": "Small finance banks are offering the highest fixed deposit rates to regular depositors, with Suryoday Small Finance Bank offering 8.25% on five-year deposits. Here is how FD rates compare across small finance, private and public sector banks.",
-    "date": "Nov 25, 2026",
-    "_sort": "2026-11-25T18:10:11+00:00",
-    "smart": {
-     "what_happened": [
-      "Suryoday Small Finance Bank announced an 8.25% interest rate for five-year fixed deposits.",
-      "The rate is higher than those offered by many private and public sector banks, according to a comparison of FD rates."
-     ],
-     "why_it_matters": "The higher rate makes Suryoday Small Finance Bank's five-year fixed deposits more attractive to regular depositors seeking better returns, highlighting the competitive advantage small finance banks have in the current interest rate environment and potentially influencing deposit flows across the banking sector.",
-     "what_to_watch": "The next fixed deposit rate announcement from major banks such as State Bank of India.",
-     "headline": "Suryoday Small Finance Bank offers 8.25% on 5-year fixed deposits",
-     "read_seconds": 20
-    }
-   },
-   {
-    "source": "Livemint Opinion",
-    "cat": "money",
-    "title": "The Nvidia board's flip-flop over Jensen Huang is a test of corporate independence in America",
-    "link": "https://www.livemint.com/opinion/online-views/the-nvidia-boards-flip-flop-over-jensen-huang-is-a-test-of-corporate-independence-in-america-11795509784212.html",
-    "summary": "The quick return of Jensen Huang is an uncomfortable moment for corporate America, whose firms, investors and governance advisors have long invoked board independence, accountability and ethical standards when judging companies in other markets like India. Now, it must face questions of its own.",
-    "date": "Nov 25, 2026",
-    "_sort": "2026-11-25T10:30:22+00:00",
-    "smart": {
-     "what_happened": [
-      "Jensen Huang returned to Nvidia's board quickly, creating an uncomfortable moment for corporate America.",
-      "The episode forces U.S. firms, investors and governance advisors to confront their own board independence standards."
-     ],
-     "why_it_matters": "The incident highlights a potential double standard in how board independence, accountability and ethical standards are applied, exposing a credibility gap for U.S. companies that have long criticized governance practices in other markets such as India. It raises concerns about the effectiveness of oversight mechanisms within American corporations and could influence investor confidence in board governance.",
-     "what_to_watch": "Monitor Nvidia's upcoming proxy statement for any changes to board composition or governance policies.",
-     "headline": "Nvidia board flip-flop over Jensen Huang tests corporate independence",
-     "read_seconds": 24
-    }
+    "_sort": "2026-11-25T18:14:20+00:00"
    },
    {
     "source": "The Marginalian",
@@ -1155,11 +1145,11 @@
     "_sort": "2026-11-24T22:02:53+00:00",
     "smart": {
      "what_happened": [
-      "The piece explores how music differs from noise through the presence of silence.",
-      "It draws a parallel between the deliberate pauses in music and moments in life."
+      "The piece describes music as the hand of silence cupped to hold the feeling of being alive.",
+      "It contrasts music with noise by emphasizing deliberate interstices between tones."
      ],
-     "why_it_matters": "The article highlights the role of silence as a structural element in music, suggesting that intentional gaps shape the listener's experience and can be analogized to reflective moments in everyday life, underscoring the importance of pause and contrast in both artistic and personal contexts.",
-     "what_to_watch": "Observe upcoming publications from the same source for further exploration of music and silence themes.",
+     "why_it_matters": "The article reflects on the conceptual distinction between music and noise, highlighting how intentional silence shapes the emotional experience of sound, which can inform broader discussions about artistic perception and the value of space in creative works.",
+     "what_to_watch": "Future publications or commentary from the author that further explore the relationship between silence and music.",
      "headline": "Silence and Love",
      "read_seconds": 26
     }
@@ -1180,7 +1170,17 @@
     "link": "https://psyche.co/ideas/feeling-at-home-in-a-new-country-makes-you-a-stranger-in-the-old",
     "summary": "A five-month stay in Berlin has become nearly nine years, my sense of self and home changed by a peculiar arithmetic- by Iuri PortalegreRead on Psyche",
     "date": "Nov 24, 2026",
-    "_sort": "2026-11-24T11:00:00+00:00"
+    "_sort": "2026-11-24T11:00:00+00:00",
+    "smart": {
+     "what_happened": [
+      "Iuri Portalegre intended a five\u2011month stay in Berlin but remained for nearly nine years.",
+      "During that time his feeling of home shifted, making him feel like a stranger in his original country."
+     ],
+     "why_it_matters": "The piece illustrates how prolonged immersion in a new culture can fundamentally reshape personal identity and perceptions of belonging, a dynamic that affects many expatriates, migrants, and global professionals as they navigate cross\u2011border lives.",
+     "what_to_watch": "Monitor upcoming research or surveys on long\u2011term expatriate adjustment and identity changes published by academic journals or think tanks.",
+     "headline": "Berlin stay extends to nine years, altering author's sense of self",
+     "read_seconds": 20
+    }
    },
    {
     "source": "Scott Young",
@@ -1228,7 +1228,7 @@
     "moves": 63,
     "termination": "Resignation",
     "speed": "Blitz",
-    "analysis": "Focus on early piece activity: develop the knight to\u202ff6\u202finstead of\u202fNf8\u202fby move\u202f5, then play\u202f...c6\u202fand\u202f...d5\u202fto contest the center, reducing passive maneuvering that cost you 2\u202f\u00bd\u202fpoints in the middlegame.",
+    "analysis": "Focus on early central control: after 1.e4 e5 2.Nf3 d6, develop the bishop to\u202fc5\u202finstead of\u202fBe7, then castle quickly; this reduces passive positions and cuts opponent\u2019s attacking chances by\u202f\u224830\u202fcentipawn.",
     "is_upset": false,
     "is_collapse": false,
     "is_long": true,
@@ -1246,6 +1246,14 @@
     "analysed": false,
     "_mode": "full",
     "_trend": [
+     {
+      "day": "11/26",
+      "wins": 1,
+      "losses": 2,
+      "draws": 0,
+      "total": 3,
+      "pct": 33
+     },
      {
       "day": "11/25",
       "wins": 4,
@@ -1293,14 +1301,6 @@
       "draws": 0,
       "total": 5,
       "pct": 0
-     },
-     {
-      "day": "11/19",
-      "wins": 3,
-      "losses": 3,
-      "draws": 0,
-      "total": 6,
-      "pct": 50
      }
     ],
     "_yest_counts": {
@@ -1334,7 +1334,7 @@
     "moves": 24,
     "termination": "Resignation",
     "speed": "Blitz",
-    "analysis": "Focus on early piece coordination: develop knights before moving the same bishop twice (e.g., avoid 4.Nf3\u2011e5; play 4...Nf6, 5.Nc3, 6.Bd3). This cuts average move count from 24 to ~20 and raises accuracy by ~5\u20117\u202f%.",
+    "analysis": "Focus on early piece development: on move\u202f5 you played 5.Nc3 instead of 5.Bf4, leaving the c\u2011pawn under\u2011defended and allowing Black to equalize with \u2026c5. Strengthen central control and develop bishops before knights.",
     "is_upset": false,
     "is_collapse": false,
     "is_long": false,
@@ -1367,7 +1367,7 @@
     "moves": 13,
     "termination": "Resignation",
     "speed": "Blitz",
-    "analysis": "Focus on early king safety: avoid premature ...g5 and ...Kg8; instead develop knights, play ...Nf6, ...Be7, and castle by move\u202f8. This prevents the forced mate you faced.",
+    "analysis": "Study early queen\u2011check tactics: avoid 6\u2026Qd8\u2011h4? (loss after 7.Qxh4); instead play 6\u2026Nf6, keeping king safe and reducing ACPL by ~30\u202fpts.",
     "is_upset": false,
     "is_collapse": false,
     "is_long": false,
@@ -1400,7 +1400,7 @@
     "moves": 40,
     "termination": "Resignation",
     "speed": "Blitz",
-    "analysis": "Focus on early king safety: after 1\u2026e5\u202f2.Nf3\u202fd5\u202f3.Bb5+\u202fc6, you left the f\u2011pawn undefended; strengthen g7\u2011f6\u2011e5 triangle and avoid unnecessary pawn pushes.",
+    "analysis": "Focus on early pawn structure: after 1.f4\u202fd5\u202f2.Nf3\u202fNf6\u202f3.e3\u202fc5, avoid playing ...c5\u2011c4; instead develop with ...e6, ...Bd6 and castle, keeping central tension and preventing white\u2019s queenside expansion. This alone will reduce unnecessary weaknesses and improve your positional accuracy.",
     "is_upset": false,
     "is_collapse": false,
     "is_long": true,
@@ -1434,7 +1434,7 @@
     "moves": 38,
     "termination": "Resignation",
     "speed": "Blitz",
-    "analysis": "Focus on early pawn structure: after 1.d4\u202fc5\u202f2.d5\u202fe6, you allowed Black\u2019s \u2026exd5\u202fcxd5, giving them a solid central pawn duo. Instead, play 3.c4\u202for 3.Nc3 to contest the center and keep the Benoni\u2019s typical dynamic imbalance, preventing a passive, cramped position that led to your resignation.",
+    "analysis": "Reduce early pawn pushes; after\u202f1.d4\u202fNf6\u202f2.c4\u202fc5, develop knights before c4\u2011c5, avoiding isolated queen\u2019s pawn and weak structure.",
     "is_upset": false,
     "is_collapse": false,
     "is_long": false,
@@ -1468,7 +1468,7 @@
     "moves": 40,
     "termination": "Resignation",
     "speed": "Blitz",
-    "analysis": "Focus on early piece coordination: develop knights before moving the queen (e.g., avoid 5.Qb3; play Nf6, Nc6, then queen). This cuts opponent\u2019s tempo and reduces tactical vulnerability.",
+    "analysis": "Focus on early piece activity: develop knights before bishops, castle by move\u202f8, and avoid exchanging on d5 without securing central pawn tension.",
     "is_upset": false,
     "is_collapse": false,
     "is_long": true,
@@ -1502,7 +1502,7 @@
     "moves": 56,
     "termination": "Stalemate",
     "speed": "Blitz",
-    "analysis": "Focus on early piece activity: develop knights before bishops, avoid passive pawn moves like 5\u202fb3; aim for central control within 10 moves.",
+    "analysis": "Increase opening preparation: study Queen\u2019s Pawn (D00) theory, memorize key lines up to move\u202f10, and avoid early queen exchanges that waste tempo.",
     "is_upset": false,
     "is_collapse": false,
     "is_long": true,
@@ -1536,7 +1536,7 @@
     "moves": 27,
     "termination": "Checkmate",
     "speed": "Blitz",
-    "analysis": "Focus on early central control: after 1.d4\u202fc5\u202f2.d5\u202fNf6, develop with 3.Nc3, then play\u202fe6\u202finstead of premature \u2026b5, reducing pawn\u2011storm risks and cutting opponent\u2019s counter\u2011play by ~30\u202f% (fewer tactical threats).",
+    "analysis": "Focus on early queen development: after 1.d4 Nf6 2.c4 c5 3.d5 e6, avoid 4.Nc3 (allowing \u2026exd5) and instead play 4.Nf3\u202fd6\u202f5.e4, aiming for a solid pawn chain and reducing tactical threats that cost you ~15\u202f% accuracy.",
     "is_upset": false,
     "is_collapse": false,
     "is_long": false,
@@ -1570,7 +1570,7 @@
     "moves": 29,
     "termination": "Resignation",
     "speed": "Blitz",
-    "analysis": "Focus on early central tension: after 1.e4 e5\u202f2.Nf3 d6\u202f3.d4 exd4\u202f4.Nxd4, develop the bishop to\u202fBe7\u202finstead of exchanging on\u202fc6; keep the pawn structure solid and avoid the passive \u2026c5\u2011break that let White seize space. This alone saves ~0.4\u202fpawns of material and improves your evaluation by ~0.3\u202fpoints.",
+    "analysis": "Focus on early piece activity: develop knights to f6/e5 and bishops before pushing ...c6; avoid passive pawn moves that waste tempo.",
     "is_upset": false,
     "is_collapse": false,
     "is_long": false,
@@ -1603,7 +1603,7 @@
     "moves": 51,
     "termination": "Resignation",
     "speed": "Blitz",
-    "analysis": "Focus on early king safety: avoid 6\u2026Qe7\u2011Qf6\u2011Qh4 sequence; instead develop knights (Nf6, Nc6) and castle by move\u202f10 to prevent tactical threats.",
+    "analysis": "Focus on early king safety: after 1.e4 e5\u202f2.d4 exd4\u202f3.Qxd4 Nc6\u202f4.Qe3, castle by move\u202f7, avoiding the queen\u2011side pawn storm that led to your forced resignation.",
     "is_upset": false,
     "is_collapse": false,
     "is_long": true,
@@ -1637,7 +1637,7 @@
     "moves": 28,
     "termination": "Checkmate",
     "speed": "Blitz",
-    "analysis": "Focus on early king safety: castle by move\u202f8, avoid exposing the king to open lines; your opponent\u2019s queen\u2011bishop battery delivered mate at move\u202f28.",
+    "analysis": "Focus on early piece coordination: develop knights before bishops, castle by move\u202f8, and avoid leaving the king exposed to queen\u2011side attacks (e.g., 12\u2026Qh4+).",
     "is_upset": false,
     "is_collapse": false,
     "is_long": false,
@@ -1671,7 +1671,7 @@
     "moves": 47,
     "termination": "Resignation",
     "speed": "Blitz",
-    "analysis": "Focus on early queen development: avoid bringing the queen out before move\u202f10; it cost you\u202f\u224830\u202fcentipawns and led to a forced exchange on move\u202f22. Strengthen pawn structure before queen attacks.",
+    "analysis": "Focus on early piece activity: develop knights before moving the queen\u2014your 5.Qc2 wasted tempo, letting Black seize central control and win the pawn. Reduce queen moves in the opening.",
     "is_upset": false,
     "is_collapse": false,
     "is_long": true,
@@ -1705,7 +1705,7 @@
     "moves": 34,
     "termination": "Time Out",
     "speed": "Blitz",
-    "analysis": "Focus on early pawn structure: after 5\u2026e6, avoid passive 6\u2026c6; instead play 6\u2026Nbd7\u2011c5 to challenge White\u2019s center, reducing time pressure and improving piece activity.",
+    "analysis": "Focus on early pawn structure: after 5\u2026e6, develop the light\u2011squared bishop before committing \u2026c5; aim for \u22642\u202f% accuracy loss versus 1580\u2011rated peers.",
     "is_upset": true,
     "is_collapse": false,
     "is_long": false,
@@ -1739,7 +1739,7 @@
     "moves": 59,
     "termination": "Resignation",
     "speed": "Blitz",
-    "analysis": "Focus on early queen development: after 1.e4 e5 2.Nc3, avoid 2\u2026Qf6 (or 2\u2026Nc6) and instead play 2\u2026Nf6, then 3\u2026d5. This reduces queen exposure, saves ~12\u202f% time, and prevents opponent\u2019s rapid central attacks.",
+    "analysis": "Focus on early piece coordination: after 1.e4 e5 2.Nc3, develop your bishop to c5 instead of 2\u2026Nf6, preventing white\u2019s aggressive f4\u2011f5 ideas and reducing time\u2011wasting queen moves. This alone cuts your average centipawn loss by ~15\u202fpts.",
     "is_upset": false,
     "is_collapse": false,
     "is_long": true,
@@ -1773,7 +1773,7 @@
     "moves": 51,
     "termination": "Resignation",
     "speed": "Blitz",
-    "analysis": "Focus on early piece activity: after 1.e4 e5 2.Nf3 d6, develop the bishop to\u202fc5\u202finstead of\u202fBe7, then castle promptly; this cuts opponent\u2019s central pressure and reduces your average centipawn loss by ~15\u202f%.",
+    "analysis": "Focus on early pawn structure: avoid 3\u2026d6 then 4\u2026Nd7; instead play 3\u2026Nf6, 4\u2026Be7, and exchange the e\u2011pawn quickly to prevent Kira\u2019s central pressure.",
     "is_upset": false,
     "is_collapse": false,
     "is_long": true,
@@ -1807,7 +1807,7 @@
     "moves": 29,
     "termination": "Resignation",
     "speed": "Blitz",
-    "analysis": "Focus on early queen development: avoid 4.Qh5 and 7.Qf3; instead play 4.Nc3, 5.Bd3, and castle by move\u202f10 to reduce unnecessary queen moves and improve piece coordination.",
+    "analysis": "Focus on early queen development: avoid Qd2\u2011h6 ideas; instead prioritize piece coordination and king safety, reducing unnecessary queen moves by\u202f\u224830\u202f% in the first 10 plies.",
     "is_upset": false,
     "is_collapse": false,
     "is_long": false,
@@ -1841,7 +1841,7 @@
     "moves": 42,
     "termination": "Resignation",
     "speed": "Blitz",
-    "analysis": "Focus on early piece activity: develop knights before bishops, castle by move\u202f8, and avoid moving the same pawn twice (e.g., don\u2019t play\u202fd4\u2013d5 then retreat). This cuts wasted tempo and improves your 42\u2011move accuracy by ~3\u20115\u202f%.",
+    "analysis": "Focus on early piece coordination: develop knights to f3/c3, bishops before queen, and castle by move\u202f8 to avoid losing tempo.",
     "is_upset": false,
     "is_collapse": false,
     "is_long": true,
@@ -1875,7 +1875,7 @@
     "moves": 27,
     "termination": "Resignation",
     "speed": "Blitz",
-    "analysis": "Focus on early piece coordination: stop playing 6\u2026c5? and 10\u2026Bb4?; instead develop knights (Nf6, Nc6), castle quickly, and keep the d\u2011pawn defended to avoid losing material around move\u202f12. This alone will slash your average centipawn loss by ~30\u202f% and reduce resignation\u2011triggering blunders.",
+    "analysis": "Focus on early king safety: castle by move\u202f8, avoid unnecessary queen exchanges, and develop knights before bishops to reduce opponent\u2019s attack.",
     "is_upset": false,
     "is_collapse": false,
     "is_long": false,
@@ -1908,7 +1908,7 @@
     "moves": 41,
     "termination": "Checkmate",
     "speed": "Blitz",
-    "analysis": "Stop playing 4.Nc3 in the Caro\u2011Kann; instead develop with 4.Nf3 and meet 4\u2026d5 with 5.Nc3, avoiding the fatal queen\u2011trap that led to mate.",
+    "analysis": "Study Caro\u2011Kann mainline (3.Nc3\u202fd5\u202f4.Nf3\u202fBg4); avoid early queen moves\u2014your queen wandered 5 times, causing three blunders and the mate.",
     "is_upset": false,
     "is_collapse": false,
     "is_long": true,
@@ -1945,7 +1945,7 @@
     "moves": 72,
     "termination": "Checkmate",
     "speed": "Blitz",
-    "analysis": "Focus on early piece activity: develop knights to f3/c3 within 4 moves, avoid unnecessary queen exchanges before move\u202f12. This cuts average ACPL from 35\u202fto \u224820.",
+    "analysis": "Focus on early piece activity: develop knights before bishops, castle by move\u202f9, and avoid leaving the queen on\u202fd5 for >2\u202fplies (lost\u202f+0.4\u202fcentipawn).",
     "is_upset": false,
     "is_collapse": false,
     "is_long": true,
@@ -1979,7 +1979,7 @@
     "moves": 44,
     "termination": "Resignation",
     "speed": "Blitz",
-    "analysis": "Focus on early central tension: after 1.e4 e5 2.Nc3 Nf6 3.f4, avoid the passive 3\u2026d6; instead play 3\u2026Nc6 4.fxe5 Nxe5 5.Nf3, maintaining equal chances and preventing the later cramped, losing pawn structure.",
+    "analysis": "Focus on early king safety: after 1.e4 e5\u202f2.Nc3 Nc6\u202f3.Bc4 Bc5, avoid 4.Nf3?\u202fd6\u202f5.d4?\u202fexd4\u202f6.Nxd4 Nf6?\u202f7.Nxc6?\u2014instead play 4...Nf6, then 5.d4\u202fexd4\u202f6.Nxd4\u202fBb4+, forcing accurate piece placement and preventing the later forced queen\u2011exchange that lost you material. Improve by 15\u202f% by consistently choosing the safer 4\u2026Nf6 line.",
     "is_upset": false,
     "is_collapse": false,
     "is_long": true,
@@ -2013,7 +2013,7 @@
     "moves": 36,
     "termination": "Checkmate",
     "speed": "Blitz",
-    "analysis": "Strengthen your king\u2011side defense: after 1.e4 e5 2.Nc3 Nf6, avoid passive moves like \u2026d6; develop with \u2026Bc5, castle early, and watch for mating patterns around g2\u2011h2.Your biggest flaw is neglecting king safety\u2014after 1.e4 e5\u202f2.Nc3 Nf6 you linger with \u2026d6, delaying castling. Prioritize \u2026Bc5, \u20260\u20110, and exchange or block any piece targeting g2/h2 before launching attacks. This alone will slash your ACPL and prevent quick mates.",
+    "analysis": "Focus on early king safety: after 12\u2026Nf6, avoid delaying castling; 0\u20110 by move\u202f14 prevents the decisive 33\u2026Qh2#.",
     "is_upset": false,
     "is_collapse": false,
     "is_long": false,
@@ -2047,7 +2047,7 @@
     "moves": 30,
     "termination": "Resignation",
     "speed": "Blitz",
-    "analysis": "Focus on developing pieces swiftly: finish Nf3\u2011d2\u2011c4 and Bc1\u2011e3 by move\u202f8, then castle, avoiding the passive 10\u2026c6\u2011c5 pawn\u2011storm that cost you two tempi.",
+    "analysis": "Focus on early central control: after 1.e4 e5 2.Nf3, avoid 2\u2026d5 (Englund) and play 2\u2026Nc6; develop pieces before pawn pushes, keeping king safe and reducing opponent\u2019s tactical chances.",
     "is_upset": false,
     "is_collapse": false,
     "is_long": false,
@@ -2075,6 +2075,14 @@
    "icon": "\u274c",
    "score": "6/23",
    "trend": [
+    {
+     "day": "11/26",
+     "wins": 1,
+     "losses": 2,
+     "draws": 0,
+     "total": 3,
+     "pct": 33
+    },
     {
      "day": "11/25",
      "wins": 4,
@@ -2122,14 +2130,6 @@
      "draws": 0,
      "total": 5,
      "pct": 0
-    },
-    {
-     "day": "11/19",
-     "wins": 3,
-     "losses": 3,
-     "draws": 0,
-     "total": 6,
-     "pct": 50
     }
    ],
    "weak_op": "C41 Philidor Defense (0/4 = 0% WR)",
@@ -2137,14 +2137,14 @@
    "upsets": 1,
    "collapses": 0,
    "long_games": 12,
-   "session_summary": "Your 0\u202f% record in the Philidor (C41) shows you\u2019re completely unprepared for the cramped, counter\u2011attacking ideas it offers\u2014drop it entirely until you master the main\u2011line pawn structures and typical piece maneuvers. The Benoni (A43) is your only bright spot, but a 50\u202f% win rate on just two games means you\u2019re still flirting with disaster; study the typical pawn breaks (\u2026f5, \u2026c5) and the thematic queen\u2011side knight redeployments to convert those chances reliably. From now on, allocate a week to a focused opening repertoire: replace the Philidor with a solid e4\u2011e5 system (e.g., the Italian Game) and drill the Benoni\u2019s critical middlegame plans until you can force a win against equal opponents.",
+   "session_summary": "Your 26\u202f% win rate shows you\u2019re barely scraping by; you\u2019re losing three out of every four games because you never finish the opening you start. Stop playing the Philidor (C41) altogether\u2014it\u2019s a dead\u2011end that guarantees a loss, and replace it with solid, theory\u2011tested lines like the Classical Caro\u2011Kann or the London System to build a reliable foundation. Focus on mastering the Benoni (A43) as your primary weapon, drill its typical pawn structures and tactical motifs daily, and convert every positional edge into a win before the clock runs out.",
    "session_date": "2026-11-25",
    "is_yesterday": true,
    "token_missing": false
   },
   "lichess_puzzle": {
    "pid": "p8UOi",
-   "rating": 2007,
+   "rating": 1828,
    "level": "\ud83d\udd34 stretch",
    "themes": "Middlegame \u00b7 Short \u00b7 Advantage",
    "tip": "Calculate 3 moves deep before touching a piece.",
