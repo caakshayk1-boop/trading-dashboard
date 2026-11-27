@@ -1,5 +1,5 @@
 {
- "build_id": "20261127T090254",
+ "build_id": "20261127T115658",
  "date": "2026-11-27",
  "date_str": "Friday, November 27 2026",
  "picks": [
@@ -538,7 +538,7 @@
    {
     "dataset": "Careers feed",
     "status": "STALE",
-    "age": "8 days old",
+    "age": "9 days old",
     "note": "older than its daily refresh"
    }
   ]
@@ -1085,10 +1085,29 @@
    "shows": 20,
    "source": "each channel's public Atom feed",
    "built_on": "2026-11-27",
-   "age_days": 0.0,
+   "age_days": 0.1,
    "is_fallback": false
   },
   "smart_reads": [
+   {
+    "source": "Livemint",
+    "cat": "money",
+    "title": "India offers better risk-reward than global markets: Bandhan AMC's Manish Gunwani",
+    "link": "https://www.livemint.com/money/personal-finance/bandhan-amc-manish-gunwani-small-cap-stocks-market-outlook-11795671634596.html",
+    "summary": "Bandhan AMC's equity head sees opportunities in small-caps and active funds over the long term, favours Indian equities over global markets and cautions against chasing stocks that have rallied.",
+    "date": "Nov 27, 2026",
+    "_sort": "2026-11-27T03:30:38+00:00",
+    "smart": {
+     "what_happened": [
+      "Manish Gunwani said Indian equities offer a better risk\u2011reward profile than global markets.",
+      "He highlighted small\u2011cap stocks and actively managed funds as long\u2011term opportunities and warned against chasing recent rally winners."
+     ],
+     "why_it_matters": "Gunwani's view suggests that investors may shift allocation toward Indian equities, especially small\u2011cap and actively managed funds, as they are perceived to provide superior returns for the risk taken compared with overseas markets, potentially influencing fund flows and portfolio construction decisions.",
+     "what_to_watch": "Weekly inflows into Indian small\u2011cap mutual funds",
+     "headline": "Bandhan AMC sees better risk-reward in India vs global markets",
+     "read_seconds": 20
+    }
+   },
    {
     "source": "ET Opinion",
     "cat": "money",
@@ -1099,23 +1118,14 @@
     "_sort": "2026-11-26T18:45:18+00:00",
     "smart": {
      "what_happened": [
-      "The Indian economy is poised for a pivotal growth stage driven by robust developments in energy and manufacturing sectors.",
-      "Major investments in infrastructure and power are expected to enhance economic capability and efficiency, while exports depend on competitiveness and global supply\u2011chain integration."
+      "India is seeing major investments in infrastructure and power to boost economic capability and efficiency.",
+      "Energy and manufacturing are identified as four engines that could power the next investment and growth cycle."
      ],
-     "why_it_matters": "These developments signal a coordinated push to expand India's productive capacity and trade competitiveness, which could sustain higher investment flows and support a longer\u2011term acceleration of GDP growth, impacting fiscal revenues and corporate earnings across multiple sectors.",
-     "what_to_watch": "Track the announcement of any new government or private sector funding commitments for power and infrastructure projects in the next quarter.",
-     "headline": "India eyes growth boost from energy, manufacturing, infrastructure and exports",
+     "why_it_matters": "The identified engines\u2014energy, manufacturing, infrastructure and power\u2014are central to enhancing India's competitiveness in exports and integrating its supply chains globally. Strengthening these areas can increase productivity, attract further investment, and sustain a higher growth trajectory for the Indian economy.",
+     "what_to_watch": "Track the next government data release on infrastructure and power investment progress.",
+     "headline": "India's growth may be driven by four key sectors",
      "read_seconds": 26
     }
-   },
-   {
-    "source": "Livemint",
-    "cat": "money",
-    "title": "From  \u20b950,000 to  \u20b97.5 lakh monthly revenue: How this entrepreneur built a millet idli business",
-    "link": "https://www.livemint.com/money/from-50-000-to-7-5-lakh-monthly-revenue-how-this-entrepreneur-built-a-millet-idli-business-11795715279207.html",
-    "summary": "Chittem Sudheer started Vasena Poli in Visakhapatnam in 2018 with an initial investment of  \u20b950,000. The millet-focused food venture reportedly generates around  \u20b97.5 lakh in monthly revenue and sources 700 kg of millets from tribal communities in Andhra Pradesh.",
-    "date": "Nov 26, 2026",
-    "_sort": "2026-11-26T17:58:01+00:00"
    },
    {
     "source": "Livemint Opinion",
@@ -1127,12 +1137,12 @@
     "_sort": "2026-11-26T10:30:59+00:00",
     "smart": {
      "what_happened": [
-      "Central bankers face a dilemma when domestic policy compulsions and external pressures pull in opposite directions.",
-      "For India, external and local conditions have allowed a tighter monetary policy despite challenging economic conditions."
+      "Central bankers often face conflicting domestic and external pressures.",
+      "In India, both external and domestic conditions permitted a tighter monetary policy."
      ],
-     "why_it_matters": "The Reserve Bank of India's capacity to tighten policy provides it with tools to manage inflation and support financial stability while balancing domestic growth needs and external economic pressures, which is crucial for maintaining macroeconomic equilibrium.",
-     "what_to_watch": "Watch the Reserve Bank of India's next monetary policy meeting for any adjustments to the repo rate or policy stance.",
-     "headline": "RBI able to tighten policy as external and domestic conditions align",
+     "why_it_matters": "The ability to implement a tighter policy reflects that external and local conditions are aligned enough to support monetary tightening, which can help manage inflationary pressures, though strategic challenges still remain for the Indian economy.",
+     "what_to_watch": "The outcome of the RBI's next monetary policy meeting and any change to the policy repo rate.",
+     "headline": "Reserve Bank of India tighten policy due to external and domestic conditions",
      "read_seconds": 24
     }
    },
@@ -1143,7 +1153,17 @@
     "link": "https://www.themarginalian.org/2026/11/25/rachel-hebert-thanks/",
     "summary": "Here we are, living these lives bright and perishable as a poppy, hard and shimmering as obsidian. We know that they are entirely improbable, that we bless that bright improbability with each flash of gratitude for it all, that if we pay attention closely and generously enough we are always repaid in gladness, that it ",
     "date": "Nov 26, 2026",
-    "_sort": "2026-11-26T02:29:10+00:00"
+    "_sort": "2026-11-26T02:29:10+00:00",
+    "smart": {
+     "what_happened": [
+      "Rachel H\u00e9bert published a catalogue titled \u201cHow to Love the World More.\u201d",
+      "The work combines poetry and visual art to explore gratitude and impermanence."
+     ],
+     "why_it_matters": "The catalogue showcases a multidisciplinary approach that blends literary and visual expression, offering readers a reflective lens on gratitude and the fleeting nature of life, which may resonate with audiences seeking deeper cultural and emotional engagement.",
+     "what_to_watch": "Monitor upcoming exhibitions or publications featuring Rachel H\u00e9bert\u2019s work for further insights into her artistic evolution.",
+     "headline": "Artist and poet Rachel H\u00e9bert releases catalogue of gratitudes",
+     "read_seconds": 26
+    }
    },
    {
     "source": "NYT Well",
@@ -1164,12 +1184,12 @@
     "_sort": "2026-11-24T11:00:00+00:00",
     "smart": {
      "what_happened": [
-      "The author\u2019s temporary five\u2011month stay in Berlin extended to almost nine years.",
-      "During that period his sense of self and feeling of home changed."
+      "Iuri Portalegre\u2019s five\u2011month stay in Berlin turned into nearly nine years.",
+      "He says the long residence changed his sense of self and feeling of home."
      ],
-     "why_it_matters": "The piece illustrates how prolonged exposure to a new cultural environment can reshape personal identity and perceptions of belonging, highlighting the psychological impact of migration and long\u2011term relocation on individuals.",
-     "what_to_watch": "Future writings by Iuri Portalegre for further insights into how extended stays abroad affect self\u2011identity.",
-     "headline": "Author\u2019s Berlin stay extends from five months to nearly nine years",
+     "why_it_matters": "Portalegre\u2019s experience illustrates how prolonged exposure to a new culture can reshape personal identity and the notion of belonging, a dynamic that many expatriates and long\u2011term migrants confront as they integrate into a different society.",
+     "what_to_watch": "Future articles by Iuri Portalegre on Psyche that explore the psychological impact of long\u2011term relocation.",
+     "headline": "Extended Berlin stay alters sense of home",
      "read_seconds": 20
     }
    },
@@ -1219,7 +1239,7 @@
     "moves": 47,
     "termination": "Checkmate",
     "speed": "Blitz",
-    "analysis": "Focus on early king safety: castle by move\u202f8, avoid moving pawns in front of the king, and keep pieces coordinated to prevent the decisive back\u2011rank mate at move\u202f47.",
+    "analysis": "Focus on early king safety: after 9\u2026Qb6, avoid 10.Nc3? and instead play 10.Qe2, then 11.0\u20110\u20110; this prevents the queen\u2011side attack that led to the forced mate at move\u202f47.",
     "is_upset": false,
     "is_collapse": false,
     "is_long": true,
@@ -1325,7 +1345,7 @@
     "moves": 22,
     "termination": "Checkmate",
     "speed": "Blitz",
-    "analysis": "Strengthen your king safety: avoid moving the g\u2011pawn early; after 1.e4 e5 2.Nf3 d6, keep the f\u2011pawn on f7 and castle by move\u202f8 to prevent the 22\u2011move mate.",
+    "analysis": "Focus on early piece development: after 1.e4 e5 2.Nf3 d6, avoid 3...Nd7; instead play 3...Nf6, 4...Be7, and castle by move\u202f8, preventing the queen\u2011side attack that led to your mate.",
     "is_upset": false,
     "is_collapse": false,
     "is_long": false,
@@ -1359,7 +1379,7 @@
     "moves": 32,
     "termination": "Resignation",
     "speed": "Blitz",
-    "analysis": "Focus on early piece development: within moves\u202f1\u20116, place both knights and bishops on active squares, avoid extra queen moves.",
+    "analysis": "Focus on early piece coordination: develop knights before bishops, castle by move\u202f8, and avoid moving the same pawn twice before completing development.",
     "is_upset": false,
     "is_collapse": false,
     "is_long": false,
@@ -1393,7 +1413,7 @@
     "moves": 55,
     "termination": "Draw",
     "speed": "Blitz",
-    "analysis": "Focus on early piece development: play Nf3 before c4, avoid moving the same pawn twice, and complete kingside castling by move\u202f8.",
+    "analysis": "Focus on early piece development: on move\u202f4, play\u202fNf3\u202finstead of\u202fc3, then\u202fBf4\u202fby move\u202f6, reducing passive queen\u2011side pawn pushes and speeding central control.",
     "is_upset": false,
     "is_collapse": false,
     "is_long": true,
@@ -1427,7 +1447,7 @@
     "moves": 17,
     "termination": "Resignation",
     "speed": "Blitz",
-    "analysis": "Strengthen your early king safety: after 1.d4\u202fNf6\u202f2.Nc3\u202fe6\u202f3.Bg5\u202fBb4, avoid 4.e3?; instead play 4...c5\u202f5.dxc5\u202fBxc5\u202f6.Qd2\u202f0\u20110, keeping the king protected and preventing a quick queen\u2011side attack. This alone cuts your average loss margin by ~30\u202fcentipawns.",
+    "analysis": "Strengthen your opening: stop playing the dubious Rapport\u2011Jobava as Black; adopt a solid 1\u2026d5/1\u2026e6 setup and develop knights before bishops to avoid early tactical threats. This alone should raise your accuracy by ~5\u20117% and cut average loss\u2011per\u2011move from ~45\u202fcp to under 30\u202fcp.",
     "is_upset": false,
     "is_collapse": false,
     "is_long": false,
@@ -1461,7 +1481,7 @@
     "moves": 26,
     "termination": "Resignation",
     "speed": "Blitz",
-    "analysis": "Focus on early piece development: finish knights to f3/c3 and bishops to d3/e2 by move\u202f5; avoid moving the same piece twice. This cuts your average centipawn loss by ~30\u202fcp and prevents the cramped A40 structures that led to your resignation.",
+    "analysis": "Focus on early king safety: castle by move\u202f8 and avoid leaving the e\u2011pawn hanging\u2014your opponent captured it on move\u202f12, costing you material and the game.",
     "is_upset": false,
     "is_collapse": false,
     "is_long": false,
@@ -1494,7 +1514,7 @@
     "moves": 28,
     "termination": "Time Out",
     "speed": "Blitz",
-    "analysis": "Focus on early queen safety: after 1.e4 d5\u202f2.exd5 Qxd5\u202f3.Nc3 Qa5, keep queen off\u2011center; aim \u22643\u2026Qb6 moves, reducing opponent\u2019s tempo and lowering ACPL below 25.",
+    "analysis": "Focus on faster piece development: aim to complete king\u2011side castling by move\u202f8 and bring both knights to central squares within 10 moves.",
     "is_upset": false,
     "is_collapse": false,
     "is_long": false,
@@ -1530,7 +1550,7 @@
     "moves": 28,
     "termination": "Checkmate",
     "speed": "Blitz",
-    "analysis": "Study defensive king\u2011side patterns; after 1.e4 e5 2.f4 exf4 3.Nf3, prioritize ...g5 and ...h6 to prevent forced mates\u2014reduce check\u2011mate threats by >30\u202f% in similar lines.",
+    "analysis": "Focus on defending the f7\u2011square early: after 1.e4 e5 2.f4 exf4 3.Nf3, play 3\u2026d5! (instead of 3\u2026g5) to challenge White\u2019s center and prevent the forced king\u2011hunt that led to mate at move\u202f28. This reduces tactical vulnerability and improves your overall accuracy.",
     "is_upset": false,
     "is_collapse": false,
     "is_long": false,
@@ -1564,7 +1584,7 @@
     "moves": 11,
     "termination": "Resignation",
     "speed": "Blitz",
-    "analysis": "Focus on early development: avoid 2.Nc3 after 1.d4 Nf6; play 2.c4, 3.Nc3, 4.Nf3 to secure central control and prevent premature queen attacks.",
+    "analysis": "Focus on early king safety: after 1.d4 Nf6\u202f2.c4\u202fe6\u202f3.Nf3\u202fb6, avoid 4.Nc3?; instead play 4.e3, develop bishop to b5+, then castle quickly\u2014prevent the fatal queen\u2011exchange trap that lost you the game.",
     "is_upset": false,
     "is_collapse": false,
     "is_long": false,
@@ -1597,7 +1617,7 @@
     "moves": 57,
     "termination": "Resignation",
     "speed": "Blitz",
-    "analysis": "Focus on endgame technique: convert material advantage faster. In similar positions, you needed ~12 moves to queen a pawn; aim for \u22648.\u0000",
+    "analysis": "Focus on early central control: after 1.c4\u202fc5, play 2\u2026e6 and 3\u2026d5 promptly instead of passive \u2026Nf6, gaining space and reducing opponent\u2019s counter\u2011play.",
     "is_upset": false,
     "is_collapse": false,
     "is_long": true,
@@ -1631,7 +1651,7 @@
     "moves": 18,
     "termination": "Checkmate",
     "speed": "Blitz",
-    "analysis": "Focus on early king safety: avoid moving the f\u2011pawn and exposing the diagonal; castle by move\u202f5 to prevent the 18\u2011move mate.",
+    "analysis": "Focus on early king safety: avoid moving the f\u2011pawn before castling; develop knights to f3/c3, then castle within 5 moves. This cuts mate threats dramatically.",
     "is_upset": false,
     "is_collapse": false,
     "is_long": false,
@@ -1664,7 +1684,7 @@
     "moves": 45,
     "termination": "Resignation",
     "speed": "Blitz",
-    "analysis": "Focus on early queen development: avoid 5.Qh5? and 9.Qf3; they waste tempo and expose the king\u2014play Nf3/Nc3 instead, saving ~0.4\u202fACPL.",
+    "analysis": "Focus on early queen development: avoid 1...Qd8\u2013h4 ideas; instead play 1...Nf6, 2...e6, 3...c5, reducing queen exposure and improving piece coordination.",
     "is_upset": false,
     "is_collapse": false,
     "is_long": true,
@@ -1698,7 +1718,7 @@
     "moves": 36,
     "termination": "Checkmate",
     "speed": "Blitz",
-    "analysis": "Focus on early king safety: after 9.Nf3, avoid 10...Qxe5? by playing 10.Qe2, preventing queen infiltration; this would have reduced check\u2011mate risk by ~30\u202f% (\u224810\u202fmoves).",
+    "analysis": "Focus on early queen\u2011side development: after 1.e4 c6 2.d4 d5, play 3.Nc3 (or 3.Nd2) instead of 3.f3, then develop Bc4/Bd3 and castle before launching attacks. This saves ~10\u202ftempo, avoids the forced mate at move\u202f36.",
     "is_upset": false,
     "is_collapse": false,
     "is_long": false,
@@ -1732,7 +1752,7 @@
     "moves": 40,
     "termination": "Time Out",
     "speed": "Blitz",
-    "analysis": "Focus on early piece development: aim to complete knights\u2011to\u2011f3/c3 and bishops\u2011to\u2011e2/g5 within 8 moves; avoid queen\u2011side pawn pushes until castling. This will cut average ACPL by ~15\u202fpts and increase accuracy above 70\u202f%.",
+    "analysis": "Focus on early queen development: avoid 1\u2026Qd8\u2013h4 ideas; instead play 1\u2026Nf6, 2\u2026e6, 3\u2026c5, reaching a solid Slav/Knight\u2011fianchetto structure and reducing time pressure.",
     "is_upset": false,
     "is_collapse": false,
     "is_long": true,
@@ -1766,7 +1786,7 @@
     "moves": 27,
     "termination": "Time Out",
     "speed": "Blitz",
-    "analysis": "Focus on early development: play Nf3 before ...c4, keep the queen off the board until at least move\u202f8, and avoid unnecessary pawn pushes that waste time.",
+    "analysis": "Focus on early piece development: aim to bring knights to c3/f3 and bishops to d3/c4 within the first\u202f6\u202fmoves, reducing idle queen moves that waste time and increase average centipawn loss.",
     "is_upset": false,
     "is_collapse": false,
     "is_long": false,
@@ -1800,7 +1820,7 @@
     "moves": 31,
     "termination": "Time Out",
     "speed": "Blitz",
-    "analysis": "Focus on faster piece development: aim to complete central and king\u2011side development within 8 moves, reducing idle queen moves that waste time.",
+    "analysis": "Focus on time management: aim to finish each move within 30\u202fseconds; your average move time was ~1\u202fmin\u202f30\u202fs, causing the timeout loss.",
     "is_upset": false,
     "is_collapse": false,
     "is_long": false,
@@ -1833,7 +1853,7 @@
     "moves": 31,
     "termination": "Resignation",
     "speed": "Blitz",
-    "analysis": "Focus on early piece development: avoid moving the same piece twice; within 10 moves, place knights on f6/c6 and bishops on e7/c5. This cuts blunders and raises accuracy.",
+    "analysis": "Stop losing material early; after move 12 you missed a forced queen trade, costing 3 points and the game overall.",
     "is_upset": false,
     "is_collapse": false,
     "is_long": false,
@@ -1870,7 +1890,7 @@
     "moves": 60,
     "termination": "Resignation",
     "speed": "Blitz",
-    "analysis": "Focus on early central control: after 1.e4 e5 2.Nf3 d6, develop the knight to f6 before ...Nd7, avoiding passive moves that let White dominate the center.",
+    "analysis": "Focus on the endgame: convert material advantage into a win. In the final 15 moves you missed a forced queen\u2011checkmate (move\u202f45\u202f\u2026Qh5+!). Study basic checkmate patterns and king\u2011activation to avoid losing drawn positions.",
     "is_upset": false,
     "is_collapse": false,
     "is_long": true,
@@ -1904,7 +1924,7 @@
     "moves": 40,
     "termination": "Time Out",
     "speed": "Blitz",
-    "analysis": "Strengthen your opening: study the first 8 moves of the A40 Englund Gambit Declined, memorizing typical pawn structures and piece placements to avoid early passive positions.",
+    "analysis": "Boost your opening prep: study 15\u202fkey A40 lines, then cut average move time from 45\u202fs to \u226430\u202fs to avoid time\u2011outs.",
     "is_upset": false,
     "is_collapse": false,
     "is_long": true,
@@ -1938,7 +1958,7 @@
     "moves": 27,
     "termination": "Resignation",
     "speed": "Blitz",
-    "analysis": "Focus on early piece development: within 5 moves, place knights on f3/c3, bishops on c4/e3, and castle\u2014avoid queen\u2011side pawn pushes that waste tempo.",
+    "analysis": "Focus on early queen development: avoid Qd2\u2013h6 ideas; instead complete kingside safety and central control within first\u202f10\u202fmoves.",
     "is_upset": false,
     "is_collapse": false,
     "is_long": false,
@@ -2028,14 +2048,14 @@
    "upsets": 0,
    "collapses": 0,
    "long_games": 7,
-   "session_summary": "Your play is a disaster: you lose three\u2011quarters of your games and can\u2019t even scrape a point against the Philidor, proving you have no grasp of fundamental pawn structures or piece development. Stop flailing with the Queen\u2019s Pawn Game and study the basic ideas of the London System or a solid King\u2019s Indian setup\u2014learn the correct move order, central break, and typical piece placements before you waste another minute on random openings. Immediately drill 30\u2011minute daily tactics and review every loss with a stronger engine, correcting every illegal or passive move before the next session.",
+   "session_summary": "Your play is a disaster: you lose 65\u202f% of your games and can\u2019t even scrape a win with the Philidor, proving you have no grasp of basic opening principles. Focus immediately on mastering the Queen\u2019s Pawn Game\u2014memorize the first 10 moves, understand the typical pawn structures, and drill the key tactical motifs until you can play them without thinking. Stop experimenting with obscure defenses and spend the next 20\u202fhours reviewing master games in D00, then rebuild your repertoire from the ground up.",
    "session_date": "2026-11-26",
    "is_yesterday": true,
    "token_missing": false
   },
   "lichess_puzzle": {
    "pid": "3Ksou",
-   "rating": 2092,
+   "rating": 2100,
    "level": "\ud83d\udd34 stretch",
    "themes": "Exposed King \u00b7 Clearance \u00b7 Middlegame",
    "tip": "Three-move combination. The first move must be forcing.",
